@@ -1,3 +1,5 @@
+import * as core from "@actions/core";
+
 import { octokit } from "../../octokit";
 
 export const getPullRequestChecks = async (
@@ -8,8 +10,8 @@ export const getPullRequestChecks = async (
     ? Promise.allSettled(
         commits.map((item) =>
           octokit.rest.checks.listForRef({
-            owner: process.env.GITHUB_OWNER!,
-            repo: process.env.GITHUB_REPO!,
+            owner: core.getInput("GITHUB_OWNER") || process.env.GITHUB_OWNER!,
+            repo: core.getInput("GITHUB_REPO") || process.env.GITHUB_REPO!,
             per_page: 100,
             page: 1,
             ref: item,

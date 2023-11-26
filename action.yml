@@ -1,0 +1,26 @@
+name: "Pull Request Full Report"
+author: "Aleksei Simatov"
+description: "Github action to show PRs report"
+inputs:
+  GITHUB_KEY:
+    description: "Github key"
+    required: true
+  GITHUB_REPO:
+    description: "Github repo"
+    required: true
+  GITHUB_OWNER:
+    description: "Github owner"
+    required: true
+  GITHUB_REPO_FOR_ISSUE:
+    description: "Github repo for issue"
+    required: true
+  GITHUB_OWNER_FOR_ISSUE:
+    description: "Github owner for issue"
+    required: true
+outputs:
+  JSON_COLLECTION:
+    description: "Output file"
+    required: false
+runs:
+  using: "node20"
+  main: "dist/index.js"
