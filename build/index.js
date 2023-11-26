@@ -448,15 +448,21 @@ const calculations_1 = __nccwpck_require__(30074);
 const preparePullRequestStats = (collection) => {
     return {
         ...collection,
-        timeToReviewAvg: (0, calculations_1.calcAvgValue)(collection.timeToReview),
-        timeToApproveAvg: (0, calculations_1.calcAvgValue)(collection.timeToApprove),
-        timeToMergeAvg: (0, calculations_1.calcAvgValue)(collection.timeToMerge),
-        timeToReviewMedian: (0, calculations_1.calcMedianValue)(collection.timeToReview),
-        timeToApproveMedian: (0, calculations_1.calcMedianValue)(collection.timeToApprove),
-        timeToMergeMedian: (0, calculations_1.calcMedianValue)(collection.timeToMerge),
-        timeToReviewP80: (0, calculations_1.calcP80Value)(collection.timeToReview),
-        timeToApproveP80: (0, calculations_1.calcP80Value)(collection.timeToApprove),
-        timeToMergeP80: (0, calculations_1.calcP80Value)(collection.timeToMerge),
+        median: {
+            timeToReview: (0, calculations_1.calcMedianValue)(collection.timeToReview),
+            timeToApprove: (0, calculations_1.calcMedianValue)(collection.timeToApprove),
+            timeToMerge: (0, calculations_1.calcMedianValue)(collection.timeToMerge),
+        },
+        p80: {
+            timeToReview: (0, calculations_1.calcP80Value)(collection.timeToReview),
+            timeToApprove: (0, calculations_1.calcP80Value)(collection.timeToApprove),
+            timeToMerge: (0, calculations_1.calcP80Value)(collection.timeToMerge),
+        },
+        avg: {
+            timeToReview: (0, calculations_1.calcAvgValue)(collection.timeToReview),
+            timeToApprove: (0, calculations_1.calcAvgValue)(collection.timeToApprove),
+            timeToMerge: (0, calculations_1.calcAvgValue)(collection.timeToMerge),
+        },
     };
 };
 exports.preparePullRequestStats = preparePullRequestStats;
@@ -873,161 +879,26 @@ exports.octokit = new octokit_1.Octokit({
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createMarkdown = void 0;
-const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(99446);
-const createBlock_1 = __nccwpck_require__(5787);
 const createMarkdown = (data) => {
     const users = Object.keys(data)
         .filter((key) => key !== "total")
         .concat("total");
-    const dates = Object.keys(data.total)
-        .slice()
-        .sort((a, b) => {
-        if (a === "total")
-            return 1;
-        if (b === "total")
-            return -1;
-        return (0, date_fns_1.isBefore)((0, date_fns_1.parse)(a, "M/y", new Date()), (0, date_fns_1.parse)(b, "M/y", new Date()))
-            ? 1
-            : -1;
-    });
+    const dates = (0, utils_1.sortCollectionsByDate)(data.total);
     const content = dates.map((date) => {
-        const tableRows = users
-            .filter((user) => data[user]?.total?.merged)
-            .map((user) => {
-            return [
-                `**${user}**`,
-                (0, utils_1.formatMinutesDuration)(data[user]?.[date]?.timeToReviewAvg || 0),
-                (0, utils_1.formatMinutesDuration)(data[user]?.[date]?.timeToApproveAvg || 0),
-                (0, utils_1.formatMinutesDuration)(data[user]?.[date]?.timeToMergeAvg || 0),
-                data[user]?.[date]?.merged?.toString() || "0",
-            ];
+        const timelineContent = ["avg", "median", "p80"].map((type) => {
+            const pullRequestTimelineTable = (0, utils_1.createTimelineTable)(data, type, users, date);
+            const pullRequestTimelineBar = (0, utils_1.createTimelineGanttBar)(data, type, users, date);
+            return `
+      ${pullRequestTimelineTable}
+      ${pullRequestTimelineBar}
+      `;
         });
-        const pullRequestTimeLine = (0, createBlock_1.createBlock)({
-            title: `Pull requests timeline avg ${date}`,
-            description: "Stats for last 20 closed PRs",
-            table: {
-                headers: [
-                    "user",
-                    "time to review",
-                    "time to approve",
-                    "time to merge",
-                    "total merged PRs",
-                ],
-                rows: tableRows,
-            },
-        });
-        const ganttPullRequestBar = (0, utils_1.createGanttBar)({
-            title: `Pull requests timeline avg ${date}`,
-            sections: users
-                .filter((user) => data[user]?.[date]?.timeToReviewAvg &&
-                data[user]?.[date]?.timeToApproveAvg &&
-                data[user]?.[date]?.timeToMergeAvg)
-                .map((user) => ({
-                name: user,
-                bars: [
-                    {
-                        name: "time to review",
-                        start: 0,
-                        end: data[user]?.[date]?.timeToReviewAvg || 0,
-                    },
-                    {
-                        name: "time to approve",
-                        start: 0,
-                        end: data[user]?.[date]?.timeToApproveAvg || 0,
-                    },
-                    {
-                        name: "time to merge",
-                        start: 0,
-                        end: data[user]?.[date]?.timeToMergeAvg || 0,
-                    },
-                ],
-            })),
-        });
-        const tableRowsMedian = users
-            .filter((user) => data[user]?.[date]?.merged)
-            .map((user) => {
-            return [
-                `**${user}**`,
-                (0, utils_1.formatMinutesDuration)(data[user]?.[date]?.timeToReviewMedian || 0),
-                (0, utils_1.formatMinutesDuration)(data[user]?.[date]?.timeToApproveMedian || 0),
-                (0, utils_1.formatMinutesDuration)(data[user]?.[date]?.timeToMergeMedian || 0),
-                data[user]?.[date]?.merged?.toString() || "0",
-            ];
-        });
-        const pullRequestTimeLineMedian = (0, createBlock_1.createBlock)({
-            title: `Pull requests timeline median ${date}`,
-            description: "Stats for last 20 closed PRs",
-            table: {
-                headers: [
-                    "user",
-                    "time to review",
-                    "time to approve",
-                    "time to merge",
-                    "total merged PRs",
-                ],
-                rows: tableRowsMedian,
-            },
-        });
-        const ganttPullRequestBarMedian = (0, utils_1.createGanttBar)({
-            title: `Pull requests timeline median ${date}`,
-            sections: users
-                .filter((user) => data[user]?.[date]?.timeToReviewMedian &&
-                data[user]?.[date]?.timeToApproveP80 &&
-                data[user]?.[date]?.timeToMergeP80)
-                .map((user) => ({
-                name: user,
-                bars: [
-                    {
-                        name: "time to review",
-                        start: 0,
-                        end: data[user]?.[date]?.timeToReviewMedian || 0,
-                    },
-                    {
-                        name: "time to approve",
-                        start: 0,
-                        end: data[user]?.[date]?.timeToApproveMedian || 0,
-                    },
-                    {
-                        name: "time to merge",
-                        start: 0,
-                        end: data[user]?.[date]?.timeToMergeMedian || 0,
-                    },
-                ],
-            })),
-        });
-        const tableRowsTotal = users
-            .filter((user) => data[user]?.[date]?.merged)
-            .map((user) => {
-            return [
-                `**${user}**`,
-                data[user]?.[date]?.merged?.toString() || "0",
-                `+${data[user]?.[date].additions || 0}/-${data[user]?.[date].deletions || 0}`,
-                data[user]?.[date]?.reviewComments?.toString() || "0",
-                data[user]?.[date]?.providedReviews?.total?.total?.toString() || "0",
-            ];
-        });
-        const pullRequestTotal = (0, createBlock_1.createBlock)({
-            title: `Pull requests stats ${date}`,
-            description: "Stats for last 20 closed PRs",
-            table: {
-                headers: [
-                    "user",
-                    "merged PRs",
-                    "Add/delete",
-                    "Review comments",
-                    "Review provided",
-                ],
-                rows: tableRowsTotal,
-            },
-        });
+        const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
         return `
 ## Pull Request stats(${date})
 This stats includes last 100 PRs since 10 may 2023 18-35.  
-    ${pullRequestTimeLine}
-    ${ganttPullRequestBar}
-    ${pullRequestTimeLineMedian}
-    ${ganttPullRequestBarMedian}
+    ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
     });
@@ -1051,6 +922,24 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createMarkdown = void 0;
 var createMarkdown_1 = __nccwpck_require__(26269);
 Object.defineProperty(exports, "createMarkdown", ({ enumerable: true, get: function () { return createMarkdown_1.createMarkdown; } }));
+
+
+/***/ }),
+
+/***/ 76374:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.reviewProvidedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
+exports.timeToReviewHeader = "Time to review";
+exports.timeToApproveHeader = "Time to approve";
+exports.timeToMergeHeader = "Time to merge";
+exports.totalMergedPrsHeader = "Total merged PRs";
+exports.additionsDeletionsHeader = "Additions/Deletions";
+exports.reviewCommentsHeader = "Review comments";
+exports.reviewProvidedHeader = "Review provided";
 
 
 /***/ }),
@@ -1111,6 +1000,133 @@ exports.createGanttBar = createGanttBar;
 
 /***/ }),
 
+/***/ 67150:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTimelineGanttBar = void 0;
+const constants_1 = __nccwpck_require__(76374);
+const createGanttBar_1 = __nccwpck_require__(27025);
+const createTimelineGanttBar = (data, type, users, date) => {
+    return (0, createGanttBar_1.createGanttBar)({
+        title: `Pull requests timeline ${type} ${date}`,
+        sections: users
+            .filter((user) => data[user]?.[date]?.[type]?.timeToReview &&
+            data[user]?.[date]?.[type]?.timeToApprove &&
+            data[user]?.[date]?.[type]?.timeToMerge)
+            .map((user) => ({
+            name: user,
+            bars: [
+                {
+                    name: constants_1.timeToReviewHeader,
+                    start: 0,
+                    end: data[user]?.[date]?.[type]?.timeToReview || 0,
+                },
+                {
+                    name: constants_1.timeToApproveHeader,
+                    start: 0,
+                    end: data[user]?.[date]?.[type]?.timeToApprove || 0,
+                },
+                {
+                    name: constants_1.timeToMergeHeader,
+                    start: 0,
+                    end: data[user]?.[date]?.[type]?.timeToMerge || 0,
+                },
+            ],
+        })),
+    });
+};
+exports.createTimelineGanttBar = createTimelineGanttBar;
+
+
+/***/ }),
+
+/***/ 89343:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTimelineTable = void 0;
+const constants_1 = __nccwpck_require__(76374);
+const createBlock_1 = __nccwpck_require__(5787);
+const formatMinutesDuration_1 = __nccwpck_require__(98884);
+const createTimelineTable = (data, type, users, date) => {
+    const tableRows = users
+        .filter((user) => data[user]?.total?.merged)
+        .map((user) => {
+        return [
+            `**${user}**`,
+            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToReview || 0),
+            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToApprove || 0),
+            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToMerge || 0),
+            data[user]?.[date]?.merged?.toString() || "0",
+        ];
+    });
+    const pullRequestTimeLine = (0, createBlock_1.createBlock)({
+        title: `Pull requests timeline(${type}) ${date}`,
+        description: "Stats for last 20 closed PRs",
+        table: {
+            headers: [
+                "user",
+                constants_1.timeToReviewHeader,
+                constants_1.timeToApproveHeader,
+                constants_1.timeToMergeHeader,
+                constants_1.totalMergedPrsHeader,
+            ],
+            rows: tableRows,
+        },
+    });
+    return pullRequestTimeLine;
+};
+exports.createTimelineTable = createTimelineTable;
+
+
+/***/ }),
+
+/***/ 68991:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTotalTable = void 0;
+const constants_1 = __nccwpck_require__(76374);
+const createBlock_1 = __nccwpck_require__(5787);
+const createTotalTable = (data, users, date) => {
+    const tableRowsTotal = users
+        .filter((user) => data[user]?.[date]?.merged)
+        .map((user) => {
+        return [
+            `**${user}**`,
+            data[user]?.[date]?.merged?.toString() || "0",
+            `+${data[user]?.[date].additions || 0}/-${data[user]?.[date].deletions || 0}`,
+            data[user]?.[date]?.reviewComments?.toString() || "0",
+            data[user]?.[date]?.providedReviews?.total?.total?.toString() || "0",
+        ];
+    });
+    return (0, createBlock_1.createBlock)({
+        title: `Pull requests stats ${date}`,
+        description: "Stats for last 20 closed PRs",
+        table: {
+            headers: [
+                "user",
+                constants_1.totalMergedPrsHeader,
+                constants_1.additionsDeletionsHeader,
+                constants_1.reviewCommentsHeader,
+                constants_1.reviewProvidedHeader,
+            ],
+            rows: tableRowsTotal,
+        },
+    });
+};
+exports.createTotalTable = createTotalTable;
+
+
+/***/ }),
+
 /***/ 98884:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1135,13 +1151,45 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = void 0;
+exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createTotalTable = void 0;
+var createTotalTable_1 = __nccwpck_require__(68991);
+Object.defineProperty(exports, "createTotalTable", ({ enumerable: true, get: function () { return createTotalTable_1.createTotalTable; } }));
 var createGanttBar_1 = __nccwpck_require__(27025);
 Object.defineProperty(exports, "createGanttBar", ({ enumerable: true, get: function () { return createGanttBar_1.createGanttBar; } }));
 var createBlock_1 = __nccwpck_require__(5787);
 Object.defineProperty(exports, "createBlock", ({ enumerable: true, get: function () { return createBlock_1.createBlock; } }));
 var formatMinutesDuration_1 = __nccwpck_require__(98884);
 Object.defineProperty(exports, "formatMinutesDuration", ({ enumerable: true, get: function () { return formatMinutesDuration_1.formatMinutesDuration; } }));
+var sortCollectionsByDate_1 = __nccwpck_require__(30693);
+Object.defineProperty(exports, "sortCollectionsByDate", ({ enumerable: true, get: function () { return sortCollectionsByDate_1.sortCollectionsByDate; } }));
+var createTimelineGanttBar_1 = __nccwpck_require__(67150);
+Object.defineProperty(exports, "createTimelineGanttBar", ({ enumerable: true, get: function () { return createTimelineGanttBar_1.createTimelineGanttBar; } }));
+var createTimelineTable_1 = __nccwpck_require__(89343);
+Object.defineProperty(exports, "createTimelineTable", ({ enumerable: true, get: function () { return createTimelineTable_1.createTimelineTable; } }));
+
+
+/***/ }),
+
+/***/ 30693:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sortCollectionsByDate = void 0;
+const date_fns_1 = __nccwpck_require__(73314);
+const sortCollectionsByDate = (collections) => Object.keys(collections)
+    .slice()
+    .sort((a, b) => {
+    if (a === "total")
+        return 1;
+    if (b === "total")
+        return -1;
+    return (0, date_fns_1.isBefore)((0, date_fns_1.parse)(a, "M/y", new Date()), (0, date_fns_1.parse)(b, "M/y", new Date()))
+        ? 1
+        : -1;
+});
+exports.sortCollectionsByDate = sortCollectionsByDate;
 
 
 /***/ }),
@@ -1192,7 +1240,7 @@ async function main() {
             !core.getInput("GITHUB_KEY"))) {
         throw new Error("Missing environment variables");
     }
-    const data = await (0, data_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || 10, {
+    const data = await (0, data_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || 100, {
         skipReviews: false,
     });
     const preparedData = (0, data_1.collectData)(data);

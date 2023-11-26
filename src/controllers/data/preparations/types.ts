@@ -2,6 +2,12 @@ type ReviewTypeStats = {
   [key: string]: number;
 };
 
+type TimelinePoints = {
+  timeToReview?: number;
+  timeToApprove?: number;
+  timeToMerge?: number;
+};
+
 export type Collection = {
   opened: number;
   closed: number;
@@ -10,18 +16,12 @@ export type Collection = {
   additions: number;
   deletions: number;
   merged: number;
+  median?: TimelinePoints;
+  p80?: TimelinePoints;
+  avg?: TimelinePoints;
   timeToReview?: number[];
   timeToApprove?: number[];
   timeToMerge?: number[];
-  timeToReviewAvg?: number;
-  timeToApproveAvg?: number;
-  timeToMergeAvg?: number;
-  timeToReviewMedian?: number;
-  timeToApproveMedian?: number;
-  timeToMergeMedian?: number;
-  timeToReviewP80?: number;
-  timeToApproveP80?: number;
-  timeToMergeP80?: number;
   providedReviews?: {
     [key: string]: ReviewTypeStats;
   };
