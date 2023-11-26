@@ -1,5 +1,5 @@
 import { parseISO } from "date-fns";
-import { calcNonWorkingHours } from "./calcNonWorkingHours.ts";
+import { calcNonWorkingHours } from "./calcNonWorkingHours";
 
 describe("check calcNonWorkingHours", () => {
   // review during 1 day

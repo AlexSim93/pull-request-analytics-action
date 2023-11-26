@@ -1,4 +1,4 @@
-import { calcDifferenceInMinutes } from "./calcDifferenceInMinutes.ts";
+import { calcDifferenceInMinutes } from "./calcDifferenceInMinutes";
 
 describe("check calcDifferenceInMinutes", () => {
   // review during 1 day

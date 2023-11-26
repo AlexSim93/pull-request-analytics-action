@@ -1055,7 +1055,7 @@ const createBlock_1 = __nccwpck_require__(5787);
 const formatMinutesDuration_1 = __nccwpck_require__(98884);
 const createTimelineTable = (data, type, users, date) => {
     const tableRows = users
-        .filter((user) => data[user]?.total?.merged)
+        .filter((user) => data[user]?.[date]?.merged)
         .map((user) => {
         return [
             `**${user}**`,
