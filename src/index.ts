@@ -7,14 +7,24 @@ import { createMarkdown } from "./controllers/view";
 
 async function main() {
   if (
-    !process.env.GITHUB_REPO_FOR_ISSUE ||
-    !process.env.GITHUB_OWNER_FOR_ISSUE ||
-    !process.env.GITHUB_REPO ||
-    !process.env.GITHUB_OWNER
+    (!process.env.GITHUB_REPO_FOR_ISSUE ||
+      !process.env.GITHUB_OWNER_FOR_ISSUE ||
+      !process.env.GITHUB_REPO ||
+      !process.env.GITHUB_OWNER) &&
+    (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+      !core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+      !core.getInput("GITHUB_OWNER") ||
+      !core.getInput("GITHUB_REPO") ||
+      !core.getInput("GITHUB_KEY"))
   ) {
     throw new Error("Missing environment variables");
   }
-  const data = await makeComplexRequest(10, { skipReviews: false });
+  const data = await makeComplexRequest(
+    parseInt(core.getInput("AMOUNT")) || 10,
+    {
+      skipReviews: false,
+    }
+  );
 
   const preparedData = collectData(data);
   core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
