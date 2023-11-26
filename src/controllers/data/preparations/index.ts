@@ -1,0 +1,1 @@
+export { collectData } from "./collectData";
