@@ -16,7 +16,7 @@ export const createTimelineTable = (
   date: string
 ) => {
   const tableRows = users
-    .filter((user) => data[user]?.total?.merged)
+    .filter((user) => data[user]?.[date]?.merged)
     .map((user) => {
       return [
         `**${user}**`,
