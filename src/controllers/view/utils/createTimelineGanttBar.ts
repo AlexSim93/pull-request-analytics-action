@@ -14,7 +14,7 @@ export const createTimelineGanttBar = (
   date: string
 ) => {
   return createGanttBar({
-    title: `Pull requests timeline ${type} ${date}`,
+    title: `Pull requests timeline(${type}) ${date} / minutes`,
     sections: users
       .filter(
         (user) =>

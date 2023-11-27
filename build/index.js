@@ -896,15 +896,15 @@ const createMarkdown = (data) => {
         });
         const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
         return `
-## Pull Request stats(${date})
-This stats includes last 100 PRs since 10 may 2023 18-35.  
+### Pull Request stats(${date})
+This section contains stats about pull requests closed during this period.
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
     });
     return `
 ## Pull Request report
-References  
+    ${(0, utils_1.createReferences)()}
     ${content.join("\n")}
   `;
 };
@@ -1000,6 +1000,21 @@ exports.createGanttBar = createGanttBar;
 
 /***/ }),
 
+/***/ 23337:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createReferences = void 0;
+const createReferences = () => {
+    return ``;
+};
+exports.createReferences = createReferences;
+
+
+/***/ }),
+
 /***/ 67150:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1011,7 +1026,7 @@ const constants_1 = __nccwpck_require__(76374);
 const createGanttBar_1 = __nccwpck_require__(27025);
 const createTimelineGanttBar = (data, type, users, date) => {
     return (0, createGanttBar_1.createGanttBar)({
-        title: `Pull requests timeline ${type} ${date}`,
+        title: `Pull requests timeline(${type}) ${date} / minutes`,
         sections: users
             .filter((user) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -1067,7 +1082,7 @@ const createTimelineTable = (data, type, users, date) => {
     });
     const pullRequestTimeLine = (0, createBlock_1.createBlock)({
         title: `Pull requests timeline(${type}) ${date}`,
-        description: "Stats for last 20 closed PRs",
+        description: "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
         table: {
             headers: [
                 "user",
@@ -1109,7 +1124,7 @@ const createTotalTable = (data, users, date) => {
     });
     return (0, createBlock_1.createBlock)({
         title: `Pull requests stats ${date}`,
-        description: "Stats for last 20 closed PRs",
+        description: "**Reviews provided** - number of reviews provided. 1 PR may have only single review.",
         table: {
             headers: [
                 "user",
@@ -1151,7 +1166,9 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createTotalTable = void 0;
+exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createTotalTable = exports.createReferences = void 0;
+var createReferences_1 = __nccwpck_require__(23337);
+Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: function () { return createReferences_1.createReferences; } }));
 var createTotalTable_1 = __nccwpck_require__(68991);
 Object.defineProperty(exports, "createTotalTable", ({ enumerable: true, get: function () { return createTotalTable_1.createTotalTable; } }));
 var createGanttBar_1 = __nccwpck_require__(27025);

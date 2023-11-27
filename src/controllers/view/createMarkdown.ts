@@ -1,6 +1,7 @@
 import { Collection } from "../data/preparations/types";
 import {
   StatsType,
+  createReferences,
   createTimelineGanttBar,
   createTimelineTable,
   createTotalTable,
@@ -40,8 +41,8 @@ export const createMarkdown = (
     const pullRequestTotal = createTotalTable(data, users, date);
 
     return `
-## Pull Request stats(${date})
-This stats includes last 100 PRs since 10 may 2023 18-35.  
+### Pull Request stats(${date})
+This section contains stats about pull requests closed during this period.
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
@@ -49,7 +50,7 @@ This stats includes last 100 PRs since 10 may 2023 18-35.
 
   return `
 ## Pull Request report
-References  
+    ${createReferences()}
     ${content.join("\n")}
   `;
 };

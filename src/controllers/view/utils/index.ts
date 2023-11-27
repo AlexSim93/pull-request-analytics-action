@@ -1,3 +1,4 @@
+export { createReferences } from './createReferences';
 export { createTotalTable } from './createTotalTable';
 export { createGanttBar } from "./createGanttBar";
 export { createBlock } from "./createBlock";
