@@ -1,3 +1,5 @@
+import { concurrentLimit } from "./constants";
+import { delay } from "./delay";
 import { getPullRequestChecks } from "./getPullRequestChecks";
 import { getPullRequestComments } from "./getPullRequestComments";
 import { getPullRequestCommits } from "./getPullRequestCommits";
@@ -32,23 +34,44 @@ export const makeComplexRequest = async (
 
   const pullRequestNumbers = pullRequests.map((item) => item.number);
 
-  const pullRequestReviews = await getPullRequestReviews(pullRequestNumbers, {
-    skip: skipReviews,
-  });
+  const PRs = [];
+  const PREvents = [];
+  let counter = 0;
+
+  while (pullRequestNumbers.length > PRs.length) {
+    const startIndex = counter * concurrentLimit;
+    const endIndex = (counter + 1) * concurrentLimit;
+    const pullRequestNumbersChunks = pullRequestNumbers.slice(
+      startIndex,
+      endIndex
+    );
+    const pullRequestDatas = await getPullRequestDatas(
+      pullRequestNumbersChunks
+    );
+    const prs = await Promise.allSettled(pullRequestDatas);
+
+    const pullRequestReviews = await getPullRequestReviews(
+      pullRequestNumbersChunks,
+      {
+        skip: skipReviews,
+      }
+    );
+    const reviews = await Promise.allSettled(pullRequestReviews);
+    await delay(5000);
+    counter++;
+    PRs.push(...prs);
+    PREvents.push(...reviews);
+  }
 
   const pullRequestCommits = await getPullRequestCommits(pullRequestNumbers, {
     skip: skipCommits,
   });
 
-  const pullRequestDatas = await getPullRequestDatas(pullRequestNumbers);
-
   const pullRequestComments = await getPullRequestComments(pullRequestNumbers, {
     skip: skipComments,
   });
 
-  const PREvents = await Promise.allSettled(pullRequestReviews);
   const PRCommits = await Promise.allSettled(pullRequestCommits);
-  const PRs = await Promise.allSettled(pullRequestDatas);
   const PRComments = await Promise.allSettled(pullRequestComments);
 
   const reviews = PREvents.map((element) =>
