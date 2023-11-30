@@ -43,7 +43,7 @@ export const createMarkdown = (
 
     return `
 ### Pull Request stats(${date})
-This section contains stats about pull requests closed during this period.
+This section contains stats about pull requests closed during this period. 
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;

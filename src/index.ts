@@ -1,5 +1,6 @@
 import "dotenv/config";
 import * as core from "@actions/core";
+import { format } from "date-fns";
 
 import { collectData, makeComplexRequest } from "./controllers/data";
 import { octokit } from "./controllers/octokit";
@@ -37,7 +38,7 @@ async function main() {
     owner:
       core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
       process.env.GITHUB_OWNER_FOR_ISSUE!,
-    title: "Pull requests report",
+    title: `Pull requests report(${format(new Date(), "d/MM/yyyy HH:mm")})`,
     body: markdown,
   });
 }

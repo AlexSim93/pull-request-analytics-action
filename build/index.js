@@ -1018,7 +1018,7 @@ const createMarkdown = (data) => {
         const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
         return `
 ### Pull Request stats(${date})
-This section contains stats about pull requests closed during this period.
+This section contains stats about pull requests closed during this period. 
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
@@ -1366,6 +1366,7 @@ const core = __importStar(__nccwpck_require__(42186));
 const data_1 = __nccwpck_require__(17514);
 const octokit_1 = __nccwpck_require__(64165);
 const view_1 = __nccwpck_require__(50459);
+const date_fns_1 = __nccwpck_require__(73314);
 async function main() {
     if ((!process.env.GITHUB_REPO_FOR_ISSUE ||
         !process.env.GITHUB_OWNER_FOR_ISSUE ||
@@ -1388,7 +1389,7 @@ async function main() {
             process.env.GITHUB_REPO_FOR_ISSUE,
         owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
             process.env.GITHUB_OWNER_FOR_ISSUE,
-        title: "Pull requests report",
+        title: `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`,
         body: markdown,
     });
 }
