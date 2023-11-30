@@ -1,6 +1,7 @@
 import { Collection } from "../data/preparations/types";
 import {
   StatsType,
+  createConfigParamsCode,
   createReferences,
   createTimelineGanttBar,
   createTimelineTable,
@@ -19,7 +20,7 @@ export const createMarkdown = (
 
   const content = dates.map((date) => {
     if (!data.total[date]?.merged) return "";
-    const timelineContent = ["avg", "median", "p80"].map((type) => {
+    const timelineContent = ["avg", "median"].map((type) => {
       const pullRequestTimelineTable = createTimelineTable(
         data,
         type as StatsType,
@@ -43,7 +44,7 @@ export const createMarkdown = (
 
     return `
 ### Pull Request stats(${date})
-This section contains stats about pull requests closed during this period. 
+This section contains stats about pull requests closed during this period.
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
@@ -52,6 +53,10 @@ This section contains stats about pull requests closed during this period.
   return `
 ## Pull Request report
     ${createReferences()}
+The total amount is ${
+    data.total.total.closed || 0
+  }. To find out more about project and configuration check [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+  ${createConfigParamsCode()}
     ${content.join("\n")}
   `;
 };

@@ -1007,7 +1007,7 @@ const createMarkdown = (data) => {
     const content = dates.map((date) => {
         if (!data.total[date]?.merged)
             return "";
-        const timelineContent = ["avg", "median", "p80"].map((type) => {
+        const timelineContent = ["avg", "median"].map((type) => {
             const pullRequestTimelineTable = (0, utils_1.createTimelineTable)(data, type, users, date);
             const pullRequestTimelineBar = (0, utils_1.createTimelineGanttBar)(data, type, users, date);
             return `
@@ -1018,7 +1018,7 @@ const createMarkdown = (data) => {
         const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
         return `
 ### Pull Request stats(${date})
-This section contains stats about pull requests closed during this period. 
+This section contains stats about pull requests closed during this period.
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
@@ -1026,6 +1026,8 @@ This section contains stats about pull requests closed during this period.
     return `
 ## Pull Request report
     ${(0, utils_1.createReferences)()}
+The total amount is ${data.total.total.closed || 0}. To find out more about project and configuration check [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+  ${(0, utils_1.createConfigParamsCode)()}
     ${content.join("\n")}
   `;
 };
@@ -1086,6 +1088,57 @@ ${table.rows
     `;
 };
 exports.createBlock = createBlock;
+
+
+/***/ }),
+
+/***/ 86600:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createConfigParamsCode = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const createConfigParamsCode = () => {
+    return `
+\`\`\`
+GITHUB_REPO: ${process.env.GITHUB_REPO || core.getInput("GITHUB_REPO")}
+GITHUB_OWNER: ${process.env.GITHUB_OWNER || core.getInput("GITHUB_OWNER")}
+GITHUB_REPO_FOR_ISSUE: ${process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GITHUB_REPO_FOR_ISSUE")}
+GITHUB_OWNER_FOR_ISSUE: ${process.env.GITHUB_OWNER_FOR_ISSUE ||
+        core.getInput("GITHUB_OWNER_FOR_ISSUE")}
+START_CORE_HOURS: ${process.env.START_CORE_HOURS || core.getInput("START_CORE_HOURS")}
+END_CORE_HOURS: ${process.env.END_CORE_HOURS || core.getInput("END_CORE_HOURS")}
+START_REPORT_DATE: ${process.env.START_REPORT_DATE || core.getInput("START_REPORT_DATE")}
+END_REPORT_DATE: ${process.env.END_REPORT_DATE || core.getInput("END_REPORT_DATE")}
+\`\`\`
+    `;
+};
+exports.createConfigParamsCode = createConfigParamsCode;
 
 
 /***/ }),
@@ -1287,7 +1340,9 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createTotalTable = exports.createReferences = void 0;
+exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createTotalTable = exports.createReferences = exports.createConfigParamsCode = void 0;
+var createConfigParamsCode_1 = __nccwpck_require__(86600);
+Object.defineProperty(exports, "createConfigParamsCode", ({ enumerable: true, get: function () { return createConfigParamsCode_1.createConfigParamsCode; } }));
 var createReferences_1 = __nccwpck_require__(23337);
 Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: function () { return createReferences_1.createReferences; } }));
 var createTotalTable_1 = __nccwpck_require__(68991);
@@ -1363,10 +1418,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __nccwpck_require__(44227);
 const core = __importStar(__nccwpck_require__(42186));
+const date_fns_1 = __nccwpck_require__(73314);
 const data_1 = __nccwpck_require__(17514);
 const octokit_1 = __nccwpck_require__(64165);
 const view_1 = __nccwpck_require__(50459);
-const date_fns_1 = __nccwpck_require__(73314);
 async function main() {
     if ((!process.env.GITHUB_REPO_FOR_ISSUE ||
         !process.env.GITHUB_OWNER_FOR_ISSUE ||
