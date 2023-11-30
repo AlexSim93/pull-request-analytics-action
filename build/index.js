@@ -1026,7 +1026,7 @@ This section contains stats about pull requests closed during this period.
     return `
 ## Pull Request report
     ${(0, utils_1.createReferences)()}
-The total amount is ${data.total.total.closed || 0}. To find out more about project and configuration check [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+The total amount is ${data.total?.total?.closed || 0}. To find out more about project and configuration check [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
   ${(0, utils_1.createConfigParamsCode)()}
     ${content.join("\n")}
   `;
