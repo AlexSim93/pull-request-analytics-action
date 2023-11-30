@@ -13,7 +13,6 @@ export const makeComplexRequest = async (
   }
 ) => {
   const pullRequests = await getPullRequests(amount);
-
   const { skipChecks = true } = options;
 
   const pullRequestNumbers = pullRequests.map((item) => item.number);

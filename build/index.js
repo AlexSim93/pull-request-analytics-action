@@ -29,7 +29,7 @@ const collectData = (data) => {
     const collection = { total: {} };
     data.pullRequestInfo.forEach((pullRequest, index) => {
         const closedDate = pullRequest?.closed_at
-            ? (0, date_fns_1.parseISO)(pullRequest?.created_at)
+            ? (0, date_fns_1.parseISO)(pullRequest?.closed_at)
             : null;
         const dateKey = closedDate ? (0, date_fns_1.format)(closedDate, "M/y") : "invalidDate";
         const userKey = pullRequest?.user.login || "invalidUser";
@@ -874,6 +874,7 @@ const getPullRequests = async (amount = 10) => {
     const endDate = endReportDate
         ? (0, date_fns_1.parse)(endReportDate, "d/MM/yyyy", new Date())
         : null;
+    console.log(startDate, endDate);
     const data = [];
     for (let i = 0, dateMatched = !!startDate; startDate ? dateMatched : i < Math.ceil(amount / 100); i++) {
         const pulls = await octokit_1.octokit.rest.pulls.list({
@@ -893,7 +894,7 @@ const getPullRequests = async (amount = 10) => {
                         ? (0, date_fns_1.isBefore)(closedDate, endDate)
                         : true;
                     const isAfterStartDate = startDate
-                        ? (0, date_fns_1.isBefore)(startDate, closedDate)
+                        ? (0, date_fns_1.isAfter)(closedDate, startDate)
                         : true;
                     return isBeforeEndDate && isAfterStartDate;
                 }
@@ -902,6 +903,8 @@ const getPullRequests = async (amount = 10) => {
             dateMatched = filteredPulls.some((pr) => startDate && pr.closed_at
                 ? (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(pr.closed_at), startDate)
                 : null);
+            console.log(filteredPulls.map((pr) => pr.closed_at));
+            console.log(filteredPulls.map((pr) => pr.closed_at && (0, date_fns_1.parseISO)(pr.closed_at)));
             data.push(...filteredPulls);
         }
         else {
@@ -947,6 +950,7 @@ const makeComplexRequest = async (amount = 10, options = {
     const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount);
     const { skipChecks = true } = options;
     const pullRequestNumbers = pullRequests.map((item) => item.number);
+    console.log(pullRequestNumbers);
     const { PRs, PREvents, PRComments, PRCommits } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, options);
     const reviews = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const pullRequestInfo = PRs.map((element) => element.status === "fulfilled" ? element.value.data : null);

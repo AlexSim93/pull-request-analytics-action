@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { isBefore, parse, parseISO } from "date-fns";
+import { isAfter, isBefore, parse, parseISO } from "date-fns";
 
 import { octokit } from "../../octokit";
 
@@ -39,7 +39,7 @@ export const getPullRequests = async (amount: number = 10) => {
             ? isBefore(closedDate, endDate)
             : true;
           const isAfterStartDate = startDate
-            ? isBefore(startDate, closedDate)
+            ? isAfter(closedDate, startDate)
             : true;
           return isBeforeEndDate && isAfterStartDate;
         }

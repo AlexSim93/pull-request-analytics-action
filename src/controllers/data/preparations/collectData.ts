@@ -15,7 +15,7 @@ export const collectData = (
 
   data.pullRequestInfo.forEach((pullRequest, index) => {
     const closedDate = pullRequest?.closed_at
-      ? parseISO(pullRequest?.created_at)
+      ? parseISO(pullRequest?.closed_at)
       : null;
 
     const dateKey = closedDate ? format(closedDate, "M/y") : "invalidDate";
