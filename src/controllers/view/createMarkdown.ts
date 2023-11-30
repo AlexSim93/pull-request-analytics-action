@@ -18,6 +18,7 @@ export const createMarkdown = (
   const dates = sortCollectionsByDate(data.total);
 
   const content = dates.map((date) => {
+    if (!data.total[date]?.merged) return "";
     const timelineContent = ["avg", "median", "p80"].map((type) => {
       const pullRequestTimelineTable = createTimelineTable(
         data,

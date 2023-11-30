@@ -17,7 +17,21 @@ inputs:
   AMOUNT:
     description: "Amount of PRs"
     required: false
-    default: '100'
+    default: "100"
+  START_REPORT_DATE:
+    description: "Start date for report(d/MM/yyyy)"
+    required: false
+  END_REPORT_DATE:
+    description: "End date for report(d/MM/yyyy)"
+    required: false
+  START_CORE_HOURS:
+    description: "Start time of core hours(HH:mm)"
+    required: false
+    default: "10:00"
+  END_CORE_HOURS:
+    description: "End time of core hours(HH:mm)"
+    required: false
+    default: "19:00"
 outputs:
   JSON_COLLECTION:
     description: "Output file"

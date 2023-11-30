@@ -74,14 +74,38 @@ exports.collectData = collectData;
 /***/ }),
 
 /***/ 15966:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.extremumValuesPercent = exports.endOfWorkingTime = exports.startOfWorkingTime = void 0;
-exports.startOfWorkingTime = "10:00";
-exports.endOfWorkingTime = "19:00";
+const core = __importStar(__nccwpck_require__(42186));
+exports.startOfWorkingTime = process.env.START_CORE_HOURS || core.getInput("START_CORE_HOURS");
+exports.endOfWorkingTime = process.env.END_CORE_HOURS || core.getInput("END_CORE_HOURS");
 exports.extremumValuesPercent = 10;
 
 
@@ -787,18 +811,50 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequests = void 0;
 const core = __importStar(__nccwpck_require__(42186));
+const date_fns_1 = __nccwpck_require__(73314);
 const octokit_1 = __nccwpck_require__(64165);
 const getPullRequests = async (amount = 10) => {
+    const startReportDate = process.env.START_REPORT_DATE || core.getInput("START_REPORT_DATE");
+    const endReportDate = process.env.END_REPORT_DATE || core.getInput("END_REPORT_DATE");
+    const startDate = startReportDate
+        ? (0, date_fns_1.parse)(startReportDate, "d/MM/yyyy", new Date())
+        : null;
+    const endDate = endReportDate
+        ? (0, date_fns_1.parse)(endReportDate, "d/MM/yyyy", new Date())
+        : null;
     const data = [];
-    for (let i = 0; i < Math.ceil(amount / 100); i++) {
+    for (let i = 0, dateMatched = !!startDate; startDate ? dateMatched : i < Math.ceil(amount / 100); i++) {
         const pulls = await octokit_1.octokit.rest.pulls.list({
             owner: core.getInput("GITHUB_OWNER") || process.env.GITHUB_OWNER,
             repo: core.getInput("GITHUB_REPO") || process.env.GITHUB_REPO,
             per_page: amount > 100 ? 100 : amount,
             page: i + 1,
             state: "closed",
+            sort: "updated",
+            direction: "desc",
         });
-        data.push(...pulls.data);
+        if (startDate || endDate) {
+            const filteredPulls = pulls.data.filter((pr) => {
+                const closedDate = pr.closed_at ? (0, date_fns_1.parseISO)(pr.closed_at) : null;
+                if (closedDate) {
+                    const isBeforeEndDate = endDate
+                        ? (0, date_fns_1.isBefore)(closedDate, endDate)
+                        : true;
+                    const isAfterStartDate = startDate
+                        ? (0, date_fns_1.isBefore)(startDate, closedDate)
+                        : true;
+                    return isBeforeEndDate && isAfterStartDate;
+                }
+                return false;
+            });
+            dateMatched = filteredPulls.some((pr) => startDate && pr.closed_at
+                ? (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(pr.closed_at), startDate)
+                : null);
+            data.push(...filteredPulls);
+        }
+        else {
+            data.push(...pulls.data);
+        }
     }
     return data;
 };
@@ -927,6 +983,8 @@ const createMarkdown = (data) => {
         .concat("total");
     const dates = (0, utils_1.sortCollectionsByDate)(data.total);
     const content = dates.map((date) => {
+        if (!data.total[date]?.merged)
+            return "";
         const timelineContent = ["avg", "median", "p80"].map((type) => {
             const pullRequestTimelineTable = (0, utils_1.createTimelineTable)(data, type, users, date);
             const pullRequestTimelineBar = (0, utils_1.createTimelineGanttBar)(data, type, users, date);
