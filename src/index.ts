@@ -14,8 +14,7 @@ async function main() {
     (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
       !core.getInput("GITHUB_REPO_FOR_ISSUE") ||
       !core.getInput("GITHUB_OWNER") ||
-      !core.getInput("GITHUB_REPO") ||
-      !core.getInput("GITHUB_KEY"))
+      !core.getInput("GITHUB_REPO"))
   ) {
     throw new Error("Missing environment variables");
   }

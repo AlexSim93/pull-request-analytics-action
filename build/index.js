@@ -554,6 +554,58 @@ exports.delay = delay;
 
 /***/ }),
 
+/***/ 60740:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getDataWithThrottle = void 0;
+const constants_1 = __nccwpck_require__(49181);
+const delay_1 = __nccwpck_require__(41581);
+const getPullRequestComments_1 = __nccwpck_require__(8931);
+const getPullRequestCommits_1 = __nccwpck_require__(8796);
+const getPullRequestData_1 = __nccwpck_require__(79802);
+const getPullRequestReviews_1 = __nccwpck_require__(51015);
+const getDataWithThrottle = async (pullRequestNumbers, options) => {
+    const PRs = [];
+    const PREvents = [];
+    const PRCommits = [];
+    const PRComments = [];
+    let counter = 0;
+    const { skipChecks = true, skipComments = true, skipCommits = true, skipReviews = true, } = options;
+    while (pullRequestNumbers.length > PRs.length) {
+        const startIndex = counter * constants_1.concurrentLimit;
+        const endIndex = (counter + 1) * constants_1.concurrentLimit;
+        const pullRequestNumbersChunks = pullRequestNumbers.slice(startIndex, endIndex);
+        const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks);
+        const prs = await Promise.allSettled(pullRequestDatas);
+        const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, {
+            skip: skipReviews,
+        });
+        const reviews = await Promise.allSettled(pullRequestReviews);
+        const pullRequestCommits = await (0, getPullRequestCommits_1.getPullRequestCommits)(pullRequestNumbers, {
+            skip: skipCommits,
+        });
+        const commits = await Promise.allSettled(pullRequestCommits);
+        const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbers, {
+            skip: skipComments,
+        });
+        const comments = await Promise.allSettled(pullRequestComments);
+        await (0, delay_1.delay)(2000);
+        counter++;
+        PRs.push(...prs);
+        PREvents.push(...reviews);
+        PRComments.push(...comments);
+        PRCommits.push(...commits);
+    }
+    return { PRs, PREvents, PRCommits, PRComments };
+};
+exports.getDataWithThrottle = getDataWithThrottle;
+
+
+/***/ }),
+
 /***/ 28738:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -883,13 +935,8 @@ Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: f
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.makeComplexRequest = void 0;
-const constants_1 = __nccwpck_require__(49181);
-const delay_1 = __nccwpck_require__(41581);
+const getDataWithThrottle_1 = __nccwpck_require__(60740);
 const getPullRequestChecks_1 = __nccwpck_require__(28738);
-const getPullRequestComments_1 = __nccwpck_require__(8931);
-const getPullRequestCommits_1 = __nccwpck_require__(8796);
-const getPullRequestData_1 = __nccwpck_require__(79802);
-const getPullRequestReviews_1 = __nccwpck_require__(51015);
 const getPullRequests_1 = __nccwpck_require__(45909);
 const makeComplexRequest = async (amount = 10, options = {
     skipChecks: true,
@@ -898,34 +945,9 @@ const makeComplexRequest = async (amount = 10, options = {
     skipReviews: true,
 }) => {
     const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount);
-    const { skipChecks = true, skipComments = true, skipCommits = true, skipReviews = true, } = options;
+    const { skipChecks = true } = options;
     const pullRequestNumbers = pullRequests.map((item) => item.number);
-    const PRs = [];
-    const PREvents = [];
-    let counter = 0;
-    while (pullRequestNumbers.length > PRs.length) {
-        const startIndex = counter * constants_1.concurrentLimit;
-        const endIndex = (counter + 1) * constants_1.concurrentLimit;
-        const pullRequestNumbersChunks = pullRequestNumbers.slice(startIndex, endIndex);
-        const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks);
-        const prs = await Promise.allSettled(pullRequestDatas);
-        const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, {
-            skip: skipReviews,
-        });
-        const reviews = await Promise.allSettled(pullRequestReviews);
-        await (0, delay_1.delay)(5000);
-        counter++;
-        PRs.push(...prs);
-        PREvents.push(...reviews);
-    }
-    const pullRequestCommits = await (0, getPullRequestCommits_1.getPullRequestCommits)(pullRequestNumbers, {
-        skip: skipCommits,
-    });
-    const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbers, {
-        skip: skipComments,
-    });
-    const PRCommits = await Promise.allSettled(pullRequestCommits);
-    const PRComments = await Promise.allSettled(pullRequestComments);
+    const { PRs, PREvents, PRComments, PRCommits } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, options);
     const reviews = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const pullRequestInfo = PRs.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const comments = PRComments.map((element) => element.status === "fulfilled" ? element.value.data : null);
@@ -1352,8 +1374,7 @@ async function main() {
         (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
             !core.getInput("GITHUB_REPO_FOR_ISSUE") ||
             !core.getInput("GITHUB_OWNER") ||
-            !core.getInput("GITHUB_REPO") ||
-            !core.getInput("GITHUB_KEY"))) {
+            !core.getInput("GITHUB_REPO"))) {
         throw new Error("Missing environment variables");
     }
     const data = await (0, data_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || 100, {
