@@ -32,6 +32,12 @@ inputs:
     description: "End time of core hours(HH:mm)"
     required: false
     default: "19:00"
+  LABEL:
+    description: "label for issue"
+    required: false
+  ASSIGNEE:
+    description: "assignee for issue"
+    required: false
 outputs:
   JSON_COLLECTION:
     description: "Output file"

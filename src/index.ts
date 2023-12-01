@@ -40,6 +40,12 @@ async function main() {
       process.env.GITHUB_OWNER_FOR_ISSUE!,
     title: `Pull requests report(${format(new Date(), "d/MM/yyyy HH:mm")})`,
     body: markdown,
+    labels:
+      typeof core.getInput("LABEL") === "string" ||
+      typeof process.env.LABEL === "string"
+        ? [(core.getInput("LABEL") as string) || (process.env.LABEL as string)]
+        : [],
+    assignee: core.getInput("ASSIGNEE") || process.env.ASSIGNEE,
   });
 }
 
