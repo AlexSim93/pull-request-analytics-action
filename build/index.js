@@ -899,8 +899,8 @@ const getPullRequests = async (amount = 10) => {
                 }
                 return false;
             });
-            dateMatched = filteredPulls.some((pr) => startDate && pr.closed_at
-                ? (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(pr.closed_at), startDate)
+            dateMatched = pulls.data.some((pr) => startDate && pr.updated_at
+                ? (0, date_fns_1.isBefore)(startDate, (0, date_fns_1.parseISO)(pr.updated_at))
                 : null);
             data.push(...filteredPulls);
         }

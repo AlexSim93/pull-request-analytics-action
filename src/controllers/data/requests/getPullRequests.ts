@@ -45,9 +45,9 @@ export const getPullRequests = async (amount: number = 10) => {
         }
         return false;
       });
-      dateMatched = filteredPulls.some((pr) =>
-        startDate && pr.closed_at
-          ? isBefore(parseISO(pr.closed_at), startDate)
+      dateMatched = pulls.data.some((pr) =>
+        startDate && pr.updated_at
+          ? isBefore(startDate, parseISO(pr.updated_at))
           : null
       );
       data.push(...filteredPulls);
