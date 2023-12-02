@@ -1,6 +1,6 @@
 {
   "name": "pr-full-report-action",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "github action to show prs report",
   "main": "build/index.js",
   "scripts": {
