@@ -15,6 +15,83 @@
 This GitHub Action, **pr-full-report-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
 
+## Setting Up and Running pr-full-report-action
+
+To integrate **pr-full-report-action** into your GitHub repository, use the following steps. The provided code is a template and can be adjusted to fit your specific requirements:
+
+1. **Create a Workflow File**:
+   - Navigate to the `.github/workflows` directory in your repository.
+   - Create a YAML file, for example, `pr-full-report-workflow.yml`.
+
+2. **Insert and Customize the Workflow Code**:
+   - Open your new YAML file and paste the following example workflow. This is a starting template and you can modify it as needed:
+     ```yaml
+     name: "PR full report workflow"
+     on:
+       workflow_dispatch:
+         inputs:
+           amount:
+             description: "Amount of PRs"
+             required: false
+             default: "100"
+           report_date_start:
+             description: "Report date start(d/MM/yyyy)"
+             required: false
+           report_date_end:
+             description: "Report date end(d/MM/yyyy)"
+             required: false
+           core_hours_start:
+             description: "Core hours start(HH:mm)"
+             required: false
+             default: "09:00"
+           core_hours_end:
+             description: "Core hours end(HH:mm)"
+             required: false
+             default: "20:00"
+           percentile:
+             description: "Percentile"
+             required: false
+             default: "75"
+     jobs:
+       create-report:
+         name: "Create report"
+         runs-on: ubuntu-latest
+         steps:
+           - name: "Run PRs full report action"
+             uses: AlexSim93/pr-full-report-action@master
+             with:
+               GITHUB_REPO_FOR_ISSUE: "repository-for-report-creation"
+               GITHUB_OWNER_FOR_ISSUE: "owner-of-repository-for-report-creation"
+               GITHUB_REPO: "repository-to-create-report"
+               GITHUB_OWNER: "owner-of-repository-to-create-report"
+               AMOUNT: ${{ inputs.amount }}
+               CORE_HOURS_START: ${{ inputs.core_hours_start }}
+               CORE_HOURS_END: ${{ inputs.core_hours_end }}
+               PERCENTILE: ${{ inputs.percentile }}
+               REPORT_DATE_START: ${{ inputs.report_date_start }}
+               REPORT_DATE_END: ${{ inputs.report_date_end }}
+               LABEL: report
+               ASSIGNEE: assignee
+               GITHUB_TOKEN: ${{ secrets.KEY }}
+     ```
+   - Adjust parameters to match your project's needs.
+
+3. **Commit and Push the Workflow File**:
+   - Save your changes and commit the file to your repository.
+   - Push it to enable the GitHub Action workflow.
+
+4. **Run the Workflow**:
+   - In your repository, go to the 'Actions' tab.
+   - Select **PR full report workflow** and start it via "Run workflow".
+   - Fill in any necessary parameters and execute the action.
+
+5. **Review the Generated Report**:
+   - Once the action completes, your detailed PR report will be available.
+   - If configured, check for a new issue in the specified repository containing the report.
+
+This setup allows you to fully leverage **pr-full-report-action** for comprehensive PR analysis, tailored to your project’s needs.
+
+
 ## Report Examples
 
 Explore how **pr-full-report-action** works with these report examples in the project:
