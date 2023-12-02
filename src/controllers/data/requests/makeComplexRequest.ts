@@ -4,7 +4,7 @@ import { getPullRequests } from "./getPullRequests";
 import { Options } from "./types";
 
 export const makeComplexRequest = async (
-  amount: number = 10,
+  amount: number = 100,
   options: Options = {
     skipChecks: true,
     skipComments: true,

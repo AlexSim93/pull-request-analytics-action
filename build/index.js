@@ -263,7 +263,7 @@ const calcPercentileValue = (values) => {
     if (!values?.length)
         return 0;
     const sortedValues = values.slice().sort((a, b) => a - b);
-    const percentilePart = Math.floor(sortedValues.length * (constants_1.percentile / 100));
+    const percentilePart = Math.ceil(sortedValues.length * (constants_1.percentile / 100));
     const percentileValues = sortedValues.slice(0, percentilePart);
     return percentileValues[percentileValues.length - 1];
 };
@@ -937,7 +937,7 @@ exports.makeComplexRequest = void 0;
 const getDataWithThrottle_1 = __nccwpck_require__(60740);
 const getPullRequestChecks_1 = __nccwpck_require__(28738);
 const getPullRequests_1 = __nccwpck_require__(45909);
-const makeComplexRequest = async (amount = 10, options = {
+const makeComplexRequest = async (amount = 100, options = {
     skipChecks: true,
     skipComments: true,
     skipCommits: true,
@@ -1460,7 +1460,7 @@ async function main() {
             !core.getInput("GITHUB_REPO"))) {
         throw new Error("Missing environment variables");
     }
-    const data = await (0, data_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || 100, {
+    const data = await (0, data_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT, {
         skipReviews: false,
     });
     const preparedData = (0, data_1.collectData)(data);

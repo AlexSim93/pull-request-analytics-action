@@ -14,7 +14,17 @@
 
 This GitHub Action, **pr-full-report-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
-## Examples
+
+## Report Examples
+
+Explore how **pr-full-report-action** works with these report examples in the project:
+
+1. **Multi-Month Report**: Analysis over several months. [View Example](https://github.com/AlexSim93/pr-full-report-action/blob/master/examples/periodReport.md).
+
+2. **Last N PRs Report**: Insights into the most recent pull requests. [View Example](https://github.com/AlexSim93/pr-full-report-action/blob/master/examples/nPRsReport.md).
+
+Click the links for detailed report formats and insights.
+
 
 ## Configuration Parameters Overview
 

@@ -20,7 +20,7 @@ async function main() {
     throw new Error("Missing environment variables");
   }
   const data = await makeComplexRequest(
-    parseInt(core.getInput("AMOUNT")) || 100,
+    parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
     {
       skipReviews: false,
     }
