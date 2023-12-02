@@ -5,9 +5,9 @@ import { octokit } from "../../octokit";
 
 export const getPullRequests = async (amount: number = 10) => {
   const startReportDate =
-    process.env.START_REPORT_DATE || core.getInput("START_REPORT_DATE");
+    process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START");
   const endReportDate =
-    process.env.END_REPORT_DATE || core.getInput("END_REPORT_DATE");
+    process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END");
 
   const startDate = startReportDate
     ? parse(startReportDate, "d/MM/yyyy", new Date())

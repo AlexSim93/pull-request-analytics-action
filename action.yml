@@ -18,17 +18,17 @@ inputs:
     description: "Amount of PRs"
     required: false
     default: "100"
-  START_REPORT_DATE:
+  REPORT_DATE_START:
     description: "Start date for report(d/MM/yyyy)"
     required: false
-  END_REPORT_DATE:
+  REPORT_DATE_END:
     description: "End date for report(d/MM/yyyy)"
     required: false
-  START_CORE_HOURS:
+  CORE_HOURS_START:
     description: "Start time of core hours(HH:mm)"
     required: false
     default: "10:00"
-  END_CORE_HOURS:
+  CORE_HOURS_END:
     description: "End time of core hours(HH:mm)"
     required: false
     default: "19:00"

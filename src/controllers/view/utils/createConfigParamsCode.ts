@@ -12,15 +12,15 @@ GITHUB_OWNER_FOR_ISSUE: ${
     process.env.GITHUB_OWNER_FOR_ISSUE ||
     core.getInput("GITHUB_OWNER_FOR_ISSUE")
   }
-START_CORE_HOURS: ${
-    process.env.START_CORE_HOURS || core.getInput("START_CORE_HOURS")
+CORE_HOURS_START: ${
+    process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START")
   }
-END_CORE_HOURS: ${process.env.END_CORE_HOURS || core.getInput("END_CORE_HOURS")}
-START_REPORT_DATE: ${
-    process.env.START_REPORT_DATE || core.getInput("START_REPORT_DATE")
+CORE_HOURS_END: ${process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END")}
+REPORT_DATE_START: ${
+    process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START")
   }
-END_REPORT_DATE: ${
-    process.env.END_REPORT_DATE || core.getInput("END_REPORT_DATE")
+REPORT_DATE_END: ${
+    process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")
   }
 \`\`\`
     `;
