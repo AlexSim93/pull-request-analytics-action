@@ -14,16 +14,17 @@
 
 This GitHub Action, **pr-full-report-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
-
 ## Setting Up and Running pr-full-report-action
 
 To integrate **pr-full-report-action** into your GitHub repository, use the following steps. The provided code is a template and can be adjusted to fit your specific requirements:
 
 1. **Create a Workflow File**:
+
    - Navigate to the `.github/workflows` directory in your repository.
    - Create a YAML file, for example, `pr-full-report-workflow.yml`.
 
 2. **Insert and Customize the Workflow Code**:
+
    - Open your new YAML file and paste the following example workflow. This is a starting template and you can modify it as needed:
      ```yaml
      name: "PR full report workflow"
@@ -77,10 +78,12 @@ To integrate **pr-full-report-action** into your GitHub repository, use the foll
    - Adjust parameters to match your project's needs.
 
 3. **Commit and Push the Workflow File**:
+
    - Save your changes and commit the file to your repository.
    - Push it to enable the GitHub Action workflow.
 
 4. **Run the Workflow**:
+
    - In your repository, go to the 'Actions' tab.
    - Select **PR full report workflow** and start it via "Run workflow".
    - Fill in any necessary parameters and execute the action.
@@ -90,7 +93,6 @@ To integrate **pr-full-report-action** into your GitHub repository, use the foll
    - If configured, check for a new issue in the specified repository containing the report.
 
 This setup allows you to fully leverage **pr-full-report-action** for comprehensive PR analysis, tailored to your project’s needs.
-
 
 ## Report Examples
 
@@ -102,6 +104,11 @@ Explore how **pr-full-report-action** works with these report examples in the pr
 
 Click the links for detailed report formats and insights.
 
+## Report Data Grouping and AMOUNT Parameter Logic
+
+- **Data Grouping**: The report data is organized based on the closure date of each pull request.
+
+- **Using AMOUNT Parameter**: When `AMOUNT` is specified without `REPORT_DATE_START`, the report includes the specified number of most recently modified pull requests. However, the report count may be less than the `AMOUNT` specified, as it only includes merged pull requests.
 
 ## Configuration Parameters Overview
 
