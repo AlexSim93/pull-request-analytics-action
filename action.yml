@@ -2,6 +2,9 @@ name: "Pull Request Full Report"
 author: "Aleksei Simatov"
 description: "Github action to show PRs report"
 inputs:
+  GITHUB_TOKEN:
+    description: "Github token"
+    required: true
   GITHUB_REPO:
     description: "Github repo"
     required: true
