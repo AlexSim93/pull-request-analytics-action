@@ -16,7 +16,9 @@ This GitHub Action, **pr-full-report-action**, is an essential tool for any team
 
 
 
+## Privacy and Data Handling
 
+**pr-full-report-action** is designed with privacy and security in mind. It operates as a stateless application, ensuring it does not retain or store any user data externally. All processing is performed within your GitHub environment, maintaining strict data confidentiality. We prioritize the security of your information, ensuring no external data collection or storage, thereby safeguarding the integrity and privacy of your workflow.
 
 
 ## Usage Limitations
@@ -25,7 +27,7 @@ This GitHub Action, **pr-full-report-action**, is an essential tool for any team
 
 
 
-### Upcoming Features and Roadmap
+## Upcoming Features and Roadmap
 
 At **pr-full-report-action**, we are committed to continuous improvement and adding functionalities that enhance your experience and the utility of our tool. Here's a glimpse into some exciting features and enhancements planned for the near future:
 
