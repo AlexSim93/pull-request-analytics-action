@@ -1,7 +1,7 @@
 ## Pull Request report
 
-The total amount is 265. To find out more about project and configuration check [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
-
+This report based on 265 last updated PRs. last updated PRs. To learn more about the project and its configuration, please visit [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+Below are the settings applied for this report:
 ```
 GITHUB_REPO: your-repository-to-report
 GITHUB_OWNER: owner-of-repository-to-report
@@ -17,9 +17,6 @@ LABEL: report
 ASSIGNEE: AlexSim93
 ```
 
-### Pull Request stats(11/2023)
-
-This section contains stats about pull requests closed during this period.
 
 ### Pull requests timeline(avg) 11/2023
 
@@ -176,8 +173,8 @@ Time to merge :  0, 1602
 
 ### Pull requests stats 11/2023
 
-**Reviews provided** - number of reviews provided. 1 PR may have only single review.
-| user | Total merged PRs | Additions/Deletions | Review comments | Review provided |
+**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.
+| user | Total merged PRs | Additions/Deletions | Comments on PRs | Reviews conducted |
 | ------ | ------ | ------ | ------ | ------ |
 | **Developer1** | 13 | +1568/-800 | 70 | 8 |
 | **AlexSim93** | 22 | +2534/-2377 | 5 | 21 |
@@ -186,9 +183,6 @@ Time to merge :  0, 1602
 | **Developer4** | 6 | +959/-160 | 23 | 10 |
 | **total** | 69 | +16837/-5690 | 155 | 0 |
 
-### Pull Request stats(10/2023)
-
-This section contains stats about pull requests closed during this period.
 
 ### Pull requests timeline(avg) 10/2023
 
@@ -345,8 +339,8 @@ Time to merge :  0, 1116
 
 ### Pull requests stats 10/2023
 
-**Reviews provided** - number of reviews provided. 1 PR may have only single review.
-| user | Total merged PRs | Additions/Deletions | Review comments | Review provided |
+**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.
+| user | Total merged PRs | Additions/Deletions | Comments on PRs | Reviews conducted |
 | ------ | ------ | ------ | ------ | ------ |
 | **Developer1** | 13 | +1113/-247 | 70 | 7 |
 | **AlexSim93** | 21 | +2007/-1135 | 24 | 29 |
@@ -355,9 +349,6 @@ Time to merge :  0, 1116
 | **Developer4** | 14 | +3501/-583 | 261 | 18 |
 | **total** | 79 | +9835/-4150 | 375 | 0 |
 
-### Pull Request stats(9/2023)
-
-This section contains stats about pull requests closed during this period.
 
 ### Pull requests timeline(avg) 9/2023
 
@@ -532,8 +523,8 @@ Time to merge :  0, 1331
 
 ### Pull requests stats 9/2023
 
-**Reviews provided** - number of reviews provided. 1 PR may have only single review.
-| user | Total merged PRs | Additions/Deletions | Review comments | Review provided |
+**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.
+| user | Total merged PRs | Additions/Deletions | Comments on PRs | Reviews conducted |
 | ------ | ------ | ------ | ------ | ------ |
 | **Developer1** | 18 | +3659/-1374 | 22 | 16 |
 | **AlexSim93** | 25 | +1683/-1431 | 38 | 25 |
@@ -543,9 +534,7 @@ Time to merge :  0, 1331
 | **Developer5** | 2 | +31/-72 | 0 | 0 |
 | **total** | 93 | +10176/-6511 | 154 | 0 |
 
-### Pull Request stats(total)
 
-This section contains stats about pull requests closed during this period.
 
 ### Pull requests timeline(avg) total
 
@@ -720,8 +709,8 @@ Time to merge :  0, 1390
 
 ### Pull requests stats total
 
-**Reviews provided** - number of reviews provided. 1 PR may have only single review.
-| user | Total merged PRs | Additions/Deletions | Review comments | Review provided |
+**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.
+| user | Total merged PRs | Additions/Deletions | Comments on PRs | Reviews conducted |
 | ------ | ------ | ------ | ------ | ------ |
 | **Developer1** | 44 | +6340/-2421 | 162 | 31 |
 | **AlexSim93** | 68 | +6224/-4943 | 67 | 75 |

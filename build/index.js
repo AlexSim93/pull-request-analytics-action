@@ -1040,8 +1040,6 @@ const createMarkdown = (data) => {
         });
         const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
         return `
-### Pull Request stats(${date})
-This section contains stats about pull requests closed during this period.
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
@@ -1049,7 +1047,7 @@ This section contains stats about pull requests closed during this period.
     return `
 ## Pull Request report
     ${(0, utils_1.createReferences)()}
-The total amount is ${data.total?.total?.closed || 0}. To find out more about project and configuration check [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
   ${(0, utils_1.createConfigParamsCode)()}
     ${content.join("\n")}
   `;
@@ -1084,8 +1082,8 @@ exports.timeToApproveHeader = "Time to approve";
 exports.timeToMergeHeader = "Time to merge";
 exports.totalMergedPrsHeader = "Total merged PRs";
 exports.additionsDeletionsHeader = "Additions/Deletions";
-exports.reviewCommentsHeader = "Review comments";
-exports.reviewProvidedHeader = "Review provided";
+exports.reviewCommentsHeader = "Comments on PRs";
+exports.reviewProvidedHeader = "Reviews conducted";
 
 
 /***/ }),
@@ -1148,6 +1146,7 @@ exports.createConfigParamsCode = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const createConfigParamsCode = () => {
     return `
+Below are the settings applied for this report:
 \`\`\`
 GITHUB_REPO: ${process.env.GITHUB_REPO || core.getInput("GITHUB_REPO")}
 GITHUB_OWNER: ${process.env.GITHUB_OWNER || core.getInput("GITHUB_OWNER")}
@@ -1325,7 +1324,7 @@ const createTotalTable = (data, users, date) => {
     });
     return (0, createBlock_1.createBlock)({
         title: `Pull requests stats ${date}`,
-        description: "**Reviews provided** - number of reviews provided. 1 PR may have only single review.",
+        description: "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.",
         table: {
             headers: [
                 "user",

@@ -43,8 +43,6 @@ export const createMarkdown = (
     const pullRequestTotal = createTotalTable(data, users, date);
 
     return `
-### Pull Request stats(${date})
-This section contains stats about pull requests closed during this period.
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     `;
@@ -53,9 +51,9 @@ This section contains stats about pull requests closed during this period.
   return `
 ## Pull Request report
     ${createReferences()}
-The total amount is ${
+This report based on ${
     data.total?.total?.closed || 0
-  }. To find out more about project and configuration check [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+  } last updated PRs. To learn more about the project and its configuration, please visit [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
   ${createConfigParamsCode()}
     ${content.join("\n")}
   `;

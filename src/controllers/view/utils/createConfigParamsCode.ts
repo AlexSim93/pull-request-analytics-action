@@ -2,6 +2,7 @@ import * as core from "@actions/core";
 
 export const createConfigParamsCode = () => {
   return `
+Below are the settings applied for this report:
 \`\`\`
 GITHUB_REPO: ${process.env.GITHUB_REPO || core.getInput("GITHUB_REPO")}
 GITHUB_OWNER: ${process.env.GITHUB_OWNER || core.getInput("GITHUB_OWNER")}

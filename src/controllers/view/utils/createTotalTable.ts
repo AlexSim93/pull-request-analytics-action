@@ -29,7 +29,7 @@ export const createTotalTable = (
   return createBlock({
     title: `Pull requests stats ${date}`,
     description:
-      "**Reviews provided** - number of reviews provided. 1 PR may have only single review.",
+      "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.",
     table: {
       headers: [
         "user",
