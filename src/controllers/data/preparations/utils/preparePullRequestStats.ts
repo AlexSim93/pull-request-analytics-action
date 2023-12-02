@@ -1,5 +1,9 @@
 import { Collection } from "../types";
-import { calcAvgValue, calcMedianValue, calcP80Value } from "./calculations";
+import {
+  calcAvgValue,
+  calcMedianValue,
+  calcPercentileValue,
+} from "./calculations";
 
 export const preparePullRequestStats = (collection: Collection) => {
   return {
@@ -9,10 +13,10 @@ export const preparePullRequestStats = (collection: Collection) => {
       timeToApprove: calcMedianValue(collection.timeToApprove),
       timeToMerge: calcMedianValue(collection.timeToMerge),
     },
-    p80: {
-      timeToReview: calcP80Value(collection.timeToReview),
-      timeToApprove: calcP80Value(collection.timeToApprove),
-      timeToMerge: calcP80Value(collection.timeToMerge),
+    percentile: {
+      timeToReview: calcPercentileValue(collection.timeToReview),
+      timeToApprove: calcPercentileValue(collection.timeToApprove),
+      timeToMerge: calcPercentileValue(collection.timeToMerge),
     },
     avg: {
       timeToReview: calcAvgValue(collection.timeToReview),

@@ -1,3 +1,4 @@
+import { percentile } from './constants';
 type ReviewTypeStats = {
   [key: string]: number;
 };
@@ -17,7 +18,7 @@ export type Collection = {
   deletions: number;
   merged: number;
   median?: TimelinePoints;
-  p80?: TimelinePoints;
+  percentile?: TimelinePoints;
   avg?: TimelinePoints;
   timeToReview?: number[];
   timeToApprove?: number[];

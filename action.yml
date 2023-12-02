@@ -35,6 +35,10 @@ inputs:
     description: "End time of core hours(HH:mm)"
     required: false
     default: "19:00"
+  PERCENTILE:
+    description: "Percentile value for timeline"
+    required: false
+    default: "75"
   LABEL:
     description: "label for issue"
     required: false

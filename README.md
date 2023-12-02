@@ -14,24 +14,27 @@
 
 This GitHub Action, **pr-full-report-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
-### Configuration Parameters Overview
+## Examples
+
+## Configuration Parameters Overview
 
 Below is a table outlining the various configuration parameters available for **pr-full-report-action**. These parameters allow you to customize the behavior of the action to fit your specific needs. Each parameter's name, description, requirement status, and default value (if applicable) are listed for your reference:
 
-| Parameter Name           | Description                             | Required | Default Value |
-| ------------------------ | --------------------------------------- | -------- | ------------- |
-| `GITHUB_TOKEN`           | Github token                            | Yes      | -             |
-| `GITHUB_REPO`            | GitHub repository for report generation | Yes      | -             |
-| `GITHUB_OWNER`           | Owner of the GitHub repository          | Yes      | -             |
-| `GITHUB_REPO_FOR_ISSUE`  | GitHub repository for issue creation    | Yes      | -             |
-| `GITHUB_OWNER_FOR_ISSUE` | Owner of the repository for issue       | Yes      | -             |
-| `AMOUNT`                 | Number of pull requests in the report   | No       | `100`         |
-| `REPORT_DATE_START`      | Start date for the report (d/MM/yyyy)   | No       | -             |
-| `REPORT_DATE_END`        | End date for the report (d/MM/yyyy)     | No       | -             |
-| `CORE_HOURS_START`       | Start of core hours (HH:mm)             | No       | `10:00`       |
-| `CORE_HOURS_END`         | End of core hours (HH:mm)               | No       | `19:00`       |
-| `LABEL`                  | Label for the created issue             | No       | -             |
-| `ASSIGNEE`               | Assignee for the issue                  | No       | -             |
+| Parameter Name           | Description                                                                      | Required | Default Value |
+| ------------------------ | -------------------------------------------------------------------------------- | -------- | ------------- |
+| `GITHUB_TOKEN`           | Github token                                                                     | Yes      | -             |
+| `GITHUB_REPO`            | GitHub repository for report generation                                          | Yes      | -             |
+| `GITHUB_OWNER`           | Owner of the GitHub repository                                                   | Yes      | -             |
+| `GITHUB_REPO_FOR_ISSUE`  | GitHub repository for issue creation                                             | Yes      | -             |
+| `GITHUB_OWNER_FOR_ISSUE` | Owner of the repository for issue                                                | Yes      | -             |
+| `AMOUNT`                 | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set | No       | `100`         |
+| `REPORT_DATE_START`      | Start date for the report (d/MM/yyyy)                                            | No       | -             |
+| `REPORT_DATE_END`        | End date for the report (d/MM/yyyy)                                              | No       | -             |
+| `CORE_HOURS_START`       | Start of core hours (HH:mm)                                                      | No       | `10:00`       |
+| `CORE_HOURS_END`         | End of core hours (HH:mm)                                                        | No       | `19:00`       |
+| `PERCENTILE`             | Percentile value for timeline                                                    | No       | `75`          |
+| `LABEL`                  | Label for the created issue                                                      | No       | -             |
+| `ASSIGNEE`               | Assignee for the issue                                                           | No       | -             |
 
 Use these parameters to tailor the **pr-full-report-action** to your project's specific requirements.
 
