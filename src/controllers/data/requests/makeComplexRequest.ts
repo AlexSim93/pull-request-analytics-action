@@ -1,10 +1,11 @@
 import { getDataWithThrottle } from "./getDataWithThrottle";
 import { getPullRequestChecks } from "./getPullRequestChecks";
 import { getPullRequests } from "./getPullRequests";
-import { Options } from "./types";
+import { Options, Repository } from "./types";
 
 export const makeComplexRequest = async (
   amount: number = 100,
+  repository: Repository,
   options: Options = {
     skipChecks: true,
     skipComments: true,
@@ -12,13 +13,14 @@ export const makeComplexRequest = async (
     skipReviews: true,
   }
 ) => {
-  const pullRequests = await getPullRequests(amount);
+  const pullRequests = await getPullRequests(amount, repository);
   const { skipChecks = true } = options;
 
   const pullRequestNumbers = pullRequests.map((item) => item.number);
 
   const { PRs, PREvents, PRComments, PRCommits } = await getDataWithThrottle(
     pullRequestNumbers,
+    repository,
     options
   );
 
@@ -59,6 +61,7 @@ export const makeComplexRequest = async (
   );
 
   return {
+    ownerRepo: `${repository.owner}/${repository.repo}`,
     reviews,
     pullRequestInfo,
     commits,

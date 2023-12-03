@@ -4,10 +4,11 @@ import { getPullRequestComments } from "./getPullRequestComments";
 import { getPullRequestCommits } from "./getPullRequestCommits";
 import { getPullRequestDatas } from "./getPullRequestData";
 import { getPullRequestReviews } from "./getPullRequestReviews";
-import { Options } from "./types";
+import { Options, Repository } from "./types";
 
 export const getDataWithThrottle = async (
   pullRequestNumbers: number[],
+  repository: Repository,
   options: Options
 ) => {
   const PRs = [];
@@ -29,24 +30,32 @@ export const getDataWithThrottle = async (
       endIndex
     );
     const pullRequestDatas = await getPullRequestDatas(
-      pullRequestNumbersChunks
+      pullRequestNumbersChunks,
+      repository
     );
+
     const prs = await Promise.allSettled(pullRequestDatas);
 
     const pullRequestReviews = await getPullRequestReviews(
       pullRequestNumbersChunks,
+      repository,
       {
         skip: skipReviews,
       }
     );
     const reviews = await Promise.allSettled(pullRequestReviews);
-    const pullRequestCommits = await getPullRequestCommits(pullRequestNumbers, {
-      skip: skipCommits,
-    });
+    const pullRequestCommits = await getPullRequestCommits(
+      pullRequestNumbers,
+      repository,
+      {
+        skip: skipCommits,
+      }
+    );
     const commits = await Promise.allSettled(pullRequestCommits);
 
     const pullRequestComments = await getPullRequestComments(
       pullRequestNumbers,
+      repository,
       {
         skip: skipComments,
       }

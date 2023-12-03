@@ -2,8 +2,8 @@ name: "Pull Request Full Report"
 author: "Aleksei Simatov"
 description: "Github action to create detailed PRs report"
 branding:
-  icon: 'trending-up'
-  color: 'orange'
+  icon: "trending-up"
+  color: "orange"
 inputs:
   GITHUB_TOKEN:
     description: "Github token"
@@ -14,6 +14,9 @@ inputs:
   GITHUB_OWNER:
     description: "Github owner"
     required: true
+  ADDITIONAL_GITHUB_OWNERS_REPOS:
+    description: "Github owner/repository list separated by comma"
+    required: false
   GITHUB_REPO_FOR_ISSUE:
     description: "Github repo for issue"
     required: true

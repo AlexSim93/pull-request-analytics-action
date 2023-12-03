@@ -2,7 +2,11 @@ import "dotenv/config";
 import * as core from "@actions/core";
 import { format } from "date-fns";
 
-import { collectData, makeComplexRequest } from "./controllers/data";
+import {
+  collectData,
+  getOwnersRepositories,
+  makeComplexRequest,
+} from "./controllers/data";
 import { octokit } from "./controllers/octokit";
 import { createMarkdown } from "./controllers/view";
 
@@ -19,14 +23,51 @@ async function main() {
   ) {
     throw new Error("Missing environment variables");
   }
-  const data = await makeComplexRequest(
-    parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
+
+  const ownersRepos = getOwnersRepositories();
+
+
+  const dataByRepos = await Promise.allSettled(
+    ownersRepos.map(([owner, repo]) =>
+      makeComplexRequest(
+        parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
+        {
+          owner,
+          repo,
+        },
+        {
+          skipReviews: false,
+        }
+      )
+    )
+  );
+
+  const data = dataByRepos
+    .map((element) => (element.status === "fulfilled" ? element.value : null))
+    .filter((el) => el);
+
+  const mergedData = data.reduce<
+    Awaited<ReturnType<typeof makeComplexRequest>>
+  >(
+    (acc, element) => ({
+      ownerRepo: acc.ownerRepo.concat(element!.ownerRepo),
+      reviews: [...acc.reviews, ...element!.reviews],
+      pullRequestInfo: [...acc?.pullRequestInfo, ...element!.pullRequestInfo],
+      comments: [...acc?.comments, ...element!.comments],
+      commits: [...acc?.commits, ...element!.commits],
+      checks: [...acc.checks, ...element!.checks],
+    }),
     {
-      skipReviews: false,
+      ownerRepo: "",
+      reviews: [],
+      pullRequestInfo: [],
+      comments: [],
+      commits: [],
+      checks: [],
     }
   );
 
-  const preparedData = collectData(data);
+  const preparedData = collectData(mergedData);
   core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
 
   const markdown = createMarkdown(preparedData);

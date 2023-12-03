@@ -1,2 +1,2 @@
 export { collectData } from "./preparations";
-export { makeComplexRequest } from "./requests";
+export { makeComplexRequest, getOwnersRepositories } from "./requests";

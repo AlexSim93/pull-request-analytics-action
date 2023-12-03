@@ -1,12 +1,17 @@
-import * as core from "@actions/core";
+import { Repository } from "./types";
 
 import { octokit } from "../../octokit";
 
-export const getPullRequestDatas = async (pullRequestNumbers: number[]) =>
-  pullRequestNumbers.map((number) =>
+export const getPullRequestDatas = async (
+  pullRequestNumbers: number[],
+  repository: Repository
+) => {
+  const { repo, owner } = repository;
+  return pullRequestNumbers.map((number) =>
     octokit.rest.pulls.get({
-      owner: core.getInput('GITHUB_OWNER') || process.env.GITHUB_OWNER!,
-      repo: core.getInput('GITHUB_REPO') || process.env.GITHUB_REPO!,
+      owner,
+      repo,
       pull_number: number,
     })
   );
+};
