@@ -4,3 +4,8 @@ export type Options = {
   skipCommits?: boolean;
   skipReviews?: boolean;
 };
+
+export type Repository = {
+  owner: string;
+  repo: string;
+};

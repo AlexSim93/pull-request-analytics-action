@@ -1,20 +1,15 @@
-import * as core from "@actions/core";
-import { isAfter, isBefore, parse, parseISO } from "date-fns";
+import { isAfter, isBefore, parseISO } from "date-fns";
 
 import { octokit } from "../../octokit";
+import { getReportDates } from "./utils";
+import { Repository } from "./types";
 
-export const getPullRequests = async (amount: number = 10) => {
-  const startReportDate =
-    process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START");
-  const endReportDate =
-    process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END");
-
-  const startDate = startReportDate
-    ? parse(startReportDate, "d/MM/yyyy", new Date())
-    : null;
-  const endDate = endReportDate
-    ? parse(endReportDate, "d/MM/yyyy", new Date())
-    : null;
+export const getPullRequests = async (
+  amount: number = 10,
+  repository: Repository
+) => {
+  const { startDate, endDate } = getReportDates();
+  const { owner, repo } = repository;
 
   const data = [];
   for (
@@ -23,9 +18,9 @@ export const getPullRequests = async (amount: number = 10) => {
     i++
   ) {
     const pulls = await octokit.rest.pulls.list({
-      owner: core.getInput("GITHUB_OWNER") || process.env.GITHUB_OWNER!,
-      repo: core.getInput("GITHUB_REPO") || process.env.GITHUB_REPO!,
-      per_page: amount > 100 ? 100 : amount,
+      owner,
+      repo,
+      per_page: amount > 100 || startDate ? 100 : amount,
       page: i + 1,
       state: "closed",
       sort: "updated",
@@ -53,6 +48,9 @@ export const getPullRequests = async (amount: number = 10) => {
       data.push(...filteredPulls);
     } else {
       data.push(...pulls.data);
+    }
+    if (pulls.data.length === 0) {
+      break;
     }
   }
   return data;
