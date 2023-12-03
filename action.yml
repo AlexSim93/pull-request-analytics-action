@@ -2,7 +2,7 @@ name: "Pull Request Full Report"
 author: "Aleksei Simatov"
 description: "Github action to create detailed PRs report"
 branding:
-  icon: 'bar-chart'
+  icon: 'trending-up'
   color: 'orange'
 inputs:
   GITHUB_TOKEN:
