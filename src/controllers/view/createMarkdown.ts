@@ -2,7 +2,6 @@ import { Collection } from "../data/preparations/types";
 import {
   StatsType,
   createConfigParamsCode,
-  createReferences,
   createTimelineGanttBar,
   createTimelineTable,
   createTotalTable,
@@ -50,7 +49,6 @@ export const createMarkdown = (
 
   return `
 ## Pull Request report
-    ${createReferences()}
 This report based on ${
     data.total?.total?.closed || 0
   } last updated PRs. To learn more about the project and its configuration, please visit [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
