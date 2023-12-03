@@ -120,7 +120,7 @@ Time to merge :  0, 698
 
 ```
 
-### Pull requests timeline(percentile) 11/2023
+### Pull requests timeline(percentile75) 11/2023
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -136,7 +136,7 @@ Time to merge :  0, 698
 
 ```mermaid
 gantt
-title Pull requests timeline(percentile) 11/2023 / minutes
+title Pull requests timeline(percentile75) 11/2023 / minutes
 dateFormat X
 axisFormat %s
 section Developer1
@@ -286,7 +286,7 @@ Time to merge :  0, 455
 
 ```
 
-### Pull requests timeline(percentile) 10/2023
+### Pull requests timeline(percentile75) 10/2023
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -302,7 +302,7 @@ Time to merge :  0, 455
 
 ```mermaid
 gantt
-title Pull requests timeline(percentile) 10/2023 / minutes
+title Pull requests timeline(percentile75) 10/2023 / minutes
 dateFormat X
 axisFormat %s
 section Developer1
@@ -464,7 +464,7 @@ Time to merge :  0, 549
 
 ```
 
-### Pull requests timeline(percentile) 9/2023
+### Pull requests timeline(percentile75) 9/2023
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -481,7 +481,7 @@ Time to merge :  0, 549
 
 ```mermaid
 gantt
-title Pull requests timeline(percentile) 9/2023 / minutes
+title Pull requests timeline(percentile75) 9/2023 / minutes
 dateFormat X
 axisFormat %s
 section Developer1
@@ -650,7 +650,7 @@ Time to merge :  0, 549
 
 ```
 
-### Pull requests timeline(percentile) total
+### Pull requests timeline(percentile75) total
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -667,7 +667,7 @@ Time to merge :  0, 549
 
 ```mermaid
 gantt
-title Pull requests timeline(percentile) total / minutes
+title Pull requests timeline(percentile75) total / minutes
 dateFormat X
 axisFormat %s
 section Developer1

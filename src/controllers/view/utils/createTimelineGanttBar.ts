@@ -1,3 +1,4 @@
+import { percentile } from "../../data/preparations/constants";
 import { Collection } from "../../data/preparations/types";
 import {
   timeToApproveHeader,
@@ -14,7 +15,9 @@ export const createTimelineGanttBar = (
   date: string
 ) => {
   return createGanttBar({
-    title: `Pull requests timeline(${type}) ${date} / minutes`,
+    title: `Pull requests timeline(${type}${
+      type === "percentile" ? percentile : ""
+    }) ${date} / minutes`,
     sections: users
       .filter(
         (user) =>

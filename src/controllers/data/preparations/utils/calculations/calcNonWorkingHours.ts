@@ -6,9 +6,17 @@ import {
   setHours,
   setMinutes,
 } from "date-fns";
-import { endOfWorkingTime, startOfWorkingTime } from "../../constants";
 
-export const calcNonWorkingHours = (firstDate: Date, secondDate: Date) => {
+export type CoreHours = {
+  startOfWorkingTime: string;
+  endOfWorkingTime: string;
+};
+
+export const calcNonWorkingHours = (
+  firstDate: Date,
+  secondDate: Date,
+  { startOfWorkingTime, endOfWorkingTime }: CoreHours
+) => {
   const daysOfInterval = eachDayOfInterval({
     start: firstDate,
     end: secondDate,

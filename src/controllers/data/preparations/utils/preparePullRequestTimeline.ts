@@ -1,3 +1,4 @@
+import { endOfWorkingTime, startOfWorkingTime } from "./../constants";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 import { getApproveTime } from "./calculations";
@@ -19,17 +20,20 @@ export const preparePullRequestTimeline = (
 
   const timeToReview = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
-    firstReview?.submitted_at
+    firstReview?.submitted_at,
+    { endOfWorkingTime, startOfWorkingTime }
   );
 
   const timeToMerge = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
-    pullRequestInfo?.merged_at
+    pullRequestInfo?.merged_at,
+    { endOfWorkingTime, startOfWorkingTime }
   );
 
   const timeToApprove = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
-    approveTime
+    approveTime,
+    { endOfWorkingTime, startOfWorkingTime }
   );
 
   return {

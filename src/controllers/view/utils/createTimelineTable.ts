@@ -1,3 +1,4 @@
+import { percentile } from "../../data/preparations/constants";
 import { Collection } from "../../data/preparations/types";
 import {
   timeToApproveHeader,
@@ -28,7 +29,9 @@ export const createTimelineTable = (
     });
 
   const pullRequestTimeLine = createBlock({
-    title: `Pull requests timeline(${type}) ${date}`,
+    title: `Pull requests timeline(${type}${
+      type === "percentile" ? percentile : ""
+    }) ${date}`,
     description:
       "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
     table: {

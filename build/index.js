@@ -152,13 +152,15 @@ exports.calcDifferenceInMinutes = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const calcWeekendMinutes_1 = __nccwpck_require__(45495);
 const calcNonWorkingHours_1 = __nccwpck_require__(4035);
-const calcDifferenceInMinutes = (firstIsoDate, secondIsoDate) => {
+const calcDifferenceInMinutes = (firstIsoDate, secondIsoDate, coreHours) => {
     const firstDate = firstIsoDate ? (0, date_fns_1.parseISO)(firstIsoDate) : null;
     const secondDate = secondIsoDate ? (0, date_fns_1.parseISO)(secondIsoDate) : null;
     if (firstDate && secondDate) {
         return ((0, date_fns_1.differenceInMinutes)(secondDate, firstDate) -
             (0, calcWeekendMinutes_1.calcWeekendMinutes)(firstDate, secondDate) -
-            (0, calcNonWorkingHours_1.calcNonWorkingHours)(firstDate, secondDate));
+            (coreHours.startOfWorkingTime && coreHours.endOfWorkingTime
+                ? (0, calcNonWorkingHours_1.calcNonWorkingHours)(firstDate, secondDate, coreHours)
+                : 0));
     }
     return null;
 };
@@ -193,16 +195,15 @@ exports.calcMedianValue = calcMedianValue;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcNonWorkingHours = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
-const constants_1 = __nccwpck_require__(15966);
-const calcNonWorkingHours = (firstDate, secondDate) => {
+const calcNonWorkingHours = (firstDate, secondDate, { startOfWorkingTime, endOfWorkingTime }) => {
     const daysOfInterval = (0, date_fns_1.eachDayOfInterval)({
         start: firstDate,
         end: secondDate,
     });
-    const [startHours, startMinutes] = constants_1.startOfWorkingTime
+    const [startHours, startMinutes] = startOfWorkingTime
         .split(":")
         .map((el) => +el);
-    const [endHours, endMinutes] = constants_1.endOfWorkingTime.split(":").map((el) => +el);
+    const [endHours, endMinutes] = endOfWorkingTime.split(":").map((el) => +el);
     const nonWorkingMinutes = daysOfInterval.reduce((acc, day, index, arr) => {
         const startOfWorkingHours = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, startHours), startMinutes);
         const endOfWorkingHours = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, endHours), endMinutes);
@@ -500,14 +501,15 @@ exports.preparePullRequestStats = preparePullRequestStats;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestTimeline = void 0;
+const constants_1 = __nccwpck_require__(15966);
 const calculations_1 = __nccwpck_require__(30074);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(43330);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
-    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at);
-    const timeToMerge = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.merged_at);
-    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime);
+    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
+    const timeToMerge = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
+    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
     return {
         ...collection,
         timeToReview: timeToReview
@@ -1222,11 +1224,12 @@ exports.createReferences = createReferences;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineGanttBar = void 0;
-const constants_1 = __nccwpck_require__(76374);
+const constants_1 = __nccwpck_require__(15966);
+const constants_2 = __nccwpck_require__(76374);
 const createGanttBar_1 = __nccwpck_require__(27025);
 const createTimelineGanttBar = (data, type, users, date) => {
     return (0, createGanttBar_1.createGanttBar)({
-        title: `Pull requests timeline(${type}) ${date} / minutes`,
+        title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date} / minutes`,
         sections: users
             .filter((user) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -1235,17 +1238,17 @@ const createTimelineGanttBar = (data, type, users, date) => {
             name: user,
             bars: [
                 {
-                    name: constants_1.timeToReviewHeader,
+                    name: constants_2.timeToReviewHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToReview || 0,
                 },
                 {
-                    name: constants_1.timeToApproveHeader,
+                    name: constants_2.timeToApproveHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToApprove || 0,
                 },
                 {
-                    name: constants_1.timeToMergeHeader,
+                    name: constants_2.timeToMergeHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToMerge || 0,
                 },
@@ -1265,7 +1268,8 @@ exports.createTimelineGanttBar = createTimelineGanttBar;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineTable = void 0;
-const constants_1 = __nccwpck_require__(76374);
+const constants_1 = __nccwpck_require__(15966);
+const constants_2 = __nccwpck_require__(76374);
 const createBlock_1 = __nccwpck_require__(5787);
 const formatMinutesDuration_1 = __nccwpck_require__(98884);
 const createTimelineTable = (data, type, users, date) => {
@@ -1281,15 +1285,15 @@ const createTimelineTable = (data, type, users, date) => {
         ];
     });
     const pullRequestTimeLine = (0, createBlock_1.createBlock)({
-        title: `Pull requests timeline(${type}) ${date}`,
+        title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date}`,
         description: "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
         table: {
             headers: [
                 "user",
-                constants_1.timeToReviewHeader,
-                constants_1.timeToApproveHeader,
-                constants_1.timeToMergeHeader,
-                constants_1.totalMergedPrsHeader,
+                constants_2.timeToReviewHeader,
+                constants_2.timeToApproveHeader,
+                constants_2.timeToMergeHeader,
+                constants_2.totalMergedPrsHeader,
             ],
             rows: tableRows,
         },
