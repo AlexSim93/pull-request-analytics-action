@@ -104,11 +104,12 @@ Explore how **pr-full-report-action** works with these report examples in the pr
 
 Click the links for detailed report formats and insights.
 
-## Report Data Grouping and AMOUNT Parameter Logic
+## Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic
 
 - **Data Grouping**: The report data is organized based on the closure date of each pull request.
-
 - **Using AMOUNT Parameter**: When `AMOUNT` is specified without `REPORT_DATE_START`, the report includes the specified number of most recently modified pull requests. However, the report count may be less than the `AMOUNT` specified, as it only includes merged pull requests.
+
+- **Excluding Weekends and Non-Working Hours**: The calculations for the report exclude weekends. Furthermore, when `CORE_HOURS_START` and `CORE_HOURS_END` are set, time outside of these core working hours is not considered in the time-related metrics.
 
 ## Configuration Parameters Overview
 
