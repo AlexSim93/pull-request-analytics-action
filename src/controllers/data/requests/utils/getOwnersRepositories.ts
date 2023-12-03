@@ -7,8 +7,8 @@ export const getOwnersRepositories = () => {
     core.getInput("ADDITIONAL_GITHUB_OWNERS_REPOS") ||
     process.env.ADDITIONAL_GITHUB_OWNERS_REPOS!;
   const ownersRepositories = splittedByComma
-    .split(",")
-    .map((el) => el.trim().split("/"))
+    ?.split(",")
+    .map((el) => el.trim()?.split("/"))
     .filter(([owner, repository]) => owner && repository);
 
   return [[owner, repository], ...ownersRepositories];
