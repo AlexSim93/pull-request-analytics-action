@@ -59,7 +59,7 @@ To integrate **pr-full-report-action** into your GitHub repository, use the foll
          runs-on: ubuntu-latest
          steps:
            - name: "Run PRs full report action"
-             uses: AlexSim93/pr-full-report-action@master
+             uses: AlexSim93/pr-full-report-action@v0.7.1
              with:
                GITHUB_REPO_FOR_ISSUE: "repository-for-report-creation"
                GITHUB_OWNER_FOR_ISSUE: "owner-of-repository-for-report-creation"
