@@ -911,7 +911,7 @@ const getOwnersRepositories = () => {
         ?.split(",")
         .map((el) => el.trim()?.split("/"))
         .filter(([owner, repository]) => owner && repository);
-    return [[owner, repository], ...ownersRepositories];
+    return [[owner, repository], ...(ownersRepositories || [])];
 };
 exports.getOwnersRepositories = getOwnersRepositories;
 
