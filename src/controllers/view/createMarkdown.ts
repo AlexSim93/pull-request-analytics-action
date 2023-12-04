@@ -1,3 +1,5 @@
+import * as core from "@actions/core";
+
 import { Collection } from "../data/preparations/types";
 import {
   StatsType,
@@ -19,25 +21,32 @@ export const createMarkdown = (
 
   const content = dates.map((date) => {
     if (!data.total[date]?.merged) return "";
-    const timelineContent = ["avg", "median", "percentile"].map((type) => {
-      const pullRequestTimelineTable = createTimelineTable(
-        data,
-        type as StatsType,
-        users,
-        date
-      );
-      const pullRequestTimelineBar = createTimelineGanttBar(
-        data,
-        type as StatsType,
-        users,
-        date
-      );
+    const methods =
+      process.env.AGGREGATE_VALUE_METHODS ||
+      core.getInput("AGGREGATE_VALUE_METHODS");
+    const timelineContent = methods
+      .split(",")
+      .map((el) => el.trim())
+      .filter((method) => ["average", "median", "percentile"].includes(method))
+      .map((type) => {
+        const pullRequestTimelineTable = createTimelineTable(
+          data,
+          type as StatsType,
+          users,
+          date
+        );
+        const pullRequestTimelineBar = createTimelineGanttBar(
+          data,
+          type as StatsType,
+          users,
+          date
+        );
 
-      return `
+        return `
       ${pullRequestTimelineTable}
       ${pullRequestTimelineBar}
       `;
-    });
+      });
 
     const pullRequestTotal = createTotalTable(data, users, date);
 

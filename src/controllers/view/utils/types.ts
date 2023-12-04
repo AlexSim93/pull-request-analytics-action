@@ -1,1 +1,1 @@
-export type StatsType = "avg" | "median" | "percentile";
+export type StatsType = "average" | "median" | "percentile";

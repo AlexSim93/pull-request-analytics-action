@@ -19,7 +19,7 @@ ASSIGNEE: AlexSim93
     
     
       
-### Pull requests timeline(avg) 12/2023
+### Pull requests timeline(average) 12/2023
 **Time to review** - time from PR creation to first review. 
 **Time to approve** - time from PR creation to first approval without requested changes. 
 **Time to merge** - time from PR creation to merge.
@@ -31,7 +31,7 @@ ASSIGNEE: AlexSim93
       
 ```mermaid
 gantt
-title Pull requests timeline(avg) 12/2023 / minutes
+title Pull requests timeline(average) 12/2023 / minutes
 dateFormat X
 axisFormat %s
 section AlexSim93
@@ -119,7 +119,7 @@ Time to merge :  0, 13
 
     
       
-### Pull requests timeline(avg) 11/2023
+### Pull requests timeline(average) 11/2023
 **Time to review** - time from PR creation to first review. 
 **Time to approve** - time from PR creation to first approval without requested changes. 
 **Time to merge** - time from PR creation to merge.
@@ -135,7 +135,7 @@ Time to merge :  0, 13
       
 ```mermaid
 gantt
-title Pull requests timeline(avg) 11/2023 / minutes
+title Pull requests timeline(average) 11/2023 / minutes
 dateFormat X
 axisFormat %s
 section AlexSim93
@@ -294,7 +294,7 @@ Time to merge :  0, 2028
     
     
       
-### Pull requests timeline(avg) total
+### Pull requests timeline(average) total
 **Time to review** - time from PR creation to first review. 
 **Time to approve** - time from PR creation to first approval without requested changes. 
 **Time to merge** - time from PR creation to merge.
@@ -310,7 +310,7 @@ Time to merge :  0, 2028
       
 ```mermaid
 gantt
-title Pull requests timeline(avg) total / minutes
+title Pull requests timeline(average) total / minutes
 dateFormat X
 axisFormat %s
 section AlexSim93

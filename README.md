@@ -116,22 +116,23 @@ Click the links for detailed report formats and insights.
 
 Below is a table outlining the various configuration parameters available for **pr-full-report-action**. These parameters allow you to customize the behavior of the action to fit your specific needs. Each parameter's name, description, requirement status, and default value (if applicable) are listed for your reference:
 
-| Parameter Name                   | Description                                                                      | Required | Default Value |
-| -------------------------------- | -------------------------------------------------------------------------------- | -------- | ------------- |
-| `GITHUB_TOKEN`                   | Github token                                                                     | Yes      | -             |
-| `GITHUB_REPO`                    | GitHub repository for report generation                                          | Yes      | -             |
-| `GITHUB_OWNER`                   | Owner of the GitHub repository                                                   | Yes      | -             |
-| `GITHUB_REPO_FOR_ISSUE`          | GitHub repository for issue creation                                             | Yes      | -             |
-| `GITHUB_OWNER_FOR_ISSUE`         | Owner of the repository for issue                                                | Yes      | -             |
-| `ADDITIONAL_GITHUB_OWNERS_REPOS` | Github owner/repository list separated by comma                                  | No       | -             |
-| `AMOUNT`                         | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set | No       | `100`         |
-| `REPORT_DATE_START`              | Start date for the report (d/MM/yyyy)                                            | No       | -             |
-| `REPORT_DATE_END`                | End date for the report (d/MM/yyyy)                                              | No       | -             |
-| `CORE_HOURS_START`               | Start of core hours (HH:mm)                                                      | No       | -             |
-| `CORE_HOURS_END`                 | End of core hours (HH:mm)                                                        | No       | -             |
-| `PERCENTILE`                     | Percentile value for timeline                                                    | No       | `75`          |
-| `LABEL`                          | Label for the created issue                                                      | No       | -             |
-| `ASSIGNEE`                       | Assignee for the issue                                                           | No       | -             |
+| Parameter Name                   | Description                                                                                                  | Required | Default Value |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------- | ------------- |
+| `GITHUB_TOKEN`                   | Github token                                                                                                 | Yes      | -             |
+| `GITHUB_REPO`                    | GitHub repository for report generation                                                                      | Yes      | -             |
+| `GITHUB_OWNER`                   | Owner of the GitHub repository                                                                               | Yes      | -             |
+| `GITHUB_REPO_FOR_ISSUE`          | GitHub repository for issue creation                                                                         | Yes      | -             |
+| `GITHUB_OWNER_FOR_ISSUE`         | Owner of the repository for issue                                                                            | Yes      | -             |
+| `ADDITIONAL_GITHUB_OWNERS_REPOS` | Github owner/repository list separated by comma                                                              | No       | -             |
+| `AGGREGATE_VALUE_METHODS`        | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median` | No       | `percentile`  |
+| `AMOUNT`                         | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                             | No       | `100`         |
+| `REPORT_DATE_START`              | Start date for the report (d/MM/yyyy)                                                                        | No       | -             |
+| `REPORT_DATE_END`                | End date for the report (d/MM/yyyy)                                                                          | No       | -             |
+| `CORE_HOURS_START`               | Start of core hours (HH:mm)                                                                                  | No       | -             |
+| `CORE_HOURS_END`                 | End of core hours (HH:mm)                                                                                    | No       | -             |
+| `PERCENTILE`                     | Percentile value for timeline                                                                                | No       | `75`          |
+| `LABEL`                          | Label for the created issue                                                                                  | No       | -             |
+| `ASSIGNEE`                       | Assignee for the issue                                                                                       | No       | -             |
 
 Use these parameters to tailor the **pr-full-report-action** to your project's specific requirements.
 

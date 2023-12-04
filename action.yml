@@ -49,6 +49,10 @@ inputs:
   ASSIGNEE:
     description: "assignee for issue"
     required: false
+  AGGREGATE_VALUE_METHODS:
+    description: "Aggregate value methods separated by comma. Can take values: 'percentile', 'average', 'median'"
+    required: false
+    default: "percentile"
 outputs:
   JSON_COLLECTION:
     description: "Output file"

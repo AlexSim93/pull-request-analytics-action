@@ -4,4 +4,4 @@ export { calcWeekendMinutes } from "./calcWeekendMinutes";
 export { calcNonWorkingHours } from "./calcNonWorkingHours";
 export { calcMedianValue } from "./calcMedianValue";
 export { calcDifferenceInMinutes } from "./calcDifferenceInMinutes";
-export { calcAvgValue } from "./calcAvgValue";
+export { calcAverageValue } from "./calcAverageValue";

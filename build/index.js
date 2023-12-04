@@ -125,20 +125,20 @@ Object.defineProperty(exports, "collectData", ({ enumerable: true, get: function
 
 /***/ }),
 
-/***/ 32244:
+/***/ 30678:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.calcAvgValue = void 0;
-const calcAvgValue = (values) => {
+exports.calcAverageValue = void 0;
+const calcAverageValue = (values) => {
     if (!values?.length)
         return 0;
     const sum = values?.reduce((acc, value) => acc + value, 0);
     return Math.ceil(sum / values.length);
 };
-exports.calcAvgValue = calcAvgValue;
+exports.calcAverageValue = calcAverageValue;
 
 
 /***/ }),
@@ -352,7 +352,7 @@ exports.getApproveTime = getApproveTime;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.calcAvgValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = void 0;
+exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = void 0;
 var calcPercentileValue_1 = __nccwpck_require__(14584);
 Object.defineProperty(exports, "calcPercentileValue", ({ enumerable: true, get: function () { return calcPercentileValue_1.calcPercentileValue; } }));
 var getApproveTime_1 = __nccwpck_require__(44876);
@@ -365,8 +365,8 @@ var calcMedianValue_1 = __nccwpck_require__(51762);
 Object.defineProperty(exports, "calcMedianValue", ({ enumerable: true, get: function () { return calcMedianValue_1.calcMedianValue; } }));
 var calcDifferenceInMinutes_1 = __nccwpck_require__(43330);
 Object.defineProperty(exports, "calcDifferenceInMinutes", ({ enumerable: true, get: function () { return calcDifferenceInMinutes_1.calcDifferenceInMinutes; } }));
-var calcAvgValue_1 = __nccwpck_require__(32244);
-Object.defineProperty(exports, "calcAvgValue", ({ enumerable: true, get: function () { return calcAvgValue_1.calcAvgValue; } }));
+var calcAverageValue_1 = __nccwpck_require__(30678);
+Object.defineProperty(exports, "calcAverageValue", ({ enumerable: true, get: function () { return calcAverageValue_1.calcAverageValue; } }));
 
 
 /***/ }),
@@ -483,10 +483,10 @@ const preparePullRequestStats = (collection) => {
             timeToApprove: (0, calculations_1.calcPercentileValue)(collection.timeToApprove),
             timeToMerge: (0, calculations_1.calcPercentileValue)(collection.timeToMerge),
         },
-        avg: {
-            timeToReview: (0, calculations_1.calcAvgValue)(collection.timeToReview),
-            timeToApprove: (0, calculations_1.calcAvgValue)(collection.timeToApprove),
-            timeToMerge: (0, calculations_1.calcAvgValue)(collection.timeToMerge),
+        average: {
+            timeToReview: (0, calculations_1.calcAverageValue)(collection.timeToReview),
+            timeToApprove: (0, calculations_1.calcAverageValue)(collection.timeToApprove),
+            timeToMerge: (0, calculations_1.calcAverageValue)(collection.timeToMerge),
         },
     };
 };
@@ -1024,12 +1024,36 @@ exports.octokit = new octokit_1.Octokit({
 /***/ }),
 
 /***/ 26269:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createMarkdown = void 0;
+const core = __importStar(__nccwpck_require__(42186));
 const utils_1 = __nccwpck_require__(99446);
 const createMarkdown = (data) => {
     const users = Object.keys(data)
@@ -1039,7 +1063,13 @@ const createMarkdown = (data) => {
     const content = dates.map((date) => {
         if (!data.total[date]?.merged)
             return "";
-        const timelineContent = ["avg", "median", "percentile"].map((type) => {
+        const methods = process.env.AGGREGATE_VALUE_METHODS ||
+            core.getInput("AGGREGATE_VALUE_METHODS");
+        const timelineContent = methods
+            .split(",")
+            .map((el) => el.trim())
+            .filter((method) => ["average", "median", "percentile"].includes(method))
+            .map((type) => {
             const pullRequestTimelineTable = (0, utils_1.createTimelineTable)(data, type, users, date);
             const pullRequestTimelineBar = (0, utils_1.createTimelineGanttBar)(data, type, users, date);
             return `
@@ -1158,6 +1188,8 @@ Below are the settings applied for this report:
 \`\`\`
 GITHUB_REPO: ${process.env.GITHUB_REPO || core.getInput("GITHUB_REPO")}
 GITHUB_OWNER: ${process.env.GITHUB_OWNER || core.getInput("GITHUB_OWNER")}
+ADDITIONAL_GITHUB_OWNERS_REPO: ${process.env.ADDITIONAL_GITHUB_OWNERS_REPO ||
+        core.getInput("ADDITIONAL_GITHUB_OWNERS_REPO")}
 GITHUB_REPO_FOR_ISSUE: ${process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GITHUB_REPO_FOR_ISSUE")}
 GITHUB_OWNER_FOR_ISSUE: ${process.env.GITHUB_OWNER_FOR_ISSUE ||
         core.getInput("GITHUB_OWNER_FOR_ISSUE")}
@@ -1167,6 +1199,8 @@ CORE_HOURS_END: ${process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END")}
 REPORT_DATE_START: ${process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START")}
 REPORT_DATE_END: ${process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")}
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
+AGGREGATE_VALUE_METHODS: ${process.env.AGGREGATE_VALUE_METHODS ||
+        core.getInput("AGGREGATE_VALUE_METHODS")}
 LABEL: ${process.env.LABEL || core.getInput("LABEL")}
 ASSIGNEE: ${process.env.ASSIGNEE || core.getInput("ASSIGNEE")}
 \`\`\`

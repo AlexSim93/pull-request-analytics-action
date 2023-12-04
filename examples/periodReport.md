@@ -18,7 +18,7 @@ ASSIGNEE: AlexSim93
 ```
 
 
-### Pull requests timeline(avg) 11/2023
+### Pull requests timeline(average) 11/2023
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -34,7 +34,7 @@ ASSIGNEE: AlexSim93
 
 ```mermaid
 gantt
-title Pull requests timeline(avg) 11/2023 / minutes
+title Pull requests timeline(average) 11/2023 / minutes
 dateFormat X
 axisFormat %s
 section Developer1
@@ -184,7 +184,7 @@ Time to merge :  0, 1602
 | **total** | 69 | +16837/-5690 | 155 | 0 |
 
 
-### Pull requests timeline(avg) 10/2023
+### Pull requests timeline(average) 10/2023
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -200,7 +200,7 @@ Time to merge :  0, 1602
 
 ```mermaid
 gantt
-title Pull requests timeline(avg) 10/2023 / minutes
+title Pull requests timeline(average) 10/2023 / minutes
 dateFormat X
 axisFormat %s
 section Developer1
@@ -350,7 +350,7 @@ Time to merge :  0, 1116
 | **total** | 79 | +9835/-4150 | 375 | 0 |
 
 
-### Pull requests timeline(avg) 9/2023
+### Pull requests timeline(average) 9/2023
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -367,7 +367,7 @@ Time to merge :  0, 1116
 
 ```mermaid
 gantt
-title Pull requests timeline(avg) 9/2023 / minutes
+title Pull requests timeline(average) 9/2023 / minutes
 dateFormat X
 axisFormat %s
 section Developer1
@@ -536,7 +536,7 @@ Time to merge :  0, 1331
 
 
 
-### Pull requests timeline(avg) total
+### Pull requests timeline(average) total
 
 **Time to review** - time from PR creation to first review.
 **Time to approve** - time from PR creation to first approval without requested changes.
@@ -553,7 +553,7 @@ Time to merge :  0, 1331
 
 ```mermaid
 gantt
-title Pull requests timeline(avg) total / minutes
+title Pull requests timeline(average) total / minutes
 dateFormat X
 axisFormat %s
 section Developer1

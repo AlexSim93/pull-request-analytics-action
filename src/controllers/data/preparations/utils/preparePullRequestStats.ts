@@ -1,6 +1,6 @@
 import { Collection } from "../types";
 import {
-  calcAvgValue,
+  calcAverageValue,
   calcMedianValue,
   calcPercentileValue,
 } from "./calculations";
@@ -18,10 +18,10 @@ export const preparePullRequestStats = (collection: Collection) => {
       timeToApprove: calcPercentileValue(collection.timeToApprove),
       timeToMerge: calcPercentileValue(collection.timeToMerge),
     },
-    avg: {
-      timeToReview: calcAvgValue(collection.timeToReview),
-      timeToApprove: calcAvgValue(collection.timeToApprove),
-      timeToMerge: calcAvgValue(collection.timeToMerge),
+    average: {
+      timeToReview: calcAverageValue(collection.timeToReview),
+      timeToApprove: calcAverageValue(collection.timeToApprove),
+      timeToMerge: calcAverageValue(collection.timeToMerge),
     },
   };
 };

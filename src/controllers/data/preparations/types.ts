@@ -19,7 +19,7 @@ export type Collection = {
   merged: number;
   median?: TimelinePoints;
   percentile?: TimelinePoints;
-  avg?: TimelinePoints;
+  average?: TimelinePoints;
   timeToReview?: number[];
   timeToApprove?: number[];
   timeToMerge?: number[];
