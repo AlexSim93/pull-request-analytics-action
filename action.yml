@@ -1,4 +1,4 @@
-name: "Pull Request Full Report"
+name: "Pull Request Analytics"
 author: "Aleksei Simatov"
 description: "Github action to create detailed PRs report"
 branding:
