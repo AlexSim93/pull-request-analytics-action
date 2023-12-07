@@ -14,9 +14,27 @@ import {
 export const createMarkdown = (
   data: Record<string, Record<string, Collection>>
 ) => {
+  const hideUsers = process.env.HIDE_USERS || core.getInput("HIDE_USERS");
+  const usersToHide =
+    hideUsers
+      ?.split(",")
+      .map((user) => user.trim())
+      .filter((user) => user) || [];
+  const showUsers = process.env.SHOW_USERS || core.getInput("SHOW_USERS");
+  const usersToShow =
+    showUsers
+      ?.split(",")
+      .map((user) => user.trim())
+      .filter((user) => user) || [];
   const users = Object.keys(data)
     .filter((key) => key !== "total")
-    .concat("total");
+    .concat("total")
+    .filter((key) => {
+      return (
+        !usersToHide.includes(key) &&
+        (usersToShow.length > 0 ? usersToShow.includes(key) : true)
+      );
+    });
 
   const dates = sortCollectionsByDate(data.total);
 

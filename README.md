@@ -133,6 +133,8 @@ Below is a table outlining the various configuration parameters available for **
 | `PERCENTILE`                     | Percentile value for timeline                                                                                | No       | `75`          |
 | `LABEL`                          | Label for the created issue                                                                                  | No       | -             |
 | `ASSIGNEE`                       | Assignee for the issue                                                                                       | No       | -             |
+| `HIDE_USERS`                     | Hidden users separated by comma                                                                              | No       | -             |
+| `SHOW_USERS`                     | Shown users separated by comma                                                                               | No       | -             |
 
 Use these parameters to tailor the **pr-full-report-action** to your project's specific requirements.
 

@@ -53,6 +53,12 @@ inputs:
     description: "Aggregate value methods separated by comma. Can take values: 'percentile', 'average', 'median'"
     required: false
     default: "percentile"
+  HIDE_USERS:
+    description: "Hidden users separated by comma"
+    required: false
+  SHOW_USERS:
+    descriptions: "Shown users separated by comma"
+    required: false
 outputs:
   JSON_COLLECTION:
     description: "Output file"
