@@ -33,9 +33,13 @@ export const getDataWithThrottle = async (
       pullRequestNumbersChunks,
       repository
     );
-
+    console.log(
+      `Batch request #${counter + 1} out of ${Math.ceil(
+        pullRequestNumbers.length / concurrentLimit
+      )}`
+    );
     const prs = await Promise.allSettled(pullRequestDatas);
-    await delay(3000);
+    await delay(10000);
 
     const pullRequestReviews = await getPullRequestReviews(
       pullRequestNumbersChunks,
@@ -44,9 +48,9 @@ export const getDataWithThrottle = async (
         skip: skipReviews,
       }
     );
-    
+
     const reviews = await Promise.allSettled(pullRequestReviews);
-    await delay(3000);
+    await delay(10000);
     const pullRequestCommits = await getPullRequestCommits(
       pullRequestNumbers,
       repository,
@@ -65,7 +69,7 @@ export const getDataWithThrottle = async (
     );
 
     const comments = await Promise.allSettled(pullRequestComments);
-    await delay(3000);
+    await delay(10000);
     counter++;
     PRs.push(...prs);
     PREvents.push(...reviews);
