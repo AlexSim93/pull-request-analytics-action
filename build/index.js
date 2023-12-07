@@ -1618,6 +1618,7 @@ async function main() {
         throw new Error("Missing environment variables");
     }
     const ownersRepos = (0, data_1.getOwnersRepositories)();
+    console.log("Initiating data request.");
     const dataByRepos = await Promise.allSettled(ownersRepos.map(([owner, repo]) => (0, data_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT, {
         owner,
         repo,
@@ -1625,6 +1626,7 @@ async function main() {
         skipReviews: false,
         skipComments: false,
     })));
+    console.log("Data successfully retrieved. Starting report calculations.");
     const data = dataByRepos
         .map((element) => (element.status === "fulfilled" ? element.value : null))
         .filter((el) => el);
@@ -1645,7 +1647,9 @@ async function main() {
     });
     const preparedData = (0, data_1.collectData)(mergedData);
     core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
+    console.log("Calculation complete. Generating markdown.");
     const markdown = (0, view_1.createMarkdown)(preparedData);
+    console.log("Markdown successfully generated.");
     octokit_1.octokit.rest.issues.create({
         repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
             process.env.GITHUB_REPO_FOR_ISSUE,

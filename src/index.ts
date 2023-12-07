@@ -25,7 +25,7 @@ async function main() {
   }
 
   const ownersRepos = getOwnersRepositories();
-
+  console.log("Initiating data request.");
   const dataByRepos = await Promise.allSettled(
     ownersRepos.map(([owner, repo]) =>
       makeComplexRequest(
@@ -41,7 +41,7 @@ async function main() {
       )
     )
   );
-
+  console.log("Data successfully retrieved. Starting report calculations.");
   const data = dataByRepos
     .map((element) => (element.status === "fulfilled" ? element.value : null))
     .filter((el) => el);
@@ -69,9 +69,9 @@ async function main() {
 
   const preparedData = collectData(mergedData);
   core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
-
+  console.log("Calculation complete. Generating markdown.");
   const markdown = createMarkdown(preparedData);
-
+  console.log("Markdown successfully generated.");
   octokit.rest.issues.create({
     repo:
       core.getInput("GITHUB_REPO_FOR_ISSUE") ||
