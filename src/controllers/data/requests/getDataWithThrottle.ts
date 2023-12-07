@@ -35,6 +35,7 @@ export const getDataWithThrottle = async (
     );
 
     const prs = await Promise.allSettled(pullRequestDatas);
+    await delay(3000);
 
     const pullRequestReviews = await getPullRequestReviews(
       pullRequestNumbersChunks,
@@ -43,7 +44,9 @@ export const getDataWithThrottle = async (
         skip: skipReviews,
       }
     );
+    
     const reviews = await Promise.allSettled(pullRequestReviews);
+    await delay(3000);
     const pullRequestCommits = await getPullRequestCommits(
       pullRequestNumbers,
       repository,
