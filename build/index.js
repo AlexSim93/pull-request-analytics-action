@@ -1174,7 +1174,7 @@ const createMarkdown = (data) => {
     });
     return `
 ## Pull Request report
-This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${(0, utils_1.createConfigParamsCode)()}
     ${content.join("\n")}
   `;
@@ -1297,6 +1297,8 @@ AGGREGATE_VALUE_METHODS: ${process.env.AGGREGATE_VALUE_METHODS ||
         core.getInput("AGGREGATE_VALUE_METHODS")}
 LABEL: ${process.env.LABEL || core.getInput("LABEL")}
 ASSIGNEE: ${process.env.ASSIGNEE || core.getInput("ASSIGNEE")}
+HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
+SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
 \`\`\`
     `;
 };
