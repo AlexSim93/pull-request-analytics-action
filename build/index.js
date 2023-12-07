@@ -894,6 +894,7 @@ Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: f
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.makeComplexRequest = void 0;
+const octokit_1 = __nccwpck_require__(64165);
 const getDataWithThrottle_1 = __nccwpck_require__(60740);
 const getPullRequestChecks_1 = __nccwpck_require__(28738);
 const getPullRequests_1 = __nccwpck_require__(45909);
@@ -903,10 +904,14 @@ const makeComplexRequest = async (amount = 100, repository, options = {
     skipCommits: true,
     skipReviews: true,
 }) => {
+    const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
+    console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
     const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount, repository);
     const { skipChecks = true } = options;
     const pullRequestNumbers = pullRequests.map((item) => item.number);
     const { PRs, PREvents, PRComments, PRCommits } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, repository, options);
+    const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
+    console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
     const reviews = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const pullRequestInfo = PRs.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const comments = PRComments.map((element) => element.status === "fulfilled" ? element.value.data : null);
