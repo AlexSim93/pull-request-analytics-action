@@ -35,6 +35,8 @@ AGGREGATE_VALUE_METHODS: ${
   }
 LABEL: ${process.env.LABEL || core.getInput("LABEL")}
 ASSIGNEE: ${process.env.ASSIGNEE || core.getInput("ASSIGNEE")}
+HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
+SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
 \`\`\`
     `;
 };

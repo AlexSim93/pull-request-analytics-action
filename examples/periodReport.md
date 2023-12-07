@@ -1,6 +1,6 @@
 ## Pull Request report
 
-This report based on 265 last updated PRs. last updated PRs. To learn more about the project and its configuration, please visit [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+This report based on 265 last updated PRs. last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
 Below are the settings applied for this report:
 ```
 GITHUB_REPO: your-repository-to-report

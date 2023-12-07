@@ -1,6 +1,6 @@
-# Pull request full report action
+# Pull request analytics action
 
-**pr-full-report-action** is a comprehensive tool designed to generate detailed reports on closed pull requests (PRs). This powerful GitHub Action aids in tracking and analyzing the efficiency and productivity of software development workflows.
+**pull-request-analytics-action** is a comprehensive tool designed to generate detailed reports on closed pull requests (PRs). This powerful GitHub Action aids in tracking and analyzing the efficiency and productivity of software development workflows.
 
 ## Key Features:
 
@@ -12,11 +12,11 @@
 - **Additional Metrics**: Apart from timeline analysis, this Action also reports on the number of open PRs, lines of code added or deleted, comments received on PRs, and the count of code reviews conducted by each developer. This comprehensive data set offers a deeper insight into the coding and collaboration activities of the team.
 - **Developer and Team Overview**: While providing detailed data for individual developers, it also compiles an aggregate summary, enabling both micro and macro-level analysis of team performance.
 
-This GitHub Action, **pr-full-report-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
+This GitHub Action, **pull-request-analytics-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
-## Setting Up and Running pr-full-report-action
+## Setting Up and Running pull-request-analytics-action
 
-To integrate **pr-full-report-action** into your GitHub repository, use the following steps. The provided code is a template and can be adjusted to fit your specific requirements:
+To integrate **pull-request-analytics-action** into your GitHub repository, use the following steps. The provided code is a template and can be adjusted to fit your specific requirements:
 
 1. **Create a Workflow File**:
 
@@ -59,7 +59,7 @@ To integrate **pr-full-report-action** into your GitHub repository, use the foll
          runs-on: ubuntu-latest
          steps:
            - name: "Run PRs full report action"
-             uses: AlexSim93/pr-full-report-action@v0.7.1
+             uses: AlexSim93/pull-request-analytics-action@v0.7.1
              with:
                GITHUB_REPO_FOR_ISSUE: "repository-for-report-creation"
                GITHUB_OWNER_FOR_ISSUE: "owner-of-repository-for-report-creation"
@@ -93,15 +93,15 @@ To integrate **pr-full-report-action** into your GitHub repository, use the foll
    - Once the action completes, your detailed PR report will be available.
    - If configured, check for a new issue in the specified repository containing the report.
 
-This setup allows you to fully leverage **pr-full-report-action** for comprehensive PR analysis, tailored to your project’s needs.
+This setup allows you to fully leverage **pull-request-analytics-action** for comprehensive PR analysis, tailored to your project’s needs.
 
 ## Report Examples
 
-Explore how **pr-full-report-action** works with these report examples in the project:
+Explore how **pull-request-analytics-action** works with these report examples in the project:
 
-1. **Multi-Month Report**: Analysis over several months. [View Example](https://github.com/AlexSim93/pr-full-report-action/blob/master/examples/periodReport.md).
+1. **Multi-Month Report**: Analysis over several months. [View Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/periodReport.md).
 
-2. **Last N PRs Report**: Insights into the most recent pull requests. [View Example](https://github.com/AlexSim93/pr-full-report-action/blob/master/examples/nPRsReport.md).
+2. **Last N PRs Report**: Insights into the most recent pull requests. [View Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/nPRsReport.md).
 
 Click the links for detailed report formats and insights.
 
@@ -114,7 +114,7 @@ Click the links for detailed report formats and insights.
 
 ## Configuration Parameters Overview
 
-Below is a table outlining the various configuration parameters available for **pr-full-report-action**. These parameters allow you to customize the behavior of the action to fit your specific needs. Each parameter's name, description, requirement status, and default value (if applicable) are listed for your reference:
+Below is a table outlining the various configuration parameters available for **pull-request-analytics-action**. These parameters allow you to customize the behavior of the action to fit your specific needs. Each parameter's name, description, requirement status, and default value (if applicable) are listed for your reference:
 
 | Parameter Name                   | Description                                                                                                  | Required | Default Value |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------- | ------------- |
@@ -136,19 +136,19 @@ Below is a table outlining the various configuration parameters available for **
 | `HIDE_USERS`                     | Hidden users separated by comma                                                                              | No       | -             |
 | `SHOW_USERS`                     | Shown users separated by comma                                                                               | No       | -             |
 
-Use these parameters to tailor the **pr-full-report-action** to your project's specific requirements.
+Use these parameters to tailor the **pull-request-analytics-action** to your project's specific requirements.
 
 ## Privacy and Data Handling
 
-**pr-full-report-action** is designed with privacy and security in mind. It operates as a stateless application, ensuring it does not retain or store any user data externally. All processing is performed within your GitHub environment, maintaining strict data confidentiality. We prioritize the security of your information, ensuring no external data collection or storage, thereby safeguarding the integrity and privacy of your workflow.
+**pull-request-analytics-action** is designed with privacy and security in mind. It operates as a stateless application, ensuring it does not retain or store any user data externally. All processing is performed within your GitHub environment, maintaining strict data confidentiality. We prioritize the security of your information, ensuring no external data collection or storage, thereby safeguarding the integrity and privacy of your workflow.
 
 ## Usage Limitations
 
-**pr-full-report-action** operates within GitHub's API rate limits and message size constraints, which are generally sufficient for detailed, long-term reporting. However, in rare cases of extremely large datasets, some adjustments might be necessary. For more information, refer to GitHub's documentation on [rate limiting](https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api). The length of the report generated by **pr-full-report-action** is limited to 65,536 characters due to GitHub Issue size constraints.
+**pull-request-analytics-action** operates within GitHub's API rate limits and message size constraints, which are generally sufficient for detailed, long-term reporting. However, in rare cases of extremely large datasets, some adjustments might be necessary. For more information, refer to GitHub's documentation on [rate limiting](https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api). The length of the report generated by **pull-request-analytics-action** is limited to 65,536 characters due to GitHub Issue size constraints.
 
 ## Upcoming Features and Roadmap
 
-At **pr-full-report-action**, we are committed to continuous improvement and adding functionalities that enhance your experience and the utility of our tool. Here's a glimpse into some exciting features and enhancements planned for the near future:
+At **pull-request-analytics-action**, we are committed to continuous improvement and adding functionalities that enhance your experience and the utility of our tool. Here's a glimpse into some exciting features and enhancements planned for the near future:
 
 1. **Multi-Repository Reporting**: We are working on a feature that will allow users to compile reports across multiple repositories simultaneously. This will enable a more comprehensive analysis for teams managing multiple projects, providing a holistic view of their development activities.
 
@@ -156,10 +156,10 @@ At **pr-full-report-action**, we are committed to continuous improvement and add
 
 3. **Enhanced Customization Options for Reports**: Recognizing the diverse needs of different teams, we aim to expand the customization capabilities of our reports. This enhancement will allow users to tailor reports more precisely to their specific requirements, ensuring that the reports are as relevant and informative as possible.
 
-These upcoming features are designed with your feedback and needs in mind, striving to make **pr-full-report-action** more adaptable, insightful, and supportive of your project management and development workflows.
+These upcoming features are designed with your feedback and needs in mind, striving to make **pull-request-analytics-action** more adaptable, insightful, and supportive of your project management and development workflows.
 
 Stay tuned for these updates, and feel free to contribute your ideas or suggestions!
 
 ## License
 
-**pr-full-report-action** is licensed under the [MIT License](https://opensource.org/licenses/MIT). This permits free use, modification, and distribution of the software, with the requirement of including the original copyright notice. For full license terms, see the [MIT License details](https://opensource.org/licenses/MIT).
+**pull-request-analytics-action** is licensed under the [MIT License](https://opensource.org/licenses/MIT). This permits free use, modification, and distribution of the software, with the requirement of including the original copyright notice. For full license terms, see the [MIT License details](https://opensource.org/licenses/MIT).

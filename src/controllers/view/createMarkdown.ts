@@ -82,7 +82,7 @@ export const createMarkdown = (
 ## Pull Request report
 This report based on ${
     data.total?.total?.closed || 0
-  } last updated PRs. To learn more about the project and its configuration, please visit [PR Full report action](https://github.com/AlexSim93/pr-full-report-action).
+  } last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${createConfigParamsCode()}
     ${content.join("\n")}
   `;
