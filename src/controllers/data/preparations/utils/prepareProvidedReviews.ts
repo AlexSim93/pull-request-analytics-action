@@ -2,16 +2,14 @@ import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 
 export const prepareProvidedReviews = (
-  pullRequestInfo: Awaited<
-    ReturnType<typeof makeComplexRequest>
-  >["pullRequestInfo"][number],
+  pullRequestLogin: string | undefined,
   pullRequestReviews:
     | Awaited<ReturnType<typeof makeComplexRequest>>["reviews"][number]
     | undefined,
   collection: Collection
 ) => {
-  const providedReviews: Collection["providedReviews"] = {
-    ...(collection?.providedReviews || {}),
+  const reviewsConducted: Collection["reviewsConducted"] = {
+    ...(collection?.reviewsConducted || {}),
   };
   const statuses = Object.keys(
     pullRequestReviews?.reduce((acc, review) => {
@@ -19,16 +17,16 @@ export const prepareProvidedReviews = (
     }, {}) || {}
   );
 
-  if (pullRequestInfo?.user.login) {
-    [pullRequestInfo.user.login, "total"].forEach((key) => {
+  if (pullRequestLogin) {
+    [pullRequestLogin, "total"].forEach((key) => {
       const statusesReviewsStats = statuses.reduce((acc, status) => {
         return {
           ...acc,
-          [status]: (providedReviews[key]?.[status] || 0) + 1,
+          [status]: (reviewsConducted[key]?.[status] || 0) + 1,
         };
       }, {});
-      providedReviews[key] = {
-        ...providedReviews[key],
+      reviewsConducted[key] = {
+        ...reviewsConducted[key],
         ...statusesReviewsStats,
       };
     });
@@ -36,6 +34,6 @@ export const prepareProvidedReviews = (
 
   return {
     ...collection,
-    providedReviews,
+    reviewsConducted,
   };
 };

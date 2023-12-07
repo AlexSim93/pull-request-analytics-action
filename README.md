@@ -1,4 +1,4 @@
-# pr-full-report-action
+# Pull request full report action
 
 **pr-full-report-action** is a comprehensive tool designed to generate detailed reports on closed pull requests (PRs). This powerful GitHub Action aids in tracking and analyzing the efficiency and productivity of software development workflows.
 

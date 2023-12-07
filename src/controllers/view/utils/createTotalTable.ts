@@ -21,8 +21,11 @@ export const createTotalTable = (
         `+${data[user]?.[date].additions || 0}/-${
           data[user]?.[date].deletions || 0
         }`,
-        data[user]?.[date]?.reviewComments?.toString() || "0",
-        data[user]?.[date]?.providedReviews?.total?.total?.toString() || "0",
+        data[user]?.[date]?.totalReviewComments?.toString() || "0",
+        user !== "total"
+          ? data[user]?.[date]?.reviewsConducted?.total?.total?.toString() ||
+            "0"
+          : "-",
       ];
     });
 

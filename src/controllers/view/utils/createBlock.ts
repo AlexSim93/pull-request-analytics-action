@@ -11,7 +11,7 @@ export const createBlock = ({
 ### ${title}
 ${description}
 | ${table.headers.join(" | ")} |
-| ${table.headers.map(() => "------").join(" | ")} |
+| ${table.headers.map(() => ":------:").join(" | ")} |
 ${table.rows
   .map((row) => {
     return `| ${row.join(" | ")} |`;

@@ -43,24 +43,8 @@ const collectData = (data) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestTimeline)(pullRequest, data.reviews[index], collection[key][innerKey]);
             });
         });
-        const users = Object.keys(data.reviews[index]?.reduce((acc, review) => {
-            if (review.user?.login &&
-                review.user.login !== pullRequest?.user.login) {
-                return { ...acc, [review.user?.login]: 1 };
-            }
-            return acc;
-        }, {}) || {});
-        users.forEach((user) => {
-            if (!collection[user]) {
-                collection[user] = {};
-            }
-            const userReviews = Array.isArray(data.reviews[index])
-                ? data.reviews[index]?.filter((review) => review.user?.login === user)
-                : data.reviews[index];
-            [dateKey, "total"].forEach((key) => {
-                collection[user][key] = (0, utils_1.prepareProvidedReviews)(pullRequest, userReviews, collection[user][key]);
-            });
-        });
+        (0, utils_1.prepareReviews)(data, collection, index, dateKey, pullRequest?.user.login);
+        (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, pullRequest?.user.login);
     });
     Object.entries(collection).map(([key, value]) => {
         Object.entries(value).forEach(([innerKey, innerValue]) => {
@@ -377,15 +361,64 @@ Object.defineProperty(exports, "calcAverageValue", ({ enumerable: true, get: fun
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prepareProvidedReviews = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = void 0;
+exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = void 0;
 var preparePullRequestTimeline_1 = __nccwpck_require__(88838);
 Object.defineProperty(exports, "preparePullRequestTimeline", ({ enumerable: true, get: function () { return preparePullRequestTimeline_1.preparePullRequestTimeline; } }));
 var preparePullRequestStats_1 = __nccwpck_require__(17046);
 Object.defineProperty(exports, "preparePullRequestStats", ({ enumerable: true, get: function () { return preparePullRequestStats_1.preparePullRequestStats; } }));
 var preparePullRequestInfo_1 = __nccwpck_require__(5831);
 Object.defineProperty(exports, "preparePullRequestInfo", ({ enumerable: true, get: function () { return preparePullRequestInfo_1.preparePullRequestInfo; } }));
-var prepareProvidedReviews_1 = __nccwpck_require__(46694);
-Object.defineProperty(exports, "prepareProvidedReviews", ({ enumerable: true, get: function () { return prepareProvidedReviews_1.prepareProvidedReviews; } }));
+var prepareDiscussions_1 = __nccwpck_require__(28301);
+Object.defineProperty(exports, "prepareDiscussions", ({ enumerable: true, get: function () { return prepareDiscussions_1.prepareDiscussions; } }));
+var prepareReviews_1 = __nccwpck_require__(72872);
+Object.defineProperty(exports, "prepareReviews", ({ enumerable: true, get: function () { return prepareReviews_1.prepareReviews; } }));
+
+
+/***/ }),
+
+/***/ 28301:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prepareDiscussions = void 0;
+const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin) => {
+    const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== comment.user.login);
+    const discussions = comments[index]?.filter((comment) => !comment.in_reply_to_id && pullRequestLogin !== comment.user.login);
+    ["total", dateKey].forEach((key) => {
+        comments[index]?.forEach((comment) => {
+            if (pullRequestLogin !== comment.user.login) {
+                collection[comment.user.login][key].commentsConducted =
+                    (collection[comment.user.login][key].commentsConducted || 0) + 1;
+                collection.total[key].commentsConducted =
+                    (collection.total[key].commentsConducted || 0) + 1;
+            }
+        });
+        if (pullRequestLogin) {
+            collection[pullRequestLogin][key]["reviewComments"] =
+                (reviewComments?.length || 0) +
+                    (collection[pullRequestLogin][key].reviewComments || 0);
+            collection.total[key]["reviewComments"] =
+                (reviewComments?.length || 0) +
+                    (collection.total[key].reviewComments || 0);
+        }
+        discussions?.forEach((discussion) => {
+            collection[discussion.user.login][key].discussionsConducted =
+                (collection[discussion.user.login][key].discussionsConducted || 0) + 1;
+            collection.total[key].discussionsConducted =
+                (collection.total[key].discussionsConducted || 0) + 1;
+        });
+        if (pullRequestLogin) {
+            collection[pullRequestLogin][key]["discussions"] =
+                (discussions?.length || 0) +
+                    (collection[pullRequestLogin][key].discussions || 0);
+            collection.total[key]["discussions"] =
+                (discussions?.length || 0) + (collection.total[key].discussions || 0);
+        }
+    });
+};
+exports.prepareDiscussions = prepareDiscussions;
 
 
 /***/ }),
@@ -397,30 +430,30 @@ Object.defineProperty(exports, "prepareProvidedReviews", ({ enumerable: true, ge
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareProvidedReviews = void 0;
-const prepareProvidedReviews = (pullRequestInfo, pullRequestReviews, collection) => {
-    const providedReviews = {
-        ...(collection?.providedReviews || {}),
+const prepareProvidedReviews = (pullRequestLogin, pullRequestReviews, collection) => {
+    const reviewsConducted = {
+        ...(collection?.reviewsConducted || {}),
     };
     const statuses = Object.keys(pullRequestReviews?.reduce((acc, review) => {
         return { ...acc, [review.state]: 1, total: 1 };
     }, {}) || {});
-    if (pullRequestInfo?.user.login) {
-        [pullRequestInfo.user.login, "total"].forEach((key) => {
+    if (pullRequestLogin) {
+        [pullRequestLogin, "total"].forEach((key) => {
             const statusesReviewsStats = statuses.reduce((acc, status) => {
                 return {
                     ...acc,
-                    [status]: (providedReviews[key]?.[status] || 0) + 1,
+                    [status]: (reviewsConducted[key]?.[status] || 0) + 1,
                 };
             }, {});
-            providedReviews[key] = {
-                ...providedReviews[key],
+            reviewsConducted[key] = {
+                ...reviewsConducted[key],
                 ...statusesReviewsStats,
             };
         });
     }
     return {
         ...collection,
-        providedReviews,
+        reviewsConducted,
     };
 };
 exports.prepareProvidedReviews = prepareProvidedReviews;
@@ -438,10 +471,10 @@ exports.preparePullRequestInfo = void 0;
 const preparePullRequestInfo = (pullRequest, collection) => {
     const previousComments = typeof collection?.comments === "number" ? collection?.comments : 0;
     const comments = previousComments + (pullRequest?.comments || 0);
-    const previousReviewComments = typeof collection?.reviewComments === "number"
-        ? collection?.reviewComments
+    const previousReviewComments = typeof collection?.totalReviewComments === "number"
+        ? collection?.totalReviewComments
         : 0;
-    const reviewComments = previousReviewComments + (pullRequest?.review_comments || 0);
+    const totalReviewComments = previousReviewComments + (pullRequest?.review_comments || 0);
     return {
         ...collection,
         opened: (collection?.opened || 0) + 1,
@@ -452,7 +485,7 @@ const preparePullRequestInfo = (pullRequest, collection) => {
             ? (collection?.merged || 0) + 1
             : collection?.merged || 0,
         comments,
-        reviewComments,
+        totalReviewComments,
         additions: (collection?.additions || 0) + (pullRequest?.additions || 0),
         deletions: (collection?.deletions || 0) + (pullRequest?.deletions || 0),
     };
@@ -525,6 +558,38 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
     };
 };
 exports.preparePullRequestTimeline = preparePullRequestTimeline;
+
+
+/***/ }),
+
+/***/ 72872:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prepareReviews = void 0;
+const prepareProvidedReviews_1 = __nccwpck_require__(46694);
+const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
+    const users = Object.keys(data.reviews[index]?.reduce((acc, review) => {
+        if (review.user?.login && review.user.login !== pullRequestLogin) {
+            return { ...acc, [review.user?.login]: 1 };
+        }
+        return acc;
+    }, {}) || {});
+    users.forEach((user) => {
+        if (!collection[user]) {
+            collection[user] = {};
+        }
+        const userReviews = Array.isArray(data.reviews[index])
+            ? data.reviews[index]?.filter((review) => review.user?.login === user)
+            : data.reviews[index];
+        [dateKey, "total"].forEach((key) => {
+            collection[user][key] = (0, prepareProvidedReviews_1.prepareProvidedReviews)(pullRequestLogin, userReviews, collection[user][key]);
+        });
+    });
+};
+exports.prepareReviews = prepareReviews;
 
 
 /***/ }),
@@ -1078,9 +1143,11 @@ const createMarkdown = (data) => {
       `;
         });
         const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
+        const pullRequestReviews = (0, utils_1.createReviewTable)(data, users, date);
         return `
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
+    ${pullRequestReviews}
     `;
     });
     return `
@@ -1114,14 +1181,19 @@ Object.defineProperty(exports, "createMarkdown", ({ enumerable: true, get: funct
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.reviewProvidedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
+exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewProvidedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
 exports.timeToReviewHeader = "Time to review";
 exports.timeToApproveHeader = "Time to approve";
 exports.timeToMergeHeader = "Time to merge";
 exports.totalMergedPrsHeader = "Total merged PRs";
 exports.additionsDeletionsHeader = "Additions/Deletions";
-exports.reviewCommentsHeader = "Comments on PRs";
+exports.reviewCommentsHeader = "Total comments";
 exports.reviewProvidedHeader = "Reviews conducted";
+exports.discussionsHeader = "Discussions received";
+exports.discussionsConductedHeader = "Discussions conducted";
+exports.commentsConductedHeader = "Comments conducted";
+exports.commentsReceivedHeader = "Comments received";
+exports.reviewTypesHeader = "Changes requested / Comments / Approvals";
 
 
 /***/ }),
@@ -1138,7 +1210,7 @@ const createBlock = ({ title, description, table, }) => {
 ### ${title}
 ${description}
 | ${table.headers.join(" | ")} |
-| ${table.headers.map(() => "------").join(" | ")} |
+| ${table.headers.map(() => ":------:").join(" | ")} |
 ${table.rows
         .map((row) => {
         return `| ${row.join(" | ")} |`;
@@ -1238,6 +1310,53 @@ ${sections
     `;
 };
 exports.createGanttBar = createGanttBar;
+
+
+/***/ }),
+
+/***/ 24410:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createReviewTable = void 0;
+const constants_1 = __nccwpck_require__(76374);
+const createBlock_1 = __nccwpck_require__(5787);
+const createReviewTable = (data, users, date) => {
+    const tableRowsTotal = users
+        .filter((user) => data[user]?.[date]?.merged)
+        .map((user) => {
+        return [
+            `**${user}**`,
+            data[user]?.[date]?.merged?.toString() || "0",
+            data[user]?.[date]?.discussions?.toString() || "0",
+            data[user]?.[date]?.reviewComments?.toString() || "0",
+            data[user]?.[date]?.discussionsConducted?.toString() || "0",
+            data[user]?.[date]?.commentsConducted?.toString() || "0",
+            user !== "total"
+                ? `${data[user]?.[date]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0}`
+                : "-",
+        ];
+    });
+    return (0, createBlock_1.createBlock)({
+        title: `Pull requests review stats ${date}`,
+        description: "**Changes requested / Comments / Approvals** - number of Reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.",
+        table: {
+            headers: [
+                "user",
+                constants_1.totalMergedPrsHeader,
+                constants_1.discussionsHeader,
+                constants_1.commentsReceivedHeader,
+                constants_1.discussionsConductedHeader,
+                constants_1.commentsConductedHeader,
+                constants_1.reviewTypesHeader,
+            ],
+            rows: tableRowsTotal,
+        },
+    });
+};
+exports.createReviewTable = createReviewTable;
 
 
 /***/ }),
@@ -1347,8 +1466,11 @@ const createTotalTable = (data, users, date) => {
             `**${user}**`,
             data[user]?.[date]?.merged?.toString() || "0",
             `+${data[user]?.[date].additions || 0}/-${data[user]?.[date].deletions || 0}`,
-            data[user]?.[date]?.reviewComments?.toString() || "0",
-            data[user]?.[date]?.providedReviews?.total?.total?.toString() || "0",
+            data[user]?.[date]?.totalReviewComments?.toString() || "0",
+            user !== "total"
+                ? data[user]?.[date]?.reviewsConducted?.total?.total?.toString() ||
+                    "0"
+                : "-",
         ];
     });
     return (0, createBlock_1.createBlock)({
@@ -1395,11 +1517,13 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createTotalTable = exports.createConfigParamsCode = void 0;
+exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = void 0;
 var createConfigParamsCode_1 = __nccwpck_require__(86600);
 Object.defineProperty(exports, "createConfigParamsCode", ({ enumerable: true, get: function () { return createConfigParamsCode_1.createConfigParamsCode; } }));
 var createTotalTable_1 = __nccwpck_require__(68991);
 Object.defineProperty(exports, "createTotalTable", ({ enumerable: true, get: function () { return createTotalTable_1.createTotalTable; } }));
+var createReviewTable_1 = __nccwpck_require__(24410);
+Object.defineProperty(exports, "createReviewTable", ({ enumerable: true, get: function () { return createReviewTable_1.createReviewTable; } }));
 var createGanttBar_1 = __nccwpck_require__(27025);
 Object.defineProperty(exports, "createGanttBar", ({ enumerable: true, get: function () { return createGanttBar_1.createGanttBar; } }));
 var createBlock_1 = __nccwpck_require__(5787);
@@ -1492,6 +1616,7 @@ async function main() {
         repo,
     }, {
         skipReviews: false,
+        skipComments: false,
     })));
     const data = dataByRepos
         .map((element) => (element.status === "fulfilled" ? element.value : null))

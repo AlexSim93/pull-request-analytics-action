@@ -2,7 +2,8 @@ import { format, parseISO } from "date-fns";
 import { makeComplexRequest } from "../requests";
 import { Collection } from "./types";
 import {
-  prepareProvidedReviews,
+  prepareReviews,
+  prepareDiscussions,
   preparePullRequestInfo,
   preparePullRequestStats,
   preparePullRequestTimeline,
@@ -38,33 +39,15 @@ export const collectData = (
         );
       });
     });
-    const users = Object.keys(
-      data.reviews[index]?.reduce((acc, review) => {
-        if (
-          review.user?.login &&
-          review.user.login !== pullRequest?.user.login
-        ) {
-          return { ...acc, [review.user?.login]: 1 };
-        }
-        return acc;
-      }, {}) || {}
-    );
 
-    users.forEach((user) => {
-      if (!collection[user]) {
-        collection[user] = {};
-      }
-      const userReviews = Array.isArray(data.reviews[index])
-        ? data.reviews[index]?.filter((review) => review.user?.login === user)
-        : data.reviews[index];
-      [dateKey, "total"].forEach((key) => {
-        collection[user][key] = prepareProvidedReviews(
-          pullRequest,
-          userReviews,
-          collection[user][key]
-        );
-      });
-    });
+    prepareReviews(data, collection, index, dateKey, pullRequest?.user.login);
+    prepareDiscussions(
+      data.comments,
+      collection,
+      index,
+      dateKey,
+      pullRequest?.user.login
+    );
   });
 
   Object.entries(collection).map(([key, value]) => {

@@ -12,11 +12,11 @@ export const preparePullRequestInfo = (
   const comments = previousComments + (pullRequest?.comments || 0);
 
   const previousReviewComments =
-    typeof collection?.reviewComments === "number"
-      ? collection?.reviewComments
+    typeof collection?.totalReviewComments === "number"
+      ? collection?.totalReviewComments
       : 0;
 
-  const reviewComments =
+  const totalReviewComments =
     previousReviewComments + (pullRequest?.review_comments || 0);
   return {
     ...collection,
@@ -28,7 +28,7 @@ export const preparePullRequestInfo = (
       ? (collection?.merged || 0) + 1
       : collection?.merged || 0,
     comments,
-    reviewComments,
+    totalReviewComments,
     additions: (collection?.additions || 0) + (pullRequest?.additions || 0),
     deletions: (collection?.deletions || 0) + (pullRequest?.deletions || 0),
   };

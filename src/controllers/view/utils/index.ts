@@ -1,5 +1,6 @@
 export { createConfigParamsCode } from "./createConfigParamsCode";
 export { createTotalTable } from "./createTotalTable";
+export { createReviewTable } from "./createReviewTable";
 export { createGanttBar } from "./createGanttBar";
 export { createBlock } from "./createBlock";
 export { formatMinutesDuration } from "./formatMinutesDuration";

@@ -26,7 +26,6 @@ async function main() {
 
   const ownersRepos = getOwnersRepositories();
 
-
   const dataByRepos = await Promise.allSettled(
     ownersRepos.map(([owner, repo]) =>
       makeComplexRequest(
@@ -37,6 +36,7 @@ async function main() {
         },
         {
           skipReviews: false,
+          skipComments: false,
         }
       )
     )
