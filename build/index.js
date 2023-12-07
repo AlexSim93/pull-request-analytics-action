@@ -601,7 +601,7 @@ exports.prepareReviews = prepareReviews;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.concurrentLimit = void 0;
-exports.concurrentLimit = 25;
+exports.concurrentLimit = 20;
 
 
 /***/ }),
@@ -647,10 +647,12 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
         const pullRequestNumbersChunks = pullRequestNumbers.slice(startIndex, endIndex);
         const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks, repository);
         const prs = await Promise.allSettled(pullRequestDatas);
+        await (0, delay_1.delay)(3000);
         const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, repository, {
             skip: skipReviews,
         });
         const reviews = await Promise.allSettled(pullRequestReviews);
+        await (0, delay_1.delay)(3000);
         const pullRequestCommits = await (0, getPullRequestCommits_1.getPullRequestCommits)(pullRequestNumbers, repository, {
             skip: skipCommits,
         });
@@ -659,7 +661,7 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
             skip: skipComments,
         });
         const comments = await Promise.allSettled(pullRequestComments);
-        await (0, delay_1.delay)(2000);
+        await (0, delay_1.delay)(3000);
         counter++;
         PRs.push(...prs);
         PREvents.push(...reviews);
