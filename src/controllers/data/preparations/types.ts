@@ -1,4 +1,3 @@
-import { percentile } from "./constants";
 type ReviewTypeStats = {
   [key: string]: number;
 };
@@ -7,6 +6,20 @@ type TimelinePoints = {
   timeToReview?: number;
   timeToApprove?: number;
   timeToMerge?: number;
+};
+
+type DiscussionResult = {
+  total: number;
+  agreed: number;
+  disagreed: number;
+  unresolved: number;
+};
+
+type DiscussionType = {
+  [key: string]: {
+    received: DiscussionResult;
+    conducted: DiscussionResult;
+  };
 };
 
 export type Collection = {
@@ -30,4 +43,5 @@ export type Collection = {
   };
   commentsConducted?: number;
   discussionsConducted?: number;
+  discussionsTypes?: DiscussionType;
 };

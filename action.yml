@@ -46,6 +46,9 @@ inputs:
   LABEL:
     description: "label for issue"
     required: false
+  ISSUE_TITLE:
+    description: "Title for issue"
+    required: false
   ASSIGNEE:
     description: "assignee for issue"
     required: false

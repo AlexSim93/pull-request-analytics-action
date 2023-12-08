@@ -1662,6 +1662,9 @@ async function main() {
         commits: [],
         checks: [],
     });
+    const issueTitle = core.getInput("ISSUE_TITLE") ||
+        process.env.ISSUE_TITLE ||
+        `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
     const preparedData = (0, data_1.collectData)(mergedData);
     core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
     console.log("Calculation complete. Generating markdown.");
@@ -1672,7 +1675,7 @@ async function main() {
             process.env.GITHUB_REPO_FOR_ISSUE,
         owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
             process.env.GITHUB_OWNER_FOR_ISSUE,
-        title: `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`,
+        title: issueTitle,
         body: markdown,
         labels: typeof core.getInput("LABEL") === "string" ||
             typeof process.env.LABEL === "string"
