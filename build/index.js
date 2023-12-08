@@ -7,12 +7,13 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getOwnersRepositories = exports.makeComplexRequest = exports.collectData = void 0;
+exports.createIssue = exports.getOwnersRepositories = exports.makeComplexRequest = exports.collectData = void 0;
 var preparations_1 = __nccwpck_require__(40539);
 Object.defineProperty(exports, "collectData", ({ enumerable: true, get: function () { return preparations_1.collectData; } }));
 var requests_1 = __nccwpck_require__(2204);
 Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: function () { return requests_1.makeComplexRequest; } }));
 Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return requests_1.getOwnersRepositories; } }));
+Object.defineProperty(exports, "createIssue", ({ enumerable: true, get: function () { return requests_1.createIssue; } }));
 
 
 /***/ }),
@@ -576,12 +577,12 @@ const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
             return { ...acc, [review.user?.login]: 1 };
         }
         return acc;
-    }, {}) || {});
+    }, {}) || {}).concat("total");
     users.forEach((user) => {
         if (!collection[user]) {
             collection[user] = {};
         }
-        const userReviews = Array.isArray(data.reviews[index])
+        const userReviews = Array.isArray(data.reviews[index]) && user !== "total"
             ? data.reviews[index]?.filter((review) => review.user?.login === user)
             : data.reviews[index];
         [dateKey, "total"].forEach((key) => {
@@ -602,6 +603,67 @@ exports.prepareReviews = prepareReviews;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.concurrentLimit = void 0;
 exports.concurrentLimit = 20;
+
+
+/***/ }),
+
+/***/ 70050:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createIssue = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const octokit_1 = __nccwpck_require__(64165);
+const date_fns_1 = __nccwpck_require__(73314);
+const createIssue = (markdown) => {
+    const issueTitle = core.getInput("ISSUE_TITLE") ||
+        process.env.ISSUE_TITLE ||
+        `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
+    const labels = (core.getInput("LABELS") || process.env.LABELS)
+        ?.split(",")
+        .map((label) => label.trim())
+        .filter((label) => label && typeof label === "string") || [];
+    const assignees = (core.getInput("ASSIGNEES") || process.env.ASSIGNEES)
+        ?.split(",")
+        .map((assignee) => assignee.trim())
+        .filter((assignee) => assignee && typeof assignee === "string") || [];
+    octokit_1.octokit.rest.issues.create({
+        repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+            process.env.GITHUB_REPO_FOR_ISSUE,
+        owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+            process.env.GITHUB_OWNER_FOR_ISSUE,
+        title: issueTitle,
+        body: markdown,
+        labels,
+        assignees,
+    });
+};
+exports.createIssue = createIssue;
 
 
 /***/ }),
@@ -640,7 +702,7 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
     const PRCommits = [];
     const PRComments = [];
     let counter = 0;
-    const { skipChecks = true, skipComments = true, skipCommits = true, skipReviews = true, } = options;
+    const { skipComments = true, skipCommits = true, skipReviews = true, } = options;
     while (pullRequestNumbers.length > PRs.length) {
         const startIndex = counter * constants_1.concurrentLimit;
         const endIndex = (counter + 1) * constants_1.concurrentLimit;
@@ -672,52 +734,6 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
     return { PRs, PREvents, PRCommits, PRComments };
 };
 exports.getDataWithThrottle = getDataWithThrottle;
-
-
-/***/ }),
-
-/***/ 28738:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestChecks = void 0;
-const core = __importStar(__nccwpck_require__(42186));
-const octokit_1 = __nccwpck_require__(64165);
-const getPullRequestChecks = async (commits, options) => !options?.skip
-    ? Promise.allSettled(commits.map((item) => octokit_1.octokit.rest.checks.listForRef({
-        owner: core.getInput("GITHUB_OWNER") || process.env.GITHUB_OWNER,
-        repo: core.getInput("GITHUB_REPO") || process.env.GITHUB_REPO,
-        per_page: 100,
-        page: 1,
-        ref: item,
-    })))
-    : [];
-exports.getPullRequestChecks = getPullRequestChecks;
 
 
 /***/ }),
@@ -881,11 +897,13 @@ exports.getPullRequests = getPullRequests;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.makeComplexRequest = exports.getOwnersRepositories = void 0;
+exports.createIssue = exports.makeComplexRequest = exports.getOwnersRepositories = void 0;
 var getOwnersRepositories_1 = __nccwpck_require__(54237);
 Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return getOwnersRepositories_1.getOwnersRepositories; } }));
 var makeComplexRequest_1 = __nccwpck_require__(25876);
 Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: function () { return makeComplexRequest_1.makeComplexRequest; } }));
+var createIssue_1 = __nccwpck_require__(70050);
+Object.defineProperty(exports, "createIssue", ({ enumerable: true, get: function () { return createIssue_1.createIssue; } }));
 
 
 /***/ }),
@@ -899,10 +917,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.makeComplexRequest = void 0;
 const octokit_1 = __nccwpck_require__(64165);
 const getDataWithThrottle_1 = __nccwpck_require__(60740);
-const getPullRequestChecks_1 = __nccwpck_require__(28738);
 const getPullRequests_1 = __nccwpck_require__(45909);
 const makeComplexRequest = async (amount = 100, repository, options = {
-    skipChecks: true,
     skipComments: true,
     skipCommits: true,
     skipReviews: true,
@@ -910,7 +926,6 @@ const makeComplexRequest = async (amount = 100, repository, options = {
     const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
     const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount, repository);
-    const { skipChecks = true } = options;
     const pullRequestNumbers = pullRequests.map((item) => item.number);
     const { PRs, PREvents, PRComments, PRCommits } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, repository, options);
     const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
@@ -919,24 +934,12 @@ const makeComplexRequest = async (amount = 100, repository, options = {
     const pullRequestInfo = PRs.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const comments = PRComments.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const commits = PRCommits.map((element) => element.status === "fulfilled" ? element.value.data : null);
-    const commitRefs = PRCommits.map((element) => element.status === "fulfilled" ? element.value.data : null);
-    const shas = commitRefs?.flat().map((element) => element?.sha);
-    const pullRequestChecks = await (0, getPullRequestChecks_1.getPullRequestChecks)(shas.filter((element) => typeof element === "string"), {
-        skip: skipChecks,
-    });
-    const PRChecks = await Promise.allSettled(pullRequestChecks);
-    const checks = PRChecks.map((element) => element.status === "fulfilled"
-        ? element.value.status === "fulfilled"
-            ? element.value.value.data
-            : null
-        : null);
     return {
         ownerRepo: `${repository.owner}/${repository.repo}`,
         reviews,
         pullRequestInfo,
         commits,
         comments,
-        checks,
     };
 };
 exports.makeComplexRequest = makeComplexRequest;
@@ -976,15 +979,12 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOwnersRepositories = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const getOwnersRepositories = () => {
-    const owner = core.getInput("GITHUB_OWNER") || process.env.GITHUB_OWNER;
-    const repository = core.getInput("GITHUB_REPO") || process.env.GITHUB_REPO;
-    const splittedByComma = core.getInput("ADDITIONAL_GITHUB_OWNERS_REPOS") ||
-        process.env.ADDITIONAL_GITHUB_OWNERS_REPOS;
+    const splittedByComma = core.getInput("GITHUB_OWNERS_REPOS") || process.env.GITHUB_OWNERS_REPOS;
     const ownersRepositories = splittedByComma
         ?.split(",")
         .map((el) => el.trim()?.split("/"))
         .filter(([owner, repository]) => owner && repository);
-    return [[owner, repository], ...(ownersRepositories || [])];
+    return ownersRepositories || [];
 };
 exports.getOwnersRepositories = getOwnersRepositories;
 
@@ -1280,10 +1280,7 @@ const createConfigParamsCode = () => {
     return `
 Below are the settings applied for this report:
 \`\`\`
-GITHUB_REPO: ${process.env.GITHUB_REPO || core.getInput("GITHUB_REPO")}
-GITHUB_OWNER: ${process.env.GITHUB_OWNER || core.getInput("GITHUB_OWNER")}
-ADDITIONAL_GITHUB_OWNERS_REPO: ${process.env.ADDITIONAL_GITHUB_OWNERS_REPO ||
-        core.getInput("ADDITIONAL_GITHUB_OWNERS_REPO")}
+GITHUB_OWNERS_REPOS: ${process.env.GITHUB_OWNERS_REPOS || core.getInput("GITHUB_OWNERS_REPOS")}
 GITHUB_REPO_FOR_ISSUE: ${process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GITHUB_REPO_FOR_ISSUE")}
 GITHUB_OWNER_FOR_ISSUE: ${process.env.GITHUB_OWNER_FOR_ISSUE ||
         core.getInput("GITHUB_OWNER_FOR_ISSUE")}
@@ -1295,8 +1292,8 @@ REPORT_DATE_END: ${process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
 AGGREGATE_VALUE_METHODS: ${process.env.AGGREGATE_VALUE_METHODS ||
         core.getInput("AGGREGATE_VALUE_METHODS")}
-LABEL: ${process.env.LABEL || core.getInput("LABEL")}
-ASSIGNEE: ${process.env.ASSIGNEE || core.getInput("ASSIGNEE")}
+LABELS: ${process.env.LABELS || core.getInput("LABELS")}
+ASSIGNEES: ${process.env.ASSIGNEES || core.getInput("ASSIGNEES")}
 HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
 SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
 \`\`\`
@@ -1619,19 +1616,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __nccwpck_require__(44227);
 const core = __importStar(__nccwpck_require__(42186));
-const date_fns_1 = __nccwpck_require__(73314);
 const data_1 = __nccwpck_require__(17514);
-const octokit_1 = __nccwpck_require__(64165);
 const view_1 = __nccwpck_require__(50459);
 async function main() {
     if ((!process.env.GITHUB_REPO_FOR_ISSUE ||
-        !process.env.GITHUB_OWNER_FOR_ISSUE ||
-        !process.env.GITHUB_REPO ||
-        !process.env.GITHUB_OWNER) &&
+        !process.env.GITHUB_OWNER_FOR_ISSUE) &&
         (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            !core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-            !core.getInput("GITHUB_OWNER") ||
-            !core.getInput("GITHUB_REPO"))) {
+            !core.getInput("GITHUB_REPO_FOR_ISSUE"))) {
         throw new Error("Missing environment variables");
     }
     const ownersRepos = (0, data_1.getOwnersRepositories)();
@@ -1648,41 +1639,26 @@ async function main() {
         .map((element) => (element.status === "fulfilled" ? element.value : null))
         .filter((el) => el);
     const mergedData = data.reduce((acc, element) => ({
-        ownerRepo: acc.ownerRepo.concat(element.ownerRepo),
+        ownerRepo: acc.ownerRepo
+            ? acc.ownerRepo.concat(",", element.ownerRepo)
+            : element.ownerRepo,
         reviews: [...acc.reviews, ...element.reviews],
         pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
         comments: [...acc?.comments, ...element.comments],
         commits: [...acc?.commits, ...element.commits],
-        checks: [...acc.checks, ...element.checks],
     }), {
         ownerRepo: "",
         reviews: [],
         pullRequestInfo: [],
         comments: [],
         commits: [],
-        checks: [],
     });
-    const issueTitle = core.getInput("ISSUE_TITLE") ||
-        process.env.ISSUE_TITLE ||
-        `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
     const preparedData = (0, data_1.collectData)(mergedData);
     core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
     console.log("Calculation complete. Generating markdown.");
     const markdown = (0, view_1.createMarkdown)(preparedData);
     console.log("Markdown successfully generated.");
-    octokit_1.octokit.rest.issues.create({
-        repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-            process.env.GITHUB_REPO_FOR_ISSUE,
-        owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            process.env.GITHUB_OWNER_FOR_ISSUE,
-        title: issueTitle,
-        body: markdown,
-        labels: typeof core.getInput("LABEL") === "string" ||
-            typeof process.env.LABEL === "string"
-            ? [core.getInput("LABEL") || process.env.LABEL]
-            : [],
-        assignee: core.getInput("ASSIGNEE") || process.env.ASSIGNEE,
-    });
+    (0, data_1.createIssue)(markdown);
 }
 main();
 

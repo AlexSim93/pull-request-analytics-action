@@ -8,15 +8,9 @@ inputs:
   GITHUB_TOKEN:
     description: "Github token"
     required: true
-  GITHUB_REPO:
-    description: "Github repo"
-    required: true
-  GITHUB_OWNER:
-    description: "Github owner"
-    required: true
-  ADDITIONAL_GITHUB_OWNERS_REPOS:
+  GITHUB_OWNERS_REPOS:
     description: "Github owner/repository list separated by comma"
-    required: false
+    required: true
   GITHUB_REPO_FOR_ISSUE:
     description: "Github repo for issue"
     required: true
@@ -43,8 +37,11 @@ inputs:
     description: "Percentile value for timeline"
     required: false
     default: "75"
-  LABEL:
-    description: "label for issue"
+  LABELS:
+    description: "Multiple labels for issue"
+    required: false
+  ASSIGNEES:
+    description: "Multiple assignees for issue"
     required: false
   ISSUE_TITLE:
     description: "Title for issue"

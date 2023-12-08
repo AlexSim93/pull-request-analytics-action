@@ -16,15 +16,16 @@ export const prepareReviews = (
       }
       return acc;
     }, {}) || {}
-  );
+  ).concat("total");
 
   users.forEach((user) => {
     if (!collection[user]) {
       collection[user] = {};
     }
-    const userReviews = Array.isArray(data.reviews[index])
-      ? data.reviews[index]?.filter((review) => review.user?.login === user)
-      : data.reviews[index];
+    const userReviews =
+      Array.isArray(data.reviews[index]) && user !== "total"
+        ? data.reviews[index]?.filter((review) => review.user?.login === user)
+        : data.reviews[index];
     [dateKey, "total"].forEach((key) => {
       collection[user][key] = prepareProvidedReviews(
         pullRequestLogin,

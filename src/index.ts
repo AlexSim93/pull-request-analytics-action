@@ -4,22 +4,18 @@ import { format } from "date-fns";
 
 import {
   collectData,
+  createIssue,
   getOwnersRepositories,
   makeComplexRequest,
 } from "./controllers/data";
-import { octokit } from "./controllers/octokit";
 import { createMarkdown } from "./controllers/view";
 
 async function main() {
   if (
     (!process.env.GITHUB_REPO_FOR_ISSUE ||
-      !process.env.GITHUB_OWNER_FOR_ISSUE ||
-      !process.env.GITHUB_REPO ||
-      !process.env.GITHUB_OWNER) &&
+      !process.env.GITHUB_OWNER_FOR_ISSUE) &&
     (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-      !core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-      !core.getInput("GITHUB_OWNER") ||
-      !core.getInput("GITHUB_REPO"))
+      !core.getInput("GITHUB_REPO_FOR_ISSUE"))
   ) {
     throw new Error("Missing environment variables");
   }
@@ -50,12 +46,13 @@ async function main() {
     Awaited<ReturnType<typeof makeComplexRequest>>
   >(
     (acc, element) => ({
-      ownerRepo: acc.ownerRepo.concat(element!.ownerRepo),
+      ownerRepo: acc.ownerRepo
+        ? acc.ownerRepo.concat(",", element!.ownerRepo)
+        : element!.ownerRepo,
       reviews: [...acc.reviews, ...element!.reviews],
       pullRequestInfo: [...acc?.pullRequestInfo, ...element!.pullRequestInfo],
       comments: [...acc?.comments, ...element!.comments],
       commits: [...acc?.commits, ...element!.commits],
-      checks: [...acc.checks, ...element!.checks],
     }),
     {
       ownerRepo: "",
@@ -63,34 +60,14 @@ async function main() {
       pullRequestInfo: [],
       comments: [],
       commits: [],
-      checks: [],
     }
   );
-  const issueTitle =
-    core.getInput("ISSUE_TITLE") ||
-    process.env.ISSUE_TITLE ||
-    `Pull requests report(${format(new Date(), "d/MM/yyyy HH:mm")})`;
   const preparedData = collectData(mergedData);
   core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
   console.log("Calculation complete. Generating markdown.");
   const markdown = createMarkdown(preparedData);
   console.log("Markdown successfully generated.");
-  octokit.rest.issues.create({
-    repo:
-      core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-      process.env.GITHUB_REPO_FOR_ISSUE!,
-    owner:
-      core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-      process.env.GITHUB_OWNER_FOR_ISSUE!,
-    title: issueTitle,
-    body: markdown,
-    labels:
-      typeof core.getInput("LABEL") === "string" ||
-      typeof process.env.LABEL === "string"
-        ? [(core.getInput("LABEL") as string) || (process.env.LABEL as string)]
-        : [],
-    assignee: core.getInput("ASSIGNEE") || process.env.ASSIGNEE,
-  });
+  createIssue(markdown);
 }
 
 main();

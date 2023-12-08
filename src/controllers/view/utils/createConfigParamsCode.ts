@@ -4,11 +4,8 @@ export const createConfigParamsCode = () => {
   return `
 Below are the settings applied for this report:
 \`\`\`
-GITHUB_REPO: ${process.env.GITHUB_REPO || core.getInput("GITHUB_REPO")}
-GITHUB_OWNER: ${process.env.GITHUB_OWNER || core.getInput("GITHUB_OWNER")}
-ADDITIONAL_GITHUB_OWNERS_REPO: ${
-    process.env.ADDITIONAL_GITHUB_OWNERS_REPO ||
-    core.getInput("ADDITIONAL_GITHUB_OWNERS_REPO")
+GITHUB_OWNERS_REPOS: ${
+    process.env.GITHUB_OWNERS_REPOS || core.getInput("GITHUB_OWNERS_REPOS")
   }
 GITHUB_REPO_FOR_ISSUE: ${
     process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GITHUB_REPO_FOR_ISSUE")
@@ -33,8 +30,8 @@ AGGREGATE_VALUE_METHODS: ${
     process.env.AGGREGATE_VALUE_METHODS ||
     core.getInput("AGGREGATE_VALUE_METHODS")
   }
-LABEL: ${process.env.LABEL || core.getInput("LABEL")}
-ASSIGNEE: ${process.env.ASSIGNEE || core.getInput("ASSIGNEE")}
+LABELS: ${process.env.LABELS || core.getInput("LABELS")}
+ASSIGNEES: ${process.env.ASSIGNEES || core.getInput("ASSIGNEES")}
 HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
 SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
 \`\`\`

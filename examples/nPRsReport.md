@@ -3,8 +3,7 @@
 This report based on 50 last updated PRs. last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
 Below are the settings applied for this report:
 ```
-GITHUB_REPO: your-repository-to-report
-GITHUB_OWNER: owner-of-repository-to-report
+GITHUB_OWNERS_REPOS: owner/repository
 GITHUB_REPO_FOR_ISSUE: repository-to-create-issue
 GITHUB_OWNER_FOR_ISSUE: owner-of-repository-to-create-issue
 AMOUNT: 50
@@ -13,8 +12,8 @@ CORE_HOURS_END: 20:00
 REPORT_DATE_START: 
 REPORT_DATE_END: 
 PERCENTILE: 75
-LABEL: report
-ASSIGNEE: AlexSim93
+LABELS: report
+ASSIGNEES: AlexSim93
 ```
     
     

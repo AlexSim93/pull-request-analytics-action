@@ -17,7 +17,6 @@ export const getDataWithThrottle = async (
   const PRComments = [];
   let counter = 0;
   const {
-    skipChecks = true,
     skipComments = true,
     skipCommits = true,
     skipReviews = true,

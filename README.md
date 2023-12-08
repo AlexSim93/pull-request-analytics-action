@@ -59,22 +59,20 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
          runs-on: ubuntu-latest
          steps:
            - name: "Run PRs full report action"
-             uses: AlexSim93/pull-request-analytics-action@v0.7.1
+             uses: AlexSim93/pull-request-analytics-action@v1.0.0
              with:
                GITHUB_REPO_FOR_ISSUE: "repository-for-report-creation"
                GITHUB_OWNER_FOR_ISSUE: "owner-of-repository-for-report-creation"
-               GITHUB_REPO: "repository-to-create-report"
-               GITHUB_OWNER: "owner-of-repository-to-create-report"
                AMOUNT: ${{ inputs.amount }}
                CORE_HOURS_START: ${{ inputs.core_hours_start }}
                CORE_HOURS_END: ${{ inputs.core_hours_end }}
                PERCENTILE: ${{ inputs.percentile }}
                REPORT_DATE_START: ${{ inputs.report_date_start }}
                REPORT_DATE_END: ${{ inputs.report_date_end }}
-               LABEL: report
-               ASSIGNEE: assignee
+               LABELS: report
+               ASSIGNEES: assignee
                GITHUB_TOKEN: ${{ secrets.KEY }}
-               ADDITIONAL_GITHUB_OWNERS_REPOS: owner-1/repo-1, owner-2/repo-2, owner-1/repo-3
+               GITHUB_OWNERS_REPOS: owner-1/repo-1, owner-2/repo-2, owner-1/repo-3
      ```
    - Adjust parameters to match your project's needs.
 
@@ -116,26 +114,24 @@ Click the links for detailed report formats and insights.
 
 Below is a table outlining the various configuration parameters available for **pull-request-analytics-action**. These parameters allow you to customize the behavior of the action to fit your specific needs. Each parameter's name, description, requirement status, and default value (if applicable) are listed for your reference:
 
-| Parameter Name                   | Description                                                                                                  | Required | Default Value                           |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------------- |
-| `GITHUB_TOKEN`                   | Github token                                                                                                 | Yes      | -                                       |
-| `GITHUB_REPO`                    | GitHub repository for report generation                                                                      | Yes      | -                                       |
-| `GITHUB_OWNER`                   | Owner of the GitHub repository                                                                               | Yes      | -                                       |
-| `GITHUB_REPO_FOR_ISSUE`          | GitHub repository for issue creation                                                                         | Yes      | -                                       |
-| `GITHUB_OWNER_FOR_ISSUE`         | Owner of the repository for issue                                                                            | Yes      | -                                       |
-| `ADDITIONAL_GITHUB_OWNERS_REPOS` | Github owner/repository list separated by comma                                                              | No       | -                                       |
-| `AGGREGATE_VALUE_METHODS`        | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median` | No       | `percentile`                            |
-| `AMOUNT`                         | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                             | No       | `100`                                   |
-| `REPORT_DATE_START`              | Start date for the report (d/MM/yyyy)                                                                        | No       | -                                       |
-| `REPORT_DATE_END`                | End date for the report (d/MM/yyyy)                                                                          | No       | -                                       |
-| `CORE_HOURS_START`               | Start of core hours (HH:mm)                                                                                  | No       | -                                       |
-| `CORE_HOURS_END`                 | End of core hours (HH:mm)                                                                                    | No       | -                                       |
-| `PERCENTILE`                     | Percentile value for timeline                                                                                | No       | `75`                                    |
-| `ISSUE_TITLE`                    | Title for the created issue                                                                                  | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
-| `LABEL`                          | Label for the created issue                                                                                  | No       | -                                       |
-| `ASSIGNEE`                       | Assignee for the issue                                                                                       | No       | -                                       |
-| `HIDE_USERS`                     | Hidden users separated by comma                                                                              | No       | -                                       |
-| `SHOW_USERS`                     | Shown users separated by comma                                                                               | No       | -                                       |
+| Parameter Name            | Description                                                                                                  | Required | Default Value                           |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------------- |
+| `GITHUB_TOKEN`            | Github token                                                                                                 | Yes      | -                                       |
+| `GITHUB_OWNERS_REPOS`     | Github owner/repository list separated by comma                                                              | Yes      | -                                       |
+| `GITHUB_REPO_FOR_ISSUE`   | GitHub repository for issue creation                                                                         | Yes      | -                                       |
+| `GITHUB_OWNER_FOR_ISSUE`  | Owner of the repository for issue                                                                            | Yes      | -                                       |
+| `AGGREGATE_VALUE_METHODS` | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median` | No       | `percentile`                            |
+| `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                             | No       | `100`                                   |
+| `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                        | No       | -                                       |
+| `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                          | No       | -                                       |
+| `CORE_HOURS_START`        | Start of core hours (HH:mm)                                                                                  | No       | -                                       |
+| `CORE_HOURS_END`          | End of core hours (HH:mm)                                                                                    | No       | -                                       |
+| `PERCENTILE`              | Percentile value for timeline                                                                                | No       | `75`                                    |
+| `ISSUE_TITLE`             | Title for the created issue                                                                                  | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
+| `LABELS`                  | Labels for the created issue separated by comma                                                              | No       | -                                       |
+| `ASSIGNEES`               | Assignees for the issue separated by comma                                                                   | No       | -                                       |
+| `HIDE_USERS`              | Hidden users separated by comma                                                                              | No       | -                                       |
+| `SHOW_USERS`              | Shown users separated by comma                                                                               | No       | -                                       |
 
 Use these parameters to tailor the **pull-request-analytics-action** to your project's specific requirements.
 
