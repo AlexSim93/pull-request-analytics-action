@@ -1,4 +1,5 @@
 import { octokit } from "../../octokit";
+import { getMultipleValuesInput } from "../../utils";
 import { getDataWithThrottle } from "./getDataWithThrottle";
 import { getPullRequests } from "./getPullRequests";
 import { Options, Repository } from "./types";
@@ -19,7 +20,15 @@ export const makeComplexRequest = async (
   );
   const pullRequests = await getPullRequests(amount, repository);
 
-  const pullRequestNumbers = pullRequests.map((item) => item.number);
+  const pullRequestNumbers = pullRequests
+    .filter((pr) => {
+      const excludeLabels = getMultipleValuesInput("EXCLUDE_LABELS");
+      const includeLabels = getMultipleValuesInput("INCLUDE_LABELS");
+      const isIncludeLabelsCorrect = includeLabels.length > 0 ? pr.labels.some((label) => includeLabels.includes(label.name)) : true;
+      const isExcludeLabelsCorrect = excludeLabels.length > 0 ? !pr.labels.some((label) => excludeLabels.includes(label.name)) : true;
+      return isIncludeLabelsCorrect && isExcludeLabelsCorrect;
+    })
+    .map((item) => item.number);
 
   const { PRs, PREvents, PRComments, PRCommits } = await getDataWithThrottle(
     pullRequestNumbers,

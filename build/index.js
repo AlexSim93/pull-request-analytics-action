@@ -911,6 +911,7 @@ Object.defineProperty(exports, "createIssue", ({ enumerable: true, get: function
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.makeComplexRequest = void 0;
 const octokit_1 = __nccwpck_require__(64165);
+const utils_1 = __nccwpck_require__(12290);
 const getDataWithThrottle_1 = __nccwpck_require__(60740);
 const getPullRequests_1 = __nccwpck_require__(45909);
 const makeComplexRequest = async (amount = 100, repository, options = {
@@ -921,7 +922,15 @@ const makeComplexRequest = async (amount = 100, repository, options = {
     const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
     const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount, repository);
-    const pullRequestNumbers = pullRequests.map((item) => item.number);
+    const pullRequestNumbers = pullRequests
+        .filter((pr) => {
+        const excludeLabels = (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS");
+        const includeLabels = (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS");
+        const isIncludeLabelsCorrect = includeLabels.length > 0 ? pr.labels.some((label) => includeLabels.includes(label.name)) : true;
+        const isExcludeLabelsCorrect = excludeLabels.length > 0 ? !pr.labels.some((label) => excludeLabels.includes(label.name)) : true;
+        return isIncludeLabelsCorrect && isExcludeLabelsCorrect;
+    })
+        .map((item) => item.number);
     const { PRs, PREvents, PRComments, PRCommits } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, repository, options);
     const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
@@ -1300,6 +1309,8 @@ LABELS: ${process.env.LABELS || core.getInput("LABELS")}
 ASSIGNEES: ${process.env.ASSIGNEES || core.getInput("ASSIGNEES")}
 HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
 SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
+INCLUDE_LABELS: ${process.env.INCLUDE_LABELS || core.getInput("INCLUDE_LABELS")}
+EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
 \`\`\`
     `;
 };

@@ -132,6 +132,8 @@ Below is a table outlining the various configuration parameters available for **
 | `ASSIGNEES`               | Assignees for the issue separated by comma                                                                   | No       | -                                       |
 | `HIDE_USERS`              | Hidden users separated by comma                                                                              | No       | -                                       |
 | `SHOW_USERS`              | Shown users separated by comma                                                                               | No       | -                                       |
+| `EXCLUDE_LABELS`          | Excludes PRs with mentioned labels. Values should be separated by comma                                      | No       | -                                       |
+| `INCLUDE_LABELS`          | Includes only PRs with mentioned labels. Values should be separated by comma                                 | No       | -                                       |
 
 Use these parameters to tailor the **pull-request-analytics-action** to your project's specific requirements.
 

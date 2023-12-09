@@ -34,6 +34,8 @@ LABELS: ${process.env.LABELS || core.getInput("LABELS")}
 ASSIGNEES: ${process.env.ASSIGNEES || core.getInput("ASSIGNEES")}
 HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
 SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
+INCLUDE_LABELS: ${process.env.INCLUDE_LABELS || core.getInput("INCLUDE_LABELS")}
+EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
 \`\`\`
     `;
 };

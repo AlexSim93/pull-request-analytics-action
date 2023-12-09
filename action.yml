@@ -38,10 +38,10 @@ inputs:
     required: false
     default: "75"
   LABELS:
-    description: "Multiple labels for issue"
+    description: "Multiple labels for issue separated by comma"
     required: false
   ASSIGNEES:
-    description: "Multiple assignees for issue"
+    description: "Multiple assignees for issue separated by comma"
     required: false
   ISSUE_TITLE:
     description: "Title for issue"
@@ -58,6 +58,12 @@ inputs:
     required: false
   SHOW_USERS:
     descriptions: "Shown users separated by comma"
+    required: false
+  INCLUDE_LABELS:
+    description: "Includes only PRs with mentioned labels. Values should be separated by comma"
+    required: false
+  EXCLUDE_LABELS:
+    description: "Excludes PRs with mentioned labels. Values should be separated by comma"
     required: false
 outputs:
   JSON_COLLECTION:
