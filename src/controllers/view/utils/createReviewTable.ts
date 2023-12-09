@@ -1,10 +1,7 @@
 import { Collection } from "../../data/preparations/types";
 import {
   commentsConductedHeader,
-  commentsReceivedHeader,
   discussionsConductedHeader,
-  discussionsHeader,
-  reviewCommentsHeader,
   reviewTypesHeader,
   totalMergedPrsHeader,
 } from "./constants";
@@ -16,30 +13,27 @@ export const createReviewTable = (
   date: string
 ) => {
   const tableRowsTotal = users
-    .filter((user) => data[user]?.[date]?.merged)
+    .filter(
+      (user) =>
+        data[user]?.[date]?.opened ||
+        data[user]?.[date]?.reviewsConducted?.total?.total
+    )
     .map((user) => {
       return [
         `**${user}**`,
         data[user]?.[date]?.merged?.toString() || "0",
-        data[user]?.[date]?.discussions?.toString() || "0",
-        data[user]?.[date]?.reviewComments?.toString() || "0",
         data[user]?.[date]?.discussionsConducted?.toString() || "0",
         data[user]?.[date]?.commentsConducted?.toString() || "0",
-        user !== "total"
-          ? `${
-              data[user]?.[
-                date
-              ]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0
-            } / ${
-              data[user]?.[
-                date
-              ]?.reviewsConducted?.total?.COMMENTED?.toString() || 0
-            } / ${
-              data[user]?.[
-                date
-              ]?.reviewsConducted?.total?.APPROVED?.toString() || 0
-            }`
-          : "-",
+        `${
+          data[user]?.[
+            date
+          ]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0
+        } / ${
+          data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() ||
+          0
+        } / ${
+          data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0
+        }`,
       ];
     });
 
@@ -51,8 +45,6 @@ export const createReviewTable = (
       headers: [
         "user",
         totalMergedPrsHeader,
-        discussionsHeader,
-        commentsReceivedHeader,
         discussionsConductedHeader,
         commentsConductedHeader,
         reviewTypesHeader,

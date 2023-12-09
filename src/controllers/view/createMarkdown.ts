@@ -4,6 +4,7 @@ import { Collection } from "../data/preparations/types";
 import {
   StatsType,
   createConfigParamsCode,
+  createPullRequestQualityTable,
   createReviewTable,
   createTimelineGanttBar,
   createTimelineTable,
@@ -59,10 +60,13 @@ export const createMarkdown = (
 
     const pullRequestReviews = createReviewTable(data, users, date);
 
+    const pullRequestQuality = createPullRequestQualityTable(data, users, date);
+
     return `
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     ${pullRequestReviews}
+    ${pullRequestQuality}
     `;
   });
 

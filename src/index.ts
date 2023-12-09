@@ -11,6 +11,9 @@ import {
 import { createMarkdown } from "./controllers/view";
 
 async function main() {
+  if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
+    process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
+  }
   if (
     (!process.env.GITHUB_REPO_FOR_ISSUE ||
       !process.env.GITHUB_OWNER_FOR_ISSUE) &&

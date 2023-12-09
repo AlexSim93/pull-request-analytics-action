@@ -1199,10 +1199,12 @@ const createMarkdown = (data) => {
         });
         const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
         const pullRequestReviews = (0, utils_1.createReviewTable)(data, users, date);
+        const pullRequestQuality = (0, utils_1.createPullRequestQualityTable)(data, users, date);
         return `
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     ${pullRequestReviews}
+    ${pullRequestQuality}
     `;
     });
     return `
@@ -1236,11 +1238,12 @@ Object.defineProperty(exports, "createMarkdown", ({ enumerable: true, get: funct
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewProvidedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
+exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewProvidedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
 exports.timeToReviewHeader = "Time to review";
 exports.timeToApproveHeader = "Time to approve";
 exports.timeToMergeHeader = "Time to merge";
 exports.totalMergedPrsHeader = "Total merged PRs";
+exports.totalOpenedPrsHeader = "Total opened PRs";
 exports.additionsDeletionsHeader = "Additions/Deletions";
 exports.reviewCommentsHeader = "Total comments";
 exports.reviewProvidedHeader = "Reviews conducted";
@@ -1249,6 +1252,7 @@ exports.discussionsConductedHeader = "Discussions conducted";
 exports.commentsConductedHeader = "Comments conducted";
 exports.commentsReceivedHeader = "Comments received";
 exports.reviewTypesHeader = "Changes requested / Comments / Approvals";
+exports.requestChangesReceived = "Changes requested received";
 
 
 /***/ }),
@@ -1320,6 +1324,7 @@ GITHUB_OWNER_FOR_ISSUE: ${process.env.GITHUB_OWNER_FOR_ISSUE ||
 AMOUNT: ${process.env.AMOUNT || core.getInput("AMOUNT")}
 CORE_HOURS_START: ${process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START")}
 CORE_HOURS_END: ${process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END")}
+TIMEZONE: ${process.env.TIMEZONE || core.getInput("TIMEZONE")}
 REPORT_DATE_START: ${process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START")}
 REPORT_DATE_END: ${process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")}
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
@@ -1370,6 +1375,47 @@ exports.createGanttBar = createGanttBar;
 
 /***/ }),
 
+/***/ 71537:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createPullRequestQualityTable = void 0;
+const constants_1 = __nccwpck_require__(76374);
+const createBlock_1 = __nccwpck_require__(5787);
+const createPullRequestQualityTable = (data, users, date) => {
+    const tableRowsTotal = users
+        .filter((user) => data[user]?.[date]?.opened)
+        .map((user) => {
+        return [
+            `**${user}**`,
+            data[user]?.[date]?.merged?.toString() || "0",
+            data["total"]?.[date]?.reviewsConducted?.[user]?.["CHANGES_REQUESTED"]?.toString() || "0",
+            data[user]?.[date]?.discussions?.toString() || "0",
+            data[user]?.[date]?.reviewComments?.toString() || "0",
+        ];
+    });
+    return (0, createBlock_1.createBlock)({
+        title: `Pull requests quality stats ${date}`,
+        description: "The table includes discussions and comments on closed pull requests.",
+        table: {
+            headers: [
+                "user",
+                constants_1.totalMergedPrsHeader,
+                constants_1.requestChangesReceived,
+                constants_1.discussionsHeader,
+                constants_1.commentsReceivedHeader,
+            ],
+            rows: tableRowsTotal,
+        },
+    });
+};
+exports.createPullRequestQualityTable = createPullRequestQualityTable;
+
+
+/***/ }),
+
 /***/ 24410:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1381,18 +1427,16 @@ const constants_1 = __nccwpck_require__(76374);
 const createBlock_1 = __nccwpck_require__(5787);
 const createReviewTable = (data, users, date) => {
     const tableRowsTotal = users
-        .filter((user) => data[user]?.[date]?.merged)
+        .filter((user) => data[user]?.[date]?.opened ||
+        data[user]?.[date]?.reviewsConducted?.total?.total)
         .map((user) => {
         return [
             `**${user}**`,
             data[user]?.[date]?.merged?.toString() || "0",
-            data[user]?.[date]?.discussions?.toString() || "0",
-            data[user]?.[date]?.reviewComments?.toString() || "0",
             data[user]?.[date]?.discussionsConducted?.toString() || "0",
             data[user]?.[date]?.commentsConducted?.toString() || "0",
-            user !== "total"
-                ? `${data[user]?.[date]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0}`
-                : "-",
+            `${data[user]?.[date]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() ||
+                0} / ${data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0}`,
         ];
     });
     return (0, createBlock_1.createBlock)({
@@ -1402,8 +1446,6 @@ const createReviewTable = (data, users, date) => {
             headers: [
                 "user",
                 constants_1.totalMergedPrsHeader,
-                constants_1.discussionsHeader,
-                constants_1.commentsReceivedHeader,
                 constants_1.discussionsConductedHeader,
                 constants_1.commentsConductedHeader,
                 constants_1.reviewTypesHeader,
@@ -1516,25 +1558,25 @@ const constants_1 = __nccwpck_require__(76374);
 const createBlock_1 = __nccwpck_require__(5787);
 const createTotalTable = (data, users, date) => {
     const tableRowsTotal = users
-        .filter((user) => data[user]?.[date]?.merged)
+        .filter((user) => data[user]?.[date]?.opened ||
+        data[user]?.[date]?.reviewsConducted?.total?.total)
         .map((user) => {
         return [
             `**${user}**`,
+            data[user]?.[date]?.opened?.toString() || "0",
             data[user]?.[date]?.merged?.toString() || "0",
             `+${data[user]?.[date].additions || 0}/-${data[user]?.[date].deletions || 0}`,
             data[user]?.[date]?.totalReviewComments?.toString() || "0",
-            user !== "total"
-                ? data[user]?.[date]?.reviewsConducted?.total?.total?.toString() ||
-                    "0"
-                : "-",
+            data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
         ];
     });
     return (0, createBlock_1.createBlock)({
-        title: `Pull requests stats ${date}`,
+        title: `Workload stats ${date}`,
         description: "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.",
         table: {
             headers: [
                 "user",
+                constants_1.totalOpenedPrsHeader,
                 constants_1.totalMergedPrsHeader,
                 constants_1.additionsDeletionsHeader,
                 constants_1.reviewCommentsHeader,
@@ -1573,7 +1615,7 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = void 0;
+exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = void 0;
 var createConfigParamsCode_1 = __nccwpck_require__(86600);
 Object.defineProperty(exports, "createConfigParamsCode", ({ enumerable: true, get: function () { return createConfigParamsCode_1.createConfigParamsCode; } }));
 var createTotalTable_1 = __nccwpck_require__(68991);
@@ -1592,6 +1634,8 @@ var createTimelineGanttBar_1 = __nccwpck_require__(67150);
 Object.defineProperty(exports, "createTimelineGanttBar", ({ enumerable: true, get: function () { return createTimelineGanttBar_1.createTimelineGanttBar; } }));
 var createTimelineTable_1 = __nccwpck_require__(89343);
 Object.defineProperty(exports, "createTimelineTable", ({ enumerable: true, get: function () { return createTimelineTable_1.createTimelineTable; } }));
+var createPullRequestQualityTable_1 = __nccwpck_require__(71537);
+Object.defineProperty(exports, "createPullRequestQualityTable", ({ enumerable: true, get: function () { return createPullRequestQualityTable_1.createPullRequestQualityTable; } }));
 
 
 /***/ }),
@@ -1654,6 +1698,9 @@ const core = __importStar(__nccwpck_require__(42186));
 const data_1 = __nccwpck_require__(17514);
 const view_1 = __nccwpck_require__(50459);
 async function main() {
+    if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
+        process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
+    }
     if ((!process.env.GITHUB_REPO_FOR_ISSUE ||
         !process.env.GITHUB_OWNER_FOR_ISSUE) &&
         (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||

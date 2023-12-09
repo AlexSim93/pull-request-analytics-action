@@ -65,6 +65,9 @@ inputs:
   EXCLUDE_LABELS:
     description: "Excludes PRs with mentioned labels. Values should be separated by comma"
     required: false
+  TIMEZONE:
+    description: "Timezone to use in action"
+    required: false
 outputs:
   JSON_COLLECTION:
     description: "Output file"

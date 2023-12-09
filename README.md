@@ -126,6 +126,7 @@ Below is a table outlining the various configuration parameters available for **
 | `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                          | No       | -                                       |
 | `CORE_HOURS_START`        | Start of core hours (HH:mm)                                                                                  | No       | -                                       |
 | `CORE_HOURS_END`          | End of core hours (HH:mm)                                                                                    | No       | -                                       |
+| `TIMEZONE`                | Timezone that will be used in action                                                                         | No       | `UTC`                                   |
 | `PERCENTILE`              | Percentile value for timeline                                                                                | No       | `75`                                    |
 | `ISSUE_TITLE`             | Title for the created issue                                                                                  | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
 | `LABELS`                  | Labels for the created issue separated by comma                                                              | No       | -                                       |

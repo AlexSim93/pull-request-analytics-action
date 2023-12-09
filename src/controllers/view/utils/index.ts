@@ -7,4 +7,5 @@ export { formatMinutesDuration } from "./formatMinutesDuration";
 export { sortCollectionsByDate } from "./sortCollectionsByDate";
 export { createTimelineGanttBar } from "./createTimelineGanttBar";
 export { createTimelineTable } from "./createTimelineTable";
+export { createPullRequestQualityTable } from "./createPullRequestQualityTable";
 export { StatsType } from "./types";

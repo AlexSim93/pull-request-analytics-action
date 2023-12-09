@@ -19,6 +19,7 @@ CORE_HOURS_START: ${
     process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START")
   }
 CORE_HOURS_END: ${process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END")}
+TIMEZONE: ${process.env.TIMEZONE || core.getInput("TIMEZONE")}
 REPORT_DATE_START: ${
     process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START")
   }
