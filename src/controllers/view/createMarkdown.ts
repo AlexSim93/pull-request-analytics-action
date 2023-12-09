@@ -10,22 +10,14 @@ import {
   createTotalTable,
   sortCollectionsByDate,
 } from "./utils";
+import { getMultipleValuesInput } from "../utils";
 
 export const createMarkdown = (
   data: Record<string, Record<string, Collection>>
 ) => {
-  const hideUsers = process.env.HIDE_USERS || core.getInput("HIDE_USERS");
-  const usersToHide =
-    hideUsers
-      ?.split(",")
-      .map((user) => user.trim())
-      .filter((user) => user) || [];
-  const showUsers = process.env.SHOW_USERS || core.getInput("SHOW_USERS");
-  const usersToShow =
-    showUsers
-      ?.split(",")
-      .map((user) => user.trim())
-      .filter((user) => user) || [];
+  const usersToHide = getMultipleValuesInput("HIDE_USERS") || [];
+  const usersToShow = getMultipleValuesInput("SHOW_USERS") || [];
+
   const users = Object.keys(data)
     .filter((key) => key !== "total")
     .concat("total")
@@ -40,12 +32,8 @@ export const createMarkdown = (
 
   const content = dates.map((date) => {
     if (!data.total[date]?.merged) return "";
-    const methods =
-      process.env.AGGREGATE_VALUE_METHODS ||
-      core.getInput("AGGREGATE_VALUE_METHODS");
-    const timelineContent = methods
-      .split(",")
-      .map((el) => el.trim())
+
+    const timelineContent = getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
       .filter((method) => ["average", "median", "percentile"].includes(method))
       .map((type) => {
         const pullRequestTimelineTable = createTimelineTable(

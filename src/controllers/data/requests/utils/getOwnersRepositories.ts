@@ -1,11 +1,8 @@
-import * as core from "@actions/core";
+import { getMultipleValuesInput } from "../../../utils";
 
 export const getOwnersRepositories = () => {
-  const splittedByComma =
-    core.getInput("GITHUB_OWNERS_REPOS") || process.env.GITHUB_OWNERS_REPOS!;
-  const ownersRepositories = splittedByComma
-    ?.split(",")
-    .map((el) => el.trim()?.split("/"))
+  const ownersRepositories = getMultipleValuesInput("GITHUB_OWNERS_REPOS")
+    .map((el) => el.split("/"))
     .filter(([owner, repository]) => owner && repository);
 
   return ownersRepositories || [];

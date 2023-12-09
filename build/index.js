@@ -640,18 +640,13 @@ exports.createIssue = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const octokit_1 = __nccwpck_require__(64165);
 const date_fns_1 = __nccwpck_require__(73314);
+const utils_1 = __nccwpck_require__(12290);
 const createIssue = (markdown) => {
     const issueTitle = core.getInput("ISSUE_TITLE") ||
         process.env.ISSUE_TITLE ||
         `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
-    const labels = (core.getInput("LABELS") || process.env.LABELS)
-        ?.split(",")
-        .map((label) => label.trim())
-        .filter((label) => label && typeof label === "string") || [];
-    const assignees = (core.getInput("ASSIGNEES") || process.env.ASSIGNEES)
-        ?.split(",")
-        .map((assignee) => assignee.trim())
-        .filter((assignee) => assignee && typeof assignee === "string") || [];
+    const labels = (0, utils_1.getMultipleValuesInput)("LABELS").filter((label) => label && typeof label === "string") || [];
+    const assignees = (0, utils_1.getMultipleValuesInput)("ASSIGNEES").filter((assignee) => assignee && typeof assignee === "string") || [];
     octokit_1.octokit.rest.issues.create({
         repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
             process.env.GITHUB_REPO_FOR_ISSUE,
@@ -948,41 +943,16 @@ exports.makeComplexRequest = makeComplexRequest;
 /***/ }),
 
 /***/ 54237:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOwnersRepositories = void 0;
-const core = __importStar(__nccwpck_require__(42186));
+const utils_1 = __nccwpck_require__(12290);
 const getOwnersRepositories = () => {
-    const splittedByComma = core.getInput("GITHUB_OWNERS_REPOS") || process.env.GITHUB_OWNERS_REPOS;
-    const ownersRepositories = splittedByComma
-        ?.split(",")
-        .map((el) => el.trim()?.split("/"))
+    const ownersRepositories = (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS")
+        .map((el) => el.split("/"))
         .filter(([owner, repository]) => owner && repository);
     return ownersRepositories || [];
 };
@@ -1089,14 +1059,27 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.octokit = void 0;
 const octokit_1 = __nccwpck_require__(57467);
 const core = __importStar(__nccwpck_require__(42186));
+const plugin_throttling_1 = __nccwpck_require__(9968);
+octokit_1.Octokit.plugin(plugin_throttling_1.throttling);
 exports.octokit = new octokit_1.Octokit({
     auth: core.getInput("GITHUB_TOKEN") || process.env.GITHUB_TOKEN,
+    throttle: {
+        onSecondaryRateLimit: (_, options) => {
+            exports.octokit.log.error(`SecondaryRateLimit detected for request ${options.method} ${options.url}`);
+            core.setFailed(`SecondaryRateLimit detected for request ${options.method} ${options.url}`);
+        },
+        onRateLimit: (_, options) => {
+            exports.octokit.log.error(`Request quota exhausted for request ${options.method} ${options.url}`);
+            core.setFailed(`Request quota exhausted for request ${options.method} ${options.url}`);
+        },
+        enabled: true,
+    },
 });
 
 
 /***/ }),
 
-/***/ 26269:
+/***/ 78894:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1125,20 +1108,45 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createMarkdown = void 0;
+exports.getMultipleValuesInput = void 0;
 const core = __importStar(__nccwpck_require__(42186));
+const getMultipleValuesInput = (name) => {
+    const values = process.env[name] || core.getInput(name);
+    return values
+        .split(",")
+        .map((el) => el.trim())
+        .filter((el) => el);
+};
+exports.getMultipleValuesInput = getMultipleValuesInput;
+
+
+/***/ }),
+
+/***/ 12290:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getMultipleValuesInput = void 0;
+var getMultipleValuesInput_1 = __nccwpck_require__(78894);
+Object.defineProperty(exports, "getMultipleValuesInput", ({ enumerable: true, get: function () { return getMultipleValuesInput_1.getMultipleValuesInput; } }));
+
+
+/***/ }),
+
+/***/ 26269:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createMarkdown = void 0;
 const utils_1 = __nccwpck_require__(99446);
+const utils_2 = __nccwpck_require__(12290);
 const createMarkdown = (data) => {
-    const hideUsers = process.env.HIDE_USERS || core.getInput("HIDE_USERS");
-    const usersToHide = hideUsers
-        ?.split(",")
-        .map((user) => user.trim())
-        .filter((user) => user) || [];
-    const showUsers = process.env.SHOW_USERS || core.getInput("SHOW_USERS");
-    const usersToShow = showUsers
-        ?.split(",")
-        .map((user) => user.trim())
-        .filter((user) => user) || [];
+    const usersToHide = (0, utils_2.getMultipleValuesInput)("HIDE_USERS") || [];
+    const usersToShow = (0, utils_2.getMultipleValuesInput)("SHOW_USERS") || [];
     const users = Object.keys(data)
         .filter((key) => key !== "total")
         .concat("total")
@@ -1150,11 +1158,7 @@ const createMarkdown = (data) => {
     const content = dates.map((date) => {
         if (!data.total[date]?.merged)
             return "";
-        const methods = process.env.AGGREGATE_VALUE_METHODS ||
-            core.getInput("AGGREGATE_VALUE_METHODS");
-        const timelineContent = methods
-            .split(",")
-            .map((el) => el.trim())
+        const timelineContent = (0, utils_2.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
             .filter((method) => ["average", "median", "percentile"].includes(method))
             .map((type) => {
             const pullRequestTimelineTable = (0, utils_1.createTimelineTable)(data, type, users, date);
