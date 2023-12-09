@@ -1,1 +1,1 @@
-export const concurrentLimit = 20;
+export const concurrentLimit = 10;

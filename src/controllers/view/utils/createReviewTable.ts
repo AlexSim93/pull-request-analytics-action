@@ -15,7 +15,7 @@ export const createReviewTable = (
   const tableRowsTotal = users
     .filter(
       (user) =>
-        data[user]?.[date]?.opened ||
+        data[user]?.[date]?.merged ||
         data[user]?.[date]?.reviewsConducted?.total?.total
     )
     .map((user) => {

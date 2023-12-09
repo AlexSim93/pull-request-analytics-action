@@ -38,7 +38,7 @@ export const getDataWithThrottle = async (
       )}`
     );
     const prs = await Promise.allSettled(pullRequestDatas);
-    await delay(10000);
+    await delay(15000);
 
     const pullRequestReviews = await getPullRequestReviews(
       pullRequestNumbersChunks,
@@ -49,7 +49,7 @@ export const getDataWithThrottle = async (
     );
 
     const reviews = await Promise.allSettled(pullRequestReviews);
-    await delay(10000);
+    await delay(15000);
     const pullRequestCommits = await getPullRequestCommits(
       pullRequestNumbers,
       repository,
@@ -68,7 +68,7 @@ export const getDataWithThrottle = async (
     );
 
     const comments = await Promise.allSettled(pullRequestComments);
-    await delay(10000);
+    await delay(15000);
     counter++;
     PRs.push(...prs);
     PREvents.push(...reviews);

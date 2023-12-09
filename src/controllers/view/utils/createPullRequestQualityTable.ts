@@ -13,7 +13,13 @@ export const createPullRequestQualityTable = (
   date: string
 ) => {
   const tableRowsTotal = users
-    .filter((user) => data[user]?.[date]?.opened)
+    .filter(
+      (user) =>
+        data[user]?.[date]?.merged ||
+        data[user]?.[date]?.discussions ||
+        data[user]?.[date]?.reviewComments ||
+        data["total"]?.[date]?.reviewsConducted?.[user]?.["CHANGES_REQUESTED"]
+    )
     .map((user) => {
       return [
         `**${user}**`,
@@ -28,7 +34,8 @@ export const createPullRequestQualityTable = (
 
   return createBlock({
     title: `Pull requests quality stats ${date}`,
-    description: "The table includes discussions and comments on closed pull requests.",
+    description:
+      "The table includes discussions and comments on closed pull requests.",
     table: {
       headers: [
         "user",

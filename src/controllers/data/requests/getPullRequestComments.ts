@@ -11,17 +11,17 @@ export const getPullRequestComments = async (
     ? pullRequestNumbers.map(async (number) => {
         const data = [];
         for (let i = 1, shouldStop = false; shouldStop === false; i++) {
-          const reviews = await octokit.rest.pulls.listReviewComments({
+          const comments = await octokit.rest.pulls.listReviewComments({
             owner,
             repo,
             pull_number: number,
             per_page: 100,
             page: i,
           });
-          if (reviews.data.length < 100) {
+          if (comments.data.length < 100) {
             shouldStop = true;
           }
-          data.push(...reviews.data);
+          data.push(...comments.data);
         }
         return { data };
       })

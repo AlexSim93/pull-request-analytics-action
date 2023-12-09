@@ -602,7 +602,7 @@ exports.prepareReviews = prepareReviews;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.concurrentLimit = void 0;
-exports.concurrentLimit = 20;
+exports.concurrentLimit = 10;
 
 
 /***/ }),
@@ -705,12 +705,12 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
         const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks, repository);
         console.log(`Batch request #${counter + 1} out of ${Math.ceil(pullRequestNumbers.length / constants_1.concurrentLimit)}`);
         const prs = await Promise.allSettled(pullRequestDatas);
-        await (0, delay_1.delay)(10000);
+        await (0, delay_1.delay)(15000);
         const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, repository, {
             skip: skipReviews,
         });
         const reviews = await Promise.allSettled(pullRequestReviews);
-        await (0, delay_1.delay)(10000);
+        await (0, delay_1.delay)(15000);
         const pullRequestCommits = await (0, getPullRequestCommits_1.getPullRequestCommits)(pullRequestNumbers, repository, {
             skip: skipCommits,
         });
@@ -719,7 +719,7 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
             skip: skipComments,
         });
         const comments = await Promise.allSettled(pullRequestComments);
-        await (0, delay_1.delay)(10000);
+        await (0, delay_1.delay)(15000);
         counter++;
         PRs.push(...prs);
         PREvents.push(...reviews);
@@ -747,17 +747,18 @@ const getPullRequestComments = async (pullRequestNumbers, repository, options) =
         ? pullRequestNumbers.map(async (number) => {
             const data = [];
             for (let i = 1, shouldStop = false; shouldStop === false; i++) {
-                const reviews = await octokit_1.octokit.rest.pulls.listReviewComments({
+                const comments = await octokit_1.octokit.rest.pulls.listReviewComments({
                     owner,
                     repo,
                     pull_number: number,
                     per_page: 100,
                     page: i,
                 });
-                if (reviews.data.length < 100) {
+                console.log(comments.headers["x-ratelimit-remaining"]);
+                if (comments.data.length < 100) {
                     shouldStop = true;
                 }
-                data.push(...reviews.data);
+                data.push(...comments.data);
             }
             return { data };
         })
@@ -835,6 +836,7 @@ const getPullRequestReviews = async (pullRequestNumbers, repository, options) =>
                     per_page: 100,
                     page: i,
                 });
+                console.log(reviews.headers["x-ratelimit-remaining"]);
                 if (reviews.data.length < 100) {
                     shouldStop = true;
                 }
@@ -1096,10 +1098,12 @@ exports.octokit = new octokit_1.Octokit({
         onSecondaryRateLimit: (_, options) => {
             exports.octokit.log.error(`SecondaryRateLimit detected for request ${options.method} ${options.url}`);
             core.setFailed(`SecondaryRateLimit detected for request ${options.method} ${options.url}`);
+            return false;
         },
         onRateLimit: (_, options) => {
             exports.octokit.log.error(`Request quota exhausted for request ${options.method} ${options.url}`);
             core.setFailed(`Request quota exhausted for request ${options.method} ${options.url}`);
+            return false;
         },
         enabled: true,
     },
@@ -1386,7 +1390,10 @@ const constants_1 = __nccwpck_require__(76374);
 const createBlock_1 = __nccwpck_require__(5787);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
-        .filter((user) => data[user]?.[date]?.opened)
+        .filter((user) => data[user]?.[date]?.merged ||
+        data[user]?.[date]?.discussions ||
+        data[user]?.[date]?.reviewComments ||
+        data["total"]?.[date]?.reviewsConducted?.[user]?.["CHANGES_REQUESTED"])
         .map((user) => {
         return [
             `**${user}**`,
@@ -1427,7 +1434,7 @@ const constants_1 = __nccwpck_require__(76374);
 const createBlock_1 = __nccwpck_require__(5787);
 const createReviewTable = (data, users, date) => {
     const tableRowsTotal = users
-        .filter((user) => data[user]?.[date]?.opened ||
+        .filter((user) => data[user]?.[date]?.merged ||
         data[user]?.[date]?.reviewsConducted?.total?.total)
         .map((user) => {
         return [
