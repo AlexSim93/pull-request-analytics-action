@@ -1,1 +1,3 @@
-build linguist-generated=true
+build/** linguist-generated
+examples/** linguist-documentation
+README.md linguist-documentation
