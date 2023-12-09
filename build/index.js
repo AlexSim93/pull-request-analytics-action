@@ -744,13 +744,23 @@ const octokit_1 = __nccwpck_require__(64165);
 const getPullRequestComments = async (pullRequestNumbers, repository, options) => {
     const { owner, repo } = repository;
     return !options?.skip
-        ? pullRequestNumbers.map((number) => octokit_1.octokit.rest.pulls.listReviewComments({
-            owner,
-            repo,
-            pull_number: number,
-            per_page: 100,
-            page: 1,
-        }))
+        ? pullRequestNumbers.map(async (number) => {
+            const data = [];
+            for (let i = 1, shouldStop = false; shouldStop === false; i++) {
+                const reviews = await octokit_1.octokit.rest.pulls.listReviewComments({
+                    owner,
+                    repo,
+                    pull_number: number,
+                    per_page: 100,
+                    page: i,
+                });
+                if (reviews.data.length < 100) {
+                    shouldStop = true;
+                }
+                data.push(...reviews.data);
+            }
+            return { data };
+        })
         : [];
 };
 exports.getPullRequestComments = getPullRequestComments;
@@ -815,13 +825,23 @@ const octokit_1 = __nccwpck_require__(64165);
 const getPullRequestReviews = async (pullRequestNumbers, repository, options) => {
     const { owner, repo } = repository;
     return !options?.skip
-        ? pullRequestNumbers.map((number) => octokit_1.octokit.rest.pulls.listReviews({
-            owner,
-            repo,
-            pull_number: number,
-            per_page: 100,
-            page: 1,
-        }))
+        ? pullRequestNumbers.map(async (number) => {
+            const data = [];
+            for (let i = 1, shouldStop = false; shouldStop === false; i++) {
+                const reviews = await octokit_1.octokit.rest.pulls.listReviews({
+                    owner,
+                    repo,
+                    pull_number: number,
+                    per_page: 100,
+                    page: i,
+                });
+                if (reviews.data.length < 100) {
+                    shouldStop = true;
+                }
+                data.push(...reviews.data);
+            }
+            return { data };
+        })
         : [];
 };
 exports.getPullRequestReviews = getPullRequestReviews;
