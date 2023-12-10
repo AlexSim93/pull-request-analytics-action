@@ -15,13 +15,16 @@ export const collectData = (
   const collection: Record<string, Record<string, Collection>> = { total: {} };
 
   data.pullRequestInfo.forEach((pullRequest, index) => {
-    const closedDate = pullRequest?.closed_at
-      ? parseISO(pullRequest?.closed_at)
+    if (pullRequest === undefined || pullRequest === null) {
+      return;
+    }
+    const closedDate = pullRequest.closed_at
+      ? parseISO(pullRequest.closed_at)
       : null;
 
     const dateKey = closedDate ? format(closedDate, "M/y") : "invalidDate";
 
-    const userKey = pullRequest?.user.login || "invalidUser";
+    const userKey = pullRequest.user.login || "invalidUser";
     if (!collection[userKey]) {
       collection[userKey] = {};
     }
@@ -40,13 +43,13 @@ export const collectData = (
       });
     });
 
-    prepareReviews(data, collection, index, dateKey, pullRequest?.user.login);
+    prepareReviews(data, collection, index, dateKey, pullRequest.user.login);
     prepareDiscussions(
       data.comments,
       collection,
       index,
       dateKey,
-      pullRequest?.user.login
+      pullRequest.user.login
     );
   });
 

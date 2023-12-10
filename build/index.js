@@ -30,11 +30,14 @@ const utils_1 = __nccwpck_require__(85318);
 const collectData = (data) => {
     const collection = { total: {} };
     data.pullRequestInfo.forEach((pullRequest, index) => {
-        const closedDate = pullRequest?.closed_at
-            ? (0, date_fns_1.parseISO)(pullRequest?.closed_at)
+        if (pullRequest === undefined || pullRequest === null) {
+            return;
+        }
+        const closedDate = pullRequest.closed_at
+            ? (0, date_fns_1.parseISO)(pullRequest.closed_at)
             : null;
         const dateKey = closedDate ? (0, date_fns_1.format)(closedDate, "M/y") : "invalidDate";
-        const userKey = pullRequest?.user.login || "invalidUser";
+        const userKey = pullRequest.user.login || "invalidUser";
         if (!collection[userKey]) {
             collection[userKey] = {};
         }
@@ -44,8 +47,8 @@ const collectData = (data) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestTimeline)(pullRequest, data.reviews[index], collection[key][innerKey]);
             });
         });
-        (0, utils_1.prepareReviews)(data, collection, index, dateKey, pullRequest?.user.login);
-        (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, pullRequest?.user.login);
+        (0, utils_1.prepareReviews)(data, collection, index, dateKey, pullRequest.user.login);
+        (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, pullRequest.user.login);
     });
     Object.entries(collection).map(([key, value]) => {
         Object.entries(value).forEach(([innerKey, innerValue]) => {
@@ -356,6 +359,25 @@ Object.defineProperty(exports, "calcAverageValue", ({ enumerable: true, get: fun
 
 /***/ }),
 
+/***/ 30459:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getDiscussionType = void 0;
+const getDiscussionType = (text) => {
+    const regex = /\[\[(.*?)\]\]/g;
+    return (text
+        .match(regex)
+        ?.map((el) => el.replace(/[\[\]]/g, ""))
+        .filter((el) => el) || []);
+};
+exports.getDiscussionType = getDiscussionType;
+
+
+/***/ }),
+
 /***/ 85318:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -378,16 +400,56 @@ Object.defineProperty(exports, "prepareReviews", ({ enumerable: true, get: funct
 /***/ }),
 
 /***/ 28301:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareDiscussions = void 0;
+const getDiscussionType_1 = __nccwpck_require__(30459);
 const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin) => {
     const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== comment.user.login);
     const discussions = comments[index]?.filter((comment) => !comment.in_reply_to_id && pullRequestLogin !== comment.user.login);
     ["total", dateKey].forEach((key) => {
+        discussions?.forEach((discussion) => {
+            if (collection[discussion.user.login][key].discussionsTypes === undefined) {
+                collection[discussion.user.login][key].discussionsTypes = {};
+            }
+            if (collection[pullRequestLogin][key].discussionsTypes === undefined) {
+                collection[pullRequestLogin][key].discussionsTypes = {};
+            }
+            if (collection.total[key].discussionsTypes === undefined) {
+                collection.total[key].discussionsTypes = {};
+            }
+            (0, getDiscussionType_1.getDiscussionType)(discussion.body).forEach((type) => {
+                collection[discussion.user.login][key].discussionsTypes[type] = {
+                    ...(collection[discussion.user.login][key].discussionsTypes[type] ||
+                        {}),
+                    conducted: {
+                        total: (collection[discussion.user.login][key].discussionsTypes[type]
+                            ?.conducted?.total || 0) + 1,
+                    },
+                };
+                collection[pullRequestLogin][key].discussionsTypes[type] = {
+                    ...(collection[pullRequestLogin][key].discussionsTypes[type] || {}),
+                    received: {
+                        total: (collection[pullRequestLogin][key].discussionsTypes[type]
+                            ?.received?.total || 0) + 1,
+                    },
+                };
+                collection.total[key].discussionsTypes[type] = {
+                    ...(collection.total[key].discussionsTypes[type] || {}),
+                    conducted: {
+                        total: (collection.total[key].discussionsTypes[type]?.conducted
+                            ?.total || 0) + 1,
+                    },
+                    received: {
+                        total: (collection.total[key].discussionsTypes[type]?.received?.total ||
+                            0) + 1,
+                    },
+                };
+            });
+        });
         comments[index]?.forEach((comment) => {
             if (pullRequestLogin !== comment.user.login) {
                 collection[comment.user.login][key].commentsConducted =
@@ -946,8 +1008,12 @@ const makeComplexRequest = async (amount = 100, repository, options = {
         .filter((pr) => {
         const excludeLabels = (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS");
         const includeLabels = (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS");
-        const isIncludeLabelsCorrect = includeLabels.length > 0 ? pr.labels.some((label) => includeLabels.includes(label.name)) : true;
-        const isExcludeLabelsCorrect = excludeLabels.length > 0 ? !pr.labels.some((label) => excludeLabels.includes(label.name)) : true;
+        const isIncludeLabelsCorrect = includeLabels.length > 0
+            ? pr.labels.some((label) => includeLabels.includes(label.name))
+            : true;
+        const isExcludeLabelsCorrect = excludeLabels.length > 0
+            ? !pr.labels.some((label) => excludeLabels.includes(label.name))
+            : true;
         return isIncludeLabelsCorrect && isExcludeLabelsCorrect;
     })
         .map((item) => item.number);
@@ -1202,11 +1268,13 @@ const createMarkdown = (data) => {
         const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
         const pullRequestReviews = (0, utils_1.createReviewTable)(data, users, date);
         const pullRequestQuality = (0, utils_1.createPullRequestQualityTable)(data, users, date);
+        const pieChart = (0, utils_1.createDiscussionsPieChart)(data, users, date);
         return `
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     ${pullRequestReviews}
     ${pullRequestQuality}
+    ${pieChart}
     `;
     });
     return `
@@ -1346,6 +1414,37 @@ exports.createConfigParamsCode = createConfigParamsCode;
 
 /***/ }),
 
+/***/ 65683:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createDiscussionsPieChart = void 0;
+const _1 = __nccwpck_require__(99446);
+const createDiscussionsPieChart = (data, users, date) => {
+    return users
+        .map((user) => ({ user, values: data[user][date]?.discussionsTypes }))
+        .filter((types) => types.values &&
+        Object.values(types.values).some((value) => value.received?.total))
+        .map((data) => {
+        const values = Object.entries(data.values)
+            .filter(([key, value]) => value.received?.total)
+            .reduce((acc, value) => {
+            return {
+                ...acc,
+                [value[0]]: value[1].received?.total,
+            };
+        }, {});
+        return (0, _1.createPieChart)(`Discussion's types ${data.user} ${date}`, values);
+    })
+        .join("\n");
+};
+exports.createDiscussionsPieChart = createDiscussionsPieChart;
+
+
+/***/ }),
+
 /***/ 27025:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -1373,6 +1472,31 @@ ${sections
     `;
 };
 exports.createGanttBar = createGanttBar;
+
+
+/***/ }),
+
+/***/ 55350:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createPieChart = void 0;
+const createPieChart = (title, values) => {
+    return `
+\`\`\`mermaid
+pie
+title ${title} 
+${Object.entries(values)
+        .map(([key, value]) => {
+        return `"${key}(${value})":${value}`;
+    })
+        .join("\n")}
+\`\`\`
+    `;
+};
+exports.createPieChart = createPieChart;
 
 
 /***/ }),
@@ -1620,7 +1744,9 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = void 0;
+exports.createPieChart = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = void 0;
+var createDiscussionsPieChart_1 = __nccwpck_require__(65683);
+Object.defineProperty(exports, "createDiscussionsPieChart", ({ enumerable: true, get: function () { return createDiscussionsPieChart_1.createDiscussionsPieChart; } }));
 var createConfigParamsCode_1 = __nccwpck_require__(86600);
 Object.defineProperty(exports, "createConfigParamsCode", ({ enumerable: true, get: function () { return createConfigParamsCode_1.createConfigParamsCode; } }));
 var createTotalTable_1 = __nccwpck_require__(68991);
@@ -1641,6 +1767,8 @@ var createTimelineTable_1 = __nccwpck_require__(89343);
 Object.defineProperty(exports, "createTimelineTable", ({ enumerable: true, get: function () { return createTimelineTable_1.createTimelineTable; } }));
 var createPullRequestQualityTable_1 = __nccwpck_require__(71537);
 Object.defineProperty(exports, "createPullRequestQualityTable", ({ enumerable: true, get: function () { return createPullRequestQualityTable_1.createPullRequestQualityTable; } }));
+var createPieChart_1 = __nccwpck_require__(55350);
+Object.defineProperty(exports, "createPieChart", ({ enumerable: true, get: function () { return createPieChart_1.createPieChart; } }));
 
 
 /***/ }),

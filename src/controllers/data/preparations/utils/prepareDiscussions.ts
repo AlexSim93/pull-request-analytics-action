@@ -1,12 +1,13 @@
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
+import { getDiscussionType } from "./getDiscussionType";
 
 export const prepareDiscussions = (
   comments: Awaited<ReturnType<typeof makeComplexRequest>>["comments"],
   collection: Record<string, Record<string, Collection>>,
   index: number,
   dateKey: string,
-  pullRequestLogin: string | undefined
+  pullRequestLogin: string
 ) => {
   const reviewComments = comments[index]?.filter(
     (comment) => pullRequestLogin !== comment.user.login
@@ -18,6 +19,52 @@ export const prepareDiscussions = (
   );
 
   ["total", dateKey].forEach((key) => {
+    discussions?.forEach((discussion) => {
+      if (
+        collection[discussion.user.login][key].discussionsTypes === undefined
+      ) {
+        collection[discussion.user.login][key].discussionsTypes = {};
+      }
+      if (collection[pullRequestLogin][key].discussionsTypes === undefined) {
+        collection[pullRequestLogin][key].discussionsTypes = {};
+      }
+      if (collection.total[key].discussionsTypes === undefined) {
+        collection.total[key].discussionsTypes = {};
+      }
+      getDiscussionType(discussion.body).forEach((type) => {
+        collection[discussion.user.login][key].discussionsTypes![type] = {
+          ...(collection[discussion.user.login][key].discussionsTypes![type] ||
+            {}),
+          conducted: {
+            total:
+              (collection[discussion.user.login][key].discussionsTypes![type]
+                ?.conducted?.total || 0) + 1,
+          },
+        };
+        collection[pullRequestLogin][key].discussionsTypes![type] = {
+          ...(collection[pullRequestLogin][key].discussionsTypes![type] || {}),
+          received: {
+            total:
+              (collection[pullRequestLogin][key].discussionsTypes![type]
+                ?.received?.total || 0) + 1,
+          },
+        };
+        collection.total[key].discussionsTypes![type] = {
+          ...(collection.total[key].discussionsTypes![type] || {}),
+          conducted: {
+            total:
+              (collection.total[key].discussionsTypes![type]?.conducted
+                ?.total || 0) + 1,
+          },
+          received: {
+            total:
+              (collection.total[key].discussionsTypes![type]?.received?.total ||
+                0) + 1,
+          },
+        };
+      });
+    });
+
     comments[index]?.forEach((comment) => {
       if (pullRequestLogin !== comment.user.login) {
         collection[comment.user.login][key].commentsConducted =
@@ -42,7 +89,7 @@ export const prepareDiscussions = (
       collection.total[key].discussionsConducted =
         (collection.total[key].discussionsConducted || 0) + 1;
     });
-    
+
     if (pullRequestLogin) {
       collection[pullRequestLogin][key]["discussions"] =
         (discussions?.length || 0) +

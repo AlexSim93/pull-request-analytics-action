@@ -1,3 +1,4 @@
+export { createDiscussionsPieChart } from "./createDiscussionsPieChart";
 export { createConfigParamsCode } from "./createConfigParamsCode";
 export { createTotalTable } from "./createTotalTable";
 export { createReviewTable } from "./createReviewTable";
@@ -8,4 +9,5 @@ export { sortCollectionsByDate } from "./sortCollectionsByDate";
 export { createTimelineGanttBar } from "./createTimelineGanttBar";
 export { createTimelineTable } from "./createTimelineTable";
 export { createPullRequestQualityTable } from "./createPullRequestQualityTable";
+export { createPieChart } from "./createPieChart";
 export { StatsType } from "./types";

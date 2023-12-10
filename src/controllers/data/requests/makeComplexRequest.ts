@@ -24,8 +24,14 @@ export const makeComplexRequest = async (
     .filter((pr) => {
       const excludeLabels = getMultipleValuesInput("EXCLUDE_LABELS");
       const includeLabels = getMultipleValuesInput("INCLUDE_LABELS");
-      const isIncludeLabelsCorrect = includeLabels.length > 0 ? pr.labels.some((label) => includeLabels.includes(label.name)) : true;
-      const isExcludeLabelsCorrect = excludeLabels.length > 0 ? !pr.labels.some((label) => excludeLabels.includes(label.name)) : true;
+      const isIncludeLabelsCorrect =
+        includeLabels.length > 0
+          ? pr.labels.some((label) => includeLabels.includes(label.name))
+          : true;
+      const isExcludeLabelsCorrect =
+        excludeLabels.length > 0
+          ? !pr.labels.some((label) => excludeLabels.includes(label.name))
+          : true;
       return isIncludeLabelsCorrect && isExcludeLabelsCorrect;
     })
     .map((item) => item.number);

@@ -1,9 +1,8 @@
-import * as core from "@actions/core";
-
 import { Collection } from "../data/preparations/types";
 import {
   StatsType,
   createConfigParamsCode,
+  createDiscussionsPieChart,
   createPullRequestQualityTable,
   createReviewTable,
   createTimelineGanttBar,
@@ -61,12 +60,13 @@ export const createMarkdown = (
     const pullRequestReviews = createReviewTable(data, users, date);
 
     const pullRequestQuality = createPullRequestQualityTable(data, users, date);
-
+    const pieChart = createDiscussionsPieChart(data, users, date);
     return `
     ${timelineContent.join("\n")}
     ${pullRequestTotal}
     ${pullRequestReviews}
     ${pullRequestQuality}
+    ${pieChart}
     `;
   });
 

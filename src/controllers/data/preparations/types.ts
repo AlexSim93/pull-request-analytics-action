@@ -10,15 +10,15 @@ type TimelinePoints = {
 
 type DiscussionResult = {
   total: number;
-  agreed: number;
-  disagreed: number;
-  unresolved: number;
+  agreed?: number;
+  disagreed?: number;
+  unresolved?: number;
 };
 
 type DiscussionType = {
   [key: string]: {
-    received: DiscussionResult;
-    conducted: DiscussionResult;
+    received?: DiscussionResult;
+    conducted?: DiscussionResult;
   };
 };
 
