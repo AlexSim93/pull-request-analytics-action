@@ -602,7 +602,7 @@ exports.prepareReviews = prepareReviews;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.concurrentLimit = void 0;
-exports.concurrentLimit = 10;
+exports.concurrentLimit = 25;
 
 
 /***/ }),
@@ -705,21 +705,21 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
         const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks, repository);
         console.log(`Batch request #${counter + 1} out of ${Math.ceil(pullRequestNumbers.length / constants_1.concurrentLimit)}`);
         const prs = await Promise.allSettled(pullRequestDatas);
-        await (0, delay_1.delay)(15000);
+        await (0, delay_1.delay)(5000);
         const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, repository, {
             skip: skipReviews,
         });
         const reviews = await Promise.allSettled(pullRequestReviews);
-        await (0, delay_1.delay)(15000);
-        const pullRequestCommits = await (0, getPullRequestCommits_1.getPullRequestCommits)(pullRequestNumbers, repository, {
+        await (0, delay_1.delay)(5000);
+        const pullRequestCommits = await (0, getPullRequestCommits_1.getPullRequestCommits)(pullRequestNumbersChunks, repository, {
             skip: skipCommits,
         });
         const commits = await Promise.allSettled(pullRequestCommits);
-        const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbers, repository, {
+        const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbersChunks, repository, {
             skip: skipComments,
         });
         const comments = await Promise.allSettled(pullRequestComments);
-        await (0, delay_1.delay)(15000);
+        await (0, delay_1.delay)(5000);
         counter++;
         PRs.push(...prs);
         PREvents.push(...reviews);
@@ -754,7 +754,6 @@ const getPullRequestComments = async (pullRequestNumbers, repository, options) =
                     per_page: 100,
                     page: i,
                 });
-                console.log(comments.headers["x-ratelimit-remaining"]);
                 if (comments.data.length < 100) {
                     shouldStop = true;
                 }
@@ -836,7 +835,6 @@ const getPullRequestReviews = async (pullRequestNumbers, repository, options) =>
                     per_page: 100,
                     page: i,
                 });
-                console.log(reviews.headers["x-ratelimit-remaining"]);
                 if (reviews.data.length < 100) {
                     shouldStop = true;
                 }
@@ -1098,12 +1096,12 @@ exports.octokit = new octokit_1.Octokit({
         onSecondaryRateLimit: (_, options) => {
             exports.octokit.log.error(`SecondaryRateLimit detected for request ${options.method} ${options.url}`);
             core.setFailed(`SecondaryRateLimit detected for request ${options.method} ${options.url}`);
-            return false;
+            throw `SecondaryRateLimit detected for request ${options.method} ${options.url}`;
         },
         onRateLimit: (_, options) => {
             exports.octokit.log.error(`Request quota exhausted for request ${options.method} ${options.url}`);
             core.setFailed(`Request quota exhausted for request ${options.method} ${options.url}`);
-            return false;
+            throw `Request quota exhausted for request ${options.method} ${options.url}`;
         },
         enabled: true,
     },

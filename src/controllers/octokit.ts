@@ -14,7 +14,7 @@ export const octokit = new Octokit({
       core.setFailed(
         `SecondaryRateLimit detected for request ${options.method} ${options.url}`
       );
-      return false;
+      throw `SecondaryRateLimit detected for request ${options.method} ${options.url}`;
     },
     onRateLimit: (_, options) => {
       octokit.log.error(
@@ -23,7 +23,7 @@ export const octokit = new Octokit({
       core.setFailed(
         `Request quota exhausted for request ${options.method} ${options.url}`
       );
-      return false;
+      throw `Request quota exhausted for request ${options.method} ${options.url}`;
     },
     enabled: true,
   },
