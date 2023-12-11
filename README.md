@@ -15,48 +15,48 @@
   | **Developer-4** | 1 hour | 3 hours 27 minutes | 14 hours 14 minutes | 4 |
   | **total** | 2 hours 39 minutes | 4 hours 14 minutes | 20 hours 33 minutes | 22 |
 
-```mermaid
-gantt
-title Pull requests timeline(percentile75) 12/2023 / minutes
-dateFormat X
-axisFormat %s
-section Developer-1
-                Time to review :  0, 99
-Time to approve :  0, 99
-Time to merge :  0, 1030
+  ```mermaid
+  gantt
+  title Pull requests timeline(percentile75) 12/2023 / minutes
+  dateFormat X
+  axisFormat %s
+  section Developer-1
+                  Time to review :  0, 99
+  Time to approve :  0, 99
+  Time to merge :  0, 1030
 
-section Developer-2
-                Time to review :  0, 260
-Time to approve :  0, 348
-Time to merge :  0, 1233
+  section Developer-2
+                  Time to review :  0, 260
+  Time to approve :  0, 348
+  Time to merge :  0, 1233
 
-section Developer-3
-                Time to review :  0, 325
-Time to approve :  0, 1600
-Time to merge :  0, 2910
+  section Developer-3
+                  Time to review :  0, 325
+  Time to approve :  0, 1600
+  Time to merge :  0, 2910
 
-section Developer-4
-                Time to review :  0, 60
-Time to approve :  0, 207
-Time to merge :  0, 854
+  section Developer-4
+                  Time to review :  0, 60
+  Time to approve :  0, 207
+  Time to merge :  0, 854
 
-section total
-                Time to review :  0, 159
-Time to approve :  0, 254
-Time to merge :  0, 1233
+  section total
+                  Time to review :  0, 159
+  Time to approve :  0, 254
+  Time to merge :  0, 1233
 
-```
+  ```
 
 - **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
 
-|      user       | Total opened PRs | Total merged PRs | Additions/Deletions | Total comments | Reviews conducted |
-| :-------------: | :--------------: | :--------------: | :-----------------: | :------------: | :---------------: |
-| **Developer-1** |        7         |        7         |      +158/-113      |       0        |         9         |
-| **Developer-2** |        10        |        9         |     +1010/-3690     |       3        |         5         |
-| **Developer-3** |        2         |        2         |      +138/-108      |       15       |         3         |
-| **Developer-4** |        4         |        4         |      +326/-142      |       12       |         3         |
-| **Developer-5** |        0         |        0         |        +0/-0        |       0        |         3         |
-|    **total**    |        23        |        22        |     +1632/-4053     |       30       |        21         |
+  |      user       | Total opened PRs | Total merged PRs | Additions/Deletions | Total comments | Reviews conducted |
+  | :-------------: | :--------------: | :--------------: | :-----------------: | :------------: | :---------------: |
+  | **Developer-1** |        7         |        7         |      +158/-113      |       0        |         9         |
+  | **Developer-2** |        10        |        9         |     +1010/-3690     |       3        |         5         |
+  | **Developer-3** |        2         |        2         |      +138/-108      |       15       |         3         |
+  | **Developer-4** |        4         |        4         |      +326/-142      |       12       |         3         |
+  | **Developer-5** |        0         |        0         |        +0/-0        |       0        |         3         |
+  |    **total**    |        23        |        22        |     +1632/-4053     |       30       |        21         |
 
 - **Quality Report on Developer-Initiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
   | user | Total merged PRs | Changes requested received | Discussions received | Comments received |
@@ -67,25 +67,25 @@ Time to merge :  0, 1233
   | **Developer-4** | 4 | 0 | 7 | 7 |
   | **total** | 22 | 3 | 15 | 17 |
 
-```mermaid
-pie
-title Discussions types total 12/2023
-"Bug(7)":7
-"Performance(4)":4
-"Code complexity(2)":2
-"Test coverage(1)":1
-```
+  ```mermaid
+  pie
+  title Discussions types total 12/2023
+  "Bug(7)":7
+  "Performance(4)":4
+  "Code complexity(2)":2
+  "Test coverage(1)":1
+  ```
 
 - **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
 
-|      user       | Total merged PRs | Discussions conducted | Comments conducted | Changes requested / Comments / Approvals |
-| :-------------: | :--------------: | :-------------------: | :----------------: | :--------------------------------------: |
-| **Developer-1** |        7         |           9           |         11         |                3 / 2 / 9                 |
-| **Developer-2** |        9         |           4           |         4          |                0 / 1 / 5                 |
-| **Developer-3** |        2         |           0           |         0          |                0 / 0 / 3                 |
-| **Developer-4** |        4         |           0           |         0          |                0 / 0 / 3                 |
-| **Developer-5** |        0         |           2           |         2          |                0 / 0 / 3                 |
-|    **total**    |        22        |          15           |         17         |                3 / 5 / 21                |
+  |      user       | Total merged PRs | Discussions conducted | Comments conducted | Changes requested / Comments / Approvals |
+  | :-------------: | :--------------: | :-------------------: | :----------------: | :--------------------------------------: |
+  | **Developer-1** |        7         |           9           |         11         |                3 / 2 / 9                 |
+  | **Developer-2** |        9         |           4           |         4          |                0 / 1 / 5                 |
+  | **Developer-3** |        2         |           0           |         0          |                0 / 0 / 3                 |
+  | **Developer-4** |        4         |           0           |         0          |                0 / 0 / 3                 |
+  | **Developer-5** |        0         |           2           |         2          |                0 / 0 / 3                 |
+  |    **total**    |        22        |          15           |         17         |                3 / 5 / 21                |
 
 - **Highly Customizable for Specific Project Needs**: This action is designed with flexibility in mind, allowing for extensive customization of display parameters, statistics collection, and report generation. Users can tailor the tool to precisely fit the requirements of their specific projects, ensuring that the reports and analytics are as relevant and useful as possible.
 
