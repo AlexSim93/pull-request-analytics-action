@@ -1,33 +1,124 @@
 # Pull request analytics action
 
-**pull-request-analytics-action** is a comprehensive tool designed to generate detailed reports on closed pull requests (PRs). This powerful GitHub Action aids in tracking and analyzing the efficiency and productivity of software development workflows.
+**pull-request-analytics-action**: A powerful tool designed for generating detailed code review reports. This action creates tables and graphs focused on key metrics derived from closed pull requests and reviews. These metrics are instrumental in identifying bottlenecks in the review process and measuring the productivity of both individual developers and the team as a whole. A significant advantage of **pull-request-analytics-action** is that all data processing is conducted within the GitHub environment, ensuring data privacy and security. This tool is completely free and open source, making it an attractive choice for a wide range of users.
+
+## Table of Contents
+
+- [Key Features](#key-features)
+- [Getting started](#getting-started)
+- [Report examples](#report-examples)
+- [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
+- [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
+- [Configuration Parameters Overview](#configuration-parameters-overview)
+- [Privacy and Data Handling](#privacy-and-data-handling)
+- [Usage Limitations](#usage-limitations)
+- [License](#license)
 
 ## Key Features:
 
-- **PR Timeline Analysis**: Generates a table showcasing the time taken from PR opening to the first review, approval, and final merge. This feature helps in understanding the responsiveness and review efficiency within the team.
-- **Developer-Specific Metrics**: Calculates and presents both median and average values for each metric, broken down by individual developers. This allows for a granular analysis of each team member's performance.
-- **Aggregate Statistics**: Provides an overall summary of all the metrics for the entire team, offering a bird's-eye view of the team's collective performance.
-- **Customizable Time Frame**: Users can set the time period for which the report is generated, making the tool flexible and adaptable to different project timelines.
-- **Graphical Representation**: Visualizes the timeline data in the form of clear, intuitive graphs for easier comprehension and presentation.
-- **Additional Metrics**: Apart from timeline analysis, this Action also reports on the number of open PRs, lines of code added or deleted, comments received on PRs, and the count of code reviews conducted by each developer. This comprehensive data set offers a deeper insight into the coding and collaboration activities of the team.
-- **Developer and Team Overview**: While providing detailed data for individual developers, it also compiles an aggregate summary, enabling both micro and macro-level analysis of team performance.
+- **Customizable Tables and Graphs for Review Timelines**: Generates user-friendly tables and graphs that mark critical milestones from PR opening to review, approval, and merge. Users can select the calculation method best suited for them, choosing from median, mean (average), or a selected percentile. This feature helps to identify bottlenecks in the code review process.
+  | user | Time to review | Time to approve | Time to merge | Total merged PRs |
+  | :------: | :------: | :------: | :------: | :------: |
+  | **dev-1** | 1 hour 39 minutes | 1 hour 39 minutes | 17 hours 10 minutes | 7 |
+  | **dev-2** | 4 hours 20 minutes | 5 hours 48 minutes | 20 hours 33 minutes | 9 |
+  | **dev-3** | 5 hours 25 minutes | 26 hours 40 minutes | 48 hours 30 minutes | 2 |
+  | **dev-4** | 1 hour | 3 hours 27 minutes | 14 hours 14 minutes | 4 |
+  | **total** | 2 hours 39 minutes | 4 hours 14 minutes | 20 hours 33 minutes | 22 |
+
+  ```mermaid
+  gantt
+  title Pull requests timeline(percentile75) 12/2023 / minutes
+  dateFormat X
+  axisFormat %s
+  section dev-1
+  Time to review :  0, 99
+  Time to approve :  0, 99
+  Time to merge :  0, 1030
+
+  section dev-2
+  Time to review :  0, 260
+  Time to approve :  0, 348
+  Time to merge :  0, 1233
+
+  section dev-3
+  Time to review :  0, 325
+  Time to approve :  0, 1600
+  Time to merge :  0, 2910
+
+  section dev-4
+  Time to review :  0, 60
+  Time to approve :  0, 207
+  Time to merge :  0, 854
+
+  section total
+  Time to review :  0, 159
+  Time to approve :  0, 254
+  Time to merge :  0, 1233
+
+  ```
+
+- **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
+  | user | Total opened PRs | Total merged PRs | Additions/Deletions | Total comments | Reviews conducted |
+  | :-------------: | :--------------: | :--------------: | :-----------------: | :------------: | :---------------: |
+  | **dev-1** | 7 | 7 | +158/-113 | 0 | 9 |
+  | **dev-2** | 10 | 9 | +1010/-3690 | 3 | 5 |
+  | **dev-3** | 2 | 2 | +138/-108 | 15 | 3 |
+  | **dev-4** | 4 | 4 | +326/-142 | 12 | 3 |
+  | **dev-5** | 0 | 0 | +0/-0 | 0 | 3 |
+  | **total** | 23 | 22 | +1632/-4053 | 30 | 21 |
+
+- **Quality Report on dev-Initiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
+
+  |   user    | Total merged PRs | Changes requested received | Discussions received | Comments received |
+  | :-------: | :--------------: | :------------------------: | :------------------: | :---------------: |
+  | **dev-1** |        7         |             0              |          0           |         0         |
+  | **dev-2** |        9         |             2              |          2           |         2         |
+  | **dev-3** |        2         |             1              |          6           |         8         |
+  | **dev-4** |        4         |             0              |          7           |         7         |
+  | **total** |        22        |             3              |          15          |        17         |
+
+```mermaid
+pie
+title Discussions types total 12/2023
+"Bug(7)":7
+"Performance(4)":4
+"Code complexity(2)":2
+"Test coverage(1)":1
+```
+
+- **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
+  | user | Total merged PRs | Discussions conducted | Comments conducted | Changes requested / Comments / Approvals |
+  | :-------------: | :--------------: | :-------------------: | :----------------: | :--------------------------------------: |
+  | **dev-1** | 7 | 9 | 11 | 3 / 2 / 9 |
+  | **dev-2** | 9 | 4 | 4 | 0 / 1 / 5 |
+  | **dev-3** | 2 | 0 | 0 | 0 / 0 / 3 |
+  | **dev-4** | 4 | 0 | 0 | 0 / 0 / 3 |
+  | **dev-5** | 0 | 2 | 2 | 0 / 0 / 3 |
+  | **total** | 22 | 15 | 17 | 3 / 5 / 21 |
+
+- **Highly Customizable for Specific Project Needs**: This action is designed with flexibility in mind, allowing for extensive customization of display parameters, statistics collection, and report generation. Users can tailor the tool to precisely fit the requirements of their specific projects, ensuring that the reports and analytics are as relevant and useful as possible.
+
+- **GitHub-Integrated, Secure, and Open Source**: As a GitHub Action, **pull-request-analytics-action** operates entirely within the GitHub environment. It neither shares nor stores any data on external services, ensuring complete data security and privacy. Additionally, it is an open-source tool, providing full transparency in its operation, and is available to use at no cost, making it accessible for all GitHub users.
 
 This GitHub Action, **pull-request-analytics-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
-## Setting Up and Running pull-request-analytics-action
+## Getting started
 
 To integrate **pull-request-analytics-action** into your GitHub repository, use the following steps. The provided code is a template and can be adjusted to fit your specific requirements:
 
 1. **Create a Workflow File**:
 
    - Navigate to the `.github/workflows` directory in your repository.
-   - Create a YAML file, for example, `pr-full-report-workflow.yml`.
+   - Create a YAML file, for example, `pull-request-analytics.yml`.
 
-2. **Insert and Customize the Workflow Code**:
+2. **Choose the Trigger Event**: Decide on which GitHub event you want to trigger the report generation. You can refer to the [GitHub Events Documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) for a detailed understanding of different events. I recommend using one of the `pull_request`, `workflow_dispatch`, or `schedule` events, depending on your specific needs. For this setup, we will configure the `workflow_dispatch` event.
+
+3. **Insert and Customize the Workflow Code**:
 
    - Open your new YAML file and paste the following example workflow. This is a starting template and you can modify it as needed:
+
      ```yaml
-     name: "PR full report workflow"
+     name: "PR Analytics"
      on:
        workflow_dispatch:
          inputs:
@@ -41,53 +132,69 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
            report_date_end:
              description: "Report date end(d/MM/yyyy)"
              required: false
-           core_hours_start:
-             description: "Core hours start(HH:mm)"
-             required: false
-             default: "09:00"
-           core_hours_end:
-             description: "Core hours end(HH:mm)"
-             required: false
-             default: "20:00"
+           aggregate_value_methods:
+             description: "Aggregate value methods for timelines separated by comma. Can take values average, percentile, medianÏ"
+             default: "percentile"
            percentile:
              description: "Percentile"
              required: false
              default: "75"
+           issue_title:
+             description: "Issue custom title"
+             required: false
+           labels:
+             description: "Issue labels"
+             required: false
+           hide_users:
+             description: "Hidden users"
+             required: false
+           show_users:
+             description: "Shown users"
+             required: false
+           exclude_labels:
+             description: "Labels to exclude"
+             required: false
      jobs:
        create-report:
          name: "Create report"
          runs-on: ubuntu-latest
          steps:
-           - name: "Run PRs full report action"
-             uses: AlexSim93/pull-request-analytics-action@v1.0.0
+           - name: "Run script for analytics"
+             uses: AlexSim93/pr-full-report-action@v1.3.0
              with:
-               GITHUB_REPO_FOR_ISSUE: "repository-for-report-creation"
-               GITHUB_OWNER_FOR_ISSUE: "owner-of-repository-for-report-creation"
-               AMOUNT: ${{ inputs.amount }}
-               CORE_HOURS_START: ${{ inputs.core_hours_start }}
-               CORE_HOURS_END: ${{ inputs.core_hours_end }}
+               GITHUB_TOKEN: ${{ secrets.KEY }}
+               ISSUE_TITLE: ${{ inputs.issue_title }}
+               ASSIGNEES: "user-1, user-2, user-3"
+               LABELS: ${{ inputs.labels }}
+               GITHUB_REPO_FOR_ISSUE: "repo"
+               GITHUB_OWNER_FOR_ISSUE: "owner"
+               GITHUB_OWNERS_REPOS: "owner-1/repo-1"
+               CORE_HOURS_START: "9:00"
+               CORE_HOURS_END: "19:00"
+               TIMEZONE: "Europe/Berlin"
+               AGGREGATE_VALUE_METHODS: ${{inputs.aggregate_value_methods}}
                PERCENTILE: ${{ inputs.percentile }}
+               AMOUNT: ${{ inputs.amount }}
                REPORT_DATE_START: ${{ inputs.report_date_start }}
                REPORT_DATE_END: ${{ inputs.report_date_end }}
-               LABELS: report
-               ASSIGNEES: assignee
-               GITHUB_TOKEN: ${{ secrets.KEY }}
-               GITHUB_OWNERS_REPOS: owner-1/repo-1, owner-2/repo-2, owner-1/repo-3
+               HIDE_USERS: ${{ inputs.hide_users }}
      ```
+
+   - In the `workflow_dispatch` section of the yml file, I have specified various inputs that can be adjusted each time the action is triggered. By utilizing the `required` and `default` fields, I've designated whether each input is mandatory and set predetermined values for ease of use. In the `with` section, I've included parameters that remain constant for each action run. For a detailed understanding of which parameters the action accepts and their functions, please refer to the [Parameters Overview section](#configuration-parameters-overview).
    - Adjust parameters to match your project's needs.
 
-3. **Commit and Push the Workflow File**:
+4. **Commit and Push the Workflow File**:
 
    - Save your changes and commit the file to your repository.
    - Push it to enable the GitHub Action workflow.
 
-4. **Run the Workflow**:
+5. **Run the Workflow**:
 
    - In your repository, go to the 'Actions' tab.
-   - Select **PR full report workflow** and start it via "Run workflow".
+   - Select **PR analytics** and start it via "Run workflow".
    - Fill in any necessary parameters and execute the action.
 
-5. **Review the Generated Report**:
+6. **Review the Generated Report**:
    - Once the action completes, your detailed PR report will be available.
    - If configured, check for a new issue in the specified repository containing the report.
 
@@ -135,8 +242,8 @@ Below is a table outlining the various configuration parameters available for **
 | `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                             | No       | `100`                                   |
 | `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                        | No       | -                                       |
 | `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                          | No       | -                                       |
-| `CORE_HOURS_START`        | Start of core hours (HH:mm)                                                                                  | No       | -                                       |
-| `CORE_HOURS_END`          | End of core hours (HH:mm)                                                                                    | No       | -                                       |
+| `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                               | No       | -                                       |
+| `CORE_HOURS_END`          | End of core hours (HH:mm). By default in UTC                                                                 | No       | -                                       |
 | `TIMEZONE`                | Timezone that will be used in action                                                                         | No       | `UTC`                                   |
 | `PERCENTILE`              | Percentile value for timeline                                                                                | No       | `75`                                    |
 | `ISSUE_TITLE`             | Title for the created issue                                                                                  | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
