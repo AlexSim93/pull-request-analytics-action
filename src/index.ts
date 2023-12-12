@@ -14,12 +14,15 @@ async function main() {
     process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
   }
   if (
-    (!process.env.GITHUB_REPO_FOR_ISSUE ||
+    ((!process.env.GITHUB_REPO_FOR_ISSUE ||
       !process.env.GITHUB_OWNER_FOR_ISSUE) &&
-    (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-      !core.getInput("GITHUB_REPO_FOR_ISSUE"))
+      (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+        !core.getInput("GITHUB_REPO_FOR_ISSUE"))) ||
+    (!core.getInput("GITHUB_OWNERS_REPOS") &&
+      !process.env.GITHUB_OWNERS_REPOS) ||
+    (!core.getInput("GITHUB_TOKEN") && !process.env.GITHUB_TOKEN)
   ) {
-    throw new Error("Missing environment variables");
+    throw new Error("Missing required variables");
   }
 
   const ownersRepos = getOwnersRepositories();
