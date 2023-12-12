@@ -19,10 +19,10 @@
 - **Customizable Tables and Graphs for Review Timelines**: Generates user-friendly tables and graphs that mark critical milestones from PR opening to review, approval, and merge. Users can select the calculation method best suited for them, choosing from median, mean (average), or a selected percentile. This feature helps to identify bottlenecks in the code review process.
   | user | Time to review | Time to approve | Time to merge | Total merged PRs |
   | :------: | :------: | :------: | :------: | :------: |
-  | **dev-1** | 1 hour 39 minutes | 1 hour 39 minutes | 17 hours 10 minutes | 7 |
-  | **dev-2** | 4 hours 20 minutes | 5 hours 48 minutes | 20 hours 33 minutes | 9 |
-  | **dev-3** | 5 hours 25 minutes | 26 hours 40 minutes | 48 hours 30 minutes | 2 |
-  | **dev-4** | 1 hour | 3 hours 27 minutes | 14 hours 14 minutes | 4 |
+  | **dev1** | 1 hour 39 minutes | 1 hour 39 minutes | 17 hours 10 minutes | 7 |
+  | **dev2** | 4 hours 20 minutes | 5 hours 48 minutes | 20 hours 33 minutes | 9 |
+  | **dev3** | 5 hours 25 minutes | 26 hours 40 minutes | 48 hours 30 minutes | 2 |
+  | **dev4** | 1 hour | 3 hours 27 minutes | 14 hours 14 minutes | 4 |
   | **total** | 2 hours 39 minutes | 4 hours 14 minutes | 20 hours 33 minutes | 22 |
 
   ```mermaid
@@ -30,22 +30,22 @@
   title Pull requests timeline(percentile75) 12/2023 / minutes
   dateFormat X
   axisFormat %s
-  section dev-1
+  section dev1
   Time to review :  0, 99
   Time to approve :  0, 99
   Time to merge :  0, 1030
 
-  section dev-2
+  section dev2
   Time to review :  0, 260
   Time to approve :  0, 348
   Time to merge :  0, 1233
 
-  section dev-3
+  section dev3
   Time to review :  0, 325
   Time to approve :  0, 1600
   Time to merge :  0, 2910
 
-  section dev-4
+  section dev4
   Time to review :  0, 60
   Time to approve :  0, 207
   Time to merge :  0, 854
@@ -60,21 +60,21 @@
 - **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
   | user | Total opened PRs | Total merged PRs | Additions/Deletions | Total comments | Reviews conducted |
   | :-------------: | :--------------: | :--------------: | :-----------------: | :------------: | :---------------: |
-  | **dev-1** | 7 | 7 | +158/-113 | 0 | 9 |
-  | **dev-2** | 10 | 9 | +1010/-3690 | 3 | 5 |
-  | **dev-3** | 2 | 2 | +138/-108 | 15 | 3 |
-  | **dev-4** | 4 | 4 | +326/-142 | 12 | 3 |
-  | **dev-5** | 0 | 0 | +0/-0 | 0 | 3 |
+  | **dev1** | 7 | 7 | +158/-113 | 0 | 9 |
+  | **dev2** | 10 | 9 | +1010/-3690 | 3 | 5 |
+  | **dev3** | 2 | 2 | +138/-108 | 15 | 3 |
+  | **dev4** | 4 | 4 | +326/-142 | 12 | 3 |
+  | **dev5** | 0 | 0 | +0/-0 | 0 | 3 |
   | **total** | 23 | 22 | +1632/-4053 | 30 | 21 |
 
-- **Quality Report on dev-Initiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
+- **Quality Report on devInitiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
 
   |   user    | Total merged PRs | Changes requested received | Discussions received | Comments received |
   | :-------: | :--------------: | :------------------------: | :------------------: | :---------------: |
-  | **dev-1** |        7         |             0              |          0           |         0         |
-  | **dev-2** |        9         |             2              |          2           |         2         |
-  | **dev-3** |        2         |             1              |          6           |         8         |
-  | **dev-4** |        4         |             0              |          7           |         7         |
+  | **dev1**  |        7         |             0              |          0           |         0         |
+  | **dev2**  |        9         |             2              |          2           |         2         |
+  | **dev3**  |        2         |             1              |          6           |         8         |
+  | **dev4**  |        4         |             0              |          7           |         7         |
   | **total** |        22        |             3              |          15          |        17         |
 
 ```mermaid
@@ -89,11 +89,11 @@ title Discussions types total 12/2023
 - **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
   | user | Total merged PRs | Discussions conducted | Comments conducted | Changes requested / Comments / Approvals |
   | :-------------: | :--------------: | :-------------------: | :----------------: | :--------------------------------------: |
-  | **dev-1** | 7 | 9 | 11 | 3 / 2 / 9 |
-  | **dev-2** | 9 | 4 | 4 | 0 / 1 / 5 |
-  | **dev-3** | 2 | 0 | 0 | 0 / 0 / 3 |
-  | **dev-4** | 4 | 0 | 0 | 0 / 0 / 3 |
-  | **dev-5** | 0 | 2 | 2 | 0 / 0 / 3 |
+  | **dev1** | 7 | 9 | 11 | 3 / 2 / 9 |
+  | **dev2** | 9 | 4 | 4 | 0 / 1 / 5 |
+  | **dev3** | 2 | 0 | 0 | 0 / 0 / 3 |
+  | **dev4** | 4 | 0 | 0 | 0 / 0 / 3 |
+  | **dev5** | 0 | 2 | 2 | 0 / 0 / 3 |
   | **total** | 22 | 15 | 17 | 3 / 5 / 21 |
 
 - **Highly Customizable for Specific Project Needs**: This action is designed with flexibility in mind, allowing for extensive customization of display parameters, statistics collection, and report generation. Users can tailor the tool to precisely fit the requirements of their specific projects, ensuring that the reports and analytics are as relevant and useful as possible.
@@ -232,27 +232,27 @@ This feature enhances the analytical capabilities of **pull-request-analytics-ac
 
 Below is a table outlining the various configuration parameters available for **pull-request-analytics-action**. These parameters allow you to customize the behavior of the action to fit your specific needs. Each parameter's name, description, requirement status, and default value (if applicable) are listed for your reference:
 
-| Parameter Name            | Description                                                                                                  | Required | Default Value                           |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------------- |
-| `GITHUB_TOKEN`            | Github token                                                                                                 | Yes      | -                                       |
-| `GITHUB_OWNERS_REPOS`     | Github owner/repository list separated by comma                                                              | Yes      | -                                       |
-| `GITHUB_REPO_FOR_ISSUE`   | GitHub repository for issue creation                                                                         | Yes      | -                                       |
-| `GITHUB_OWNER_FOR_ISSUE`  | Owner of the repository for issue                                                                            | Yes      | -                                       |
-| `AGGREGATE_VALUE_METHODS` | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median` | No       | `percentile`                            |
-| `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                             | No       | `100`                                   |
-| `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                        | No       | -                                       |
-| `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                          | No       | -                                       |
-| `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                               | No       | -                                       |
-| `CORE_HOURS_END`          | End of core hours (HH:mm). By default in UTC                                                                 | No       | -                                       |
-| `TIMEZONE`                | Timezone that will be used in action                                                                         | No       | `UTC`                                   |
-| `PERCENTILE`              | Percentile value for timeline                                                                                | No       | `75`                                    |
-| `ISSUE_TITLE`             | Title for the created issue                                                                                  | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
-| `LABELS`                  | Labels for the created issue separated by comma                                                              | No       | -                                       |
-| `ASSIGNEES`               | Assignees for the issue separated by comma                                                                   | No       | -                                       |
-| `HIDE_USERS`              | Hidden users separated by comma                                                                              | No       | -                                       |
-| `SHOW_USERS`              | Shown users separated by comma                                                                               | No       | -                                       |
-| `EXCLUDE_LABELS`          | Excludes PRs with mentioned labels. Values should be separated by comma                                      | No       | -                                       |
-| `INCLUDE_LABELS`          | Includes only PRs with mentioned labels. Values should be separated by comma                                 | No       | -                                       |
+| Parameter Name            | Description                                                                                                                      | Required | Default Value                           |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------- | --------------------------------------- |
+| `GITHUB_TOKEN`            | Github token                                                                                                                     | Yes      | -                                       |
+| `GITHUB_OWNERS_REPOS`     | Github owner/repository list separated by comma                                                                                  | Yes      | -                                       |
+| `GITHUB_REPO_FOR_ISSUE`   | GitHub repository for issue creation                                                                                             | Yes      | -                                       |
+| `GITHUB_OWNER_FOR_ISSUE`  | Owner of the repository for issue                                                                                                | Yes      | -                                       |
+| `AGGREGATE_VALUE_METHODS` | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median`                     | No       | `percentile`                            |
+| `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                                                 | No       | `100`                                   |
+| `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                                            | No       | -                                       |
+| `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                                              | No       | -                                       |
+| `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                                                   | No       | -                                       |
+| `CORE_HOURS_END`          | End of core hours (HH:mm). By default in UTC                                                                                     | No       | -                                       |
+| `TIMEZONE`                | Timezone that will be used in action                                                                                             | No       | `UTC`                                   |
+| `PERCENTILE`              | Percentile value for timeline                                                                                                    | No       | `75`                                    |
+| `ISSUE_TITLE`             | Title for the created issue                                                                                                      | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
+| `LABELS`                  | Labels for the created issue separated by comma                                                                                  | No       | -                                       |
+| `ASSIGNEES`               | Assignees for the issue separated by comma                                                                                       | No       | -                                       |
+| `HIDE_USERS`              | Hides selected users from reports, while still including their data in the analytics. Users should be separated by comma         | No       | -                                       |
+| `SHOW_USERS`              | Displays only specified users in reports, but includes all users in the background analytics. Users should be separated by comma | No       | -                                       |
+| `EXCLUDE_LABELS`          | Excludes PRs with mentioned labels. Values should be separated by comma                                                          | No       | -                                       |
+| `INCLUDE_LABELS`          | Includes only PRs with mentioned labels. Values should be separated by comma                                                     | No       | -                                       |
 
 Use these parameters to tailor the **pull-request-analytics-action** to your project's specific requirements.
 
