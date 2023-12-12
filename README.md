@@ -4,6 +4,16 @@
 
 ## Table of Contents
 
+- [Key Features](#key-features)
+- [Getting started](#getting-started)
+- [Report examples](#report-examples)
+- [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
+- [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
+- [Configuration Parameters Overview](#configuration-parameters-overview)
+- [Privacy and Data Handling](#privacy-and-data-handling)
+- [Usage Limitations](#usage-limitations)
+- [License](#license)
+
 ## Key Features:
 
 - **Customizable Tables and Graphs for Review Timelines**: Generates user-friendly tables and graphs that mark critical milestones from PR opening to review, approval, and merge. Users can select the calculation method best suited for them, choosing from median, mean (average), or a selected percentile. This feature helps to identify bottlenecks in the code review process.
@@ -94,20 +104,22 @@ title Discussions types total 12/2023
 
 This GitHub Action, **pull-request-analytics-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
-## Setting Up and Running pull-request-analytics-action
+## Getting started
 
 To integrate **pull-request-analytics-action** into your GitHub repository, use the following steps. The provided code is a template and can be adjusted to fit your specific requirements:
 
 1. **Create a Workflow File**:
 
    - Navigate to the `.github/workflows` directory in your repository.
-   - Create a YAML file, for example, `pr-full-report-workflow.yml`.
+   - Create a YAML file, for example, `pull-request-analytics.yml`.
 
-2. **Insert and Customize the Workflow Code**:
+2. **Choose the Trigger Event**: Decide on which GitHub event you want to trigger the report generation. You can refer to the [GitHub Events Documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) for a detailed understanding of different events. I recommend using one of the `pull_request`, `workflow_dispatch`, or `schedule` events, depending on your specific needs. For this setup, we will configure the `workflow_dispatch` event.
+
+3. **Insert and Customize the Workflow Code**:
 
    - Open your new YAML file and paste the following example workflow. This is a starting template and you can modify it as needed:
      ```yaml
-     name: "PR full report workflow"
+     name: "PR analytics workflow"
      on:
        workflow_dispatch:
          inputs:
@@ -138,7 +150,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
          name: "Create report"
          runs-on: ubuntu-latest
          steps:
-           - name: "Run PRs full report action"
+           - name: "Run Pull Request analytics action"
              uses: AlexSim93/pull-request-analytics-action@v1.3.0
              with:
                GITHUB_OWNERS_REPOS: owner-1/repo-1, owner-2/repo-2, owner-1/repo-3
@@ -156,18 +168,18 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
      ```
    - Adjust parameters to match your project's needs.
 
-3. **Commit and Push the Workflow File**:
+4. **Commit and Push the Workflow File**:
 
    - Save your changes and commit the file to your repository.
    - Push it to enable the GitHub Action workflow.
 
-4. **Run the Workflow**:
+5. **Run the Workflow**:
 
    - In your repository, go to the 'Actions' tab.
    - Select **PR full report workflow** and start it via "Run workflow".
    - Fill in any necessary parameters and execute the action.
 
-5. **Review the Generated Report**:
+6. **Review the Generated Report**:
    - Once the action completes, your detailed PR report will be available.
    - If configured, check for a new issue in the specified repository containing the report.
 
