@@ -19,10 +19,10 @@
 - **Customizable Tables and Graphs for Review Timelines**: Generates user-friendly tables and graphs that mark critical milestones from PR opening to review, approval, and merge. Users can select the calculation method best suited for them, choosing from median, mean (average), or a selected percentile. This feature helps to identify bottlenecks in the code review process.
   | user | Time to review | Time to approve | Time to merge | Total merged PRs |
   | :------: | :------: | :------: | :------: | :------: |
-  | **Developer-1** | 1 hour 39 minutes | 1 hour 39 minutes | 17 hours 10 minutes | 7 |
-  | **Developer-2** | 4 hours 20 minutes | 5 hours 48 minutes | 20 hours 33 minutes | 9 |
-  | **Developer-3** | 5 hours 25 minutes | 26 hours 40 minutes | 48 hours 30 minutes | 2 |
-  | **Developer-4** | 1 hour | 3 hours 27 minutes | 14 hours 14 minutes | 4 |
+  | **dev-1** | 1 hour 39 minutes | 1 hour 39 minutes | 17 hours 10 minutes | 7 |
+  | **dev-2** | 4 hours 20 minutes | 5 hours 48 minutes | 20 hours 33 minutes | 9 |
+  | **dev-3** | 5 hours 25 minutes | 26 hours 40 minutes | 48 hours 30 minutes | 2 |
+  | **dev-4** | 1 hour | 3 hours 27 minutes | 14 hours 14 minutes | 4 |
   | **total** | 2 hours 39 minutes | 4 hours 14 minutes | 20 hours 33 minutes | 22 |
 
   ```mermaid
@@ -30,22 +30,22 @@
   title Pull requests timeline(percentile75) 12/2023 / minutes
   dateFormat X
   axisFormat %s
-  section Developer-1
+  section dev-1
   Time to review :  0, 99
   Time to approve :  0, 99
   Time to merge :  0, 1030
 
-  section Developer-2
+  section dev-2
   Time to review :  0, 260
   Time to approve :  0, 348
   Time to merge :  0, 1233
 
-  section Developer-3
+  section dev-3
   Time to review :  0, 325
   Time to approve :  0, 1600
   Time to merge :  0, 2910
 
-  section Developer-4
+  section dev-4
   Time to review :  0, 60
   Time to approve :  0, 207
   Time to merge :  0, 854
@@ -60,22 +60,22 @@
 - **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
   | user | Total opened PRs | Total merged PRs | Additions/Deletions | Total comments | Reviews conducted |
   | :-------------: | :--------------: | :--------------: | :-----------------: | :------------: | :---------------: |
-  | **Developer-1** | 7 | 7 | +158/-113 | 0 | 9 |
-  | **Developer-2** | 10 | 9 | +1010/-3690 | 3 | 5 |
-  | **Developer-3** | 2 | 2 | +138/-108 | 15 | 3 |
-  | **Developer-4** | 4 | 4 | +326/-142 | 12 | 3 |
-  | **Developer-5** | 0 | 0 | +0/-0 | 0 | 3 |
+  | **dev-1** | 7 | 7 | +158/-113 | 0 | 9 |
+  | **dev-2** | 10 | 9 | +1010/-3690 | 3 | 5 |
+  | **dev-3** | 2 | 2 | +138/-108 | 15 | 3 |
+  | **dev-4** | 4 | 4 | +326/-142 | 12 | 3 |
+  | **dev-5** | 0 | 0 | +0/-0 | 0 | 3 |
   | **total** | 23 | 22 | +1632/-4053 | 30 | 21 |
 
-- **Quality Report on Developer-Initiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
+- **Quality Report on dev-Initiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
 
-  |      user       | Total merged PRs | Changes requested received | Discussions received | Comments received |
-  | :-------------: | :--------------: | :------------------------: | :------------------: | :---------------: |
-  | **Developer-1** |        7         |             0              |          0           |         0         |
-  | **Developer-2** |        9         |             2              |          2           |         2         |
-  | **Developer-3** |        2         |             1              |          6           |         8         |
-  | **Developer-4** |        4         |             0              |          7           |         7         |
-  |    **total**    |        22        |             3              |          15          |        17         |
+  |   user    | Total merged PRs | Changes requested received | Discussions received | Comments received |
+  | :-------: | :--------------: | :------------------------: | :------------------: | :---------------: |
+  | **dev-1** |        7         |             0              |          0           |         0         |
+  | **dev-2** |        9         |             2              |          2           |         2         |
+  | **dev-3** |        2         |             1              |          6           |         8         |
+  | **dev-4** |        4         |             0              |          7           |         7         |
+  | **total** |        22        |             3              |          15          |        17         |
 
 ```mermaid
 pie
@@ -89,11 +89,11 @@ title Discussions types total 12/2023
 - **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
   | user | Total merged PRs | Discussions conducted | Comments conducted | Changes requested / Comments / Approvals |
   | :-------------: | :--------------: | :-------------------: | :----------------: | :--------------------------------------: |
-  | **Developer-1** | 7 | 9 | 11 | 3 / 2 / 9 |
-  | **Developer-2** | 9 | 4 | 4 | 0 / 1 / 5 |
-  | **Developer-3** | 2 | 0 | 0 | 0 / 0 / 3 |
-  | **Developer-4** | 4 | 0 | 0 | 0 / 0 / 3 |
-  | **Developer-5** | 0 | 2 | 2 | 0 / 0 / 3 |
+  | **dev-1** | 7 | 9 | 11 | 3 / 2 / 9 |
+  | **dev-2** | 9 | 4 | 4 | 0 / 1 / 5 |
+  | **dev-3** | 2 | 0 | 0 | 0 / 0 / 3 |
+  | **dev-4** | 4 | 0 | 0 | 0 / 0 / 3 |
+  | **dev-5** | 0 | 2 | 2 | 0 / 0 / 3 |
   | **total** | 22 | 15 | 17 | 3 / 5 / 21 |
 
 - **Highly Customizable for Specific Project Needs**: This action is designed with flexibility in mind, allowing for extensive customization of display parameters, statistics collection, and report generation. Users can tailor the tool to precisely fit the requirements of their specific projects, ensuring that the reports and analytics are as relevant and useful as possible.
@@ -116,8 +116,9 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
 3. **Insert and Customize the Workflow Code**:
 
    - Open your new YAML file and paste the following example workflow. This is a starting template and you can modify it as needed:
+
      ```yaml
-     name: "PR analytics workflow"
+     name: "PR Analytics"
      on:
        workflow_dispatch:
          inputs:
@@ -131,39 +132,55 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
            report_date_end:
              description: "Report date end(d/MM/yyyy)"
              required: false
-           core_hours_start:
-             description: "Core hours start(HH:mm)"
-             required: false
-             default: "09:00"
-           core_hours_end:
-             description: "Core hours end(HH:mm)"
-             required: false
-             default: "20:00"
+           aggregate_value_methods:
+             description: "Aggregate value methods for timelines separated by comma. Can take values average, percentile, medianÏ"
+             default: "percentile"
            percentile:
              description: "Percentile"
              required: false
              default: "75"
+           issue_title:
+             description: "Issue custom title"
+             required: false
+           labels:
+             description: "Issue labels"
+             required: false
+           hide_users:
+             description: "Hidden users"
+             required: false
+           show_users:
+             description: "Shown users"
+             required: false
+           exclude_labels:
+             description: "Labels to exclude"
+             required: false
      jobs:
        create-report:
          name: "Create report"
          runs-on: ubuntu-latest
          steps:
-           - name: "Run Pull Request analytics action"
-             uses: AlexSim93/pull-request-analytics-action@v1.3.0
+           - name: "Run script for analytics"
+             uses: AlexSim93/pr-full-report-action@v1.3.0
              with:
-               GITHUB_OWNERS_REPOS: owner-1/repo-1, owner-2/repo-2, owner-1/repo-3
-               GITHUB_REPO_FOR_ISSUE: "repository-for-report-creation"
-               GITHUB_OWNER_FOR_ISSUE: "owner-of-repository-for-report-creation"
-               AMOUNT: ${{ inputs.amount }}
-               CORE_HOURS_START: ${{ inputs.core_hours_start }}
-               CORE_HOURS_END: ${{ inputs.core_hours_end }}
+               GITHUB_TOKEN: ${{ secrets.KEY }}
+               ISSUE_TITLE: ${{ inputs.issue_title }}
+               ASSIGNEES: "user-1, user-2, user-3"
+               LABELS: ${{ inputs.labels }}
+               GITHUB_REPO_FOR_ISSUE: "repo"
+               GITHUB_OWNER_FOR_ISSUE: "owner"
+               GITHUB_OWNERS_REPOS: "owner-1/repo-1"
+               CORE_HOURS_START: "9:00"
+               CORE_HOURS_END: "19:00"
+               TIMEZONE: "Europe/Berlin"
+               AGGREGATE_VALUE_METHODS: ${{inputs.aggregate_value_methods}}
                PERCENTILE: ${{ inputs.percentile }}
+               AMOUNT: ${{ inputs.amount }}
                REPORT_DATE_START: ${{ inputs.report_date_start }}
                REPORT_DATE_END: ${{ inputs.report_date_end }}
-               LABELS: report
-               ASSIGNEES: assignee
-               GITHUB_TOKEN: ${{ secrets.KEY }}
+               HIDE_USERS: ${{ inputs.hide_users }}
      ```
+
+   - In the `workflow_dispatch` section of the yml file, I have specified various inputs that can be adjusted each time the action is triggered. By utilizing the `required` and `default` fields, I've designated whether each input is mandatory and set predetermined values for ease of use. In the `with` section, I've included parameters that remain constant for each action run. For a detailed understanding of which parameters the action accepts and their functions, please refer to the [Parameters Overview section](#configuration-parameters-overview).
    - Adjust parameters to match your project's needs.
 
 4. **Commit and Push the Workflow File**:
@@ -174,7 +191,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
 5. **Run the Workflow**:
 
    - In your repository, go to the 'Actions' tab.
-   - Select **PR analytics workflow** and start it via "Run workflow".
+   - Select **PR analytics** and start it via "Run workflow".
    - Fill in any necessary parameters and execute the action.
 
 6. **Review the Generated Report**:
@@ -225,8 +242,8 @@ Below is a table outlining the various configuration parameters available for **
 | `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                             | No       | `100`                                   |
 | `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                        | No       | -                                       |
 | `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                          | No       | -                                       |
-| `CORE_HOURS_START`        | Start of core hours (HH:mm)                                                                                  | No       | -                                       |
-| `CORE_HOURS_END`          | End of core hours (HH:mm)                                                                                    | No       | -                                       |
+| `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                               | No       | -                                       |
+| `CORE_HOURS_END`          | End of core hours (HH:mm). By default in UTC                                                                 | No       | -                                       |
 | `TIMEZONE`                | Timezone that will be used in action                                                                         | No       | `UTC`                                   |
 | `PERCENTILE`              | Percentile value for timeline                                                                                | No       | `75`                                    |
 | `ISSUE_TITLE`             | Title for the created issue                                                                                  | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
