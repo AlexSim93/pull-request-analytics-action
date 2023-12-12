@@ -176,7 +176,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
 5. **Run the Workflow**:
 
    - In your repository, go to the 'Actions' tab.
-   - Select **PR full report workflow** and start it via "Run workflow".
+   - Select **PR analytics workflow** and start it via "Run workflow".
    - Fill in any necessary parameters and execute the action.
 
 6. **Review the Generated Report**:
