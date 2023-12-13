@@ -1,24 +1,63 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 17514:
+/***/ 31437:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getMultipleValuesInput = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const getMultipleValuesInput = (name) => {
+    const values = process.env[name] || core.getInput(name);
+    return values
+        .split(",")
+        .map((el) => el.trim())
+        .filter((el) => el);
+};
+exports.getMultipleValuesInput = getMultipleValuesInput;
+
+
+/***/ }),
+
+/***/ 41002:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createIssue = exports.getOwnersRepositories = exports.makeComplexRequest = exports.collectData = void 0;
-var preparations_1 = __nccwpck_require__(40539);
-Object.defineProperty(exports, "collectData", ({ enumerable: true, get: function () { return preparations_1.collectData; } }));
-var requests_1 = __nccwpck_require__(2204);
-Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: function () { return requests_1.makeComplexRequest; } }));
-Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return requests_1.getOwnersRepositories; } }));
-Object.defineProperty(exports, "createIssue", ({ enumerable: true, get: function () { return requests_1.createIssue; } }));
+exports.getMultipleValuesInput = void 0;
+var getMultipleValuesInput_1 = __nccwpck_require__(31437);
+Object.defineProperty(exports, "getMultipleValuesInput", ({ enumerable: true, get: function () { return getMultipleValuesInput_1.getMultipleValuesInput; } }));
 
 
 /***/ }),
 
-/***/ 74607:
+/***/ 18465:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -26,7 +65,7 @@ Object.defineProperty(exports, "createIssue", ({ enumerable: true, get: function
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collectData = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
-const utils_1 = __nccwpck_require__(85318);
+const utils_1 = __nccwpck_require__(64266);
 const collectData = (data) => {
     const collection = { total: {} };
     data.pullRequestInfo.forEach((pullRequest, index) => {
@@ -62,7 +101,7 @@ exports.collectData = collectData;
 
 /***/ }),
 
-/***/ 15966:
+/***/ 95354:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -100,20 +139,20 @@ exports.percentile = parseInt(process.env.PERCENTILE || core.getInput("PERCENTIL
 
 /***/ }),
 
-/***/ 40539:
+/***/ 86200:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collectData = void 0;
-var collectData_1 = __nccwpck_require__(74607);
+var collectData_1 = __nccwpck_require__(18465);
 Object.defineProperty(exports, "collectData", ({ enumerable: true, get: function () { return collectData_1.collectData; } }));
 
 
 /***/ }),
 
-/***/ 30678:
+/***/ 9101:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -131,7 +170,7 @@ exports.calcAverageValue = calcAverageValue;
 
 /***/ }),
 
-/***/ 43330:
+/***/ 72317:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -139,8 +178,8 @@ exports.calcAverageValue = calcAverageValue;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcDifferenceInMinutes = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
-const calcWeekendMinutes_1 = __nccwpck_require__(45495);
-const calcNonWorkingHours_1 = __nccwpck_require__(4035);
+const calcWeekendMinutes_1 = __nccwpck_require__(54409);
+const calcNonWorkingHours_1 = __nccwpck_require__(72096);
 const calcDifferenceInMinutes = (firstIsoDate, secondIsoDate, coreHours) => {
     const firstDate = firstIsoDate ? (0, date_fns_1.parseISO)(firstIsoDate) : null;
     const secondDate = secondIsoDate ? (0, date_fns_1.parseISO)(secondIsoDate) : null;
@@ -158,7 +197,7 @@ exports.calcDifferenceInMinutes = calcDifferenceInMinutes;
 
 /***/ }),
 
-/***/ 51762:
+/***/ 17745:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -176,7 +215,7 @@ exports.calcMedianValue = calcMedianValue;
 
 /***/ }),
 
-/***/ 4035:
+/***/ 72096:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -241,14 +280,14 @@ exports.calcNonWorkingHours = calcNonWorkingHours;
 
 /***/ }),
 
-/***/ 14584:
+/***/ 24684:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcPercentileValue = void 0;
-const constants_1 = __nccwpck_require__(15966);
+const constants_1 = __nccwpck_require__(95354);
 const calcPercentileValue = (values) => {
     if (!values?.length)
         return 0;
@@ -262,7 +301,7 @@ exports.calcPercentileValue = calcPercentileValue;
 
 /***/ }),
 
-/***/ 45495:
+/***/ 54409:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -292,7 +331,7 @@ exports.calcWeekendMinutes = calcWeekendMinutes;
 
 /***/ }),
 
-/***/ 44876:
+/***/ 39922:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -334,32 +373,32 @@ exports.getApproveTime = getApproveTime;
 
 /***/ }),
 
-/***/ 30074:
+/***/ 16576:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = void 0;
-var calcPercentileValue_1 = __nccwpck_require__(14584);
+var calcPercentileValue_1 = __nccwpck_require__(24684);
 Object.defineProperty(exports, "calcPercentileValue", ({ enumerable: true, get: function () { return calcPercentileValue_1.calcPercentileValue; } }));
-var getApproveTime_1 = __nccwpck_require__(44876);
+var getApproveTime_1 = __nccwpck_require__(39922);
 Object.defineProperty(exports, "getApproveTime", ({ enumerable: true, get: function () { return getApproveTime_1.getApproveTime; } }));
-var calcWeekendMinutes_1 = __nccwpck_require__(45495);
+var calcWeekendMinutes_1 = __nccwpck_require__(54409);
 Object.defineProperty(exports, "calcWeekendMinutes", ({ enumerable: true, get: function () { return calcWeekendMinutes_1.calcWeekendMinutes; } }));
-var calcNonWorkingHours_1 = __nccwpck_require__(4035);
+var calcNonWorkingHours_1 = __nccwpck_require__(72096);
 Object.defineProperty(exports, "calcNonWorkingHours", ({ enumerable: true, get: function () { return calcNonWorkingHours_1.calcNonWorkingHours; } }));
-var calcMedianValue_1 = __nccwpck_require__(51762);
+var calcMedianValue_1 = __nccwpck_require__(17745);
 Object.defineProperty(exports, "calcMedianValue", ({ enumerable: true, get: function () { return calcMedianValue_1.calcMedianValue; } }));
-var calcDifferenceInMinutes_1 = __nccwpck_require__(43330);
+var calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 Object.defineProperty(exports, "calcDifferenceInMinutes", ({ enumerable: true, get: function () { return calcDifferenceInMinutes_1.calcDifferenceInMinutes; } }));
-var calcAverageValue_1 = __nccwpck_require__(30678);
+var calcAverageValue_1 = __nccwpck_require__(9101);
 Object.defineProperty(exports, "calcAverageValue", ({ enumerable: true, get: function () { return calcAverageValue_1.calcAverageValue; } }));
 
 
 /***/ }),
 
-/***/ 30459:
+/***/ 49575:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -378,35 +417,73 @@ exports.getDiscussionType = getDiscussionType;
 
 /***/ }),
 
-/***/ 85318:
+/***/ 64266:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = void 0;
-var preparePullRequestTimeline_1 = __nccwpck_require__(88838);
+var preparePullRequestTimeline_1 = __nccwpck_require__(63787);
 Object.defineProperty(exports, "preparePullRequestTimeline", ({ enumerable: true, get: function () { return preparePullRequestTimeline_1.preparePullRequestTimeline; } }));
-var preparePullRequestStats_1 = __nccwpck_require__(17046);
+var preparePullRequestStats_1 = __nccwpck_require__(46710);
 Object.defineProperty(exports, "preparePullRequestStats", ({ enumerable: true, get: function () { return preparePullRequestStats_1.preparePullRequestStats; } }));
-var preparePullRequestInfo_1 = __nccwpck_require__(5831);
+var preparePullRequestInfo_1 = __nccwpck_require__(33569);
 Object.defineProperty(exports, "preparePullRequestInfo", ({ enumerable: true, get: function () { return preparePullRequestInfo_1.preparePullRequestInfo; } }));
-var prepareDiscussions_1 = __nccwpck_require__(28301);
+var prepareDiscussions_1 = __nccwpck_require__(88196);
 Object.defineProperty(exports, "prepareDiscussions", ({ enumerable: true, get: function () { return prepareDiscussions_1.prepareDiscussions; } }));
-var prepareReviews_1 = __nccwpck_require__(72872);
+var prepareReviews_1 = __nccwpck_require__(60934);
 Object.defineProperty(exports, "prepareReviews", ({ enumerable: true, get: function () { return prepareReviews_1.prepareReviews; } }));
 
 
 /***/ }),
 
-/***/ 28301:
+/***/ 15278:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prepareConductedReviews = void 0;
+const prepareConductedReviews = (pullRequestLogin, pullRequestReviews, collection) => {
+    const reviewsConducted = {
+        ...(collection?.reviewsConducted || {}),
+    };
+    const statuses = Object.keys(pullRequestReviews?.reduce((acc, review) => {
+        return { ...acc, [review.state]: 1, total: 1 };
+    }, {}) || {});
+    if (pullRequestLogin) {
+        [pullRequestLogin, "total"].forEach((key) => {
+            const statusesReviewsStats = statuses.reduce((acc, status) => {
+                return {
+                    ...acc,
+                    [status]: (reviewsConducted[key]?.[status] || 0) + 1,
+                };
+            }, {});
+            reviewsConducted[key] = {
+                ...reviewsConducted[key],
+                ...statusesReviewsStats,
+            };
+        });
+    }
+    return {
+        ...collection,
+        reviewsConducted,
+    };
+};
+exports.prepareConductedReviews = prepareConductedReviews;
+
+
+/***/ }),
+
+/***/ 88196:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareDiscussions = void 0;
-const getDiscussionType_1 = __nccwpck_require__(30459);
+const getDiscussionType_1 = __nccwpck_require__(49575);
 const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin) => {
     const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== comment.user.login);
     const discussions = comments[index]?.filter((comment) => !comment.in_reply_to_id && pullRequestLogin !== comment.user.login);
@@ -486,45 +563,7 @@ exports.prepareDiscussions = prepareDiscussions;
 
 /***/ }),
 
-/***/ 46694:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prepareProvidedReviews = void 0;
-const prepareProvidedReviews = (pullRequestLogin, pullRequestReviews, collection) => {
-    const reviewsConducted = {
-        ...(collection?.reviewsConducted || {}),
-    };
-    const statuses = Object.keys(pullRequestReviews?.reduce((acc, review) => {
-        return { ...acc, [review.state]: 1, total: 1 };
-    }, {}) || {});
-    if (pullRequestLogin) {
-        [pullRequestLogin, "total"].forEach((key) => {
-            const statusesReviewsStats = statuses.reduce((acc, status) => {
-                return {
-                    ...acc,
-                    [status]: (reviewsConducted[key]?.[status] || 0) + 1,
-                };
-            }, {});
-            reviewsConducted[key] = {
-                ...reviewsConducted[key],
-                ...statusesReviewsStats,
-            };
-        });
-    }
-    return {
-        ...collection,
-        reviewsConducted,
-    };
-};
-exports.prepareProvidedReviews = prepareProvidedReviews;
-
-
-/***/ }),
-
-/***/ 5831:
+/***/ 33569:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -558,14 +597,14 @@ exports.preparePullRequestInfo = preparePullRequestInfo;
 
 /***/ }),
 
-/***/ 17046:
+/***/ 46710:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestStats = void 0;
-const calculations_1 = __nccwpck_require__(30074);
+const calculations_1 = __nccwpck_require__(16576);
 const preparePullRequestStats = (collection) => {
     return {
         ...collection,
@@ -591,16 +630,16 @@ exports.preparePullRequestStats = preparePullRequestStats;
 
 /***/ }),
 
-/***/ 88838:
+/***/ 63787:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestTimeline = void 0;
-const constants_1 = __nccwpck_require__(15966);
-const calculations_1 = __nccwpck_require__(30074);
-const calcDifferenceInMinutes_1 = __nccwpck_require__(43330);
+const constants_1 = __nccwpck_require__(95354);
+const calculations_1 = __nccwpck_require__(16576);
+const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
@@ -625,14 +664,14 @@ exports.preparePullRequestTimeline = preparePullRequestTimeline;
 
 /***/ }),
 
-/***/ 72872:
+/***/ 60934:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareReviews = void 0;
-const prepareProvidedReviews_1 = __nccwpck_require__(46694);
+const prepareConductedReviews_1 = __nccwpck_require__(15278);
 const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
     const users = Object.keys(data.reviews[index]?.reduce((acc, review) => {
         if (review.user?.login && review.user.login !== pullRequestLogin) {
@@ -648,7 +687,7 @@ const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
             ? data.reviews[index]?.filter((review) => review.user?.login === user)
             : data.reviews[index];
         [dateKey, "total"].forEach((key) => {
-            collection[user][key] = (0, prepareProvidedReviews_1.prepareProvidedReviews)(pullRequestLogin, userReviews, collection[user][key]);
+            collection[user][key] = (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, collection[user][key]);
         });
     });
 };
@@ -657,19 +696,7 @@ exports.prepareReviews = prepareReviews;
 
 /***/ }),
 
-/***/ 49181:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.concurrentLimit = void 0;
-exports.concurrentLimit = 25;
-
-
-/***/ }),
-
-/***/ 70050:
+/***/ 79283:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -698,431 +725,63 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createIssue = void 0;
+__nccwpck_require__(44227);
 const core = __importStar(__nccwpck_require__(42186));
-const octokit_1 = __nccwpck_require__(64165);
-const date_fns_1 = __nccwpck_require__(73314);
-const utils_1 = __nccwpck_require__(12290);
-const createIssue = (markdown) => {
-    const issueTitle = core.getInput("ISSUE_TITLE") ||
-        process.env.ISSUE_TITLE ||
-        `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
-    const labels = (0, utils_1.getMultipleValuesInput)("LABELS").filter((label) => label && typeof label === "string") || [];
-    const assignees = (0, utils_1.getMultipleValuesInput)("ASSIGNEES").filter((assignee) => assignee && typeof assignee === "string") || [];
-    octokit_1.octokit.rest.issues.create({
-        repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-            process.env.GITHUB_REPO_FOR_ISSUE,
-        owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            process.env.GITHUB_OWNER_FOR_ISSUE,
-        title: issueTitle,
-        body: markdown,
-        labels,
-        assignees,
-    });
-};
-exports.createIssue = createIssue;
-
-
-/***/ }),
-
-/***/ 41581:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.delay = void 0;
-const delay = (ms) => new Promise((resolve) => {
-    setTimeout(resolve, ms);
-});
-exports.delay = delay;
-
-
-/***/ }),
-
-/***/ 60740:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getDataWithThrottle = void 0;
-const constants_1 = __nccwpck_require__(49181);
-const delay_1 = __nccwpck_require__(41581);
-const getPullRequestComments_1 = __nccwpck_require__(8931);
-const getPullRequestCommits_1 = __nccwpck_require__(8796);
-const getPullRequestData_1 = __nccwpck_require__(79802);
-const getPullRequestReviews_1 = __nccwpck_require__(51015);
-const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
-    const PRs = [];
-    const PREvents = [];
-    const PRCommits = [];
-    const PRComments = [];
-    let counter = 0;
-    const { skipComments = true, skipCommits = true, skipReviews = true, } = options;
-    while (pullRequestNumbers.length > PRs.length) {
-        const startIndex = counter * constants_1.concurrentLimit;
-        const endIndex = (counter + 1) * constants_1.concurrentLimit;
-        const pullRequestNumbersChunks = pullRequestNumbers.slice(startIndex, endIndex);
-        const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks, repository);
-        console.log(`Batch request #${counter + 1} out of ${Math.ceil(pullRequestNumbers.length / constants_1.concurrentLimit)}`);
-        const prs = await Promise.allSettled(pullRequestDatas);
-        await (0, delay_1.delay)(5000);
-        const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, repository, {
-            skip: skipReviews,
-        });
-        const reviews = await Promise.allSettled(pullRequestReviews);
-        await (0, delay_1.delay)(5000);
-        const pullRequestCommits = await (0, getPullRequestCommits_1.getPullRequestCommits)(pullRequestNumbersChunks, repository, {
-            skip: skipCommits,
-        });
-        const commits = await Promise.allSettled(pullRequestCommits);
-        const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbersChunks, repository, {
-            skip: skipComments,
-        });
-        const comments = await Promise.allSettled(pullRequestComments);
-        await (0, delay_1.delay)(5000);
-        counter++;
-        PRs.push(...prs);
-        PREvents.push(...reviews);
-        PRComments.push(...comments);
-        PRCommits.push(...commits);
+const view_1 = __nccwpck_require__(55379);
+const requests_1 = __nccwpck_require__(49591);
+const converters_1 = __nccwpck_require__(86200);
+async function main() {
+    if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
+        process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
     }
-    return { PRs, PREvents, PRCommits, PRComments };
-};
-exports.getDataWithThrottle = getDataWithThrottle;
-
-
-/***/ }),
-
-/***/ 8931:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestComments = void 0;
-const octokit_1 = __nccwpck_require__(64165);
-const getPullRequestComments = async (pullRequestNumbers, repository, options) => {
-    const { owner, repo } = repository;
-    return !options?.skip
-        ? pullRequestNumbers.map(async (number) => {
-            const data = [];
-            for (let i = 1, shouldStop = false; shouldStop === false; i++) {
-                const comments = await octokit_1.octokit.rest.pulls.listReviewComments({
-                    owner,
-                    repo,
-                    pull_number: number,
-                    per_page: 100,
-                    page: i,
-                });
-                if (comments.data.length < 100) {
-                    shouldStop = true;
-                }
-                data.push(...comments.data);
-            }
-            return { data };
-        })
-        : [];
-};
-exports.getPullRequestComments = getPullRequestComments;
-
-
-/***/ }),
-
-/***/ 8796:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestCommits = void 0;
-const octokit_1 = __nccwpck_require__(64165);
-const getPullRequestCommits = async (pullRequestNumbers, repository, options) => {
-    const { repo, owner } = repository;
-    return !options?.skip
-        ? pullRequestNumbers.map((number) => octokit_1.octokit.rest.pulls.listCommits({
-            owner,
-            repo,
-            pull_number: number,
-            per_page: 100,
-            page: 1,
-        }))
-        : [];
-};
-exports.getPullRequestCommits = getPullRequestCommits;
-
-
-/***/ }),
-
-/***/ 79802:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestDatas = void 0;
-const octokit_1 = __nccwpck_require__(64165);
-const getPullRequestDatas = async (pullRequestNumbers, repository) => {
-    const { repo, owner } = repository;
-    return pullRequestNumbers.map((number) => octokit_1.octokit.rest.pulls.get({
+    if (((!process.env.GITHUB_REPO_FOR_ISSUE ||
+        !process.env.GITHUB_OWNER_FOR_ISSUE) &&
+        (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+            !core.getInput("GITHUB_REPO_FOR_ISSUE"))) ||
+        (!core.getInput("GITHUB_OWNERS_REPOS") &&
+            !process.env.GITHUB_OWNERS_REPOS) ||
+        (!core.getInput("GITHUB_TOKEN") && !process.env.GITHUB_TOKEN)) {
+        throw new Error("Missing required variables");
+    }
+    const ownersRepos = (0, requests_1.getOwnersRepositories)();
+    console.log("Initiating data request.");
+    const dataByRepos = await Promise.allSettled(ownersRepos.map(([owner, repo]) => (0, requests_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT, {
         owner,
         repo,
-        pull_number: number,
-    }));
-};
-exports.getPullRequestDatas = getPullRequestDatas;
+    }, {
+        skipReviews: false,
+        skipComments: false,
+    })));
+    console.log("Data successfully retrieved. Starting report calculations.");
+    const data = dataByRepos
+        .map((element) => (element.status === "fulfilled" ? element.value : null))
+        .filter((el) => el);
+    const mergedData = data.reduce((acc, element) => ({
+        ownerRepo: acc.ownerRepo
+            ? acc.ownerRepo.concat(",", element.ownerRepo)
+            : element.ownerRepo,
+        reviews: [...acc.reviews, ...element.reviews],
+        pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
+        comments: [...acc?.comments, ...element.comments],
+    }), {
+        ownerRepo: "",
+        reviews: [],
+        pullRequestInfo: [],
+        comments: [],
+    });
+    const preparedData = (0, converters_1.collectData)(mergedData);
+    core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
+    console.log("Calculation complete. Generating markdown.");
+    const markdown = (0, view_1.createMarkdown)(preparedData);
+    console.log("Markdown successfully generated.");
+    (0, requests_1.createIssue)(markdown);
+}
+main();
 
 
 /***/ }),
 
-/***/ 51015:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestReviews = void 0;
-const octokit_1 = __nccwpck_require__(64165);
-const getPullRequestReviews = async (pullRequestNumbers, repository, options) => {
-    const { owner, repo } = repository;
-    return !options?.skip
-        ? pullRequestNumbers.map(async (number) => {
-            const data = [];
-            for (let i = 1, shouldStop = false; shouldStop === false; i++) {
-                const reviews = await octokit_1.octokit.rest.pulls.listReviews({
-                    owner,
-                    repo,
-                    pull_number: number,
-                    per_page: 100,
-                    page: i,
-                });
-                if (reviews.data.length < 100) {
-                    shouldStop = true;
-                }
-                data.push(...reviews.data);
-            }
-            return { data };
-        })
-        : [];
-};
-exports.getPullRequestReviews = getPullRequestReviews;
-
-
-/***/ }),
-
-/***/ 45909:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequests = void 0;
-const date_fns_1 = __nccwpck_require__(73314);
-const octokit_1 = __nccwpck_require__(64165);
-const utils_1 = __nccwpck_require__(19338);
-const getPullRequests = async (amount = 10, repository) => {
-    const { startDate, endDate } = (0, utils_1.getReportDates)();
-    const { owner, repo } = repository;
-    const data = [];
-    for (let i = 0, dateMatched = !!startDate; startDate ? dateMatched : i < Math.ceil(amount / 100); i++) {
-        const pulls = await octokit_1.octokit.rest.pulls.list({
-            owner,
-            repo,
-            per_page: amount > 100 || startDate ? 100 : amount,
-            page: i + 1,
-            state: "closed",
-            sort: "updated",
-            direction: "desc",
-        });
-        if (startDate || endDate) {
-            const filteredPulls = pulls.data.filter((pr) => {
-                const closedDate = pr.closed_at ? (0, date_fns_1.parseISO)(pr.closed_at) : null;
-                if (closedDate) {
-                    const isBeforeEndDate = endDate
-                        ? (0, date_fns_1.isBefore)(closedDate, endDate)
-                        : true;
-                    const isAfterStartDate = startDate
-                        ? (0, date_fns_1.isAfter)(closedDate, startDate)
-                        : true;
-                    return isBeforeEndDate && isAfterStartDate;
-                }
-                return false;
-            });
-            dateMatched = pulls.data.some((pr) => startDate && pr.updated_at
-                ? (0, date_fns_1.isBefore)(startDate, (0, date_fns_1.parseISO)(pr.updated_at))
-                : null);
-            data.push(...filteredPulls);
-        }
-        else {
-            data.push(...pulls.data);
-        }
-        if (pulls.data.length === 0) {
-            break;
-        }
-    }
-    return data;
-};
-exports.getPullRequests = getPullRequests;
-
-
-/***/ }),
-
-/***/ 2204:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createIssue = exports.makeComplexRequest = exports.getOwnersRepositories = void 0;
-var getOwnersRepositories_1 = __nccwpck_require__(54237);
-Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return getOwnersRepositories_1.getOwnersRepositories; } }));
-var makeComplexRequest_1 = __nccwpck_require__(25876);
-Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: function () { return makeComplexRequest_1.makeComplexRequest; } }));
-var createIssue_1 = __nccwpck_require__(70050);
-Object.defineProperty(exports, "createIssue", ({ enumerable: true, get: function () { return createIssue_1.createIssue; } }));
-
-
-/***/ }),
-
-/***/ 25876:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.makeComplexRequest = void 0;
-const octokit_1 = __nccwpck_require__(64165);
-const utils_1 = __nccwpck_require__(12290);
-const getDataWithThrottle_1 = __nccwpck_require__(60740);
-const getPullRequests_1 = __nccwpck_require__(45909);
-const makeComplexRequest = async (amount = 100, repository, options = {
-    skipComments: true,
-    skipCommits: true,
-    skipReviews: true,
-}) => {
-    const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
-    console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
-    const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount, repository);
-    const pullRequestNumbers = pullRequests
-        .filter((pr) => {
-        const excludeLabels = (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS");
-        const includeLabels = (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS");
-        const isIncludeLabelsCorrect = includeLabels.length > 0
-            ? pr.labels.some((label) => includeLabels.includes(label.name))
-            : true;
-        const isExcludeLabelsCorrect = excludeLabels.length > 0
-            ? !pr.labels.some((label) => excludeLabels.includes(label.name))
-            : true;
-        return isIncludeLabelsCorrect && isExcludeLabelsCorrect;
-    })
-        .map((item) => item.number);
-    const { PRs, PREvents, PRComments, PRCommits } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, repository, options);
-    const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
-    console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
-    const reviews = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
-    const pullRequestInfo = PRs.map((element) => element.status === "fulfilled" ? element.value.data : null);
-    const comments = PRComments.map((element) => element.status === "fulfilled" ? element.value.data : null);
-    const commits = PRCommits.map((element) => element.status === "fulfilled" ? element.value.data : null);
-    return {
-        ownerRepo: `${repository.owner}/${repository.repo}`,
-        reviews,
-        pullRequestInfo,
-        commits,
-        comments,
-    };
-};
-exports.makeComplexRequest = makeComplexRequest;
-
-
-/***/ }),
-
-/***/ 54237:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getOwnersRepositories = void 0;
-const utils_1 = __nccwpck_require__(12290);
-const getOwnersRepositories = () => {
-    const ownersRepositories = (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS")
-        .map((el) => el.split("/"))
-        .filter(([owner, repository]) => owner && repository);
-    return ownersRepositories || [];
-};
-exports.getOwnersRepositories = getOwnersRepositories;
-
-
-/***/ }),
-
-/***/ 65913:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getReportDates = void 0;
-const core = __importStar(__nccwpck_require__(42186));
-const date_fns_1 = __nccwpck_require__(73314);
-const getReportDates = () => {
-    const startReportDate = process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START");
-    const endReportDate = process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END");
-    const startDate = startReportDate
-        ? (0, date_fns_1.parse)(startReportDate, "d/MM/yyyy", new Date())
-        : null;
-    const endDate = endReportDate
-        ? (0, date_fns_1.parse)(endReportDate, "d/MM/yyyy", new Date())
-        : null;
-    return {
-        startDate,
-        endDate,
-    };
-};
-exports.getReportDates = getReportDates;
-
-
-/***/ }),
-
-/***/ 19338:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getOwnersRepositories = exports.getReportDates = void 0;
-var getReportDates_1 = __nccwpck_require__(65913);
-Object.defineProperty(exports, "getReportDates", ({ enumerable: true, get: function () { return getReportDates_1.getReportDates; } }));
-var getOwnersRepositories_1 = __nccwpck_require__(54237);
-Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return getOwnersRepositories_1.getOwnersRepositories; } }));
-
-
-/***/ }),
-
-/***/ 64165:
+/***/ 24641:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1176,7 +835,19 @@ exports.octokit = new octokit_1.Octokit({
 
 /***/ }),
 
-/***/ 78894:
+/***/ 8827:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.concurrentLimit = void 0;
+exports.concurrentLimit = 25;
+
+
+/***/ }),
+
+/***/ 5891:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1205,76 +876,429 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getMultipleValuesInput = void 0;
+exports.createIssue = void 0;
 const core = __importStar(__nccwpck_require__(42186));
-const getMultipleValuesInput = (name) => {
-    const values = process.env[name] || core.getInput(name);
-    return values
-        .split(",")
-        .map((el) => el.trim())
-        .filter((el) => el);
+const octokit_1 = __nccwpck_require__(24641);
+const date_fns_1 = __nccwpck_require__(73314);
+const utils_1 = __nccwpck_require__(41002);
+const createIssue = (markdown) => {
+    const issueTitle = core.getInput("ISSUE_TITLE") ||
+        process.env.ISSUE_TITLE ||
+        `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
+    const labels = (0, utils_1.getMultipleValuesInput)("LABELS").filter((label) => label && typeof label === "string") || [];
+    const assignees = (0, utils_1.getMultipleValuesInput)("ASSIGNEES").filter((assignee) => assignee && typeof assignee === "string") || [];
+    octokit_1.octokit.rest.issues.create({
+        repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+            process.env.GITHUB_REPO_FOR_ISSUE,
+        owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+            process.env.GITHUB_OWNER_FOR_ISSUE,
+        title: issueTitle,
+        body: markdown,
+        labels,
+        assignees,
+    });
 };
-exports.getMultipleValuesInput = getMultipleValuesInput;
+exports.createIssue = createIssue;
 
 
 /***/ }),
 
-/***/ 12290:
+/***/ 1847:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.delay = void 0;
+const delay = (ms) => new Promise((resolve) => {
+    setTimeout(resolve, ms);
+});
+exports.delay = delay;
+
+
+/***/ }),
+
+/***/ 17227:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getMultipleValuesInput = void 0;
-var getMultipleValuesInput_1 = __nccwpck_require__(78894);
-Object.defineProperty(exports, "getMultipleValuesInput", ({ enumerable: true, get: function () { return getMultipleValuesInput_1.getMultipleValuesInput; } }));
+exports.getDataWithThrottle = void 0;
+const constants_1 = __nccwpck_require__(8827);
+const delay_1 = __nccwpck_require__(1847);
+const getPullRequestComments_1 = __nccwpck_require__(92041);
+const getPullRequestData_1 = __nccwpck_require__(6382);
+const getPullRequestReviews_1 = __nccwpck_require__(34712);
+const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
+    const PRs = [];
+    const PREvents = [];
+    const PRComments = [];
+    let counter = 0;
+    const { skipComments = true, skipReviews = true, } = options;
+    while (pullRequestNumbers.length > PRs.length) {
+        const startIndex = counter * constants_1.concurrentLimit;
+        const endIndex = (counter + 1) * constants_1.concurrentLimit;
+        const pullRequestNumbersChunks = pullRequestNumbers.slice(startIndex, endIndex);
+        const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks, repository);
+        console.log(`Batch request #${counter + 1} out of ${Math.ceil(pullRequestNumbers.length / constants_1.concurrentLimit)}`);
+        const prs = await Promise.allSettled(pullRequestDatas);
+        await (0, delay_1.delay)(5000);
+        const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, repository, {
+            skip: skipReviews,
+        });
+        const reviews = await Promise.allSettled(pullRequestReviews);
+        await (0, delay_1.delay)(5000);
+        const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbersChunks, repository, {
+            skip: skipComments,
+        });
+        const comments = await Promise.allSettled(pullRequestComments);
+        await (0, delay_1.delay)(5000);
+        counter++;
+        PRs.push(...prs);
+        PREvents.push(...reviews);
+        PRComments.push(...comments);
+    }
+    return { PRs, PREvents, PRComments };
+};
+exports.getDataWithThrottle = getDataWithThrottle;
 
 
 /***/ }),
 
-/***/ 26269:
+/***/ 92041:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPullRequestComments = void 0;
+const octokit_1 = __nccwpck_require__(24641);
+const getPullRequestComments = async (pullRequestNumbers, repository, options) => {
+    const { owner, repo } = repository;
+    return !options?.skip
+        ? pullRequestNumbers.map(async (number) => {
+            const data = [];
+            for (let i = 1, shouldStop = false; shouldStop === false; i++) {
+                const comments = await octokit_1.octokit.rest.pulls.listReviewComments({
+                    owner,
+                    repo,
+                    pull_number: number,
+                    per_page: 100,
+                    page: i,
+                });
+                if (comments.data.length < 100) {
+                    shouldStop = true;
+                }
+                data.push(...comments.data);
+            }
+            return { data };
+        })
+        : [];
+};
+exports.getPullRequestComments = getPullRequestComments;
+
+
+/***/ }),
+
+/***/ 6382:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPullRequestDatas = void 0;
+const octokit_1 = __nccwpck_require__(24641);
+const getPullRequestDatas = async (pullRequestNumbers, repository) => {
+    const { repo, owner } = repository;
+    return pullRequestNumbers.map((number) => octokit_1.octokit.rest.pulls.get({
+        owner,
+        repo,
+        pull_number: number,
+    }));
+};
+exports.getPullRequestDatas = getPullRequestDatas;
+
+
+/***/ }),
+
+/***/ 34712:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPullRequestReviews = void 0;
+const octokit_1 = __nccwpck_require__(24641);
+const getPullRequestReviews = async (pullRequestNumbers, repository, options) => {
+    const { owner, repo } = repository;
+    return !options?.skip
+        ? pullRequestNumbers.map(async (number) => {
+            const data = [];
+            for (let i = 1, shouldStop = false; shouldStop === false; i++) {
+                const reviews = await octokit_1.octokit.rest.pulls.listReviews({
+                    owner,
+                    repo,
+                    pull_number: number,
+                    per_page: 100,
+                    page: i,
+                });
+                if (reviews.data.length < 100) {
+                    shouldStop = true;
+                }
+                data.push(...reviews.data);
+            }
+            return { data };
+        })
+        : [];
+};
+exports.getPullRequestReviews = getPullRequestReviews;
+
+
+/***/ }),
+
+/***/ 21341:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPullRequests = void 0;
+const date_fns_1 = __nccwpck_require__(73314);
+const octokit_1 = __nccwpck_require__(24641);
+const utils_1 = __nccwpck_require__(50426);
+const getPullRequests = async (amount = 10, repository) => {
+    const { startDate, endDate } = (0, utils_1.getReportDates)();
+    const { owner, repo } = repository;
+    const data = [];
+    for (let i = 0, dateMatched = !!startDate; startDate ? dateMatched : i < Math.ceil(amount / 100); i++) {
+        const pulls = await octokit_1.octokit.rest.pulls.list({
+            owner,
+            repo,
+            per_page: amount > 100 || startDate ? 100 : amount,
+            page: i + 1,
+            state: "closed",
+            sort: "updated",
+            direction: "desc",
+        });
+        if (startDate || endDate) {
+            const filteredPulls = pulls.data.filter((pr) => {
+                const closedDate = pr.closed_at ? (0, date_fns_1.parseISO)(pr.closed_at) : null;
+                if (closedDate) {
+                    const isBeforeEndDate = endDate
+                        ? (0, date_fns_1.isBefore)(closedDate, endDate)
+                        : true;
+                    const isAfterStartDate = startDate
+                        ? (0, date_fns_1.isAfter)(closedDate, startDate)
+                        : true;
+                    return isBeforeEndDate && isAfterStartDate;
+                }
+                return false;
+            });
+            dateMatched = pulls.data.some((pr) => startDate && pr.updated_at
+                ? (0, date_fns_1.isBefore)(startDate, (0, date_fns_1.parseISO)(pr.updated_at))
+                : null);
+            data.push(...filteredPulls);
+        }
+        else {
+            data.push(...pulls.data);
+        }
+        if (pulls.data.length === 0) {
+            break;
+        }
+    }
+    return data;
+};
+exports.getPullRequests = getPullRequests;
+
+
+/***/ }),
+
+/***/ 49591:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createIssue = exports.makeComplexRequest = exports.getOwnersRepositories = void 0;
+var getOwnersRepositories_1 = __nccwpck_require__(57288);
+Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return getOwnersRepositories_1.getOwnersRepositories; } }));
+var makeComplexRequest_1 = __nccwpck_require__(99378);
+Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: function () { return makeComplexRequest_1.makeComplexRequest; } }));
+var createIssue_1 = __nccwpck_require__(5891);
+Object.defineProperty(exports, "createIssue", ({ enumerable: true, get: function () { return createIssue_1.createIssue; } }));
+
+
+/***/ }),
+
+/***/ 99378:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.makeComplexRequest = void 0;
+const octokit_1 = __nccwpck_require__(24641);
+const utils_1 = __nccwpck_require__(41002);
+const getDataWithThrottle_1 = __nccwpck_require__(17227);
+const getPullRequests_1 = __nccwpck_require__(21341);
+const makeComplexRequest = async (amount = 100, repository, options = {
+    skipComments: true,
+    skipReviews: true,
+}) => {
+    const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
+    console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
+    const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount, repository);
+    const pullRequestNumbers = pullRequests
+        .filter((pr) => {
+        const excludeLabels = (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS");
+        const includeLabels = (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS");
+        const isIncludeLabelsCorrect = includeLabels.length > 0
+            ? pr.labels.some((label) => includeLabels.includes(label.name))
+            : true;
+        const isExcludeLabelsCorrect = excludeLabels.length > 0
+            ? !pr.labels.some((label) => excludeLabels.includes(label.name))
+            : true;
+        return isIncludeLabelsCorrect && isExcludeLabelsCorrect;
+    })
+        .map((item) => item.number);
+    const { PRs, PREvents, PRComments } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, repository, options);
+    const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
+    console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
+    const reviews = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
+    const pullRequestInfo = PRs.map((element) => element.status === "fulfilled" ? element.value.data : null);
+    const comments = PRComments.map((element) => element.status === "fulfilled" ? element.value.data : null);
+    return {
+        ownerRepo: `${repository.owner}/${repository.repo}`,
+        reviews,
+        pullRequestInfo,
+        comments,
+    };
+};
+exports.makeComplexRequest = makeComplexRequest;
+
+
+/***/ }),
+
+/***/ 57288:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getOwnersRepositories = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const getOwnersRepositories = () => {
+    const ownersRepositories = (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS")
+        .map((el) => el.split("/"))
+        .filter(([owner, repository]) => owner && repository);
+    return ownersRepositories || [];
+};
+exports.getOwnersRepositories = getOwnersRepositories;
+
+
+/***/ }),
+
+/***/ 30183:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getReportDates = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const date_fns_1 = __nccwpck_require__(73314);
+const getReportDates = () => {
+    const startReportDate = process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START");
+    const endReportDate = process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END");
+    const startDate = startReportDate
+        ? (0, date_fns_1.parse)(startReportDate, "d/MM/yyyy", new Date())
+        : null;
+    const endDate = endReportDate
+        ? (0, date_fns_1.parse)(endReportDate, "d/MM/yyyy", new Date())
+        : null;
+    return {
+        startDate,
+        endDate,
+    };
+};
+exports.getReportDates = getReportDates;
+
+
+/***/ }),
+
+/***/ 50426:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getOwnersRepositories = exports.getReportDates = void 0;
+var getReportDates_1 = __nccwpck_require__(30183);
+Object.defineProperty(exports, "getReportDates", ({ enumerable: true, get: function () { return getReportDates_1.getReportDates; } }));
+var getOwnersRepositories_1 = __nccwpck_require__(57288);
+Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return getOwnersRepositories_1.getOwnersRepositories; } }));
+
+
+/***/ }),
+
+/***/ 54184:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createMarkdown = void 0;
-const utils_1 = __nccwpck_require__(99446);
-const utils_2 = __nccwpck_require__(12290);
+const utils_1 = __nccwpck_require__(92884);
+const utils_2 = __nccwpck_require__(41002);
 const createMarkdown = (data) => {
-    const usersToHide = (0, utils_2.getMultipleValuesInput)("HIDE_USERS") || [];
-    const usersToShow = (0, utils_2.getMultipleValuesInput)("SHOW_USERS") || [];
-    const users = Object.keys(data)
-        .filter((key) => key !== "total")
-        .concat("total")
-        .filter((key) => {
-        return (!usersToHide.includes(key) &&
-            (usersToShow.length > 0 ? usersToShow.includes(key) : true));
-    });
+    const users = (0, utils_1.getDisplayUserList)(data);
     const dates = (0, utils_1.sortCollectionsByDate)(data.total);
+    const contentTypes = (0, utils_2.getMultipleValuesInput)("SHOW_STATS_TYPES");
     const content = dates.map((date) => {
         if (!data.total[date]?.merged)
             return "";
-        const timelineContent = (0, utils_2.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-            .filter((method) => ["average", "median", "percentile"].includes(method))
-            .map((type) => {
-            const pullRequestTimelineTable = (0, utils_1.createTimelineTable)(data, type, users, date);
-            const pullRequestTimelineBar = (0, utils_1.createTimelineGanttBar)(data, type, users, date);
-            return `
-      ${pullRequestTimelineTable}
-      ${pullRequestTimelineBar}
-      `;
-        });
-        const pullRequestTotal = (0, utils_1.createTotalTable)(data, users, date);
-        const pullRequestReviews = (0, utils_1.createReviewTable)(data, users, date);
-        const pullRequestQuality = (0, utils_1.createPullRequestQualityTable)(data, users, date);
-        const pieChart = (0, utils_1.createDiscussionsPieChart)(data, users, date);
+        const timelineContent = contentTypes.includes("timeline")
+            ? (0, utils_1.createTimelineContent)(data, users, date)
+            : [];
+        const pullRequestTotal = contentTypes.includes("workload")
+            ? (0, utils_1.createTotalTable)(data, users, date)
+            : "";
+        const pullRequestReviews = contentTypes.includes("code-review-engagement")
+            ? (0, utils_1.createReviewTable)(data, users, date)
+            : "";
+        const pullRequestQuality = contentTypes.includes("pr-quality")
+            ? (0, utils_1.createPullRequestQualityTable)(data, users, date)
+            : "";
+        const pieChart = contentTypes.includes("pr-quality")
+            ? (0, utils_1.createDiscussionsPieChart)(data, users, date)
+            : "";
         return `
     ${timelineContent.join("\n")}
-    ${pullRequestTotal}
-    ${pullRequestReviews}
-    ${pullRequestQuality}
-    ${pieChart}
+    ${[pullRequestTotal, pullRequestReviews, pullRequestQuality, pieChart].join("\n")}
     `;
     });
     return `
@@ -1289,26 +1313,26 @@ exports.createMarkdown = createMarkdown;
 
 /***/ }),
 
-/***/ 50459:
+/***/ 55379:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createMarkdown = void 0;
-var createMarkdown_1 = __nccwpck_require__(26269);
+var createMarkdown_1 = __nccwpck_require__(54184);
 Object.defineProperty(exports, "createMarkdown", ({ enumerable: true, get: function () { return createMarkdown_1.createMarkdown; } }));
 
 
 /***/ }),
 
-/***/ 76374:
+/***/ 11474:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewProvidedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
+exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
 exports.timeToReviewHeader = "Time to review";
 exports.timeToApproveHeader = "Time to approve";
 exports.timeToMergeHeader = "Time to merge";
@@ -1316,7 +1340,7 @@ exports.totalMergedPrsHeader = "Total merged PRs";
 exports.totalOpenedPrsHeader = "Total opened PRs";
 exports.additionsDeletionsHeader = "Additions/Deletions";
 exports.reviewCommentsHeader = "Total comments";
-exports.reviewProvidedHeader = "Reviews conducted";
+exports.reviewConductedHeader = "Reviews conducted";
 exports.discussionsHeader = "Discussions received";
 exports.discussionsConductedHeader = "Discussions conducted";
 exports.commentsConductedHeader = "Comments conducted";
@@ -1327,7 +1351,7 @@ exports.requestChangesReceived = "Changes requested received";
 
 /***/ }),
 
-/***/ 5787:
+/***/ 83454:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1352,7 +1376,7 @@ exports.createBlock = createBlock;
 
 /***/ }),
 
-/***/ 86600:
+/***/ 96354:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1400,6 +1424,7 @@ REPORT_DATE_END: ${process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
 AGGREGATE_VALUE_METHODS: ${process.env.AGGREGATE_VALUE_METHODS ||
         core.getInput("AGGREGATE_VALUE_METHODS")}
+SHOW_STATS_TYPES: ${process.env.SHOW_STATS_TYPES || core.getInput("SHOW_STATS_TYPES")}
 LABELS: ${process.env.LABELS || core.getInput("LABELS")}
 ASSIGNEES: ${process.env.ASSIGNEES || core.getInput("ASSIGNEES")}
 HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
@@ -1414,14 +1439,14 @@ exports.createConfigParamsCode = createConfigParamsCode;
 
 /***/ }),
 
-/***/ 65683:
+/***/ 99622:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createDiscussionsPieChart = void 0;
-const _1 = __nccwpck_require__(99446);
+const _1 = __nccwpck_require__(92884);
 const createDiscussionsPieChart = (data, users, date) => {
     return users
         .map((user) => ({ user, values: data[user][date]?.discussionsTypes }))
@@ -1445,7 +1470,7 @@ exports.createDiscussionsPieChart = createDiscussionsPieChart;
 
 /***/ }),
 
-/***/ 27025:
+/***/ 85095:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1476,7 +1501,7 @@ exports.createGanttBar = createGanttBar;
 
 /***/ }),
 
-/***/ 55350:
+/***/ 15035:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1501,15 +1526,15 @@ exports.createPieChart = createPieChart;
 
 /***/ }),
 
-/***/ 71537:
+/***/ 64721:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createPullRequestQualityTable = void 0;
-const constants_1 = __nccwpck_require__(76374);
-const createBlock_1 = __nccwpck_require__(5787);
+const constants_1 = __nccwpck_require__(11474);
+const createBlock_1 = __nccwpck_require__(83454);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
@@ -1526,7 +1551,7 @@ const createPullRequestQualityTable = (data, users, date) => {
         ];
     });
     return (0, createBlock_1.createBlock)({
-        title: `Pull requests quality stats ${date}`,
+        title: `Pull request quality ${date}`,
         description: "The table includes discussions and comments on closed pull requests.",
         table: {
             headers: [
@@ -1545,15 +1570,15 @@ exports.createPullRequestQualityTable = createPullRequestQualityTable;
 
 /***/ }),
 
-/***/ 24410:
+/***/ 79243:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createReviewTable = void 0;
-const constants_1 = __nccwpck_require__(76374);
-const createBlock_1 = __nccwpck_require__(5787);
+const constants_1 = __nccwpck_require__(11474);
+const createBlock_1 = __nccwpck_require__(83454);
 const createReviewTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
@@ -1569,7 +1594,7 @@ const createReviewTable = (data, users, date) => {
         ];
     });
     return (0, createBlock_1.createBlock)({
-        title: `Pull requests review stats ${date}`,
+        title: `Code review engagement ${date}`,
         description: "**Changes requested / Comments / Approvals** - number of Reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.",
         table: {
             headers: [
@@ -1588,16 +1613,41 @@ exports.createReviewTable = createReviewTable;
 
 /***/ }),
 
-/***/ 67150:
+/***/ 50940:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTimelineContent = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const createTimelineGanttBar_1 = __nccwpck_require__(5304);
+const createTimelineTable_1 = __nccwpck_require__(20194);
+const createTimelineContent = (data, users, date) => (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+    .filter((method) => ["average", "median", "percentile"].includes(method))
+    .map((type) => {
+    const pullRequestTimelineTable = (0, createTimelineTable_1.createTimelineTable)(data, type, users, date);
+    const pullRequestTimelineBar = (0, createTimelineGanttBar_1.createTimelineGanttBar)(data, type, users, date);
+    return `
+${pullRequestTimelineTable}
+${pullRequestTimelineBar}
+`;
+});
+exports.createTimelineContent = createTimelineContent;
+
+
+/***/ }),
+
+/***/ 5304:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineGanttBar = void 0;
-const constants_1 = __nccwpck_require__(15966);
-const constants_2 = __nccwpck_require__(76374);
-const createGanttBar_1 = __nccwpck_require__(27025);
+const constants_1 = __nccwpck_require__(95354);
+const constants_2 = __nccwpck_require__(11474);
+const createGanttBar_1 = __nccwpck_require__(85095);
 const createTimelineGanttBar = (data, type, users, date) => {
     return (0, createGanttBar_1.createGanttBar)({
         title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date} / minutes`,
@@ -1632,17 +1682,17 @@ exports.createTimelineGanttBar = createTimelineGanttBar;
 
 /***/ }),
 
-/***/ 89343:
+/***/ 20194:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineTable = void 0;
-const constants_1 = __nccwpck_require__(15966);
-const constants_2 = __nccwpck_require__(76374);
-const createBlock_1 = __nccwpck_require__(5787);
-const formatMinutesDuration_1 = __nccwpck_require__(98884);
+const constants_1 = __nccwpck_require__(95354);
+const constants_2 = __nccwpck_require__(11474);
+const createBlock_1 = __nccwpck_require__(83454);
+const formatMinutesDuration_1 = __nccwpck_require__(92411);
 const createTimelineTable = (data, type, users, date) => {
     const tableRows = users
         .filter((user) => data[user]?.[date]?.merged)
@@ -1676,15 +1726,15 @@ exports.createTimelineTable = createTimelineTable;
 
 /***/ }),
 
-/***/ 68991:
+/***/ 29724:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTotalTable = void 0;
-const constants_1 = __nccwpck_require__(76374);
-const createBlock_1 = __nccwpck_require__(5787);
+const constants_1 = __nccwpck_require__(11474);
+const createBlock_1 = __nccwpck_require__(83454);
 const createTotalTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.opened ||
@@ -1709,7 +1759,7 @@ const createTotalTable = (data, users, date) => {
                 constants_1.totalMergedPrsHeader,
                 constants_1.additionsDeletionsHeader,
                 constants_1.reviewCommentsHeader,
-                constants_1.reviewProvidedHeader,
+                constants_1.reviewConductedHeader,
             ],
             rows: tableRowsTotal,
         },
@@ -1720,7 +1770,7 @@ exports.createTotalTable = createTotalTable;
 
 /***/ }),
 
-/***/ 98884:
+/***/ 92411:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -1738,42 +1788,70 @@ exports.formatMinutesDuration = formatMinutesDuration;
 
 /***/ }),
 
-/***/ 99446:
+/***/ 88144:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPieChart = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = void 0;
-var createDiscussionsPieChart_1 = __nccwpck_require__(65683);
-Object.defineProperty(exports, "createDiscussionsPieChart", ({ enumerable: true, get: function () { return createDiscussionsPieChart_1.createDiscussionsPieChart; } }));
-var createConfigParamsCode_1 = __nccwpck_require__(86600);
-Object.defineProperty(exports, "createConfigParamsCode", ({ enumerable: true, get: function () { return createConfigParamsCode_1.createConfigParamsCode; } }));
-var createTotalTable_1 = __nccwpck_require__(68991);
-Object.defineProperty(exports, "createTotalTable", ({ enumerable: true, get: function () { return createTotalTable_1.createTotalTable; } }));
-var createReviewTable_1 = __nccwpck_require__(24410);
-Object.defineProperty(exports, "createReviewTable", ({ enumerable: true, get: function () { return createReviewTable_1.createReviewTable; } }));
-var createGanttBar_1 = __nccwpck_require__(27025);
-Object.defineProperty(exports, "createGanttBar", ({ enumerable: true, get: function () { return createGanttBar_1.createGanttBar; } }));
-var createBlock_1 = __nccwpck_require__(5787);
-Object.defineProperty(exports, "createBlock", ({ enumerable: true, get: function () { return createBlock_1.createBlock; } }));
-var formatMinutesDuration_1 = __nccwpck_require__(98884);
-Object.defineProperty(exports, "formatMinutesDuration", ({ enumerable: true, get: function () { return formatMinutesDuration_1.formatMinutesDuration; } }));
-var sortCollectionsByDate_1 = __nccwpck_require__(30693);
-Object.defineProperty(exports, "sortCollectionsByDate", ({ enumerable: true, get: function () { return sortCollectionsByDate_1.sortCollectionsByDate; } }));
-var createTimelineGanttBar_1 = __nccwpck_require__(67150);
-Object.defineProperty(exports, "createTimelineGanttBar", ({ enumerable: true, get: function () { return createTimelineGanttBar_1.createTimelineGanttBar; } }));
-var createTimelineTable_1 = __nccwpck_require__(89343);
-Object.defineProperty(exports, "createTimelineTable", ({ enumerable: true, get: function () { return createTimelineTable_1.createTimelineTable; } }));
-var createPullRequestQualityTable_1 = __nccwpck_require__(71537);
-Object.defineProperty(exports, "createPullRequestQualityTable", ({ enumerable: true, get: function () { return createPullRequestQualityTable_1.createPullRequestQualityTable; } }));
-var createPieChart_1 = __nccwpck_require__(55350);
-Object.defineProperty(exports, "createPieChart", ({ enumerable: true, get: function () { return createPieChart_1.createPieChart; } }));
+exports.getDisplayUserList = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const getDisplayUserList = (data) => {
+    const usersToHide = (0, utils_1.getMultipleValuesInput)("HIDE_USERS") || [];
+    const usersToShow = (0, utils_1.getMultipleValuesInput)("SHOW_USERS") || [];
+    return Object.keys(data)
+        .filter((key) => key !== "total")
+        .concat("total")
+        .filter((key) => {
+        return (!usersToHide.includes(key) &&
+            (usersToShow.length > 0 ? usersToShow.includes(key) : true));
+    });
+};
+exports.getDisplayUserList = getDisplayUserList;
 
 
 /***/ }),
 
-/***/ 30693:
+/***/ 92884:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTimelineContent = exports.getDisplayUserList = exports.createPieChart = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = void 0;
+var createDiscussionsPieChart_1 = __nccwpck_require__(99622);
+Object.defineProperty(exports, "createDiscussionsPieChart", ({ enumerable: true, get: function () { return createDiscussionsPieChart_1.createDiscussionsPieChart; } }));
+var createConfigParamsCode_1 = __nccwpck_require__(96354);
+Object.defineProperty(exports, "createConfigParamsCode", ({ enumerable: true, get: function () { return createConfigParamsCode_1.createConfigParamsCode; } }));
+var createTotalTable_1 = __nccwpck_require__(29724);
+Object.defineProperty(exports, "createTotalTable", ({ enumerable: true, get: function () { return createTotalTable_1.createTotalTable; } }));
+var createReviewTable_1 = __nccwpck_require__(79243);
+Object.defineProperty(exports, "createReviewTable", ({ enumerable: true, get: function () { return createReviewTable_1.createReviewTable; } }));
+var createGanttBar_1 = __nccwpck_require__(85095);
+Object.defineProperty(exports, "createGanttBar", ({ enumerable: true, get: function () { return createGanttBar_1.createGanttBar; } }));
+var createBlock_1 = __nccwpck_require__(83454);
+Object.defineProperty(exports, "createBlock", ({ enumerable: true, get: function () { return createBlock_1.createBlock; } }));
+var formatMinutesDuration_1 = __nccwpck_require__(92411);
+Object.defineProperty(exports, "formatMinutesDuration", ({ enumerable: true, get: function () { return formatMinutesDuration_1.formatMinutesDuration; } }));
+var sortCollectionsByDate_1 = __nccwpck_require__(49740);
+Object.defineProperty(exports, "sortCollectionsByDate", ({ enumerable: true, get: function () { return sortCollectionsByDate_1.sortCollectionsByDate; } }));
+var createTimelineGanttBar_1 = __nccwpck_require__(5304);
+Object.defineProperty(exports, "createTimelineGanttBar", ({ enumerable: true, get: function () { return createTimelineGanttBar_1.createTimelineGanttBar; } }));
+var createTimelineTable_1 = __nccwpck_require__(20194);
+Object.defineProperty(exports, "createTimelineTable", ({ enumerable: true, get: function () { return createTimelineTable_1.createTimelineTable; } }));
+var createPullRequestQualityTable_1 = __nccwpck_require__(64721);
+Object.defineProperty(exports, "createPullRequestQualityTable", ({ enumerable: true, get: function () { return createPullRequestQualityTable_1.createPullRequestQualityTable; } }));
+var createPieChart_1 = __nccwpck_require__(15035);
+Object.defineProperty(exports, "createPieChart", ({ enumerable: true, get: function () { return createPieChart_1.createPieChart; } }));
+var getDisplayUserList_1 = __nccwpck_require__(88144);
+Object.defineProperty(exports, "getDisplayUserList", ({ enumerable: true, get: function () { return getDisplayUserList_1.getDisplayUserList; } }));
+var createTimelineContent_1 = __nccwpck_require__(50940);
+Object.defineProperty(exports, "createTimelineContent", ({ enumerable: true, get: function () { return createTimelineContent_1.createTimelineContent; } }));
+
+
+/***/ }),
+
+/***/ 49740:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -1793,92 +1871,6 @@ const sortCollectionsByDate = (collections) => Object.keys(collections)
         : -1;
 });
 exports.sortCollectionsByDate = sortCollectionsByDate;
-
-
-/***/ }),
-
-/***/ 79283:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__nccwpck_require__(44227);
-const core = __importStar(__nccwpck_require__(42186));
-const data_1 = __nccwpck_require__(17514);
-const view_1 = __nccwpck_require__(50459);
-async function main() {
-    if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
-        process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
-    }
-    if (((!process.env.GITHUB_REPO_FOR_ISSUE ||
-        !process.env.GITHUB_OWNER_FOR_ISSUE) &&
-        (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            !core.getInput("GITHUB_REPO_FOR_ISSUE"))) ||
-        (!core.getInput("GITHUB_OWNERS_REPOS") &&
-            !process.env.GITHUB_OWNERS_REPOS) ||
-        (!core.getInput("GITHUB_TOKEN") && !process.env.GITHUB_TOKEN)) {
-        throw new Error("Missing required variables");
-    }
-    const ownersRepos = (0, data_1.getOwnersRepositories)();
-    console.log("Initiating data request.");
-    const dataByRepos = await Promise.allSettled(ownersRepos.map(([owner, repo]) => (0, data_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT, {
-        owner,
-        repo,
-    }, {
-        skipReviews: false,
-        skipComments: false,
-    })));
-    console.log("Data successfully retrieved. Starting report calculations.");
-    const data = dataByRepos
-        .map((element) => (element.status === "fulfilled" ? element.value : null))
-        .filter((el) => el);
-    const mergedData = data.reduce((acc, element) => ({
-        ownerRepo: acc.ownerRepo
-            ? acc.ownerRepo.concat(",", element.ownerRepo)
-            : element.ownerRepo,
-        reviews: [...acc.reviews, ...element.reviews],
-        pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
-        comments: [...acc?.comments, ...element.comments],
-        commits: [...acc?.commits, ...element.commits],
-    }), {
-        ownerRepo: "",
-        reviews: [],
-        pullRequestInfo: [],
-        comments: [],
-        commits: [],
-    });
-    const preparedData = (0, data_1.collectData)(mergedData);
-    core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
-    console.log("Calculation complete. Generating markdown.");
-    const markdown = (0, view_1.createMarkdown)(preparedData);
-    console.log("Markdown successfully generated.");
-    (0, data_1.createIssue)(markdown);
-}
-main();
 
 
 /***/ }),

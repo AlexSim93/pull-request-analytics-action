@@ -17,6 +17,10 @@ inputs:
   GITHUB_OWNER_FOR_ISSUE:
     description: "Github owner for issue"
     required: true
+  SHOW_STATS_TYPES:
+    description: "Stats types that should be displayed in report. Values must be separated by comma. Can take values: 'timeline', 'workload', 'pr-quality', 'code-review-engagement'"
+    required: false
+    default: "timeline, workload, pr-quality, code-review-engagement"
   AMOUNT:
     description: "Amount of PRs"
     required: false
