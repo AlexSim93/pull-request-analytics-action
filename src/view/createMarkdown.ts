@@ -23,29 +23,18 @@ export const createMarkdown = (
   const content = dates.map((date) => {
     if (!data.total[date]?.merged) return "";
 
-    const timelineContent = contentTypes.includes("timeline")
-      ? createTimelineContent(data, users, date)
-      : [];
+    const contentMap: Record<string, string> = {
+      timeline: createTimelineContent(data, users, date).join("\n"),
+      workload: createTotalTable(data, users, date),
+      "code-review-engagement": createReviewTable(data, users, date),
+      "pr-quality": createPullRequestQualityTable(data, users, date),
+    };
 
-    const pullRequestTotal = contentTypes.includes("workload")
-      ? createTotalTable(data, users, date)
-      : "";
-
-    const pullRequestReviews = contentTypes.includes("code-review-engagement")
-      ? createReviewTable(data, users, date)
-      : "";
-
-    const pullRequestQuality = contentTypes.includes("pr-quality")
-      ? createPullRequestQualityTable(data, users, date)
-      : "";
-    const pieChart = contentTypes.includes("pr-quality")
-      ? createDiscussionsPieChart(data, users, date)
-      : "";
     return `
-    ${timelineContent.join("\n")}
-    ${[pullRequestTotal, pullRequestReviews, pullRequestQuality, pieChart].join(
-      "\n"
-    )}
+    ${contentTypes
+      .map((type) => contentMap[type])
+      .filter((content) => content)
+      .join("\n")}
     `;
   });
 
