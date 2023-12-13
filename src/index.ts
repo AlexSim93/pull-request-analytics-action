@@ -1,13 +1,13 @@
 import "dotenv/config";
 import * as core from "@actions/core";
 
+import { createMarkdown } from "./view";
 import {
-  collectData,
   createIssue,
   getOwnersRepositories,
   makeComplexRequest,
-} from "./controllers/data";
-import { createMarkdown } from "./controllers/view";
+} from "./requests";
+import { collectData } from "./converters";
 
 async function main() {
   if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
@@ -57,14 +57,12 @@ async function main() {
       reviews: [...acc.reviews, ...element!.reviews],
       pullRequestInfo: [...acc?.pullRequestInfo, ...element!.pullRequestInfo],
       comments: [...acc?.comments, ...element!.comments],
-      commits: [...acc?.commits, ...element!.commits],
     }),
     {
       ownerRepo: "",
       reviews: [],
       pullRequestInfo: [],
       comments: [],
-      commits: [],
     }
   );
   const preparedData = collectData(mergedData);

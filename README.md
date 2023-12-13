@@ -232,27 +232,28 @@ This feature enhances the analytical capabilities of **pull-request-analytics-ac
 
 Below is a table outlining the various configuration parameters available for **pull-request-analytics-action**. These parameters allow you to customize the behavior of the action to fit your specific needs. Each parameter's name, description, requirement status, and default value (if applicable) are listed for your reference:
 
-| Parameter Name            | Description                                                                                                                      | Required | Default Value                           |
-| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------- | --------------------------------------- |
-| `GITHUB_TOKEN`            | Github token                                                                                                                     | Yes      | -                                       |
-| `GITHUB_OWNERS_REPOS`     | Github owner/repository list separated by comma                                                                                  | Yes      | -                                       |
-| `GITHUB_REPO_FOR_ISSUE`   | GitHub repository for issue creation                                                                                             | Yes      | -                                       |
-| `GITHUB_OWNER_FOR_ISSUE`  | Owner of the repository for issue                                                                                                | Yes      | -                                       |
-| `AGGREGATE_VALUE_METHODS` | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median`                     | No       | `percentile`                            |
-| `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                                                 | No       | `100`                                   |
-| `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                                            | No       | -                                       |
-| `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                                              | No       | -                                       |
-| `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                                                   | No       | -                                       |
-| `CORE_HOURS_END`          | End of core hours (HH:mm). By default in UTC                                                                                     | No       | -                                       |
-| `TIMEZONE`                | Timezone that will be used in action                                                                                             | No       | `UTC`                                   |
-| `PERCENTILE`              | Percentile value for timeline                                                                                                    | No       | `75`                                    |
-| `ISSUE_TITLE`             | Title for the created issue                                                                                                      | No       | `Pull requests report(d/MM/yyyy HH:mm)` |
-| `LABELS`                  | Labels for the created issue separated by comma                                                                                  | No       | -                                       |
-| `ASSIGNEES`               | Assignees for the issue separated by comma                                                                                       | No       | -                                       |
-| `HIDE_USERS`              | Hides selected users from reports, while still including their data in the analytics. Users should be separated by comma         | No       | -                                       |
-| `SHOW_USERS`              | Displays only specified users in reports, but includes all users in the background analytics. Users should be separated by comma | No       | -                                       |
-| `EXCLUDE_LABELS`          | Excludes PRs with mentioned labels. Values should be separated by comma                                                          | No       | -                                       |
-| `INCLUDE_LABELS`          | Includes only PRs with mentioned labels. Values should be separated by comma                                                     | No       | -                                       |
+| Parameter Name            | Description                                                                                                                                                        | Required | Default Value                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- | -------------------------------------------------------- |
+| `GITHUB_TOKEN`            | Github token                                                                                                                                                       | Yes      | -                                                        |
+| `GITHUB_OWNERS_REPOS`     | Github owner/repository list separated by comma                                                                                                                    | Yes      | -                                                        |
+| `GITHUB_REPO_FOR_ISSUE`   | GitHub repository for issue creation                                                                                                                               | Yes      | -                                                        |
+| `GITHUB_OWNER_FOR_ISSUE`  | Owner of the repository for issue                                                                                                                                  | Yes      | -                                                        |
+| `SHOW_STATS_TYPES`        | Stats types that should be displayed in report. Values must be separated by comma. Can take values: `timeline`, `workload`, `pr-quality`, `code-review-engagement` | No       | `timeline, workload, pr-quality, code-review-engagement` |
+| `AGGREGATE_VALUE_METHODS` | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median`                                                       | No       | `percentile`                                             |
+| `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                                                                                   | No       | `100`                                                    |
+| `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                                                                              | No       | -                                                        |
+| `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                                                                                | No       | -                                                        |
+| `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                                                                                     | No       | -                                                        |
+| `CORE_HOURS_END`          | End of core hours (HH:mm). By default in UTC                                                                                                                       | No       | -                                                        |
+| `TIMEZONE`                | Timezone that will be used in action                                                                                                                               | No       | `UTC`                                                    |
+| `PERCENTILE`              | Percentile value for timeline                                                                                                                                      | No       | `75`                                                     |
+| `ISSUE_TITLE`             | Title for the created issue                                                                                                                                        | No       | `Pull requests report(d/MM/yyyy HH:mm)`                  |
+| `LABELS`                  | Labels for the created issue separated by comma                                                                                                                    | No       | -                                                        |
+| `ASSIGNEES`               | Assignees for the issue separated by comma                                                                                                                         | No       | -                                                        |
+| `HIDE_USERS`              | Hides selected users from reports, while still including their data in the analytics. Users should be separated by comma                                           | No       | -                                                        |
+| `SHOW_USERS`              | Displays only specified users in reports, but includes all users in the background analytics. Users should be separated by comma                                   | No       | -                                                        |
+| `EXCLUDE_LABELS`          | Excludes PRs with mentioned labels. Values should be separated by comma                                                                                            | No       | -                                                        |
+| `INCLUDE_LABELS`          | Includes only PRs with mentioned labels. Values should be separated by comma                                                                                       | No       | -                                                        |
 
 Use these parameters to tailor the **pull-request-analytics-action** to your project's specific requirements.
 
@@ -263,6 +264,19 @@ Use these parameters to tailor the **pull-request-analytics-action** to your pro
 ## Usage Limitations
 
 **pull-request-analytics-action** operates within GitHub's API rate limits and message size constraints, which are generally sufficient for detailed, long-term reporting. However, in rare cases of extremely large datasets, some adjustments might be necessary. For more information, refer to GitHub's documentation on [rate limiting](https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api). The length of the report generated by **pull-request-analytics-action** is limited to 65,536 characters due to GitHub Issue size constraints.
+
+## How You Can Help
+
+Contributions to **pull-request-analytics-action** are always welcome, no matter how large or small. Here are some ways you can help:
+
+- **Contribute to the Code**: Follow our contribution guidelines to make code contributions. Every pull request helps!
+- **Report Bugs**: Encountered an issue? Please let us know by opening an issue on GitHub. This is crucial for continuous improvement.
+- **Share Ideas**: Have ideas on how to improve **pull-request-analytics-action**? Open an issue and tell us about your suggestions.
+- **Participate in Surveys**: Occasionally, we conduct surveys to gather feedback. Your participation would be invaluable in shaping the future of **pull-request-analytics-action**.
+- **Spread the Word**: Mention **pull-request-analytics-action** in your articles, blog posts, and social media. The more people know about it, the better it gets.
+- **Get Featured**: If your company or project uses **pull-request-analytics-action**, let us know! We'd be proud to mention your name in our list of users. It's a great way for you to showcase your commitment to quality in software development, and it helps us demonstrate the real-world effectiveness of our tool.
+
+Your support and contributions greatly enhance this project. Together, we can make it the best tool for analyzing pull requests!
 
 ## License
 
