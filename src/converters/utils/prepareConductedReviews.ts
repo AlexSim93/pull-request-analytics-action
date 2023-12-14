@@ -2,7 +2,7 @@ import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 
 export const prepareConductedReviews = (
-  pullRequestLogin: string | undefined,
+  pullRequestLogin: string,
   pullRequestReviews:
     | Awaited<ReturnType<typeof makeComplexRequest>>["reviews"][number]
     | undefined,
