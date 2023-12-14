@@ -1,4 +1,5 @@
 import { makeComplexRequest } from "../../requests";
+import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import { getDiscussionType } from "./getDiscussionType";
 
@@ -10,20 +11,19 @@ export const prepareDiscussions = (
   pullRequestLogin: string
 ) => {
   const reviewComments = comments[index]?.filter(
-    (comment) => pullRequestLogin !== comment.user.login
+    (comment) => pullRequestLogin !== comment.user?.login
   );
 
-  const discussions = comments[index]?.filter(
-    (comment) =>
-      !comment.in_reply_to_id && pullRequestLogin !== comment.user.login
-  );
+  const discussions = comments[index]?.filter((comment) => {
+    const userLogin = comment.user?.login || invalidUserLogin;
+    return !comment.in_reply_to_id && pullRequestLogin !== userLogin;
+  });
 
   ["total", dateKey].forEach((key) => {
     discussions?.forEach((discussion) => {
-      if (
-        collection[discussion.user.login][key].discussionsTypes === undefined
-      ) {
-        collection[discussion.user.login][key].discussionsTypes = {};
+      const userLogin = discussion.user?.login || invalidUserLogin;
+      if (collection[userLogin][key].discussionsTypes === undefined) {
+        collection[userLogin][key].discussionsTypes = {};
       }
       if (collection[pullRequestLogin][key].discussionsTypes === undefined) {
         collection[pullRequestLogin][key].discussionsTypes = {};
@@ -32,13 +32,12 @@ export const prepareDiscussions = (
         collection.total[key].discussionsTypes = {};
       }
       getDiscussionType(discussion.body).forEach((type) => {
-        collection[discussion.user.login][key].discussionsTypes![type] = {
-          ...(collection[discussion.user.login][key].discussionsTypes![type] ||
-            {}),
+        collection[userLogin][key].discussionsTypes![type] = {
+          ...(collection[userLogin][key].discussionsTypes![type] || {}),
           conducted: {
             total:
-              (collection[discussion.user.login][key].discussionsTypes![type]
-                ?.conducted?.total || 0) + 1,
+              (collection[userLogin][key].discussionsTypes![type]?.conducted
+                ?.total || 0) + 1,
           },
         };
         collection[pullRequestLogin][key].discussionsTypes![type] = {
@@ -66,9 +65,10 @@ export const prepareDiscussions = (
     });
 
     comments[index]?.forEach((comment) => {
-      if (pullRequestLogin !== comment.user.login) {
-        collection[comment.user.login][key].commentsConducted =
-          (collection[comment.user.login][key].commentsConducted || 0) + 1;
+      const userLogin = comment.user?.login || invalidUserLogin;
+      if (pullRequestLogin !== userLogin) {
+        collection[userLogin][key].commentsConducted =
+          (collection[userLogin][key].commentsConducted || 0) + 1;
         collection.total[key].commentsConducted =
           (collection.total[key].commentsConducted || 0) + 1;
       }
@@ -84,8 +84,9 @@ export const prepareDiscussions = (
     }
 
     discussions?.forEach((discussion) => {
-      collection[discussion.user.login][key].discussionsConducted =
-        (collection[discussion.user.login][key].discussionsConducted || 0) + 1;
+      const userLogin = discussion.user?.login || invalidUserLogin;
+      collection[userLogin][key].discussionsConducted =
+        (collection[userLogin][key].discussionsConducted || 0) + 1;
       collection.total[key].discussionsConducted =
         (collection.total[key].discussionsConducted || 0) + 1;
     });

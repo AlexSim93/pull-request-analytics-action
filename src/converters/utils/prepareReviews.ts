@@ -1,4 +1,5 @@
 import { makeComplexRequest } from "../../requests";
+import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import { prepareConductedReviews } from "./prepareConductedReviews";
 
@@ -7,12 +8,13 @@ export const prepareReviews = (
   collection: Record<string, Record<string, Collection>>,
   index: number,
   dateKey: string,
-  pullRequestLogin: string | undefined
+  pullRequestLogin: string
 ) => {
   const users = Object.keys(
     data.reviews[index]?.reduce((acc, review) => {
-      if (review.user?.login && review.user.login !== pullRequestLogin) {
-        return { ...acc, [review.user?.login]: 1 };
+      const userLogin = review.user?.login || invalidUserLogin;
+      if (userLogin !== pullRequestLogin) {
+        return { ...acc, [userLogin]: 1 };
       }
       return acc;
     }, {}) || {}
@@ -24,7 +26,10 @@ export const prepareReviews = (
     }
     const userReviews =
       Array.isArray(data.reviews[index]) && user !== "total"
-        ? data.reviews[index]?.filter((review) => review.user?.login === user)
+        ? data.reviews[index]?.filter((review) => {
+            const userLogin = review.user?.login || invalidUserLogin;
+            return userLogin === user;
+          })
         : data.reviews[index];
     [dateKey, "total"].forEach((key) => {
       collection[user][key] = prepareConductedReviews(

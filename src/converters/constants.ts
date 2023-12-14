@@ -7,3 +7,4 @@ export const endOfWorkingTime =
 export const percentile = parseInt(
   process.env.PERCENTILE || core.getInput("PERCENTILE")
 );
+export const invalidUserLogin = 'Invalid-User-PRAA'

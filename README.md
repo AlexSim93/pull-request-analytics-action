@@ -12,6 +12,7 @@
 - [Configuration Parameters Overview](#configuration-parameters-overview)
 - [Privacy and Data Handling](#privacy-and-data-handling)
 - [Usage Limitations](#usage-limitations)
+- [How You Can Help](#how-you-can-help)
 - [License](#license)
 
 ## Key Features:
@@ -160,7 +161,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
          runs-on: ubuntu-latest
          steps:
            - name: "Run script for analytics"
-             uses: AlexSim93/pull-request-analytics-action@v1.4.0
+             uses: AlexSim93/pull-request-analytics-action@v1.4.1
              with:
                GITHUB_TOKEN: ${{ secrets.KEY }}
                ISSUE_TITLE: ${{ inputs.issue_title }}
