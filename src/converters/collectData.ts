@@ -8,6 +8,7 @@ import {
   preparePullRequestStats,
   preparePullRequestTimeline,
 } from "./utils";
+import { invalidUserLogin } from "./constants";
 
 export const collectData = (
   data: Awaited<ReturnType<typeof makeComplexRequest>>
@@ -24,7 +25,7 @@ export const collectData = (
 
     const dateKey = closedDate ? format(closedDate, "M/y") : "invalidDate";
 
-    const userKey = pullRequest.user.login || "invalidUser";
+    const userKey = pullRequest.user?.login || invalidUserLogin;
     if (!collection[userKey]) {
       collection[userKey] = {};
     }
@@ -43,13 +44,13 @@ export const collectData = (
       });
     });
 
-    prepareReviews(data, collection, index, dateKey, pullRequest.user.login);
+    prepareReviews(data, collection, index, dateKey, userKey);
     prepareDiscussions(
       data.comments,
       collection,
       index,
       dateKey,
-      pullRequest.user.login
+      userKey
     );
   });
 

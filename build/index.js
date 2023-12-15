@@ -66,6 +66,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.collectData = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(64266);
+const constants_1 = __nccwpck_require__(95354);
 const collectData = (data) => {
     const collection = { total: {} };
     data.pullRequestInfo.forEach((pullRequest, index) => {
@@ -76,7 +77,7 @@ const collectData = (data) => {
             ? (0, date_fns_1.parseISO)(pullRequest.closed_at)
             : null;
         const dateKey = closedDate ? (0, date_fns_1.format)(closedDate, "M/y") : "invalidDate";
-        const userKey = pullRequest.user.login || "invalidUser";
+        const userKey = pullRequest.user?.login || constants_1.invalidUserLogin;
         if (!collection[userKey]) {
             collection[userKey] = {};
         }
@@ -86,8 +87,8 @@ const collectData = (data) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestTimeline)(pullRequest, data.reviews[index], collection[key][innerKey]);
             });
         });
-        (0, utils_1.prepareReviews)(data, collection, index, dateKey, pullRequest.user.login);
-        (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, pullRequest.user.login);
+        (0, utils_1.prepareReviews)(data, collection, index, dateKey, userKey);
+        (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, userKey);
     });
     Object.entries(collection).map(([key, value]) => {
         Object.entries(value).forEach(([innerKey, innerValue]) => {
@@ -130,11 +131,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.percentile = exports.endOfWorkingTime = exports.startOfWorkingTime = void 0;
+exports.invalidUserLogin = exports.percentile = exports.endOfWorkingTime = exports.startOfWorkingTime = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 exports.startOfWorkingTime = process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START");
 exports.endOfWorkingTime = process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END");
 exports.percentile = parseInt(process.env.PERCENTILE || core.getInput("PERCENTILE"));
+exports.invalidUserLogin = 'Invalid-User-PRAA';
 
 
 /***/ }),
@@ -483,14 +485,19 @@ exports.prepareConductedReviews = prepareConductedReviews;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareDiscussions = void 0;
+const constants_1 = __nccwpck_require__(95354);
 const getDiscussionType_1 = __nccwpck_require__(49575);
 const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin) => {
-    const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== comment.user.login);
-    const discussions = comments[index]?.filter((comment) => !comment.in_reply_to_id && pullRequestLogin !== comment.user.login);
+    const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== comment.user?.login);
+    const discussions = comments[index]?.filter((comment) => {
+        const userLogin = comment.user?.login || constants_1.invalidUserLogin;
+        return !comment.in_reply_to_id && pullRequestLogin !== userLogin;
+    });
     ["total", dateKey].forEach((key) => {
         discussions?.forEach((discussion) => {
-            if (collection[discussion.user.login][key].discussionsTypes === undefined) {
-                collection[discussion.user.login][key].discussionsTypes = {};
+            const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
+            if (collection[userLogin][key].discussionsTypes === undefined) {
+                collection[userLogin][key].discussionsTypes = {};
             }
             if (collection[pullRequestLogin][key].discussionsTypes === undefined) {
                 collection[pullRequestLogin][key].discussionsTypes = {};
@@ -499,12 +506,11 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                 collection.total[key].discussionsTypes = {};
             }
             (0, getDiscussionType_1.getDiscussionType)(discussion.body).forEach((type) => {
-                collection[discussion.user.login][key].discussionsTypes[type] = {
-                    ...(collection[discussion.user.login][key].discussionsTypes[type] ||
-                        {}),
+                collection[userLogin][key].discussionsTypes[type] = {
+                    ...(collection[userLogin][key].discussionsTypes[type] || {}),
                     conducted: {
-                        total: (collection[discussion.user.login][key].discussionsTypes[type]
-                            ?.conducted?.total || 0) + 1,
+                        total: (collection[userLogin][key].discussionsTypes[type]?.conducted
+                            ?.total || 0) + 1,
                     },
                 };
                 collection[pullRequestLogin][key].discussionsTypes[type] = {
@@ -528,9 +534,10 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
             });
         });
         comments[index]?.forEach((comment) => {
-            if (pullRequestLogin !== comment.user.login) {
-                collection[comment.user.login][key].commentsConducted =
-                    (collection[comment.user.login][key].commentsConducted || 0) + 1;
+            const userLogin = comment.user?.login || constants_1.invalidUserLogin;
+            if (pullRequestLogin !== userLogin) {
+                collection[userLogin][key].commentsConducted =
+                    (collection[userLogin][key].commentsConducted || 0) + 1;
                 collection.total[key].commentsConducted =
                     (collection.total[key].commentsConducted || 0) + 1;
             }
@@ -544,8 +551,9 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                     (collection.total[key].reviewComments || 0);
         }
         discussions?.forEach((discussion) => {
-            collection[discussion.user.login][key].discussionsConducted =
-                (collection[discussion.user.login][key].discussionsConducted || 0) + 1;
+            const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
+            collection[userLogin][key].discussionsConducted =
+                (collection[userLogin][key].discussionsConducted || 0) + 1;
             collection.total[key].discussionsConducted =
                 (collection.total[key].discussionsConducted || 0) + 1;
         });
@@ -641,7 +649,7 @@ const constants_1 = __nccwpck_require__(95354);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
-    const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user.login);
+    const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
     const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
     const timeToMerge = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
@@ -671,11 +679,13 @@ exports.preparePullRequestTimeline = preparePullRequestTimeline;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareReviews = void 0;
+const constants_1 = __nccwpck_require__(95354);
 const prepareConductedReviews_1 = __nccwpck_require__(15278);
 const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
     const users = Object.keys(data.reviews[index]?.reduce((acc, review) => {
-        if (review.user?.login && review.user.login !== pullRequestLogin) {
-            return { ...acc, [review.user?.login]: 1 };
+        const userLogin = review.user?.login || constants_1.invalidUserLogin;
+        if (userLogin !== pullRequestLogin) {
+            return { ...acc, [userLogin]: 1 };
         }
         return acc;
     }, {}) || {}).concat("total");
@@ -684,7 +694,10 @@ const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
             collection[user] = {};
         }
         const userReviews = Array.isArray(data.reviews[index]) && user !== "total"
-            ? data.reviews[index]?.filter((review) => review.user?.login === user)
+            ? data.reviews[index]?.filter((review) => {
+                const userLogin = review.user?.login || constants_1.invalidUserLogin;
+                return userLogin === user;
+            })
             : data.reviews[index];
         [dateKey, "total"].forEach((key) => {
             collection[user][key] = (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, collection[user][key]);
