@@ -50,6 +50,10 @@ inputs:
   ISSUE_TITLE:
     description: "Title for issue"
     required: false
+  CREATE_ISSUE:
+    description: "Create an issue"
+    required: false
+    default: true
   ASSIGNEE:
     description: "assignee for issue"
     required: false
@@ -72,9 +76,12 @@ inputs:
   TIMEZONE:
     description: "Timezone to use in action"
     required: false
+
 outputs:
   JSON_COLLECTION:
     description: "Output file"
+  MARKDOWN:
+    description: "Markdown text"
 runs:
   using: "node20"
   main: "build/index.js"

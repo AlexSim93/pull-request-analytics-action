@@ -4,15 +4,18 @@
 
 ## Table of Contents
 
-- [Key Features](#key-features)
-- [Getting started](#getting-started)
-- [Report examples](#report-examples)
-- [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
-- [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
-- [Configuration Parameters Overview](#configuration-parameters-overview)
-- [Privacy and Data Handling](#privacy-and-data-handling)
-- [Usage Limitations](#usage-limitations)
-- [License](#license)
+- [Pull request analytics action](#pull-request-analytics-action)
+  - [Table of Contents](#table-of-contents)
+  - [Key Features:](#key-features)
+  - [Getting started](#getting-started)
+  - [Report Examples](#report-examples)
+  - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
+  - [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#report-data-grouping-amount-parameter-and-time-calculation-logic)
+  - [Configuration Parameters Overview](#configuration-parameters-overview)
+  - [Privacy and Data Handling](#privacy-and-data-handling)
+  - [Usage Limitations](#usage-limitations)
+  - [How You Can Help](#how-you-can-help)
+  - [License](#license)
 
 ## Key Features:
 
@@ -248,6 +251,7 @@ Below is a table outlining the various configuration parameters available for **
 | `TIMEZONE`                | Timezone that will be used in action                                                                                                                               | No       | `UTC`                                                    |
 | `PERCENTILE`              | Percentile value for timeline                                                                                                                                      | No       | `75`                                                     |
 | `ISSUE_TITLE`             | Title for the created issue                                                                                                                                        | No       | `Pull requests report(d/MM/yyyy HH:mm)`                  |
+| `CREATE_ISSUE`            | Create an issue. Create an Issue. Outputs `MARKDOWN` even if set to `false`.                                                                                       | No       | `true`                                                   |
 | `LABELS`                  | Labels for the created issue separated by comma                                                                                                                    | No       | -                                                        |
 | `ASSIGNEES`               | Assignees for the issue separated by comma                                                                                                                         | No       | -                                                        |
 | `HIDE_USERS`              | Hides selected users from reports, while still including their data in the analytics. Users should be separated by comma                                           | No       | -                                                        |
