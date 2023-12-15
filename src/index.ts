@@ -8,6 +8,7 @@ import {
   makeComplexRequest,
 } from "./requests";
 import { collectData } from "./converters";
+import { octokit } from "./octokit/octokit";
 
 async function main() {
   if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
@@ -24,28 +25,31 @@ async function main() {
   ) {
     throw new Error("Missing required variables");
   }
+  const rateLimitAtBeginning = await octokit.rest.rateLimit.get();
+  console.log(
+    "RATE LIMIT REMAINING BEFORE REQUESTS: ",
+    rateLimitAtBeginning.data.rate.remaining
+  );
 
   const ownersRepos = getOwnersRepositories();
   console.log("Initiating data request.");
-  const dataByRepos = await Promise.allSettled(
-    ownersRepos.map(([owner, repo]) =>
-      makeComplexRequest(
-        parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
-        {
-          owner,
-          repo,
-        },
-        {
-          skipReviews: false,
-          skipComments: false,
-        }
-      )
-    )
-  );
+  const data = [];
+  for (let i = 0; i < ownersRepos.length; i++) {
+    const result = await makeComplexRequest(
+      parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
+      {
+        owner: ownersRepos[i][0],
+        repo: ownersRepos[i][1],
+      },
+      {
+        skipReviews: false,
+        skipComments: false,
+      }
+    );
+    data.push(result);
+  }
+
   console.log("Data successfully retrieved. Starting report calculations.");
-  const data = dataByRepos
-    .map((element) => (element.status === "fulfilled" ? element.value : null))
-    .filter((el) => el);
 
   const mergedData = data.reduce<
     Awaited<ReturnType<typeof makeComplexRequest>>
@@ -71,6 +75,11 @@ async function main() {
   const markdown = createMarkdown(preparedData);
   console.log("Markdown successfully generated.");
   createIssue(markdown);
+  const rateLimitAtEnd = await octokit.rest.rateLimit.get();
+  console.log(
+    "RATE LIMIT REMAINING AFTER REQUESTS: ",
+    rateLimitAtEnd.data.rate.remaining
+  );
 }
 
 main();

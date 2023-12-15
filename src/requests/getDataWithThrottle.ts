@@ -14,10 +14,7 @@ export const getDataWithThrottle = async (
   const PREvents = [];
   const PRComments = [];
   let counter = 0;
-  const {
-    skipComments = true,
-    skipReviews = true,
-  } = options;
+  const { skipComments = true, skipReviews = true } = options;
   while (pullRequestNumbers.length > PRs.length) {
     const startIndex = counter * concurrentLimit;
     const endIndex = (counter + 1) * concurrentLimit;
@@ -32,10 +29,10 @@ export const getDataWithThrottle = async (
     console.log(
       `Batch request #${counter + 1} out of ${Math.ceil(
         pullRequestNumbers.length / concurrentLimit
-      )}`
+      )}(${repository.owner}/${repository.repo})`
     );
     const prs = await Promise.allSettled(pullRequestDatas);
-    await delay(5000);
+    await delay(2000);
 
     const pullRequestReviews = await getPullRequestReviews(
       pullRequestNumbersChunks,
@@ -46,7 +43,7 @@ export const getDataWithThrottle = async (
     );
 
     const reviews = await Promise.allSettled(pullRequestReviews);
-    await delay(5000);
+    await delay(2000);
 
     const pullRequestComments = await getPullRequestComments(
       pullRequestNumbersChunks,
@@ -57,7 +54,7 @@ export const getDataWithThrottle = async (
     );
 
     const comments = await Promise.allSettled(pullRequestComments);
-    await delay(5000);
+    await delay(2000);
     counter++;
     PRs.push(...prs);
     PREvents.push(...reviews);

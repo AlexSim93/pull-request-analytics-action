@@ -6,6 +6,7 @@ import {
   totalMergedPrsHeader,
 } from "./constants";
 import { createBlock } from "./createBlock";
+import { createDiscussionsPieChart } from "./createDiscussionsPieChart";
 
 export const createPullRequestQualityTable = (
   data: Record<string, Record<string, Collection>>,
@@ -32,19 +33,22 @@ export const createPullRequestQualityTable = (
       ];
     });
 
-  return createBlock({
-    title: `Pull request quality ${date}`,
-    description:
-      "The table includes discussions and comments on closed pull requests.",
-    table: {
-      headers: [
-        "user",
-        totalMergedPrsHeader,
-        requestChangesReceived,
-        discussionsHeader,
-        commentsReceivedHeader,
-      ],
-      rows: tableRowsTotal,
-    },
-  });
+  return [
+    createBlock({
+      title: `Pull request quality ${date}`,
+      description:
+        "The table includes discussions and comments on closed pull requests.",
+      table: {
+        headers: [
+          "user",
+          totalMergedPrsHeader,
+          requestChangesReceived,
+          discussionsHeader,
+          commentsReceivedHeader,
+        ],
+        rows: tableRowsTotal,
+      },
+    }),
+    createDiscussionsPieChart(data, users, date),
+  ].join("\n");
 };

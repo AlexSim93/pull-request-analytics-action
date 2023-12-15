@@ -5,3 +5,4 @@ export { calcNonWorkingHours } from "./calcNonWorkingHours";
 export { calcMedianValue } from "./calcMedianValue";
 export { calcDifferenceInMinutes } from "./calcDifferenceInMinutes";
 export { calcAverageValue } from "./calcAverageValue";
+export { getPullRequestSize } from "./getPullRequestSize";

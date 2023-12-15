@@ -12,11 +12,6 @@ export const makeComplexRequest = async (
     skipReviews: true,
   }
 ) => {
-  const rateLimitAtBeginning = await octokit.rest.rateLimit.get();
-  console.log(
-    "RATE LIMIT REMAINING BEFORE REQUESTS: ",
-    rateLimitAtBeginning.data.rate.remaining
-  );
   const pullRequests = await getPullRequests(amount, repository);
 
   const pullRequestNumbers = pullRequests
@@ -39,12 +34,6 @@ export const makeComplexRequest = async (
     pullRequestNumbers,
     repository,
     options
-  );
-
-  const rateLimitAtEnd = await octokit.rest.rateLimit.get();
-  console.log(
-    "RATE LIMIT REMAINING AFTER REQUESTS: ",
-    rateLimitAtEnd.data.rate.remaining
   );
 
   const reviews = PREvents.map((element) =>
