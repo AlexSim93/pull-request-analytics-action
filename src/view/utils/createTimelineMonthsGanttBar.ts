@@ -1,3 +1,4 @@
+import { percentile } from "../../converters/constants";
 import { Collection } from "../../converters/types";
 import { timeToMergeHeader, timeToReviewHeader } from "./constants";
 import { createGanttBar } from "./createGanttBar";
@@ -10,7 +11,9 @@ export const createTimelineMonthsGanttBar = (
   user: string
 ) => {
   return createGanttBar({
-    title: `Pull request's retrospective timeline(${user}) / minutes`,
+    title: `Pull request's retrospective timeline(${type}${
+      type === "percentile" ? percentile : ""
+    }) ${user} / minutes`,
     sections: dates
       .filter(
         (date) =>

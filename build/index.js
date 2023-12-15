@@ -992,17 +992,17 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
         const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks, repository);
         console.log(`Batch request #${counter + 1} out of ${Math.ceil(pullRequestNumbers.length / constants_1.concurrentLimit)}(${repository.owner}/${repository.repo})`);
         const prs = await Promise.allSettled(pullRequestDatas);
-        await (0, delay_1.delay)(2000);
+        await (0, delay_1.delay)(4000);
         const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, repository, {
             skip: skipReviews,
         });
         const reviews = await Promise.allSettled(pullRequestReviews);
-        await (0, delay_1.delay)(2000);
+        await (0, delay_1.delay)(4000);
         const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbersChunks, repository, {
             skip: skipComments,
         });
         const comments = await Promise.allSettled(pullRequestComments);
-        await (0, delay_1.delay)(2000);
+        await (0, delay_1.delay)(4000);
         counter++;
         PRs.push(...prs);
         PREvents.push(...reviews);
@@ -1734,11 +1734,12 @@ exports.createTimelineGanttBar = createTimelineGanttBar;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineMonthsGanttBar = void 0;
-const constants_1 = __nccwpck_require__(11474);
+const constants_1 = __nccwpck_require__(95354);
+const constants_2 = __nccwpck_require__(11474);
 const createGanttBar_1 = __nccwpck_require__(85095);
 const createTimelineMonthsGanttBar = (data, type, dates, user) => {
     return (0, createGanttBar_1.createGanttBar)({
-        title: `Pull request's retrospective timeline(${user}) / minutes`,
+        title: `Pull request's retrospective timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${user} / minutes`,
         sections: dates
             .filter((date) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -1747,17 +1748,17 @@ const createTimelineMonthsGanttBar = (data, type, dates, user) => {
             name: date,
             bars: [
                 {
-                    name: constants_1.timeToReviewHeader,
+                    name: constants_2.timeToReviewHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToReview || 0,
                 },
                 {
-                    name: constants_1.timeToReviewHeader,
+                    name: constants_2.timeToReviewHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToApprove || 0,
                 },
                 {
-                    name: constants_1.timeToMergeHeader,
+                    name: constants_2.timeToMergeHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToMerge || 0,
                 },
