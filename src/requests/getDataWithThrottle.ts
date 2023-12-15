@@ -32,7 +32,7 @@ export const getDataWithThrottle = async (
       )}(${repository.owner}/${repository.repo})`
     );
     const prs = await Promise.allSettled(pullRequestDatas);
-    await delay(2000);
+    await delay(4000);
 
     const pullRequestReviews = await getPullRequestReviews(
       pullRequestNumbersChunks,
@@ -43,7 +43,7 @@ export const getDataWithThrottle = async (
     );
 
     const reviews = await Promise.allSettled(pullRequestReviews);
-    await delay(2000);
+    await delay(4000);
 
     const pullRequestComments = await getPullRequestComments(
       pullRequestNumbersChunks,
@@ -54,7 +54,7 @@ export const getDataWithThrottle = async (
     );
 
     const comments = await Promise.allSettled(pullRequestComments);
-    await delay(2000);
+    await delay(4000);
     counter++;
     PRs.push(...prs);
     PREvents.push(...reviews);
