@@ -1,3 +1,5 @@
+import { PullRequestSize } from "./utils/calculations/getPullRequestSize";
+
 type ReviewTypeStats = {
   [key: string]: number;
 };
@@ -20,6 +22,16 @@ type DiscussionType = {
     received?: DiscussionResult;
     conducted?: DiscussionResult;
   };
+};
+
+type PullRequestTimelineInfo = {
+  link?: string;
+  title?: string;
+  number?: number;
+  comments?: number;
+  timeToReview: number;
+  timeToMerge: number;
+  timeToApprove: number;
 };
 
 export type Collection = {
@@ -45,5 +57,6 @@ export type Collection = {
   discussionsConducted?: number;
   discussionsTypes?: DiscussionType;
   prSizes?: string[];
-  reviewsConductedSize?: string[];
+  reviewsConductedSize?: PullRequestSize[];
+  pullRequestsInfo?: PullRequestTimelineInfo[];
 };

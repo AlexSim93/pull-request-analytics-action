@@ -25,7 +25,7 @@ export const createMarkdown = (
     if (!data.total[date]?.merged) return "";
 
     const contentMap: Record<string, string> = {
-      timeline: createTimelineContent(data, users, date).join("\n"),
+      timeline: createTimelineContent(data, users, date),
       workload: createTotalTable(data, users, date),
       "code-review-engagement": createReviewTable(data, users, date),
       "pr-quality": createPullRequestQualityTable(data, users, date),

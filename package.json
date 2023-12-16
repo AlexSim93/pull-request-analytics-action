@@ -1,6 +1,6 @@
 {
   "name": "pull-request-analytics-action",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "github action to show prs report",
   "main": "build/index.js",
   "scripts": {

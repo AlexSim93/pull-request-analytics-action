@@ -703,6 +703,18 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
         timeToMerge: timeToMerge
             ? [...(collection?.timeToMerge || []), timeToMerge]
             : collection.timeToMerge,
+        pullRequestsInfo: [
+            ...(collection?.pullRequestsInfo || []),
+            {
+                number: pullRequestInfo?.number,
+                link: pullRequestInfo?._links?.html?.href,
+                title: pullRequestInfo?.title,
+                comments: pullRequestInfo?.review_comments,
+                timeToReview: timeToReview || 0,
+                timeToApprove: (timeToApprove || 0) - (timeToReview || 0),
+                timeToMerge: (timeToMerge || 0) - (timeToApprove || 0),
+            },
+        ],
     };
 };
 exports.preparePullRequestTimeline = preparePullRequestTimeline;
@@ -1344,7 +1356,7 @@ const createMarkdown = (data) => {
         if (!data.total[date]?.merged)
             return "";
         const contentMap = {
-            timeline: (0, utils_1.createTimelineContent)(data, users, date).join("\n"),
+            timeline: (0, utils_1.createTimelineContent)(data, users, date),
             workload: (0, utils_1.createTotalTable)(data, users, date),
             "code-review-engagement": (0, utils_1.createReviewTable)(data, users, date),
             "pr-quality": (0, utils_1.createPullRequestQualityTable)(data, users, date),
@@ -1476,6 +1488,7 @@ GITHUB_REPO_FOR_ISSUE: ${process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GIT
 GITHUB_OWNER_FOR_ISSUE: ${process.env.GITHUB_OWNER_FOR_ISSUE ||
         core.getInput("GITHUB_OWNER_FOR_ISSUE")}
 AMOUNT: ${process.env.AMOUNT || core.getInput("AMOUNT")}
+TOP_LIST_AMOUNT: ${process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")}
 CORE_HOURS_START: ${process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START")}
 CORE_HOURS_END: ${process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END")}
 TIMEZONE: ${process.env.TIMEZONE || core.getInput("TIMEZONE")}
@@ -1561,6 +1574,26 @@ exports.createGanttBar = createGanttBar;
 
 /***/ }),
 
+/***/ 40638:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createList = void 0;
+const createList = (title, items) => {
+    return `
+### ${title}
+${items
+        .map((item, index) => `${index + 1}. [${item.text}](${item.link})`)
+        .join("\n")}
+    `;
+};
+exports.createList = createList;
+
+
+/***/ }),
+
 /***/ 15035:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -1587,15 +1620,40 @@ exports.createPieChart = createPieChart;
 /***/ }),
 
 /***/ 64721:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createPullRequestQualityTable = void 0;
+const core = __importStar(__nccwpck_require__(42186));
 const constants_1 = __nccwpck_require__(11474);
 const createBlock_1 = __nccwpck_require__(83454);
 const createDiscussionsPieChart_1 = __nccwpck_require__(99622);
+const createList_1 = __nccwpck_require__(40638);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
@@ -1611,6 +1669,14 @@ const createPullRequestQualityTable = (data, users, date) => {
             data[user]?.[date]?.reviewComments?.toString() || "0",
         ];
     });
+    const items = data.total?.[date]?.pullRequestsInfo
+        ?.slice()
+        ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
+        .slice(0, parseInt(process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")))
+        .map((item) => ({
+        text: `${item.title}(${item.comments || 0})`,
+        link: item.link || "",
+    })) || [];
     return [
         (0, createBlock_1.createBlock)({
             title: `Pull request quality ${date}`,
@@ -1627,6 +1693,7 @@ const createPullRequestQualityTable = (data, users, date) => {
             },
         }),
         (0, createDiscussionsPieChart_1.createDiscussionsPieChart)(data, users, date),
+        (0, createList_1.createList)("The most commented PRs", items),
     ].join("\n");
 };
 exports.createPullRequestQualityTable = createPullRequestQualityTable;
@@ -1683,25 +1750,76 @@ exports.createReviewTable = createReviewTable;
 /***/ }),
 
 /***/ 50940:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineContent = void 0;
+const core = __importStar(__nccwpck_require__(42186));
 const utils_1 = __nccwpck_require__(41002);
+const createList_1 = __nccwpck_require__(40638);
 const createTimelineGanttBar_1 = __nccwpck_require__(5304);
 const createTimelineTable_1 = __nccwpck_require__(20194);
-const createTimelineContent = (data, users, date) => (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-    .filter((method) => ["average", "median", "percentile"].includes(method))
-    .map((type) => {
-    const pullRequestTimelineTable = (0, createTimelineTable_1.createTimelineTable)(data, type, users, date);
-    const pullRequestTimelineBar = (0, createTimelineGanttBar_1.createTimelineGanttBar)(data, type, users, date);
-    return `
+const formatMinutesDuration_1 = __nccwpck_require__(92411);
+const createTimelineContent = (data, users, date) => {
+    const milestoneTitle = {
+        timeToReview: "longest-pending reviews",
+        timeToApprove: "longest-pending approvals",
+        timeToMerge: "longest-pending merge",
+    };
+    const problematicList = ["timeToReview", "timeToApprove", "timeToMerge"]
+        .map((milestone) => {
+        const items = data.total?.[date]?.pullRequestsInfo
+            ?.slice()
+            ?.sort((a, b) => b[milestone] - a[milestone])
+            .slice(0, parseInt(process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")))
+            .map((item) => ({
+            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone])})`,
+            link: item.link || "",
+        })) || [];
+        return (0, createList_1.createList)(milestoneTitle[milestone], items);
+    })
+        .join("\n");
+    const timeline = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+        .filter((method) => ["average", "median", "percentile"].includes(method))
+        .map((type) => {
+        const pullRequestTimelineTable = (0, createTimelineTable_1.createTimelineTable)(data, type, users, date);
+        const pullRequestTimelineBar = (0, createTimelineGanttBar_1.createTimelineGanttBar)(data, type, users, date);
+        return `
 ${pullRequestTimelineTable}
 ${pullRequestTimelineBar}
 `;
-});
+    })
+        .join("\n");
+    return `
+  ${timeline}
+  ${problematicList}
+  `;
+};
 exports.createTimelineContent = createTimelineContent;
 
 

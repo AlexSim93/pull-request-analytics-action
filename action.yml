@@ -41,6 +41,10 @@ inputs:
     description: "Percentile value for timeline"
     required: false
     default: "75"
+  TOP_LIST_AMOUNT:
+    description: "Amount of items in lists"
+    required: false
+    default: "5"
   LABELS:
     description: "Multiple labels for issue separated by comma"
     required: false
