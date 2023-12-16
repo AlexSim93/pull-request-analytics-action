@@ -50,10 +50,6 @@ inputs:
   ISSUE_TITLE:
     description: "Title for issue"
     required: false
-  CREATE_ISSUE:
-    description: "Create an issue"
-    required: false
-    default: true
   ASSIGNEE:
     description: "assignee for issue"
     required: false
@@ -80,8 +76,6 @@ inputs:
     description: "Outcome format separated by comma. Can take values: 'output', 'new-issue'"
     required: false
     default: "new-issue"
-
-
 
 outputs:
   JSON_COLLECTION:

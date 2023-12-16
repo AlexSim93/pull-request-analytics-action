@@ -4,18 +4,16 @@
 
 ## Table of Contents
 
-- [Pull request analytics action](#pull-request-analytics-action)
-  - [Table of Contents](#table-of-contents)
-  - [Key Features:](#key-features)
-  - [Getting started](#getting-started)
-  - [Report Examples](#report-examples)
-  - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
-  - [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#report-data-grouping-amount-parameter-and-time-calculation-logic)
-  - [Configuration Parameters Overview](#configuration-parameters-overview)
-  - [Privacy and Data Handling](#privacy-and-data-handling)
-  - [Usage Limitations](#usage-limitations)
-  - [How You Can Help](#how-you-can-help)
-  - [License](#license)
+- [Key Features](#key-features)
+- [Getting started](#getting-started)
+- [Report examples](#report-examples)
+- [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
+- [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
+- [Configuration Parameters Overview](#configuration-parameters-overview)
+- [Privacy and Data Handling](#privacy-and-data-handling)
+- [Usage Limitations](#usage-limitations)
+- [How You Can Help](#how-you-can-help)
+- [License](#license)
 
 ## Key Features:
 

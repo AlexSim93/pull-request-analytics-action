@@ -774,6 +774,7 @@ const view_1 = __nccwpck_require__(55379);
 const requests_1 = __nccwpck_require__(49591);
 const converters_1 = __nccwpck_require__(86200);
 const octokit_1 = __nccwpck_require__(24641);
+const utils_1 = __nccwpck_require__(41002);
 async function main() {
     if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
         process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
@@ -820,9 +821,18 @@ async function main() {
     core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
     console.log("Calculation complete. Generating markdown.");
     const markdown = (0, view_1.createMarkdown)(preparedData);
-    core.setOutput("MARKDOWN", markdown);
     console.log("Markdown successfully generated.");
-    (0, requests_1.createIssue)(markdown);
+    (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME")
+        .filter((outcome) => ["new-issue", "output"].includes(outcome))
+        .forEach((outcome) => {
+        console.log(`Outcome: ${outcome}`);
+        if (outcome === 'new-issue') {
+            (0, requests_1.createIssue)(markdown);
+        }
+        else if (outcome === 'output') {
+            core.setOutput("MARKDOWN", markdown);
+        }
+    });
     const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
 }
@@ -892,7 +902,7 @@ exports.octokit = new octokit_1.Octokit({
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.concurrentLimit = void 0;
-exports.concurrentLimit = 50;
+exports.concurrentLimit = 25;
 
 
 /***/ }),
