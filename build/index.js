@@ -825,7 +825,6 @@ async function main() {
     (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME")
         .filter((outcome) => ["new-issue", "output"].includes(outcome))
         .forEach((outcome) => {
-        console.log(`Outcome: ${outcome}`);
         if (outcome === 'new-issue') {
             (0, requests_1.createIssue)(markdown);
         }
