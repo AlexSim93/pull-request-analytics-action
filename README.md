@@ -8,6 +8,7 @@
 - [Getting started](#getting-started)
 - [Report examples](#report-examples)
 - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
+- [Pull Request Sizes](#pull-request-sizes)
 - [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
 - [Configuration Parameters Overview](#configuration-parameters-overview)
 - [Privacy and Data Handling](#privacy-and-data-handling)
