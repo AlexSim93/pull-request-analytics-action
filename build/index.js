@@ -1895,7 +1895,7 @@ const createTimelineMonthsGanttBar = (data, type, dates, user) => {
                     end: data[user]?.[date]?.[type]?.timeToReview || 0,
                 },
                 {
-                    name: constants_2.timeToReviewHeader,
+                    name: constants_2.timeToApproveHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToApprove || 0,
                 },

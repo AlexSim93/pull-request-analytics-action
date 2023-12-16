@@ -1,6 +1,6 @@
 import { percentile } from "../../converters/constants";
 import { Collection } from "../../converters/types";
-import { timeToMergeHeader, timeToReviewHeader } from "./constants";
+import { timeToApproveHeader, timeToMergeHeader, timeToReviewHeader } from "./constants";
 import { createGanttBar } from "./createGanttBar";
 import { StatsType } from "./types";
 
@@ -30,7 +30,7 @@ export const createTimelineMonthsGanttBar = (
             end: data[user]?.[date]?.[type]?.timeToReview || 0,
           },
           {
-            name: timeToReviewHeader,
+            name: timeToApproveHeader,
             start: 0,
             end: data[user]?.[date]?.[type]?.timeToApprove || 0,
           },
