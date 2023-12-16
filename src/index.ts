@@ -9,6 +9,7 @@ import {
 } from "./requests";
 import { collectData } from "./converters";
 import { octokit } from "./octokit/octokit";
+import { getMultipleValuesInput } from "./common/utils";
 
 async function main() {
   if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
@@ -74,7 +75,16 @@ async function main() {
   console.log("Calculation complete. Generating markdown.");
   const markdown = createMarkdown(preparedData);
   console.log("Markdown successfully generated.");
-  createIssue(markdown);
+  getMultipleValuesInput("EXECUTION_OUTCOME")
+    .filter((outcome) => ["new-issue", "output"].includes(outcome))
+    .forEach((outcome) => {
+      if (outcome === 'new-issue') {
+        createIssue(markdown);
+      } else if (outcome === 'output') {
+        core.setOutput("MARKDOWN", markdown);
+      }
+    });
+
   const rateLimitAtEnd = await octokit.rest.rateLimit.get();
   console.log(
     "RATE LIMIT REMAINING AFTER REQUESTS: ",
