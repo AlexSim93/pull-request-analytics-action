@@ -15,6 +15,9 @@ GITHUB_OWNER_FOR_ISSUE: ${
     core.getInput("GITHUB_OWNER_FOR_ISSUE")
   }
 AMOUNT: ${process.env.AMOUNT || core.getInput("AMOUNT")}
+TOP_LIST_AMOUNT: ${
+    process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")
+  }
 CORE_HOURS_START: ${
     process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START")
   }

@@ -1,3 +1,4 @@
+import * as core from "@actions/core";
 import { Collection } from "../../converters/types";
 import {
   commentsReceivedHeader,
@@ -7,6 +8,7 @@ import {
 } from "./constants";
 import { createBlock } from "./createBlock";
 import { createDiscussionsPieChart } from "./createDiscussionsPieChart";
+import { createList } from "./createList";
 
 export const createPullRequestQualityTable = (
   data: Record<string, Record<string, Collection>>,
@@ -33,6 +35,21 @@ export const createPullRequestQualityTable = (
       ];
     });
 
+  const items =
+    data.total?.[date]?.pullRequestsInfo
+      ?.slice()
+      ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
+      .slice(
+        0,
+        parseInt(
+          process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")
+        )
+      )
+      .map((item) => ({
+        text: `${item.title}(${item.comments || 0})`,
+        link: item.link || "",
+      })) || [];
+
   return [
     createBlock({
       title: `Pull request quality ${date}`,
@@ -50,5 +67,6 @@ export const createPullRequestQualityTable = (
       },
     }),
     createDiscussionsPieChart(data, users, date),
+    createList("The most commented PRs", items),
   ].join("\n");
 };

@@ -47,5 +47,17 @@ export const preparePullRequestTimeline = (
     timeToMerge: timeToMerge
       ? [...(collection?.timeToMerge || []), timeToMerge]
       : collection.timeToMerge,
+    pullRequestsInfo: [
+      ...(collection?.pullRequestsInfo || []),
+      {
+        number: pullRequestInfo?.number,
+        link: pullRequestInfo?._links?.html?.href,
+        title: pullRequestInfo?.title,
+        comments: pullRequestInfo?.review_comments,
+        timeToReview: timeToReview || 0,
+        timeToApprove: (timeToApprove || 0) - (timeToReview || 0),
+        timeToMerge: (timeToMerge || 0) - (timeToApprove || 0),
+      },
+    ],
   };
 };

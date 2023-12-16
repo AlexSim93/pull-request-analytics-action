@@ -162,7 +162,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
          runs-on: ubuntu-latest
          steps:
            - name: "Run script for analytics"
-             uses: AlexSim93/pull-request-analytics-action@v1.6.0
+             uses: AlexSim93/pull-request-analytics-action@v1.7.0
              with:
                GITHUB_TOKEN: ${{ secrets.KEY }}
                ISSUE_TITLE: ${{ inputs.issue_title }}
@@ -256,6 +256,7 @@ Below is a table outlining the various configuration parameters available for **
 | `SHOW_STATS_TYPES`        | Stats types that should be displayed in report. Values must be separated by comma. Can take values: `timeline`, `workload`, `pr-quality`, `code-review-engagement`                        | No       | `timeline, workload, pr-quality, code-review-engagement` |
 | `AGGREGATE_VALUE_METHODS` | Aggregate value methods for timelines separated by comma. Can take values: `percentile`, `average`, `median`                                                                              | No       | `percentile`                                             |
 | `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                                                                                                          | No       | `100`                                                    |
+| `TOP_LIST_AMOUNT`         | Amount of items in lists                                                                                                                                                                  | No       | `5`                                                      |
 | `REPORT_DATE_START`       | Start date for the report (d/MM/yyyy)                                                                                                                                                     | No       | -                                                        |
 | `REPORT_DATE_END`         | End date for the report (d/MM/yyyy)                                                                                                                                                       | No       | -                                                        |
 | `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                                                                                                            | No       | -                                                        |
