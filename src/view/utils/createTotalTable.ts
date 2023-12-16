@@ -1,6 +1,7 @@
 import { Collection } from "../../converters/types";
 import {
   additionsDeletionsHeader,
+  prSizesHeader,
   reviewCommentsHeader,
   reviewConductedHeader,
   totalMergedPrsHeader,
@@ -13,6 +14,7 @@ export const createTotalTable = (
   users: string[],
   date: string
 ) => {
+  const sizes = ["xs", "s", "m", "l", "xl"];
   const tableRowsTotal = users
     .filter(
       (user) =>
@@ -27,6 +29,13 @@ export const createTotalTable = (
         `+${data[user]?.[date].additions || 0}/-${
           data[user]?.[date].deletions || 0
         }`,
+        `${sizes
+          .map(
+            (size) =>
+              data[user]?.[date]?.prSizes?.filter((prSize) => prSize === size)
+                .length || 0
+          )
+          .join(" / ")}`,
         data[user]?.[date]?.totalReviewComments?.toString() || "0",
         data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
       ];
@@ -35,13 +44,14 @@ export const createTotalTable = (
   return createBlock({
     title: `Workload stats ${date}`,
     description:
-      "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.",
+      "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",
     table: {
       headers: [
         "user",
         totalOpenedPrsHeader,
         totalMergedPrsHeader,
         additionsDeletionsHeader,
+        prSizesHeader,
         reviewCommentsHeader,
         reviewConductedHeader,
       ],

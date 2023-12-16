@@ -1,5 +1,6 @@
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
+import { getPullRequestSize } from "./calculations";
 
 export const preparePullRequestInfo = (
   pullRequest: Awaited<
@@ -31,5 +32,9 @@ export const preparePullRequestInfo = (
     totalReviewComments,
     additions: (collection?.additions || 0) + (pullRequest?.additions || 0),
     deletions: (collection?.deletions || 0) + (pullRequest?.deletions || 0),
+    prSizes: [
+      ...(collection?.prSizes || []),
+      getPullRequestSize(pullRequest?.additions, pullRequest?.deletions),
+    ],
   };
 };

@@ -44,4 +44,6 @@ export type Collection = {
   commentsConducted?: number;
   discussionsConducted?: number;
   discussionsTypes?: DiscussionType;
+  prSizes?: string[];
+  reviewsConductedSize?: string[];
 };

@@ -161,7 +161,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
          runs-on: ubuntu-latest
          steps:
            - name: "Run script for analytics"
-             uses: AlexSim93/pull-request-analytics-action@v1.5.2
+             uses: AlexSim93/pull-request-analytics-action@v1.6.0
              with:
                GITHUB_TOKEN: ${{ secrets.KEY }}
                ISSUE_TITLE: ${{ inputs.issue_title }}
@@ -221,6 +221,18 @@ To obtain a detailed report on the types of open discussions, it is necessary to
 - **pull-request-analytics-action** will recognize these labels and include them in the report, providing a categorized overview of discussions.
 
 This feature enhances the analytical capabilities of **pull-request-analytics-action**, offering a deeper insight into the nature and distribution of discussions in your pull requests.
+
+## Pull Request Sizes
+
+**Calculating PR Size**: The size of a pull request is determined using the formula: `additions + deletions * 0.5`. This calculation considers both the lines of code added and a weighted count of deletions to assess the overall size.
+
+Based on this calculation, pull requests are categorized into the following size brackets:
+
+- `0-50`: `xs`
+- `51-200`: `s`
+- `201-400`: `m`
+- `401-700`: `l`
+- `701+`: `xl`
 
 ## Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic
 

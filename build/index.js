@@ -67,6 +67,7 @@ exports.collectData = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(64266);
 const constants_1 = __nccwpck_require__(95354);
+const calculations_1 = __nccwpck_require__(16576);
 const collectData = (data) => {
     const collection = { total: {} };
     data.pullRequestInfo.forEach((pullRequest, index) => {
@@ -87,7 +88,7 @@ const collectData = (data) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestTimeline)(pullRequest, data.reviews[index], collection[key][innerKey]);
             });
         });
-        (0, utils_1.prepareReviews)(data, collection, index, dateKey, userKey);
+        (0, utils_1.prepareReviews)(data, collection, index, dateKey, userKey, (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions));
         (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, userKey);
     });
     Object.entries(collection).map(([key, value]) => {
@@ -383,17 +384,17 @@ exports.getApproveTime = getApproveTime;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestSize = void 0;
 const getPullRequestSize = (additions, deletions) => {
-    const size = additions + deletions * 0.5;
-    if (size < 50) {
+    const size = (additions || 0) + (deletions || 0) * 0.5;
+    if (size <= 50) {
         return "xs";
     }
-    if (size < 200) {
+    if (size <= 200) {
         return "s";
     }
-    if (size < 400) {
+    if (size <= 400) {
         return "m";
     }
-    if (size < 700) {
+    if (size <= 700) {
         return "l";
     }
     return "xl";
@@ -477,30 +478,32 @@ Object.defineProperty(exports, "prepareReviews", ({ enumerable: true, get: funct
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareConductedReviews = void 0;
-const prepareConductedReviews = (pullRequestLogin, pullRequestReviews, collection) => {
+const prepareConductedReviews = (pullRequestLogin, pullRequestReviews, collection, pullRequestSize) => {
     const reviewsConducted = {
         ...(collection?.reviewsConducted || {}),
     };
     const statuses = Object.keys(pullRequestReviews?.reduce((acc, review) => {
         return { ...acc, [review.state]: 1, total: 1 };
     }, {}) || {});
-    if (pullRequestLogin) {
-        [pullRequestLogin, "total"].forEach((key) => {
-            const statusesReviewsStats = statuses.reduce((acc, status) => {
-                return {
-                    ...acc,
-                    [status]: (reviewsConducted[key]?.[status] || 0) + 1,
-                };
-            }, {});
-            reviewsConducted[key] = {
-                ...reviewsConducted[key],
-                ...statusesReviewsStats,
+    [pullRequestLogin, "total"].forEach((key) => {
+        const statusesReviewsStats = statuses.reduce((acc, status) => {
+            return {
+                ...acc,
+                [status]: (reviewsConducted[key]?.[status] || 0) + 1,
             };
-        });
-    }
+        }, {});
+        reviewsConducted[key] = {
+            ...reviewsConducted[key],
+            ...statusesReviewsStats,
+        };
+    });
     return {
         ...collection,
         reviewsConducted,
+        reviewsConductedSize: [
+            ...(collection?.reviewsConductedSize || []),
+            pullRequestSize,
+        ],
     };
 };
 exports.prepareConductedReviews = prepareConductedReviews;
@@ -602,12 +605,13 @@ exports.prepareDiscussions = prepareDiscussions;
 /***/ }),
 
 /***/ 33569:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestInfo = void 0;
+const calculations_1 = __nccwpck_require__(16576);
 const preparePullRequestInfo = (pullRequest, collection) => {
     const previousComments = typeof collection?.comments === "number" ? collection?.comments : 0;
     const comments = previousComments + (pullRequest?.comments || 0);
@@ -628,6 +632,10 @@ const preparePullRequestInfo = (pullRequest, collection) => {
         totalReviewComments,
         additions: (collection?.additions || 0) + (pullRequest?.additions || 0),
         deletions: (collection?.deletions || 0) + (pullRequest?.deletions || 0),
+        prSizes: [
+            ...(collection?.prSizes || []),
+            (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions),
+        ],
     };
 };
 exports.preparePullRequestInfo = preparePullRequestInfo;
@@ -711,7 +719,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareReviews = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const prepareConductedReviews_1 = __nccwpck_require__(15278);
-const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
+const prepareReviews = (data, collection, index, dateKey, pullRequestLogin, pullRequestSize) => {
     const users = Object.keys(data.reviews[index]?.reduce((acc, review) => {
         const userLogin = review.user?.login || constants_1.invalidUserLogin;
         if (userLogin !== pullRequestLogin) {
@@ -730,7 +738,7 @@ const prepareReviews = (data, collection, index, dateKey, pullRequestLogin) => {
             })
             : data.reviews[index];
         [dateKey, "total"].forEach((key) => {
-            collection[user][key] = (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, collection[user][key]);
+            collection[user][key] = (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, collection[user][key], pullRequestSize);
         });
     });
 };
@@ -891,7 +899,7 @@ exports.octokit = new octokit_1.Octokit({
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.concurrentLimit = void 0;
-exports.concurrentLimit = 50;
+exports.concurrentLimit = 25;
 
 
 /***/ }),
@@ -1373,7 +1381,7 @@ Object.defineProperty(exports, "createMarkdown", ({ enumerable: true, get: funct
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
+exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
 exports.timeToReviewHeader = "Time to review";
 exports.timeToApproveHeader = "Time to approve";
 exports.timeToMergeHeader = "Time to merge";
@@ -1388,6 +1396,7 @@ exports.commentsConductedHeader = "Comments conducted";
 exports.commentsReceivedHeader = "Comments received";
 exports.reviewTypesHeader = "Changes requested / Comments / Approvals";
 exports.requestChangesReceived = "Changes requested received";
+exports.prSizesHeader = "PR size: xs / s / m / l / xl";
 
 
 /***/ }),
@@ -1625,6 +1634,7 @@ exports.createReviewTable = void 0;
 const constants_1 = __nccwpck_require__(11474);
 const createBlock_1 = __nccwpck_require__(83454);
 const createReviewTable = (data, users, date) => {
+    const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
         data[user]?.[date]?.reviewsConducted?.total?.total)
@@ -1634,19 +1644,23 @@ const createReviewTable = (data, users, date) => {
             data[user]?.[date]?.merged?.toString() || "0",
             data[user]?.[date]?.discussionsConducted?.toString() || "0",
             data[user]?.[date]?.commentsConducted?.toString() || "0",
+            `${sizes
+                .map((size) => data[user]?.[date]?.reviewsConductedSize?.filter((prSize) => prSize === size).length || 0)
+                .join(" / ")}`,
             `${data[user]?.[date]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() ||
                 0} / ${data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0}`,
         ];
     });
     return (0, createBlock_1.createBlock)({
         title: `Code review engagement ${date}`,
-        description: "**Changes requested / Comments / Approvals** - number of Reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.",
+        description: "**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Changes requested / Comments / Approvals** - number of Reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.",
         table: {
             headers: [
                 "user",
                 constants_1.totalMergedPrsHeader,
                 constants_1.discussionsConductedHeader,
                 constants_1.commentsConductedHeader,
+                constants_1.prSizesHeader,
                 constants_1.reviewTypesHeader,
             ],
             rows: tableRowsTotal,
@@ -1825,6 +1839,7 @@ exports.createTotalTable = void 0;
 const constants_1 = __nccwpck_require__(11474);
 const createBlock_1 = __nccwpck_require__(83454);
 const createTotalTable = (data, users, date) => {
+    const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.opened ||
         data[user]?.[date]?.reviewsConducted?.total?.total)
@@ -1834,19 +1849,24 @@ const createTotalTable = (data, users, date) => {
             data[user]?.[date]?.opened?.toString() || "0",
             data[user]?.[date]?.merged?.toString() || "0",
             `+${data[user]?.[date].additions || 0}/-${data[user]?.[date].deletions || 0}`,
+            `${sizes
+                .map((size) => data[user]?.[date]?.prSizes?.filter((prSize) => prSize === size)
+                .length || 0)
+                .join(" / ")}`,
             data[user]?.[date]?.totalReviewComments?.toString() || "0",
             data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
         ];
     });
     return (0, createBlock_1.createBlock)({
         title: `Workload stats ${date}`,
-        description: "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.",
+        description: "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",
         table: {
             headers: [
                 "user",
                 constants_1.totalOpenedPrsHeader,
                 constants_1.totalMergedPrsHeader,
                 constants_1.additionsDeletionsHeader,
+                constants_1.prSizesHeader,
                 constants_1.reviewCommentsHeader,
                 constants_1.reviewConductedHeader,
             ],

@@ -9,6 +9,7 @@ import {
   preparePullRequestTimeline,
 } from "./utils";
 import { invalidUserLogin } from "./constants";
+import { getPullRequestSize } from "./utils/calculations";
 
 export const collectData = (
   data: Awaited<ReturnType<typeof makeComplexRequest>>
@@ -44,14 +45,15 @@ export const collectData = (
       });
     });
 
-    prepareReviews(data, collection, index, dateKey, userKey);
-    prepareDiscussions(
-      data.comments,
+    prepareReviews(
+      data,
       collection,
       index,
       dateKey,
-      userKey
+      userKey,
+      getPullRequestSize(pullRequest?.additions, pullRequest?.deletions)
     );
+    prepareDiscussions(data.comments, collection, index, dateKey, userKey);
   });
 
   Object.entries(collection).map(([key, value]) => {

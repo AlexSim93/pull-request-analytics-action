@@ -1,6 +1,7 @@
 import { makeComplexRequest } from "../../requests";
 import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
+import { PullRequestSize } from "./calculations/getPullRequestSize";
 import { prepareConductedReviews } from "./prepareConductedReviews";
 
 export const prepareReviews = (
@@ -8,7 +9,8 @@ export const prepareReviews = (
   collection: Record<string, Record<string, Collection>>,
   index: number,
   dateKey: string,
-  pullRequestLogin: string
+  pullRequestLogin: string,
+  pullRequestSize: PullRequestSize
 ) => {
   const users = Object.keys(
     data.reviews[index]?.reduce((acc, review) => {
@@ -35,7 +37,8 @@ export const prepareReviews = (
       collection[user][key] = prepareConductedReviews(
         pullRequestLogin,
         userReviews,
-        collection[user][key]
+        collection[user][key],
+        pullRequestSize
       );
     });
   });
