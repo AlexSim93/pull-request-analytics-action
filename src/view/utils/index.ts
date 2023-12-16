@@ -12,4 +12,5 @@ export { createPullRequestQualityTable } from "./createPullRequestQualityTable";
 export { createPieChart } from "./createPieChart";
 export { getDisplayUserList } from "./getDisplayUserList";
 export { createTimelineContent } from "./createTimelineContent";
+export { createTimelineMonthsGanttBar } from "./createTimelineMonthsGanttBar";
 export { StatsType } from "./types";

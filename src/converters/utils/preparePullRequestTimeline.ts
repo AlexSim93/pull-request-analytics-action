@@ -14,7 +14,7 @@ export const preparePullRequestTimeline = (
   collection: Collection
 ) => {
   const firstReview = pullRequestReviews?.find(
-    (review) => review.user?.login !== pullRequestInfo?.user.login
+    (review) => review.user?.login !== pullRequestInfo?.user?.login
   );
   const approveTime = getApproveTime(pullRequestReviews);
 

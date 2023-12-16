@@ -8,6 +8,8 @@ import {
   makeComplexRequest,
 } from "./requests";
 import { collectData } from "./converters";
+import { octokit } from "./octokit/octokit";
+import { getMultipleValuesInput } from "./common/utils";
 
 async function main() {
   if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
@@ -24,28 +26,31 @@ async function main() {
   ) {
     throw new Error("Missing required variables");
   }
+  const rateLimitAtBeginning = await octokit.rest.rateLimit.get();
+  console.log(
+    "RATE LIMIT REMAINING BEFORE REQUESTS: ",
+    rateLimitAtBeginning.data.rate.remaining
+  );
 
   const ownersRepos = getOwnersRepositories();
   console.log("Initiating data request.");
-  const dataByRepos = await Promise.allSettled(
-    ownersRepos.map(([owner, repo]) =>
-      makeComplexRequest(
-        parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
-        {
-          owner,
-          repo,
-        },
-        {
-          skipReviews: false,
-          skipComments: false,
-        }
-      )
-    )
-  );
+  const data = [];
+  for (let i = 0; i < ownersRepos.length; i++) {
+    const result = await makeComplexRequest(
+      parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
+      {
+        owner: ownersRepos[i][0],
+        repo: ownersRepos[i][1],
+      },
+      {
+        skipReviews: false,
+        skipComments: false,
+      }
+    );
+    data.push(result);
+  }
+
   console.log("Data successfully retrieved. Starting report calculations.");
-  const data = dataByRepos
-    .map((element) => (element.status === "fulfilled" ? element.value : null))
-    .filter((el) => el);
 
   const mergedData = data.reduce<
     Awaited<ReturnType<typeof makeComplexRequest>>
@@ -69,16 +74,22 @@ async function main() {
   core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
   console.log("Calculation complete. Generating markdown.");
   const markdown = createMarkdown(preparedData);
-  core.setOutput("MARKDOWN", markdown);
   console.log("Markdown successfully generated.");
+  getMultipleValuesInput("EXECUTION_OUTCOME")
+    .filter((outcome) => ["new-issue", "output"].includes(outcome))
+    .forEach((outcome) => {
+      if (outcome === 'new-issue') {
+        createIssue(markdown);
+      } else if (outcome === 'output') {
+        core.setOutput("MARKDOWN", markdown);
+      }
+    });
 
-  const createIssueFlag =
-    core.getInput("CREATE_ISSUE") ||
-    process.env.CREATE_ISSUE ||
-    `true`;
-  if (createIssueFlag === "true") {
-    createIssue(markdown);
-  }
+  const rateLimitAtEnd = await octokit.rest.rateLimit.get();
+  console.log(
+    "RATE LIMIT REMAINING AFTER REQUESTS: ",
+    rateLimitAtEnd.data.rate.remaining
+  );
 }
 
 main();

@@ -1,10 +1,11 @@
 import { Collection } from "../converters/types";
 import {
+  StatsType,
   createConfigParamsCode,
-  createDiscussionsPieChart,
   createPullRequestQualityTable,
   createReviewTable,
   createTimelineContent,
+  createTimelineMonthsGanttBar,
   createTotalTable,
   getDisplayUserList,
   sortCollectionsByDate,
@@ -45,5 +46,16 @@ This report based on ${
   } last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${createConfigParamsCode()}
     ${content.join("\n")}
+  ${getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
+    .filter((method) => ["average", "median", "percentile"].includes(method))
+    .map((type) =>
+      createTimelineMonthsGanttBar(
+        data,
+        type as StatsType,
+        dates.filter((date) => date !== "total"),
+        "total"
+      )
+    )
+    .join("\n")}
   `;
 };
