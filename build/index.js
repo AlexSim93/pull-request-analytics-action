@@ -183,7 +183,7 @@ const validate = () => {
         "GITHUB_OWNER_FOR_ISSUE",
         "GITHUB_REPO_FOR_ISSUE",
     ]);
-    const { errors, warnings } = (0, validators_2.validateMultipleValues)({
+    const { errors: multipleValuesErrors, warnings: multipleValuesWarnings } = (0, validators_2.validateMultipleValues)({
         SHOW_STATS_TYPES: {
             validValues: [
                 "timeline",
@@ -202,16 +202,15 @@ const validate = () => {
             required: true,
         },
     });
-    Object.entries({ ...errors, ...requiredErrors }).forEach(([key, message]) => {
+    const errors = { ...multipleValuesErrors, ...requiredErrors };
+    const warnings = { ...multipleValuesWarnings };
+    Object.entries(errors).forEach(([key, message]) => {
         core.error(message);
     });
-    Object.entries({ ...warnings }).forEach(([key, message]) => {
+    Object.entries(warnings).forEach(([key, message]) => {
         console.warn(message);
     });
-    if (Object.entries({ ...errors, ...requiredErrors }).length > 0) {
-        core.setFailed("Inputs are invalid. Action is failed with validation error");
-        throw "Inputs are invalid. Action is failed with validation error";
-    }
+    return errors;
 };
 exports.validate = validate;
 
@@ -1052,7 +1051,11 @@ const octokit_1 = __nccwpck_require__(24641);
 const utils_1 = __nccwpck_require__(41002);
 async function main() {
     (0, utils_1.setTimezone)();
-    (0, utils_1.validate)();
+    const errors = (0, utils_1.validate)();
+    if (Object.entries(errors).length > 0) {
+        core.setFailed("Inputs are invalid. Action is failed with validation error");
+        return;
+    }
     const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
     const ownersRepos = (0, requests_1.getOwnersRepositories)();

@@ -13,7 +13,13 @@ import { getMultipleValuesInput, setTimezone, validate } from "./common/utils";
 
 async function main() {
   setTimezone();
-  validate();
+  const errors = validate();
+  if (Object.entries(errors).length > 0) {
+    core.setFailed(
+      "Inputs are invalid. Action is failed with validation error"
+    );
+    return;
+  }
   const rateLimitAtBeginning = await octokit.rest.rateLimit.get();
   console.log(
     "RATE LIMIT REMAINING BEFORE REQUESTS: ",

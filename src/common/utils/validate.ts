@@ -10,36 +10,33 @@ export const validate = () => {
     "GITHUB_REPO_FOR_ISSUE",
   ]);
 
-  const { errors, warnings } = validateMultipleValues({
-    SHOW_STATS_TYPES: {
-      validValues: [
-        "timeline",
-        "workload",
-        "pr-quality",
-        "code-review-engagement",
-      ],
-      required: true,
-    },
-    AGGREGATE_VALUE_METHODS: {
-      validValues: ["percentile", "average", "median"],
-      required: false,
-    },
-    EXECUTION_OUTCOME: {
-      validValues: ["new-issue", "markdown", "collection"],
-      required: true,
-    },
-  });
-
-  Object.entries({ ...errors, ...requiredErrors }).forEach(([key, message]) => {
+  const { errors: multipleValuesErrors, warnings: multipleValuesWarnings } =
+    validateMultipleValues({
+      SHOW_STATS_TYPES: {
+        validValues: [
+          "timeline",
+          "workload",
+          "pr-quality",
+          "code-review-engagement",
+        ],
+        required: true,
+      },
+      AGGREGATE_VALUE_METHODS: {
+        validValues: ["percentile", "average", "median"],
+        required: false,
+      },
+      EXECUTION_OUTCOME: {
+        validValues: ["new-issue", "markdown", "collection"],
+        required: true,
+      },
+    });
+  const errors = { ...multipleValuesErrors, ...requiredErrors };
+  const warnings = { ...multipleValuesWarnings };
+  Object.entries(errors).forEach(([key, message]) => {
     core.error(message as string);
   });
-  Object.entries({ ...warnings }).forEach(([key, message]) => {
+  Object.entries(warnings).forEach(([key, message]) => {
     console.warn(message);
   });
-  if (Object.entries({ ...errors, ...requiredErrors }).length > 0) {
-    core.setFailed(
-      "Inputs are invalid. Action is failed with validation error"
-    );
-    throw "Inputs are invalid. Action is failed with validation error";
-  }
+  return errors;
 };
