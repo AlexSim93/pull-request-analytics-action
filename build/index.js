@@ -210,6 +210,7 @@ const validate = () => {
     });
     if (Object.entries({ ...errors, ...requiredErrors }).length > 0) {
         core.setFailed("Inputs are invalid. Action is failed with validation error");
+        throw "Inputs are invalid. Action is failed with validation error";
     }
 };
 exports.validate = validate;
