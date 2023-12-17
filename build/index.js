@@ -208,7 +208,7 @@ const validate = () => {
         core.error(message);
     });
     Object.entries(warnings).forEach(([key, message]) => {
-        console.warn(message);
+        core.warning(message);
     });
     return errors;
 };
