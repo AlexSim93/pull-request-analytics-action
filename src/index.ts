@@ -9,23 +9,11 @@ import {
 } from "./requests";
 import { collectData } from "./converters";
 import { octokit } from "./octokit/octokit";
-import { getMultipleValuesInput } from "./common/utils";
+import { getMultipleValuesInput, setTimezone, validate } from "./common/utils";
 
 async function main() {
-  if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
-    process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
-  }
-  if (
-    ((!process.env.GITHUB_REPO_FOR_ISSUE ||
-      !process.env.GITHUB_OWNER_FOR_ISSUE) &&
-      (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-        !core.getInput("GITHUB_REPO_FOR_ISSUE"))) ||
-    (!core.getInput("GITHUB_OWNERS_REPOS") &&
-      !process.env.GITHUB_OWNERS_REPOS) ||
-    (!core.getInput("GITHUB_TOKEN") && !process.env.GITHUB_TOKEN)
-  ) {
-    throw new Error("Missing required variables");
-  }
+  setTimezone();
+  validate();
   const rateLimitAtBeginning = await octokit.rest.rateLimit.get();
   console.log(
     "RATE LIMIT REMAINING BEFORE REQUESTS: ",
@@ -71,17 +59,22 @@ async function main() {
     }
   );
   const preparedData = collectData(mergedData);
-  core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
   console.log("Calculation complete. Generating markdown.");
   const markdown = createMarkdown(preparedData);
   console.log("Markdown successfully generated.");
   getMultipleValuesInput("EXECUTION_OUTCOME")
-    .filter((outcome) => ["new-issue", "output"].includes(outcome))
+    .filter((outcome) =>
+      ["new-issue", "output", "collection"].includes(outcome)
+    )
     .forEach((outcome) => {
-      if (outcome === 'new-issue') {
+      if (outcome === "new-issue") {
         createIssue(markdown);
-      } else if (outcome === 'output') {
+      }
+      if (outcome === "output") {
         core.setOutput("MARKDOWN", markdown);
+      }
+      if (outcome === "collection") {
+        core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
       }
     });
 

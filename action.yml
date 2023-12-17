@@ -77,7 +77,7 @@ inputs:
     description: "Timezone to use in action"
     required: false
   EXECUTION_OUTCOME:
-    description: "Outcome format separated by comma. Can take values: 'output', 'new-issue'"
+    description: "Outcome format separated by comma. Can take values: 'output', 'new-issue', 'collection'"
     required: false
     default: "new-issue"
 
