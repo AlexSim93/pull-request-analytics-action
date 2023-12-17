@@ -40,6 +40,6 @@ export const validate = () => {
     core.setFailed(
       "Inputs are invalid. Action is failed with validation error"
     );
-    throw "Inputs are invalid. Action is failed with validation error";
+    throw new Error("Inputs are invalid. Action is failed with validation error");
   }
 };
