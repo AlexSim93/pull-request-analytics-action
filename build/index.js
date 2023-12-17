@@ -895,6 +895,7 @@ const core = __importStar(__nccwpck_require__(42186));
 const plugin_throttling_1 = __nccwpck_require__(9968);
 octokit_1.Octokit.plugin(plugin_throttling_1.throttling);
 exports.octokit = new octokit_1.Octokit({
+    baseUrl: process.env['GITHUB_API_URL'] || 'https://api.github.com',
     auth: core.getInput("GITHUB_TOKEN") || process.env.GITHUB_TOKEN,
     throttle: {
         onSecondaryRateLimit: (_, options) => {

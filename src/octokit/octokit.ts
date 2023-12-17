@@ -5,6 +5,7 @@ import { throttling } from "@octokit/plugin-throttling";
 Octokit.plugin(throttling);
 
 export const octokit = new Octokit({
+  baseUrl: process.env['GITHUB_API_URL'] || 'https://api.github.com',
   auth: core.getInput("GITHUB_TOKEN") || process.env.GITHUB_TOKEN,
   throttle: {
     onSecondaryRateLimit: (_, options) => {
