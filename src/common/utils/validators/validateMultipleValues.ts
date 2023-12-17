@@ -38,7 +38,7 @@ export const validateMultipleValues = (fields: Field) => {
       if (
         value.required === false &&
         inputValues.length > 0 &&
-        inputValues.every((input) => !value.validValues.includes(input))
+        inputValues.some((input) => !value.validValues.includes(input))
       ) {
         return {
           ...acc,
