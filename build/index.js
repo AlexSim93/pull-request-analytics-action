@@ -271,6 +271,17 @@ const validateMultipleValues = (fields) => {
                 },
             };
         }
+        else if (value.required &&
+            inputValues.length > 0 &&
+            inputValues.some((input) => !value.validValues.includes(input))) {
+            return {
+                ...acc,
+                warnings: {
+                    ...acc.warnings,
+                    [key]: `Some values in ${key} are invalid.`,
+                },
+            };
+        }
         if (value.required === false &&
             inputValues.length > 0 &&
             inputValues.some((input) => !value.validValues.includes(input))) {

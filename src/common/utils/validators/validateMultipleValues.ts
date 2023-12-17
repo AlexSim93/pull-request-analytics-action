@@ -33,6 +33,18 @@ export const validateMultipleValues = (fields: Field) => {
             [key]: `${key} doesn't contain any valid value. At least one value should be valid.`,
           },
         };
+      } else if (
+        value.required &&
+        inputValues.length > 0 &&
+        inputValues.some((input) => !value.validValues.includes(input))
+      ) {
+        return {
+          ...acc,
+          warnings: {
+            ...acc.warnings,
+            [key]: `Some values in ${key} are invalid.`,
+          },
+        };
       }
 
       if (
