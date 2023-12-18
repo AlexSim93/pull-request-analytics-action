@@ -412,8 +412,8 @@ const validateNumber = (field) => {
                 },
             };
         }
-        const isLessMinValue = value.min && number < value.min;
-        const isMoreMaxValue = value.max && number > value.max;
+        const isLessMinValue = typeof value.min === "number" && number < value.min;
+        const isMoreMaxValue = typeof value.max === "number" && number > value.max;
         if (isLessMinValue) {
             return {
                 ...acc,
