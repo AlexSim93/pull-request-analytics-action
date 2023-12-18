@@ -200,7 +200,7 @@ const validate = () => {
             required: false,
         },
         EXECUTION_OUTCOME: {
-            validValues: ["new-issue", "markdown", "collection"],
+            validValues: ["new-issue", "output", "collection"],
             required: true,
         },
     });
