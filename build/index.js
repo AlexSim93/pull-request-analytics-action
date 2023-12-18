@@ -217,10 +217,11 @@ const validate = () => {
         },
         TOP_LIST_AMOUNT: { min: 0, isCritical: false },
     });
-    (0, validators_1.validateDate)();
+    const dateErrors = (0, validators_1.validateDate)();
     const errors = {
         ...multipleValuesErrors,
         ...numbersErrors,
+        ...dateErrors,
         ...requiredErrors,
     };
     const warnings = { ...multipleValuesWarnings, ...numbersWarnings };
@@ -268,15 +269,52 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.validateDate = void 0;
 const parse_1 = __importDefault(__nccwpck_require__(71287));
 const getValueAsIs_1 = __nccwpck_require__(18863);
+const date_fns_1 = __nccwpck_require__(73314);
 const validateDate = () => {
-    const errors = {};
+    let errors = {};
     if ((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") && (0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END")) {
         const startDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START"), "d/MM/yyyy", new Date());
         const endDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END"), "d/MM/yyyy", new Date());
+        if ((0, date_fns_1.isAfter)(startDate, endDate)) {
+            errors = {
+                ...errors,
+                REPORT_DATE_START: "REPORT_DATE_START is after REPORT_DATE_END",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(startDate)) {
+            errors = {
+                ...errors,
+                REPORT_DATE_START: "REPORT_DATE_START is invalid",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(endDate)) {
+            errors = {
+                ...errors,
+                REPORT_DATE_END: "REPORT_DATE_END is invalid",
+            };
+        }
     }
     if ((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START") && (0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END")) {
         const startCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START"), "HH:mm", new Date());
         const endCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END"), "HH:mm", new Date());
+        if ((0, date_fns_1.isAfter)(startCoreHours, endCoreHours)) {
+            errors = {
+                ...errors,
+                CORE_HOURS_START: "CORE_HOURS_START is after CORE_HOURS_END",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(startCoreHours)) {
+            errors = {
+                ...errors,
+                CORE_HOURS_START: "CORE_HOURS_START is invalid",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(endCoreHours)) {
+            errors = {
+                ...errors,
+                CORE_HOURS_END: "CORE_HOURS_END is invalid",
+            };
+        }
     }
     return errors;
 };

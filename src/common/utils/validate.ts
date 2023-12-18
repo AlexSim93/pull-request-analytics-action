@@ -49,10 +49,11 @@ export const validate = () => {
     TOP_LIST_AMOUNT: { min: 0, isCritical: false },
   });
 
-  validateDate();
+  const dateErrors = validateDate();
   const errors = {
     ...multipleValuesErrors,
     ...numbersErrors,
+    ...dateErrors,
     ...requiredErrors,
   };
   const warnings = { ...multipleValuesWarnings, ...numbersWarnings };
