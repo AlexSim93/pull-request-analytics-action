@@ -13,6 +13,7 @@ export const validateNumber = (field: Field) => {
         return {
           ...acc,
           [value.isCritical ? "errors" : "warnings"]: {
+            ...acc[value.isCritical ? "errors" : "warnings"],
             [key]: `${key} is not a number`,
           },
         };
@@ -25,6 +26,7 @@ export const validateNumber = (field: Field) => {
         return {
           ...acc,
           [value.isCritical ? "errors" : "warnings"]: {
+            ...acc[value.isCritical ? "errors" : "warnings"],
             [key]: `${key} should be more than ${value.min}`,
           },
         };
@@ -33,6 +35,7 @@ export const validateNumber = (field: Field) => {
         return {
           ...acc,
           [value.isCritical ? "errors" : "warnings"]: {
+            ...acc[value.isCritical ? "errors" : "warnings"],
             [key]: `${key} should be less than ${value.max}`,
           },
         };

@@ -408,6 +408,7 @@ const validateNumber = (field) => {
             return {
                 ...acc,
                 [value.isCritical ? "errors" : "warnings"]: {
+                    ...acc[value.isCritical ? "errors" : "warnings"],
                     [key]: `${key} is not a number`,
                 },
             };
@@ -418,6 +419,7 @@ const validateNumber = (field) => {
             return {
                 ...acc,
                 [value.isCritical ? "errors" : "warnings"]: {
+                    ...acc[value.isCritical ? "errors" : "warnings"],
                     [key]: `${key} should be more than ${value.min}`,
                 },
             };
@@ -426,6 +428,7 @@ const validateNumber = (field) => {
             return {
                 ...acc,
                 [value.isCritical ? "errors" : "warnings"]: {
+                    ...acc[value.isCritical ? "errors" : "warnings"],
                     [key]: `${key} should be less than ${value.max}`,
                 },
             };
