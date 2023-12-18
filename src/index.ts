@@ -9,7 +9,12 @@ import {
 } from "./requests";
 import { collectData } from "./converters";
 import { octokit } from "./octokit/octokit";
-import { getMultipleValuesInput, setTimezone, validate } from "./common/utils";
+import {
+  checkCommentSkip,
+  getMultipleValuesInput,
+  setTimezone,
+  validate,
+} from "./common/utils";
 
 async function main() {
   setTimezone();
@@ -38,7 +43,7 @@ async function main() {
       },
       {
         skipReviews: false,
-        skipComments: false,
+        skipComments: checkCommentSkip(),
       }
     );
     data.push(result);
@@ -70,13 +75,13 @@ async function main() {
   console.log("Markdown successfully generated.");
   getMultipleValuesInput("EXECUTION_OUTCOME")
     .filter((outcome) =>
-      ["new-issue", "output", "collection"].includes(outcome)
+      ["new-issue", "output", "collection", "markdown"].includes(outcome)
     )
     .forEach((outcome) => {
       if (outcome === "new-issue") {
         createIssue(markdown);
       }
-      if (outcome === "output") {
+      if (outcome === "markdown" || outcome === "output") {
         core.setOutput("MARKDOWN", markdown);
       }
       if (outcome === "collection") {

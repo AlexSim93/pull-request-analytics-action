@@ -1,4 +1,4 @@
-# Pull Request Template for pull-request-analytics-action
+# Pull Request
 
 ## Description
 Please explain the changes you made here.
@@ -17,10 +17,9 @@ Please explain the changes you made here.
 Please describe the tests that you ran to verify your changes.
 
 ## Checklist:
-- [ ] I have read the [CONTRIBUTING](../CONTRIBUTING.md) document.
+- [ ] I have read the [CONTRIBUTING](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/CONTRIBUTING.md) document.
 - [ ] My code follows the code style of this project.
 - [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
 - [ ] My changes generate no new warnings.
 - [ ] I have updated the documentation accordingly.
 
