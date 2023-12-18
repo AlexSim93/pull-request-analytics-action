@@ -39,6 +39,7 @@ export const createTimelineContent = (
           })) || [];
       return createList(milestoneTitle[milestone], items);
     })
+    .filter((item) => item)
     .join("\n");
 
   const timeline = getMultipleValuesInput("AGGREGATE_VALUE_METHODS")

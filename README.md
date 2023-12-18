@@ -162,7 +162,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
          runs-on: ubuntu-latest
          steps:
            - name: "Run script for analytics"
-             uses: AlexSim93/pull-request-analytics-action@v1.7.0
+             uses: AlexSim93/pull-request-analytics-action@master
              with:
                GITHUB_TOKEN: ${{ secrets.KEY }}
                ISSUE_TITLE: ${{ inputs.issue_title }}
@@ -270,7 +270,7 @@ Below is a table outlining the various configuration parameters available for **
 | `SHOW_USERS`              | Displays only specified users in reports, but includes all users in the background analytics. Use `total` to show total stats. Users should be separated by comma.                        | No       | -                                                        |
 | `EXCLUDE_LABELS`          | Excludes PRs with mentioned labels. Values should be separated by comma                                                                                                                   | No       | -                                                        |
 | `INCLUDE_LABELS`          | Includes only PRs with mentioned labels. Values should be separated by comma                                                                                                              | No       | -                                                        |
-| `EXECUTION_OUTCOME`       | Outcome format separated by comma. Can take values: `new-issue`, `output`                                                                                                                 | No       | `new-issue`                                              |
+| `EXECUTION_OUTCOME`       | Outcome format separated by comma. Can take values: `new-issue`, `output`, `collection`                                                                                                   | No       | `new-issue`                                              |
 
 Use these parameters to tailor the **pull-request-analytics-action** to your project's specific requirements.
 

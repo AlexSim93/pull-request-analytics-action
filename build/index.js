@@ -44,15 +44,420 @@ exports.getMultipleValuesInput = getMultipleValuesInput;
 
 /***/ }),
 
+/***/ 18863:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getValueAsIs = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const getValueAsIs = (name) => {
+    return process.env[name] || core.getInput(name);
+};
+exports.getValueAsIs = getValueAsIs;
+
+
+/***/ }),
+
 /***/ 41002:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getMultipleValuesInput = void 0;
+exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = void 0;
+var getValueAsIs_1 = __nccwpck_require__(18863);
+Object.defineProperty(exports, "getValueAsIs", ({ enumerable: true, get: function () { return getValueAsIs_1.getValueAsIs; } }));
+var setTimezone_1 = __nccwpck_require__(73220);
+Object.defineProperty(exports, "setTimezone", ({ enumerable: true, get: function () { return setTimezone_1.setTimezone; } }));
 var getMultipleValuesInput_1 = __nccwpck_require__(31437);
 Object.defineProperty(exports, "getMultipleValuesInput", ({ enumerable: true, get: function () { return getMultipleValuesInput_1.getMultipleValuesInput; } }));
+var validate_1 = __nccwpck_require__(43373);
+Object.defineProperty(exports, "validate", ({ enumerable: true, get: function () { return validate_1.validate; } }));
+
+
+/***/ }),
+
+/***/ 73220:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.setTimezone = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const setTimezone = () => {
+    if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
+        process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
+    }
+};
+exports.setTimezone = setTimezone;
+
+
+/***/ }),
+
+/***/ 43373:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validate = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const validators_1 = __nccwpck_require__(75733);
+const validators_2 = __nccwpck_require__(75733);
+const getMultipleValuesInput_1 = __nccwpck_require__(31437);
+const getValueAsIs_1 = __nccwpck_require__(18863);
+const validate = () => {
+    const requiredErrors = (0, validators_1.validateRequired)([
+        "GITHUB_TOKEN",
+        "GITHUB_OWNERS_REPOS",
+        "GITHUB_OWNER_FOR_ISSUE",
+        "GITHUB_REPO_FOR_ISSUE",
+    ]);
+    const { errors: multipleValuesErrors, warnings: multipleValuesWarnings } = (0, validators_2.validateMultipleValues)({
+        SHOW_STATS_TYPES: {
+            validValues: [
+                "timeline",
+                "workload",
+                "pr-quality",
+                "code-review-engagement",
+            ],
+            required: true,
+        },
+        AGGREGATE_VALUE_METHODS: {
+            validValues: ["percentile", "average", "median"],
+            required: false,
+        },
+        EXECUTION_OUTCOME: {
+            validValues: ["new-issue", "markdown", "collection"],
+            required: true,
+        },
+    });
+    const { warnings: numbersWarnings, errors: numbersErrors } = (0, validators_1.validateNumber)({
+        AMOUNT: {
+            min: 0,
+            isCritical: !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") && !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END"),
+        },
+        PERCENTILE: {
+            max: 100,
+            min: 0,
+            isCritical: (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS").length === 1 &&
+                (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")[0] === "percentile",
+        },
+        TOP_LIST_AMOUNT: { min: 0, isCritical: false },
+    });
+    const dateErrors = (0, validators_1.validateDate)();
+    const errors = {
+        ...multipleValuesErrors,
+        ...numbersErrors,
+        ...dateErrors,
+        ...requiredErrors,
+    };
+    const warnings = { ...multipleValuesWarnings, ...numbersWarnings };
+    Object.values(errors).forEach((message) => {
+        core.error(message);
+    });
+    Object.values(warnings).forEach((message) => {
+        core.warning(message);
+    });
+    return errors;
+};
+exports.validate = validate;
+
+
+/***/ }),
+
+/***/ 75733:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateDate = exports.validateNumber = exports.validateMultipleValues = exports.validateRequired = void 0;
+var validateRequired_1 = __nccwpck_require__(85069);
+Object.defineProperty(exports, "validateRequired", ({ enumerable: true, get: function () { return validateRequired_1.validateRequired; } }));
+var validateMultipleValues_1 = __nccwpck_require__(11886);
+Object.defineProperty(exports, "validateMultipleValues", ({ enumerable: true, get: function () { return validateMultipleValues_1.validateMultipleValues; } }));
+var validateNumber_1 = __nccwpck_require__(20839);
+Object.defineProperty(exports, "validateNumber", ({ enumerable: true, get: function () { return validateNumber_1.validateNumber; } }));
+var validateDate_1 = __nccwpck_require__(39974);
+Object.defineProperty(exports, "validateDate", ({ enumerable: true, get: function () { return validateDate_1.validateDate; } }));
+
+
+/***/ }),
+
+/***/ 39974:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateDate = void 0;
+const parse_1 = __importDefault(__nccwpck_require__(71287));
+const getValueAsIs_1 = __nccwpck_require__(18863);
+const date_fns_1 = __nccwpck_require__(73314);
+const validateDate = () => {
+    let errors = {};
+    if ((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") && (0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END")) {
+        const startDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START"), "d/MM/yyyy", new Date());
+        const endDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END"), "d/MM/yyyy", new Date());
+        if ((0, date_fns_1.isAfter)(startDate, endDate)) {
+            errors = {
+                ...errors,
+                REPORT_DATE_START: "REPORT_DATE_START is after REPORT_DATE_END",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(startDate)) {
+            errors = {
+                ...errors,
+                REPORT_DATE_START: "REPORT_DATE_START is invalid",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(endDate)) {
+            errors = {
+                ...errors,
+                REPORT_DATE_END: "REPORT_DATE_END is invalid",
+            };
+        }
+    }
+    if ((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START") && (0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END")) {
+        const startCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START"), "HH:mm", new Date());
+        const endCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END"), "HH:mm", new Date());
+        if ((0, date_fns_1.isAfter)(startCoreHours, endCoreHours)) {
+            errors = {
+                ...errors,
+                CORE_HOURS_START: "CORE_HOURS_START is after CORE_HOURS_END",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(startCoreHours)) {
+            errors = {
+                ...errors,
+                CORE_HOURS_START: "CORE_HOURS_START is invalid",
+            };
+        }
+        if (!(0, date_fns_1.isValid)(endCoreHours)) {
+            errors = {
+                ...errors,
+                CORE_HOURS_END: "CORE_HOURS_END is invalid",
+            };
+        }
+    }
+    return errors;
+};
+exports.validateDate = validateDate;
+
+
+/***/ }),
+
+/***/ 11886:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateMultipleValues = void 0;
+const getMultipleValuesInput_1 = __nccwpck_require__(31437);
+const validateMultipleValues = (fields) => {
+    return Object.entries(fields).reduce((acc, [key, value]) => {
+        const inputValues = (0, getMultipleValuesInput_1.getMultipleValuesInput)(key);
+        if (inputValues.length === 0) {
+            return value.required
+                ? {
+                    ...acc,
+                    errors: {
+                        ...acc.errors,
+                        [key]: `${key} is empty.`,
+                    },
+                }
+                : {
+                    ...acc,
+                    warnings: {
+                        ...acc.warnings,
+                        [key]: `${key} is empty.`,
+                    },
+                };
+        }
+        if (value.required &&
+            inputValues.length > 0 &&
+            inputValues.every((input) => !value.validValues.includes(input))) {
+            return {
+                ...acc,
+                errors: {
+                    ...acc.errors,
+                    [key]: `${key} doesn't contain any valid value. At least one value should be valid.`,
+                },
+            };
+        }
+        else if (value.required &&
+            inputValues.length > 0 &&
+            inputValues.some((input) => !value.validValues.includes(input))) {
+            return {
+                ...acc,
+                warnings: {
+                    ...acc.warnings,
+                    [key]: `Some values in ${key} are invalid.`,
+                },
+            };
+        }
+        if (value.required === false &&
+            inputValues.length > 0 &&
+            inputValues.some((input) => !value.validValues.includes(input))) {
+            return {
+                ...acc,
+                warnings: {
+                    ...acc.warnings,
+                    [key]: `Some values in ${key} are invalid.`,
+                },
+            };
+        }
+        return acc;
+    }, { errors: {}, warnings: {} });
+};
+exports.validateMultipleValues = validateMultipleValues;
+
+
+/***/ }),
+
+/***/ 20839:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateNumber = void 0;
+const getValueAsIs_1 = __nccwpck_require__(18863);
+const validateNumber = (field) => {
+    return Object.entries(field).reduce((acc, [key, value]) => {
+        const input = (0, getValueAsIs_1.getValueAsIs)(key);
+        const number = parseInt(input);
+        if (Number.isNaN(number)) {
+            return {
+                ...acc,
+                [value.isCritical ? "errors" : "warnings"]: {
+                    ...acc[value.isCritical ? "errors" : "warnings"],
+                    [key]: `${key} is not a number`,
+                },
+            };
+        }
+        const isLessMinValue = typeof value.min === "number" && number < value.min;
+        const isMoreMaxValue = typeof value.max === "number" && number > value.max;
+        if (isLessMinValue) {
+            return {
+                ...acc,
+                [value.isCritical ? "errors" : "warnings"]: {
+                    ...acc[value.isCritical ? "errors" : "warnings"],
+                    [key]: `${key} should be more than ${value.min}`,
+                },
+            };
+        }
+        if (isMoreMaxValue) {
+            return {
+                ...acc,
+                [value.isCritical ? "errors" : "warnings"]: {
+                    ...acc[value.isCritical ? "errors" : "warnings"],
+                    [key]: `${key} should be less than ${value.max}`,
+                },
+            };
+        }
+        return acc;
+    }, { errors: {}, warnings: {} });
+};
+exports.validateNumber = validateNumber;
+
+
+/***/ }),
+
+/***/ 85069:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateRequired = void 0;
+const getValueAsIs_1 = __nccwpck_require__(18863);
+const validateRequired = (names) => {
+    return names.reduce((acc, name) => {
+        const value = (0, getValueAsIs_1.getValueAsIs)(name);
+        if (value)
+            return acc;
+        return { ...acc, [name]: `${name} is required` };
+    }, {});
+};
+exports.validateRequired = validateRequired;
 
 
 /***/ }),
@@ -796,17 +1201,11 @@ const converters_1 = __nccwpck_require__(86200);
 const octokit_1 = __nccwpck_require__(24641);
 const utils_1 = __nccwpck_require__(41002);
 async function main() {
-    if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
-        process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
-    }
-    if (((!process.env.GITHUB_REPO_FOR_ISSUE ||
-        !process.env.GITHUB_OWNER_FOR_ISSUE) &&
-        (!core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            !core.getInput("GITHUB_REPO_FOR_ISSUE"))) ||
-        (!core.getInput("GITHUB_OWNERS_REPOS") &&
-            !process.env.GITHUB_OWNERS_REPOS) ||
-        (!core.getInput("GITHUB_TOKEN") && !process.env.GITHUB_TOKEN)) {
-        throw new Error("Missing required variables");
+    (0, utils_1.setTimezone)();
+    const errors = (0, utils_1.validate)();
+    if (Object.entries(errors).length > 0) {
+        core.setFailed("Inputs are invalid. Action is failed with validation error");
+        return;
     }
     const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
@@ -838,18 +1237,20 @@ async function main() {
         comments: [],
     });
     const preparedData = (0, converters_1.collectData)(mergedData);
-    core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
     console.log("Calculation complete. Generating markdown.");
     const markdown = (0, view_1.createMarkdown)(preparedData);
     console.log("Markdown successfully generated.");
     (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME")
-        .filter((outcome) => ["new-issue", "output"].includes(outcome))
+        .filter((outcome) => ["new-issue", "output", "collection"].includes(outcome))
         .forEach((outcome) => {
-        if (outcome === 'new-issue') {
+        if (outcome === "new-issue") {
             (0, requests_1.createIssue)(markdown);
         }
-        else if (outcome === 'output') {
+        if (outcome === "output") {
             core.setOutput("MARKDOWN", markdown);
+        }
+        if (outcome === "collection") {
+            core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
         }
     });
     const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
@@ -1583,6 +1984,8 @@ exports.createGanttBar = createGanttBar;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createList = void 0;
 const createList = (title, items) => {
+    if (items.length === 0)
+        return "";
     return `
 ### ${title}
 ${items
@@ -1804,6 +2207,7 @@ const createTimelineContent = (data, users, date) => {
         })) || [];
         return (0, createList_1.createList)(milestoneTitle[milestone], items);
     })
+        .filter((item) => item)
         .join("\n");
     const timeline = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
         .filter((method) => ["average", "median", "percentile"].includes(method))

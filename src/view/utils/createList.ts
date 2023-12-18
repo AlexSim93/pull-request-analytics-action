@@ -4,6 +4,7 @@ type Item = {
 };
 
 export const createList = (title: string, items: Item[]) => {
+  if (items.length === 0) return "";
   return `
 ### ${title}
 ${items
