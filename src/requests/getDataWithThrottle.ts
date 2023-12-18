@@ -1,3 +1,4 @@
+import { checkCommentSkip } from "../common/utils";
 import { concurrentLimit } from "./constants";
 import { delay } from "./delay";
 import { getPullRequestComments } from "./getPullRequestComments";
@@ -54,7 +55,7 @@ export const getDataWithThrottle = async (
     );
 
     const comments = await Promise.allSettled(pullRequestComments);
-    await delay(4000);
+    await delay(checkCommentSkip() ? 0 : 4000);
     counter++;
     PRs.push(...prs);
     PREvents.push(...reviews);

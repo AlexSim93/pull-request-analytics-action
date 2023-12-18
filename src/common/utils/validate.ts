@@ -28,7 +28,7 @@ export const validate = () => {
         required: false,
       },
       EXECUTION_OUTCOME: {
-        validValues: ["new-issue", "output", "collection"],
+        validValues: ["new-issue", "output", "collection", 'markdown'],
         required: true,
       },
     });

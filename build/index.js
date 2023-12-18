@@ -1,6 +1,22 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 61585:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkCommentSkip = void 0;
+const getMultipleValuesInput_1 = __nccwpck_require__(31437);
+const checkCommentSkip = () => {
+    return (!(0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes("code-review-engagement") && !(0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes("pr-quality"));
+};
+exports.checkCommentSkip = checkCommentSkip;
+
+
+/***/ }),
+
 /***/ 31437:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -89,7 +105,7 @@ exports.getValueAsIs = getValueAsIs;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = void 0;
+exports.checkCommentSkip = exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = void 0;
 var getValueAsIs_1 = __nccwpck_require__(18863);
 Object.defineProperty(exports, "getValueAsIs", ({ enumerable: true, get: function () { return getValueAsIs_1.getValueAsIs; } }));
 var setTimezone_1 = __nccwpck_require__(73220);
@@ -98,6 +114,8 @@ var getMultipleValuesInput_1 = __nccwpck_require__(31437);
 Object.defineProperty(exports, "getMultipleValuesInput", ({ enumerable: true, get: function () { return getMultipleValuesInput_1.getMultipleValuesInput; } }));
 var validate_1 = __nccwpck_require__(43373);
 Object.defineProperty(exports, "validate", ({ enumerable: true, get: function () { return validate_1.validate; } }));
+var checkCommentSkip_1 = __nccwpck_require__(61585);
+Object.defineProperty(exports, "checkCommentSkip", ({ enumerable: true, get: function () { return checkCommentSkip_1.checkCommentSkip; } }));
 
 
 /***/ }),
@@ -200,7 +218,7 @@ const validate = () => {
             required: false,
         },
         EXECUTION_OUTCOME: {
-            validValues: ["new-issue", "output", "collection"],
+            validValues: ["new-issue", "output", "collection", 'markdown'],
             required: true,
         },
     });
@@ -1218,7 +1236,7 @@ async function main() {
             repo: ownersRepos[i][1],
         }, {
             skipReviews: false,
-            skipComments: false,
+            skipComments: (0, utils_1.checkCommentSkip)(),
         });
         data.push(result);
     }
@@ -1241,12 +1259,12 @@ async function main() {
     const markdown = (0, view_1.createMarkdown)(preparedData);
     console.log("Markdown successfully generated.");
     (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME")
-        .filter((outcome) => ["new-issue", "output", "collection"].includes(outcome))
+        .filter((outcome) => ["new-issue", "output", "collection", "markdown"].includes(outcome))
         .forEach((outcome) => {
         if (outcome === "new-issue") {
             (0, requests_1.createIssue)(markdown);
         }
-        if (outcome === "output") {
+        if (outcome === "markdown" || outcome === "output") {
             core.setOutput("MARKDOWN", markdown);
         }
         if (outcome === "collection") {
@@ -1406,6 +1424,7 @@ exports.delay = delay;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getDataWithThrottle = void 0;
+const utils_1 = __nccwpck_require__(41002);
 const constants_1 = __nccwpck_require__(8827);
 const delay_1 = __nccwpck_require__(1847);
 const getPullRequestComments_1 = __nccwpck_require__(92041);
@@ -1434,7 +1453,7 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
             skip: skipComments,
         });
         const comments = await Promise.allSettled(pullRequestComments);
-        await (0, delay_1.delay)(4000);
+        await (0, delay_1.delay)((0, utils_1.checkCommentSkip)() ? 0 : 4000);
         counter++;
         PRs.push(...prs);
         PREvents.push(...reviews);
@@ -1906,6 +1925,7 @@ HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
 SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
 INCLUDE_LABELS: ${process.env.INCLUDE_LABELS || core.getInput("INCLUDE_LABELS")}
 EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
+EXECUTION_OUTCOME: ${process.env.EXECUTION_OUTCOME || core.getInput("EXECUTION_OUTCOME")}
 \`\`\`
     `;
 };
