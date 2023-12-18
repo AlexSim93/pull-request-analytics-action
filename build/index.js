@@ -176,6 +176,8 @@ exports.validate = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const validators_1 = __nccwpck_require__(75733);
 const validators_2 = __nccwpck_require__(75733);
+const getMultipleValuesInput_1 = __nccwpck_require__(31437);
+const getValueAsIs_1 = __nccwpck_require__(18863);
 const validate = () => {
     const requiredErrors = (0, validators_1.validateRequired)([
         "GITHUB_TOKEN",
@@ -202,12 +204,30 @@ const validate = () => {
             required: true,
         },
     });
-    const errors = { ...multipleValuesErrors, ...requiredErrors };
-    const warnings = { ...multipleValuesWarnings };
-    Object.entries(errors).forEach(([key, message]) => {
+    const { warnings: numbersWarnings, errors: numbersErrors } = (0, validators_1.validateNumber)({
+        AMOUNT: {
+            min: 0,
+            isCritical: !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") && !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END"),
+        },
+        PERCENTILE: {
+            max: 100,
+            min: 0,
+            isCritical: (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS").length === 1 &&
+                (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")[0] === "percentile",
+        },
+        TOP_LIST_AMOUNT: { min: 0, isCritical: false },
+    });
+    (0, validators_1.validateDate)();
+    const errors = {
+        ...multipleValuesErrors,
+        ...numbersErrors,
+        ...requiredErrors,
+    };
+    const warnings = { ...multipleValuesWarnings, ...numbersWarnings };
+    Object.values(errors).forEach((message) => {
         core.error(message);
     });
-    Object.entries(warnings).forEach(([key, message]) => {
+    Object.values(warnings).forEach((message) => {
         core.warning(message);
     });
     return errors;
@@ -223,11 +243,44 @@ exports.validate = validate;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateMultipleValues = exports.validateRequired = void 0;
+exports.validateDate = exports.validateNumber = exports.validateMultipleValues = exports.validateRequired = void 0;
 var validateRequired_1 = __nccwpck_require__(85069);
 Object.defineProperty(exports, "validateRequired", ({ enumerable: true, get: function () { return validateRequired_1.validateRequired; } }));
 var validateMultipleValues_1 = __nccwpck_require__(11886);
 Object.defineProperty(exports, "validateMultipleValues", ({ enumerable: true, get: function () { return validateMultipleValues_1.validateMultipleValues; } }));
+var validateNumber_1 = __nccwpck_require__(20839);
+Object.defineProperty(exports, "validateNumber", ({ enumerable: true, get: function () { return validateNumber_1.validateNumber; } }));
+var validateDate_1 = __nccwpck_require__(39974);
+Object.defineProperty(exports, "validateDate", ({ enumerable: true, get: function () { return validateDate_1.validateDate; } }));
+
+
+/***/ }),
+
+/***/ 39974:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateDate = void 0;
+const parse_1 = __importDefault(__nccwpck_require__(71287));
+const getValueAsIs_1 = __nccwpck_require__(18863);
+const validateDate = () => {
+    const errors = {};
+    if ((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") && (0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END")) {
+        const startDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START"), "d/MM/yyyy", new Date());
+        const endDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END"), "d/MM/yyyy", new Date());
+    }
+    if ((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START") && (0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END")) {
+        const startCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START"), "HH:mm", new Date());
+        const endCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END"), "HH:mm", new Date());
+    }
+    return errors;
+};
+exports.validateDate = validateDate;
 
 
 /***/ }),
@@ -297,6 +350,52 @@ const validateMultipleValues = (fields) => {
     }, { errors: {}, warnings: {} });
 };
 exports.validateMultipleValues = validateMultipleValues;
+
+
+/***/ }),
+
+/***/ 20839:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateNumber = void 0;
+const getValueAsIs_1 = __nccwpck_require__(18863);
+const validateNumber = (field) => {
+    return Object.entries(field).reduce((acc, [key, value]) => {
+        const input = (0, getValueAsIs_1.getValueAsIs)(key);
+        const number = parseInt(input);
+        if (Number.isNaN(number)) {
+            return {
+                ...acc,
+                [value.isCritical ? "errors" : "warnings"]: {
+                    [key]: `${key} is not a number`,
+                },
+            };
+        }
+        const isLessMinValue = value.min && number < value.min;
+        const isMoreMaxValue = value.max && number > value.max;
+        if (isLessMinValue) {
+            return {
+                ...acc,
+                [value.isCritical ? "errors" : "warnings"]: {
+                    [key]: `${key} should be more than ${value.min}`,
+                },
+            };
+        }
+        if (isMoreMaxValue) {
+            return {
+                ...acc,
+                [value.isCritical ? "errors" : "warnings"]: {
+                    [key]: `${key} should be less than ${value.max}`,
+                },
+            };
+        }
+        return acc;
+    }, { errors: {}, warnings: {} });
+};
+exports.validateNumber = validateNumber;
 
 
 /***/ }),

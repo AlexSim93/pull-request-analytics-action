@@ -1,6 +1,8 @@
 import * as core from "@actions/core";
-import { validateRequired } from "./validators";
+import { validateDate, validateNumber, validateRequired } from "./validators";
 import { validateMultipleValues } from "./validators";
+import { getMultipleValuesInput } from "./getMultipleValuesInput";
+import { getValueAsIs } from "./getValueAsIs";
 
 export const validate = () => {
   const requiredErrors = validateRequired([
@@ -30,12 +32,34 @@ export const validate = () => {
         required: true,
       },
     });
-  const errors = { ...multipleValuesErrors, ...requiredErrors };
-  const warnings = { ...multipleValuesWarnings };
-  Object.entries(errors).forEach(([key, message]) => {
+
+  const { warnings: numbersWarnings, errors: numbersErrors } = validateNumber({
+    AMOUNT: {
+      min: 0,
+      isCritical:
+        !getValueAsIs("REPORT_DATE_START") && !getValueAsIs("REPORT_DATE_END"),
+    },
+    PERCENTILE: {
+      max: 100,
+      min: 0,
+      isCritical:
+        getMultipleValuesInput("AGGREGATE_VALUE_METHODS").length === 1 &&
+        getMultipleValuesInput("AGGREGATE_VALUE_METHODS")[0] === "percentile",
+    },
+    TOP_LIST_AMOUNT: { min: 0, isCritical: false },
+  });
+
+  validateDate();
+  const errors = {
+    ...multipleValuesErrors,
+    ...numbersErrors,
+    ...requiredErrors,
+  };
+  const warnings = { ...multipleValuesWarnings, ...numbersWarnings };
+  Object.values(errors).forEach((message) => {
     core.error(message as string);
   });
-  Object.entries(warnings).forEach(([key, message]) => {
+  Object.values(warnings).forEach((message) => {
     core.warning(message as string);
   });
   return errors;
