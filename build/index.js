@@ -1885,7 +1885,15 @@ const createOutput = async (data) => {
             });
         }
         if (outcome === "markdown" || outcome === "output") {
-            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates);
+            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates).concat(`\n${(0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+                .filter((method) => ["average", "median", "percentile"].includes(method))
+                .map((type) => users
+                .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
+                value.timeToApprove &&
+                value.timeToMerge).length > 2)
+                .map((user) => (0, utils_2.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
+                .join("\n"))
+                .join("\n")}`);
             console.log("Markdown successfully generated.");
             core.setOutput("MARKDOWN", markdown);
         }
@@ -2227,6 +2235,8 @@ exports.createPullRequestQualityTable = createPullRequestQualityTable;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createReferences = void 0;
 const createReferences = (links) => {
+    if (links.length === 0)
+        return "";
     return `
 ## References
 ${links.map((link) => `- [${link.title}](${link.link})`).join("\n")}

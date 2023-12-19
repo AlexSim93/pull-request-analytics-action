@@ -1,7 +1,7 @@
 {
   "name": "pull-request-analytics-action",
-  "version": "1.8.1",
-  "description": "github action to show prs report",
+  "version": "1.8.2",
+  "description": "Generates detailed PR analytics reports within GitHub, focusing on review efficiency and team performance.",
   "main": "build/index.js",
   "scripts": {
     "start": "node ./build/index.js",
