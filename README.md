@@ -60,11 +60,6 @@ Time to review(486) : 0, 486
 Time to approve(635) : 0, 635
 Time to merge(2691) : 0, 2691
 
-section dev6
-Time to review(231) : 0, 231
-Time to approve(332) : 0, 332
-Time to merge(2057) : 0, 2057
-
 section total
 Time to review(200) : 0, 200
 Time to approve(419) : 0, 419
@@ -222,9 +217,13 @@ This setup allows you to fully leverage **pull-request-analytics-action** for co
 
 Explore how **pull-request-analytics-action** works with these report examples in the project:
 
-1. **Multi-Month Report**: Analysis over several months. [View Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/periodReport.md).
+1. **Issue Creation with Comments**: Demonstrates the generation of a new issue with detailed comments for each report. [View Issue Example](#).
 
-2. **Last N PRs Report**: Insights into the most recent pull requests. [View Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/nPRsReport.md).
+2. **Multi-Month Report**: Analysis over several months. [View Markdown Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/periodReport.md).
+
+3. **Last N PRs Report**: Insights into the most recent pull requests. [View Markdown Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/nPRsReport.md).
+
+4. **JSON Data Report**: Example of JSON data collected by the action, showcasing detailed analytics. [View JSON Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/collectionExample.json).
 
 Click the links for detailed report formats and insights.
 

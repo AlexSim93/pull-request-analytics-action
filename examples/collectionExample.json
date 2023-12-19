@@ -1,0 +1,1103 @@
+{
+    "total": {
+        "total": {
+            "opened": 20,
+            "closed": 20,
+            "merged": 19,
+            "comments": 0,
+            "totalReviewComments": 28,
+            "additions": 1762,
+            "deletions": 656,
+            "prSizes": [
+                "xs",
+                "xl",
+                "xs",
+                "xs",
+                "xs",
+                "m",
+                "xs",
+                "s",
+                "xs",
+                "s",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s",
+                "s"
+            ],
+            "timeToReview": [
+                9,
+                424,
+                126,
+                9,
+                1100,
+                161,
+                1035,
+                164,
+                55,
+                187,
+                794,
+                296,
+                82,
+                321,
+                36,
+                983,
+                602,
+                212
+            ],
+            "timeToApprove": [
+                9,
+                1303,
+                709,
+                9,
+                1100,
+                615,
+                1626,
+                220,
+                55,
+                187,
+                794,
+                296,
+                82,
+                321,
+                36,
+                983,
+                602,
+                212
+            ],
+            "timeToMerge": [
+                10,
+                2713,
+                11588,
+                10,
+                1753,
+                1431,
+                3582,
+                327,
+                597,
+                1729,
+                969,
+                305,
+                955,
+                330,
+                28,
+                888,
+                1561,
+                967,
+                329
+            ],
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo/pull/1",
+                    "title": "Feature: Do something",
+                    "comments": 0,
+                    "timeToReview": 9,
+                    "timeToApprove": 0,
+                    "timeToMerge": 1
+                }
+            ],
+            "reviewsConducted": {
+                "dev5": {
+                    "APPROVED": 6,
+                    "total": 6,
+                    "CHANGES_REQUESTED": 2,
+                    "COMMENTED": 2
+                },
+                "total": {
+                    "APPROVED": 18,
+                    "total": 18,
+                    "CHANGES_REQUESTED": 4,
+                    "COMMENTED": 5
+                },
+                "dev4": {
+                    "CHANGES_REQUESTED": 1,
+                    "total": 1,
+                    "COMMENTED": 1,
+                    "APPROVED": 1
+                },
+                "dev3": {
+                    "APPROVED": 3,
+                    "total": 3,
+                    "CHANGES_REQUESTED": 1,
+                    "COMMENTED": 1
+                },
+                "dev2": {
+                    "COMMENTED": 1,
+                    "total": 1,
+                    "APPROVED": 1
+                },
+                "dev1": {
+                    "APPROVED": 7,
+                    "total": 7
+                }
+            },
+            "reviewsConductedSize": [
+                "xs",
+                "xl",
+                "xs",
+                "xs",
+                "xs",
+                "m",
+                "xs",
+                "s",
+                "xs",
+                "s",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s",
+                "s"
+            ],
+            "reviewComments": 16,
+            "discussions": 14,
+            "discussionsTypes": {},
+            "commentsConducted": 16,
+            "discussionsConducted": 14,
+            "median": {
+                "timeToReview": 212,
+                "timeToApprove": 321,
+                "timeToMerge": 955
+            },
+            "percentile": {
+                "timeToReview": 602,
+                "timeToApprove": 794,
+                "timeToMerge": 1729
+            },
+            "average": {
+                "timeToReview": 367,
+                "timeToApprove": 509,
+                "timeToMerge": 1583
+            }
+        },
+        "12/2023": {
+            "opened": 20,
+            "closed": 20,
+            "merged": 19,
+            "comments": 0,
+            "totalReviewComments": 28,
+            "additions": 1762,
+            "deletions": 656,
+            "prSizes": [
+                "xs",
+                "xl",
+                "xs",
+                "xs",
+                "xs",
+                "m",
+                "xs",
+                "s",
+                "xs",
+                "s",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s",
+                "s"
+            ],
+            "timeToReview": [
+                9,
+                424,
+                126,
+                9,
+                1100,
+                161,
+                1035,
+                164,
+                55,
+                187,
+                794,
+                296,
+                82,
+                321,
+                36,
+                983,
+                602,
+                212
+            ],
+            "timeToApprove": [
+                9,
+                1303,
+                709,
+                9,
+                1100,
+                615,
+                1626,
+                220,
+                55,
+                187,
+                794,
+                296,
+                82,
+                321,
+                36,
+                983,
+                602,
+                212
+            ],
+            "timeToMerge": [
+                10,
+                2713,
+                11588,
+                10,
+                1753,
+                1431,
+                3582,
+                327,
+                597,
+                1729,
+                969,
+                305,
+                955,
+                330,
+                28,
+                888,
+                1561,
+                967,
+                329
+            ],
+            "pullRequestsInfo": [
+                {
+                    "number": 2,
+                    "link": "https://github.com/owner/repo/pull/2",
+                    "title": "Feature: Do something 2",
+                    "comments": 0,
+                    "timeToReview": 92,
+                    "timeToApprove": 101,
+                    "timeToMerge": 139
+                },
+                {
+                    "number": 3,
+                    "link": "https://github.com/owner/repo/pull/3",
+                    "title": "Feature: Do something 3",
+                    "comments": 0,
+                    "timeToReview": 29,
+                    "timeToApprove": 12,
+                    "timeToMerge": 13
+                }
+            ],
+            "reviewsConducted": {
+                "dev5": {
+                    "APPROVED": 6,
+                    "total": 6,
+                    "CHANGES_REQUESTED": 2,
+                    "COMMENTED": 2
+                },
+                "total": {
+                    "APPROVED": 18,
+                    "total": 18,
+                    "CHANGES_REQUESTED": 4,
+                    "COMMENTED": 5
+                },
+                "dev4": {
+                    "CHANGES_REQUESTED": 1,
+                    "total": 1,
+                    "COMMENTED": 1,
+                    "APPROVED": 1
+                },
+                "dev3": {
+                    "APPROVED": 3,
+                    "total": 3,
+                    "CHANGES_REQUESTED": 1,
+                    "COMMENTED": 1
+                },
+                "dev2": {
+                    "COMMENTED": 1,
+                    "total": 1,
+                    "APPROVED": 1
+                },
+                "dev1": {
+                    "APPROVED": 7,
+                    "total": 7
+                }
+            },
+            "reviewsConductedSize": [
+                "xs",
+                "xl",
+                "xs",
+                "xs",
+                "xs",
+                "m",
+                "xs",
+                "s",
+                "xs",
+                "s",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s",
+                "s"
+            ],
+            "reviewComments": 16,
+            "discussions": 14,
+            "discussionsTypes": {},
+            "commentsConducted": 16,
+            "discussionsConducted": 14,
+            "median": {
+                "timeToReview": 212,
+                "timeToApprove": 321,
+                "timeToMerge": 955
+            },
+            "percentile": {
+                "timeToReview": 602,
+                "timeToApprove": 794,
+                "timeToMerge": 1729
+            },
+            "average": {
+                "timeToReview": 367,
+                "timeToApprove": 509,
+                "timeToMerge": 1583
+            }
+        }
+    },
+    "dev5": {
+        "total": {
+            "opened": 7,
+            "closed": 7,
+            "merged": 6,
+            "comments": 0,
+            "totalReviewComments": 9,
+            "additions": 313,
+            "deletions": 49,
+            "prSizes": [
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "xs",
+                "xs",
+                "s"
+            ],
+            "timeToReview": [
+                9,
+                126,
+                1100,
+                164,
+                794,
+                602
+            ],
+            "timeToApprove": [
+                9,
+                709,
+                1100,
+                220,
+                794,
+                602
+            ],
+            "timeToMerge": [
+                10,
+                11588,
+                1753,
+                327,
+                969,
+                967
+            ],
+            "pullRequestsInfo": [],
+            "reviewComments": 5,
+            "discussions": 4,
+            "discussionsTypes": {},
+            "reviewsConducted": {
+                "dev3": {
+                    "APPROVED": 1,
+                    "total": 1
+                },
+                "total": {
+                    "APPROVED": 5,
+                    "total": 5
+                },
+                "dev1": {
+                    "APPROVED": 4,
+                    "total": 4
+                }
+            },
+            "reviewsConductedSize": [
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s"
+            ],
+            "median": {
+                "timeToReview": 602,
+                "timeToApprove": 709,
+                "timeToMerge": 969
+            },
+            "percentile": {
+                "timeToReview": 794,
+                "timeToApprove": 794,
+                "timeToMerge": 1753
+            },
+            "average": {
+                "timeToReview": 466,
+                "timeToApprove": 573,
+                "timeToMerge": 2603
+            }
+        },
+        "12/2023": {
+            "opened": 7,
+            "closed": 7,
+            "merged": 6,
+            "comments": 0,
+            "totalReviewComments": 9,
+            "additions": 313,
+            "deletions": 49,
+            "prSizes": [
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "xs",
+                "xs",
+                "s"
+            ],
+            "timeToReview": [
+                9,
+                126,
+                1100,
+                164,
+                794,
+                602
+            ],
+            "timeToApprove": [
+                9,
+                709,
+                1100,
+                220,
+                794,
+                602
+            ],
+            "timeToMerge": [
+                10,
+                11588,
+                1753,
+                327,
+                969,
+                967
+            ],
+            "pullRequestsInfo": [
+                {
+                    "number": 5,
+                    "link": "https://github.com/owner/repo/pull/5",
+                    "title": "Fix: Fix bug 1",
+                    "comments": 0,
+                    "timeToReview": 9,
+                    "timeToApprove": 0,
+                    "timeToMerge": 1
+                }
+            ],
+            "reviewComments": 5,
+            "discussions": 4,
+            "discussionsTypes": {},
+            "reviewsConducted": {
+                "dev3": {
+                    "APPROVED": 1,
+                    "total": 1
+                },
+                "total": {
+                    "APPROVED": 5,
+                    "total": 5
+                },
+                "dev1": {
+                    "APPROVED": 4,
+                    "total": 4
+                }
+            },
+            "reviewsConductedSize": [
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s"
+            ],
+            "median": {
+                "timeToReview": 602,
+                "timeToApprove": 709,
+                "timeToMerge": 969
+            },
+            "percentile": {
+                "timeToReview": 794,
+                "timeToApprove": 794,
+                "timeToMerge": 1753
+            },
+            "average": {
+                "timeToReview": 466,
+                "timeToApprove": 573,
+                "timeToMerge": 2603
+            }
+        }
+    },
+    "dev1": {
+        "12/2023": {
+            "reviewsConducted": {
+                "dev5": {
+                    "APPROVED": 5,
+                    "total": 5,
+                    "CHANGES_REQUESTED": 2,
+                    "COMMENTED": 1
+                },
+                "total": {
+                    "APPROVED": 8,
+                    "total": 8,
+                    "CHANGES_REQUESTED": 4,
+                    "COMMENTED": 2
+                },
+                "dev4": {
+                    "CHANGES_REQUESTED": 1,
+                    "total": 1,
+                    "COMMENTED": 1,
+                    "APPROVED": 1
+                },
+                "dev3": {
+                    "APPROVED": 2,
+                    "total": 2,
+                    "CHANGES_REQUESTED": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "xs",
+                "xl",
+                "xs",
+                "xs",
+                "xs",
+                "m",
+                "s",
+                "s"
+            ],
+            "discussionsTypes": {},
+            "commentsConducted": 15,
+            "discussionsConducted": 13,
+            "opened": 8,
+            "closed": 8,
+            "merged": 8,
+            "comments": 0,
+            "totalReviewComments": 0,
+            "additions": 301,
+            "deletions": 219,
+            "prSizes": [
+                "s",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s"
+            ],
+            "timeToReview": [
+                187,
+                296,
+                82,
+                321,
+                36,
+                983,
+                212
+            ],
+            "timeToApprove": [
+                187,
+                296,
+                82,
+                321,
+                36,
+                983,
+                212
+            ],
+            "timeToMerge": [
+                1729,
+                305,
+                955,
+                330,
+                28,
+                888,
+                1561,
+                329
+            ],
+            "pullRequestsInfo": [],
+            "reviewComments": 0,
+            "discussions": 0,
+            "median": {
+                "timeToReview": 212,
+                "timeToApprove": 212,
+                "timeToMerge": 888
+            },
+            "percentile": {
+                "timeToReview": 321,
+                "timeToApprove": 321,
+                "timeToMerge": 955
+            },
+            "average": {
+                "timeToReview": 303,
+                "timeToApprove": 303,
+                "timeToMerge": 766
+            }
+        },
+        "total": {
+            "reviewsConducted": {
+                "dev5": {
+                    "APPROVED": 5,
+                    "total": 5,
+                    "CHANGES_REQUESTED": 2,
+                    "COMMENTED": 1
+                },
+                "total": {
+                    "APPROVED": 8,
+                    "total": 8,
+                    "CHANGES_REQUESTED": 4,
+                    "COMMENTED": 2
+                },
+                "dev4": {
+                    "CHANGES_REQUESTED": 1,
+                    "total": 1,
+                    "COMMENTED": 1,
+                    "APPROVED": 1
+                },
+                "dev3": {
+                    "APPROVED": 2,
+                    "total": 2,
+                    "CHANGES_REQUESTED": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "xs",
+                "xl",
+                "xs",
+                "xs",
+                "xs",
+                "m",
+                "s",
+                "s"
+            ],
+            "discussionsTypes": {},
+            "commentsConducted": 15,
+            "discussionsConducted": 13,
+            "opened": 8,
+            "closed": 8,
+            "merged": 8,
+            "comments": 0,
+            "totalReviewComments": 0,
+            "additions": 301,
+            "deletions": 219,
+            "prSizes": [
+                "s",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "xs",
+                "s",
+                "s"
+            ],
+            "timeToReview": [
+                187,
+                296,
+                82,
+                321,
+                36,
+                983,
+                212
+            ],
+            "timeToApprove": [
+                187,
+                296,
+                82,
+                321,
+                36,
+                983,
+                212
+            ],
+            "timeToMerge": [
+                1729,
+                305,
+                955,
+                330,
+                28,
+                888,
+                1561,
+                329
+            ],
+            "pullRequestsInfo": [],
+            "reviewComments": 0,
+            "discussions": 0,
+            "median": {
+                "timeToReview": 212,
+                "timeToApprove": 212,
+                "timeToMerge": 888
+            },
+            "percentile": {
+                "timeToReview": 321,
+                "timeToApprove": 321,
+                "timeToMerge": 955
+            },
+            "average": {
+                "timeToReview": 303,
+                "timeToApprove": 303,
+                "timeToMerge": 766
+            }
+        }
+    },
+    "dev4": {
+        "total": {
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 0,
+            "totalReviewComments": 16,
+            "additions": 827,
+            "deletions": 358,
+            "prSizes": [
+                "xl"
+            ],
+            "timeToReview": [
+                424
+            ],
+            "timeToApprove": [
+                1303
+            ],
+            "timeToMerge": [
+                2713
+            ],
+            "pullRequestsInfo": [],
+            "discussionsTypes": {},
+            "reviewComments": 9,
+            "discussions": 8,
+            "reviewsConducted": {
+                "dev2": {
+                    "COMMENTED": 1,
+                    "total": 1,
+                    "APPROVED": 1
+                },
+                "total": {
+                    "COMMENTED": 1,
+                    "total": 1,
+                    "APPROVED": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "xs"
+            ],
+            "commentsConducted": 1,
+            "discussionsConducted": 1,
+            "median": {
+                "timeToReview": 424,
+                "timeToApprove": 1303,
+                "timeToMerge": 2713
+            },
+            "percentile": {
+                "timeToReview": 424,
+                "timeToApprove": 1303,
+                "timeToMerge": 2713
+            },
+            "average": {
+                "timeToReview": 424,
+                "timeToApprove": 1303,
+                "timeToMerge": 2713
+            }
+        },
+        "12/2023": {
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 0,
+            "totalReviewComments": 16,
+            "additions": 827,
+            "deletions": 358,
+            "prSizes": [
+                "xl"
+            ],
+            "timeToReview": [
+                424
+            ],
+            "timeToApprove": [
+                1303
+            ],
+            "timeToMerge": [
+                2713
+            ],
+            "pullRequestsInfo": [
+                {
+                    "number": 6,
+                    "link": "https://github.com/owner/repo/pull/6",
+                    "title": "Improvement: Improve something 1",
+                    "comments": 16,
+                    "timeToReview": 424,
+                    "timeToApprove": 879,
+                    "timeToMerge": 1410
+                }
+            ],
+            "discussionsTypes": {},
+            "reviewComments": 9,
+            "discussions": 8,
+            "reviewsConducted": {
+                "dev2": {
+                    "COMMENTED": 1,
+                    "total": 1,
+                    "APPROVED": 1
+                },
+                "total": {
+                    "COMMENTED": 1,
+                    "total": 1,
+                    "APPROVED": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "xs"
+            ],
+            "commentsConducted": 1,
+            "discussionsConducted": 1,
+            "median": {
+                "timeToReview": 424,
+                "timeToApprove": 1303,
+                "timeToMerge": 2713
+            },
+            "percentile": {
+                "timeToReview": 424,
+                "timeToApprove": 1303,
+                "timeToMerge": 2713
+            },
+            "average": {
+                "timeToReview": 424,
+                "timeToApprove": 1303,
+                "timeToMerge": 2713
+            }
+        }
+    },
+    "dev3": {
+        "total": {
+            "opened": 3,
+            "closed": 3,
+            "merged": 3,
+            "comments": 0,
+            "totalReviewComments": 2,
+            "additions": 307,
+            "deletions": 28,
+            "prSizes": [
+                "xs",
+                "m",
+                "xs"
+            ],
+            "timeToReview": [
+                9,
+                161,
+                55
+            ],
+            "timeToApprove": [
+                9,
+                615,
+                55
+            ],
+            "timeToMerge": [
+                10,
+                1431,
+                597
+            ],
+            "pullRequestsInfo": [],
+            "reviewComments": 1,
+            "discussions": 1,
+            "discussionsTypes": {},
+            "reviewsConducted": {
+                "dev1": {
+                    "APPROVED": 3,
+                    "total": 3
+                },
+                "total": {
+                    "APPROVED": 4,
+                    "total": 4
+                },
+                "dev5": {
+                    "APPROVED": 1,
+                    "total": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "s",
+                "xs",
+                "xs",
+                "xs"
+            ],
+            "median": {
+                "timeToReview": 55,
+                "timeToApprove": 55,
+                "timeToMerge": 597
+            },
+            "percentile": {
+                "timeToReview": 161,
+                "timeToApprove": 615,
+                "timeToMerge": 1431
+            },
+            "average": {
+                "timeToReview": 75,
+                "timeToApprove": 227,
+                "timeToMerge": 680
+            }
+        },
+        "12/2023": {
+            "opened": 3,
+            "closed": 3,
+            "merged": 3,
+            "comments": 0,
+            "totalReviewComments": 2,
+            "additions": 307,
+            "deletions": 28,
+            "prSizes": [
+                "xs",
+                "m",
+                "xs"
+            ],
+            "timeToReview": [
+                9,
+                161,
+                55
+            ],
+            "timeToApprove": [
+                9,
+                615,
+                55
+            ],
+            "timeToMerge": [
+                10,
+                1431,
+                597
+            ],
+            "pullRequestsInfo": [],
+            "reviewComments": 1,
+            "discussions": 1,
+            "discussionsTypes": {},
+            "reviewsConducted": {
+                "dev1": {
+                    "APPROVED": 3,
+                    "total": 3
+                },
+                "total": {
+                    "APPROVED": 4,
+                    "total": 4
+                },
+                "dev5": {
+                    "APPROVED": 1,
+                    "total": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "s",
+                "xs",
+                "xs",
+                "xs"
+            ],
+            "median": {
+                "timeToReview": 55,
+                "timeToApprove": 55,
+                "timeToMerge": 597
+            },
+            "percentile": {
+                "timeToReview": 161,
+                "timeToApprove": 615,
+                "timeToMerge": 1431
+            },
+            "average": {
+                "timeToReview": 75,
+                "timeToApprove": 227,
+                "timeToMerge": 680
+            }
+        }
+    },
+    "dev2": {
+        "total": {
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 0,
+            "totalReviewComments": 1,
+            "additions": 14,
+            "deletions": 2,
+            "prSizes": [
+                "xs"
+            ],
+            "timeToReview": [
+                1035
+            ],
+            "timeToApprove": [
+                1626
+            ],
+            "timeToMerge": [
+                3582
+            ],
+            "pullRequestsInfo": [],
+            "discussionsTypes": {},
+            "reviewComments": 1,
+            "discussions": 1,
+            "median": {
+                "timeToReview": 1035,
+                "timeToApprove": 1626,
+                "timeToMerge": 3582
+            },
+            "percentile": {
+                "timeToReview": 1035,
+                "timeToApprove": 1626,
+                "timeToMerge": 3582
+            },
+            "average": {
+                "timeToReview": 1035,
+                "timeToApprove": 1626,
+                "timeToMerge": 3582
+            }
+        },
+        "12/2023": {
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 0,
+            "totalReviewComments": 1,
+            "additions": 14,
+            "deletions": 2,
+            "prSizes": [
+                "xs"
+            ],
+            "timeToReview": [
+                1035
+            ],
+            "timeToApprove": [
+                1626
+            ],
+            "timeToMerge": [
+                3582
+            ],
+            "pullRequestsInfo": [],
+            "discussionsTypes": {},
+            "reviewComments": 1,
+            "discussions": 1,
+            "median": {
+                "timeToReview": 1035,
+                "timeToApprove": 1626,
+                "timeToMerge": 3582
+            },
+            "percentile": {
+                "timeToReview": 1035,
+                "timeToApprove": 1626,
+                "timeToMerge": 3582
+            },
+            "average": {
+                "timeToReview": 1035,
+                "timeToApprove": 1626,
+                "timeToMerge": 3582
+            }
+        }
+    }
+}
