@@ -1,1 +1,1 @@
-export { createMarkdown } from "./createMarkdown";
+export { createOutput } from "./createOutput";

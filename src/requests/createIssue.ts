@@ -3,7 +3,7 @@ import { octokit } from "../octokit/octokit";
 import { format } from "date-fns";
 import { getMultipleValuesInput } from "../common/utils";
 
-export const createIssue = (markdown: string) => {
+export const createIssue = async (markdown: string) => {
   const issueTitle =
     core.getInput("ISSUE_TITLE") ||
     process.env.ISSUE_TITLE ||
@@ -17,7 +17,7 @@ export const createIssue = (markdown: string) => {
       (assignee) => assignee && typeof assignee === "string"
     ) || [];
 
-  octokit.rest.issues.create({
+  const result = await octokit.rest.issues.create({
     repo:
       core.getInput("GITHUB_REPO_FOR_ISSUE") ||
       process.env.GITHUB_REPO_FOR_ISSUE!,
@@ -29,4 +29,5 @@ export const createIssue = (markdown: string) => {
     labels,
     assignees,
   });
+  return result;
 };
