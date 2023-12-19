@@ -1,6 +1,6 @@
 # Pull request analytics action
 
-**pull-request-analytics-action**: A powerful tool designed for generating detailed code review reports. This action creates tables and graphs focused on key metrics derived from closed pull requests and reviews. These metrics are instrumental in identifying bottlenecks in the review process and measuring the productivity of both individual developers and the team as a whole. A significant advantage of **pull-request-analytics-action** is that all data processing is conducted within the GitHub environment, ensuring data privacy and security. This tool is completely free and open source, making it an attractive choice for a wide range of users.
+**pull-request-analytics-action**: A powerful tool for analyzing the effectiveness of both teams and individual developers. This action generates reports based on data from pull requests, code reviews, and comments, enabling you to identify your team's strengths as well as areas needing improvement. The statistics collected by this GitHub Action can be displayed in the form of tables and graphs or passed on for further operations as markdown or a data collection. No information is transferred to external services; all operations are conducted exclusively within the GitHub environment. The tool offers numerous configuration parameters and can be customized to suit specific project needs.
 
 ## Table of Contents
 
@@ -21,82 +21,93 @@
 - **Customizable Tables and Graphs for Review Timelines**: Generates user-friendly tables and graphs that mark critical milestones from PR opening to review, approval, and merge. Users can select the calculation method best suited for them, choosing from median, mean (average), or a selected percentile. This feature helps to identify bottlenecks in the code review process.
   | user | Time to review | Time to approve | Time to merge | Total merged PRs |
   | :------: | :------: | :------: | :------: | :------: |
-  | **dev1** | 1 hour 39 minutes | 1 hour 39 minutes | 17 hours 10 minutes | 7 |
-  | **dev2** | 4 hours 20 minutes | 5 hours 48 minutes | 20 hours 33 minutes | 9 |
-  | **dev3** | 5 hours 25 minutes | 26 hours 40 minutes | 48 hours 30 minutes | 2 |
-  | **dev4** | 1 hour | 3 hours 27 minutes | 14 hours 14 minutes | 4 |
-  | **total** | 2 hours 39 minutes | 4 hours 14 minutes | 20 hours 33 minutes | 22 |
+  | **dev1** | 3 hours 35 minutes | 10 hours 22 minutes | 20 hours 52 minutes | 34 |
+  | **dev2** | 2 hours 41 minutes | 3 hours 56 minutes | 11 hours 30 minutes | 49 |
+  | **dev3** | 2 hours 5 minutes | 2 hours 19 minutes | 37 hours 46 minutes | 33 |
+  | **dev4** | 2 hours 41 minutes | 11 hours 23 minutes | 28 hours 15 minutes | 28 |
+  | **dev5** | 8 hours 6 minutes | 10 hours 35 minutes | 44 hours 51 minutes | 26 |
+  | **total** | 3 hours 20 minutes | 6 hours 59 minutes | 25 hours 49 minutes | 171 |
 
-  ```mermaid
-  gantt
-  title Pull requests timeline(percentile75) 12/2023 / minutes
-  dateFormat X
-  axisFormat %s
-  section dev1
-  Time to review :  0, 99
-  Time to approve :  0, 99
-  Time to merge :  0, 1030
+gantt
+title Pull requests timeline(percentile75) total / minutes
+dateFormat X
+axisFormat %s
+section dev1
+Time to review(215) : 0, 215
+Time to approve(622) : 0, 622
+Time to merge(1252) : 0, 1252
 
-  section dev2
-  Time to review :  0, 260
-  Time to approve :  0, 348
-  Time to merge :  0, 1233
+section dev2
+Time to review(161) : 0, 161
+Time to approve(236) : 0, 236
+Time to merge(690) : 0, 690
 
-  section dev3
-  Time to review :  0, 325
-  Time to approve :  0, 1600
-  Time to merge :  0, 2910
+section dev3
+Time to review(125) : 0, 125
+Time to approve(139) : 0, 139
+Time to merge(2266) : 0, 2266
 
-  section dev4
-  Time to review :  0, 60
-  Time to approve :  0, 207
-  Time to merge :  0, 854
+section dev4
+Time to review(161) : 0, 161
+Time to approve(683) : 0, 683
+Time to merge(1695) : 0, 1695
 
-  section total
-  Time to review :  0, 159
-  Time to approve :  0, 254
-  Time to merge :  0, 1233
+section dev5
+Time to review(486) : 0, 486
+Time to approve(635) : 0, 635
+Time to merge(2691) : 0, 2691
 
-  ```
+section dev6
+Time to review(231) : 0, 231
+Time to approve(332) : 0, 332
+Time to merge(2057) : 0, 2057
+
+section total
+Time to review(200) : 0, 200
+Time to approve(419) : 0, 419
+Time to merge(1549) : 0, 1549
 
 - **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
-  | user | Total opened PRs | Total merged PRs | Additions/Deletions | Total comments | Reviews conducted |
-  | :-------------: | :--------------: | :--------------: | :-----------------: | :------------: | :---------------: |
-  | **dev1** | 7 | 7 | +158/-113 | 0 | 9 |
-  | **dev2** | 10 | 9 | +1010/-3690 | 3 | 5 |
-  | **dev3** | 2 | 2 | +138/-108 | 15 | 3 |
-  | **dev4** | 4 | 4 | +326/-142 | 12 | 3 |
-  | **dev5** | 0 | 0 | +0/-0 | 0 | 3 |
-  | **total** | 23 | 22 | +1632/-4053 | 30 | 21 |
+  | user | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs / s / m / l / xl | Total comments | Reviews conducted |
+  | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+  | **dev1** | 42 | 34 | +6759/-6457 | 23 / 6 / 7 / 3 / 3 | 254 | 33 |
+  | **dev2** | 54 | 49 | +4011/-3296 | 37 / 12 / 3 / 0 / 2 | 7 | 65 |
+  | **dev3** | 35 | 33 | +4729/-3413 | 18 / 8 / 3 / 3 / 3 | 70 | 43 |
+  | **dev4** | 29 | 28 | +3489/-1322 | 14 / 8 / 4 / 2 / 1 | 152 | 19 |
+  | **dev5** | 28 | 26 | +2529/-1361 | 18 / 4 / 4 / 2 / 0 | 16 | 40 |
+  | **total** | 200 | 171 | +71881/-16131 | 117 / 41 / 21 / 10 / 11 | 519 | 177 |
 
 - **Quality Report on devInitiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
-
-  |   user    | Total merged PRs | Changes requested received | Discussions received | Comments received |
-  | :-------: | :--------------: | :------------------------: | :------------------: | :---------------: |
-  | **dev1**  |        7         |             0              |          0           |         0         |
-  | **dev2**  |        9         |             2              |          2           |         2         |
-  | **dev3**  |        2         |             1              |          6           |         8         |
-  | **dev4**  |        4         |             0              |          7           |         7         |
-  | **total** |        22        |             3              |          15          |        17         |
+  | user | Total merged PRs | Changes requested received | Discussions received | Comments received |
+  | :------: | :------: | :------: | :------: | :------: |
+  | **dev1** | 34 | 14 | 82 | 124 |
+  | **dev2** | 49 | 0 | 4 | 4 |
+  | **dev3** | 33 | 5 | 36 | 38 |
+  | **dev4** | 28 | 9 | 61 | 76 |
+  | **dev5** | 26 | 1 | 6 | 8 |
+  | **total** | 171 | 29 | 197 | 260 |
 
 ```mermaid
 pie
 title Discussions types total 12/2023
-"Bug(7)":7
-"Performance(4)":4
-"Code complexity(2)":2
-"Test coverage(1)":1
+"Bug(12)":12
+"Performance(8)":8
+"Code complexity(3)":3
+"Test coverage(2)":2
+"Formatting(9)":9
 ```
 
 - **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
-  | user | Total merged PRs | Discussions conducted | Comments conducted | Changes requested / Comments / Approvals |
-  | :-------------: | :--------------: | :-------------------: | :----------------: | :--------------------------------------: |
-  | **dev1** | 7 | 9 | 11 | 3 / 2 / 9 |
-  | **dev2** | 9 | 4 | 4 | 0 / 1 / 5 |
-  | **dev3** | 2 | 0 | 0 | 0 / 0 / 3 |
-  | **dev4** | 4 | 0 | 0 | 0 / 0 / 3 |
-  | **dev5** | 0 | 2 | 2 | 0 / 0 / 3 |
-  | **total** | 22 | 15 | 17 | 3 / 5 / 21 |
+  | user | Total merged PRs | Discussions conducted | Comments conducted | PR size: xs / s / m / l / xl | Changes requested / Comments / Approvals |
+  | :------: | :------: | :------: | :------: | :------: | :------: |
+  | **dev1** | 34 | 18 | 21 | 18 / 12 / 1 / 1 / 1 | 0 / 11 / 26 |
+  | **dev2** | 49 | 141 | 197 | 30 / 15 / 8 / 6 / 6 | 25 / 25 / 64 |
+  | **dev3** | 33 | 5 | 5 | 30 / 7 / 3 / 2 / 1 | 0 / 4 / 42 |
+  | **dev4** | 28 | 2 | 2 | 13 / 5 / 1 / 0 / 0 | 0 / 1 / 19 |
+  | **dev5** | 26 | 29 | 30 | 25 / 8 / 3 / 2 / 2 | 4 / 3 / 37 |
+  | **total** | 171 | 197 | 260 | 117 / 41 / 21 / 10 / 11 | 29 / 50 / 175 |
+
+- **Highlighted PRs List by Key Metrics**: One of the standout features of **pull-request-analytics-action** is the ability to generate a list of the most notable pull requests based on four key metrics: time from opening to review, time from review to approval, time from approval to merge, and the number of comments. This feature provides a list of links directly to these exceptional PRs, allowing for quick access and detailed analysis.
 
 - **Highly Customizable for Specific Project Needs**: This action is designed with flexibility in mind, allowing for extensive customization of display parameters, statistics collection, and report generation. Users can tailor the tool to precisely fit the requirements of their specific projects, ensuring that the reports and analytics are as relevant and useful as possible.
 
@@ -144,9 +155,6 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
            issue_title:
              description: "Issue custom title"
              required: false
-           labels:
-             description: "Issue labels"
-             required: false
            hide_users:
              description: "Hidden users"
              required: false
@@ -167,7 +175,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
                GITHUB_TOKEN: ${{ secrets.KEY }}
                ISSUE_TITLE: ${{ inputs.issue_title }}
                ASSIGNEES: "user-1, user-2, user-3"
-               LABELS: ${{ inputs.labels }}
+               LABELS: "Report"
                GITHUB_REPO_FOR_ISSUE: "repo"
                GITHUB_OWNER_FOR_ISSUE: "owner"
                GITHUB_OWNERS_REPOS: "owner-1/repo-1"
@@ -274,6 +282,15 @@ Below is a table outlining the various configuration parameters available for **
 
 Use these parameters to tailor the **pull-request-analytics-action** to your project's specific requirements.
 
+## Outputs
+
+Below is a table describing the possible outputs of **pull-request-analytics-action**:
+
+| Output Option     | Description                                                                                                                                          |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `JSON_COLLECTION` | A string output containing a JSON object with all the data collected by the action. To receive this output, add `collection` to `EXECUTION_OUTCOME`. |
+| `MARKDOWN`        | An output containing the report as a markdown string. To receive this output, add `markdown` to `EXECUTION_OUTCOME`.                                 |
+
 ## Privacy and Data Handling
 
 **pull-request-analytics-action** is designed with privacy and security in mind. It operates as a stateless application, ensuring it does not retain or store any user data externally. All processing is performed within your GitHub environment, maintaining strict data confidentiality. We prioritize the security of your information, ensuring no external data collection or storage, thereby safeguarding the integrity and privacy of your workflow.
@@ -286,12 +303,12 @@ Use these parameters to tailor the **pull-request-analytics-action** to your pro
 
 Contributions to **pull-request-analytics-action** are always welcome, no matter how large or small. Here are some ways you can help:
 
-- **Star the Project**: If you find pull-request-analytics-action useful, consider giving it a star on GitHub. This helps increase its visibility and shows support for our work.
+- **Star the Project**: If you find **pull-request-analytics-action** useful, consider giving it a star on GitHub. This helps increase its visibility and shows support for our work.
+- **Spread the Word**: Mention **pull-request-analytics-action** in your articles, blog posts, and social media. The more people know about it, the better it gets.
 - **Contribute to the Code**: Follow our contribution guidelines to make code contributions. Every pull request helps!
 - **Report Bugs**: Encountered an issue? Please let us know by opening an issue on GitHub. This is crucial for continuous improvement.
 - **Share Ideas**: Have ideas on how to improve **pull-request-analytics-action**? Open an issue and tell us about your suggestions.
 - **Participate in Surveys**: Occasionally, we conduct surveys to gather feedback. Your participation would be invaluable in shaping the future of **pull-request-analytics-action**.
-- **Spread the Word**: Mention **pull-request-analytics-action** in your articles, blog posts, and social media. The more people know about it, the better it gets.
 - **Get Featured**: If your company or project uses **pull-request-analytics-action**, let us know! We'd be proud to mention your name in our list of users. It's a great way for you to showcase your commitment to quality in software development, and it helps us demonstrate the real-world effectiveness of our tool.
 
 Your support and contributions greatly enhance this project. Together, we can make it the best tool for analyzing pull requests!
