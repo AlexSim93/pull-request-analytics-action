@@ -1,24 +1,19 @@
 import { Collection } from "../converters/types";
 import {
-  StatsType,
   createConfigParamsCode,
   createPullRequestQualityTable,
   createReviewTable,
   createTimelineContent,
-  createTimelineMonthsGanttBar,
   createTotalTable,
-  getDisplayUserList,
-  sortCollectionsByDate,
 } from "./utils";
 import { getMultipleValuesInput } from "../common/utils";
 
 export const createMarkdown = (
-  data: Record<string, Record<string, Collection>>
+  data: Record<string, Record<string, Collection>>,
+  users: string[],
+  dates: string[],
+  title: string = "Pull Request report"
 ) => {
-  const users = getDisplayUserList(data);
-
-  const dates = sortCollectionsByDate(data.total);
-
   const contentTypes = getMultipleValuesInput("SHOW_STATS_TYPES");
 
   const content = dates.map((date) => {
@@ -39,23 +34,14 @@ export const createMarkdown = (
     `;
   });
 
+  if (content.join("").trim() === "") return "";
+
   return `
-## Pull Request report
+## ${title}
 This report based on ${
     data.total?.total?.closed || 0
   } last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${createConfigParamsCode()}
     ${content.join("\n")}
-  ${getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
-    .filter((method) => ["average", "median", "percentile"].includes(method))
-    .map((type) =>
-      createTimelineMonthsGanttBar(
-        data,
-        type as StatsType,
-        dates.filter((date) => date !== "total"),
-        "total"
-      )
-    )
-    .join("\n")}
   `;
 };

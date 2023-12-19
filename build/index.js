@@ -1256,21 +1256,7 @@ async function main() {
     });
     const preparedData = (0, converters_1.collectData)(mergedData);
     console.log("Calculation complete. Generating markdown.");
-    const markdown = (0, view_1.createMarkdown)(preparedData);
-    console.log("Markdown successfully generated.");
-    (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME")
-        .filter((outcome) => ["new-issue", "output", "collection", "markdown"].includes(outcome))
-        .forEach((outcome) => {
-        if (outcome === "new-issue") {
-            (0, requests_1.createIssue)(markdown);
-        }
-        if (outcome === "markdown" || outcome === "output") {
-            core.setOutput("MARKDOWN", markdown);
-        }
-        if (outcome === "collection") {
-            core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
-        }
-    });
+    await (0, view_1.createOutput)(preparedData);
     const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
 }
@@ -1380,13 +1366,13 @@ const core = __importStar(__nccwpck_require__(42186));
 const octokit_1 = __nccwpck_require__(24641);
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
-const createIssue = (markdown) => {
+const createIssue = async (markdown) => {
     const issueTitle = core.getInput("ISSUE_TITLE") ||
         process.env.ISSUE_TITLE ||
         `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
     const labels = (0, utils_1.getMultipleValuesInput)("LABELS").filter((label) => label && typeof label === "string") || [];
     const assignees = (0, utils_1.getMultipleValuesInput)("ASSIGNEES").filter((assignee) => assignee && typeof assignee === "string") || [];
-    octokit_1.octokit.rest.issues.create({
+    const result = await octokit_1.octokit.rest.issues.create({
         repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
             process.env.GITHUB_REPO_FOR_ISSUE,
         owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
@@ -1396,6 +1382,7 @@ const createIssue = (markdown) => {
         labels,
         assignees,
     });
+    return result;
 };
 exports.createIssue = createIssue;
 
@@ -1769,9 +1756,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createMarkdown = void 0;
 const utils_1 = __nccwpck_require__(92884);
 const utils_2 = __nccwpck_require__(41002);
-const createMarkdown = (data) => {
-    const users = (0, utils_1.getDisplayUserList)(data);
-    const dates = (0, utils_1.sortCollectionsByDate)(data.total);
+const createMarkdown = (data, users, dates, title = "Pull Request report") => {
     const contentTypes = (0, utils_2.getMultipleValuesInput)("SHOW_STATS_TYPES");
     const content = dates.map((date) => {
         if (!data.total[date]?.merged)
@@ -1789,18 +1774,100 @@ const createMarkdown = (data) => {
             .join("\n")}
     `;
     });
+    if (content.join("").trim() === "")
+        return "";
     return `
-## Pull Request report
+## ${title}
 This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${(0, utils_1.createConfigParamsCode)()}
     ${content.join("\n")}
-  ${(0, utils_2.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-        .filter((method) => ["average", "median", "percentile"].includes(method))
-        .map((type) => (0, utils_1.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), "total"))
-        .join("\n")}
   `;
 };
 exports.createMarkdown = createMarkdown;
+
+
+/***/ }),
+
+/***/ 26207:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createOutput = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const utils_1 = __nccwpck_require__(41002);
+const createMarkdown_1 = __nccwpck_require__(54184);
+const requests_1 = __nccwpck_require__(49591);
+const utils_2 = __nccwpck_require__(92884);
+const octokit_1 = __nccwpck_require__(24641);
+const createOutput = async (data) => {
+    const outcomes = (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME");
+    for (let outcome of outcomes) {
+        const users = (0, utils_2.getDisplayUserList)(data);
+        const dates = (0, utils_2.sortCollectionsByDate)(data.total);
+        if (outcome === "new-issue") {
+            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, ["total"], `Pull Request report total`);
+            const issue = await (0, requests_1.createIssue)(markdown.concat(`\n${(0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+                .filter((method) => ["average", "median", "percentile"].includes(method))
+                .map((type) => users
+                .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
+                value.timeToApprove &&
+                value.timeToMerge).length > 2)
+                .map((user) => (0, utils_2.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
+                .join("\n"))
+                .join("\n")}`));
+            console.log("Issue successfully created.");
+            for (let date of dates) {
+                if (date === "total")
+                    continue;
+                const commentMarkdown = (0, createMarkdown_1.createMarkdown)(data, users, [date], `Pull Request report ${date}`);
+                if (commentMarkdown === "")
+                    continue;
+                await octokit_1.octokit.rest.issues.createComment({
+                    repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+                        process.env.GITHUB_REPO_FOR_ISSUE,
+                    owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+                        process.env.GITHUB_OWNER_FOR_ISSUE,
+                    issue_number: issue.data.number,
+                    body: commentMarkdown,
+                });
+            }
+        }
+        if (outcome === "markdown" || outcome === "output") {
+            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates);
+            console.log("Markdown successfully generated.");
+            core.setOutput("MARKDOWN", markdown);
+        }
+        if (outcome === "collection") {
+            core.setOutput("JSON_COLLECTION", JSON.stringify(data));
+        }
+    }
+};
+exports.createOutput = createOutput;
 
 
 /***/ }),
@@ -1811,9 +1878,9 @@ exports.createMarkdown = createMarkdown;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createMarkdown = void 0;
-var createMarkdown_1 = __nccwpck_require__(54184);
-Object.defineProperty(exports, "createMarkdown", ({ enumerable: true, get: function () { return createMarkdown_1.createMarkdown; } }));
+exports.createOutput = void 0;
+var createOutput_1 = __nccwpck_require__(26207);
+Object.defineProperty(exports, "createOutput", ({ enumerable: true, get: function () { return createOutput_1.createOutput; } }));
 
 
 /***/ }),

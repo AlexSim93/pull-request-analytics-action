@@ -1,6 +1,10 @@
 import { percentile } from "../../converters/constants";
 import { Collection } from "../../converters/types";
-import { timeToApproveHeader, timeToMergeHeader, timeToReviewHeader } from "./constants";
+import {
+  timeToApproveHeader,
+  timeToMergeHeader,
+  timeToReviewHeader,
+} from "./constants";
 import { createGanttBar } from "./createGanttBar";
 import { StatsType } from "./types";
 

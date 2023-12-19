@@ -1,20 +1,11 @@
 import "dotenv/config";
 import * as core from "@actions/core";
 
-import { createMarkdown } from "./view";
-import {
-  createIssue,
-  getOwnersRepositories,
-  makeComplexRequest,
-} from "./requests";
+import { createOutput } from "./view";
+import { getOwnersRepositories, makeComplexRequest } from "./requests";
 import { collectData } from "./converters";
 import { octokit } from "./octokit/octokit";
-import {
-  checkCommentSkip,
-  getMultipleValuesInput,
-  setTimezone,
-  validate,
-} from "./common/utils";
+import { checkCommentSkip, setTimezone, validate } from "./common/utils";
 
 async function main() {
   setTimezone();
@@ -71,23 +62,7 @@ async function main() {
   );
   const preparedData = collectData(mergedData);
   console.log("Calculation complete. Generating markdown.");
-  const markdown = createMarkdown(preparedData);
-  console.log("Markdown successfully generated.");
-  getMultipleValuesInput("EXECUTION_OUTCOME")
-    .filter((outcome) =>
-      ["new-issue", "output", "collection", "markdown"].includes(outcome)
-    )
-    .forEach((outcome) => {
-      if (outcome === "new-issue") {
-        createIssue(markdown);
-      }
-      if (outcome === "markdown" || outcome === "output") {
-        core.setOutput("MARKDOWN", markdown);
-      }
-      if (outcome === "collection") {
-        core.setOutput("JSON_COLLECTION", JSON.stringify(preparedData));
-      }
-    });
+  await createOutput(preparedData);
 
   const rateLimitAtEnd = await octokit.rest.rateLimit.get();
   console.log(
