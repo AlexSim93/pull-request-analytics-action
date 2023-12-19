@@ -2227,6 +2227,8 @@ exports.createPullRequestQualityTable = createPullRequestQualityTable;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createReferences = void 0;
 const createReferences = (links) => {
+    if (links.length === 0)
+        return "";
     return `
 ## References
 ${links.map((link) => `- [${link.title}](${link.link})`).join("\n")}

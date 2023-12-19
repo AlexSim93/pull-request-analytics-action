@@ -11,6 +11,7 @@
 - [Pull Request Sizes](#pull-request-sizes)
 - [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
 - [Configuration Parameters Overview](#configuration-parameters-overview)
+- [Outputs](#outputs)
 - [Privacy and Data Handling](#privacy-and-data-handling)
 - [Usage Limitations](#usage-limitations)
 - [How You Can Help](#how-you-can-help)

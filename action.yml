@@ -1,6 +1,6 @@
 name: "Pull Request Analytics"
 author: "Aleksei Simatov"
-description: "Github action to create detailed PRs report"
+description: "Generates detailed PR analytics reports within GitHub, focusing on review efficiency and team performance."
 branding:
   icon: "trending-up"
   color: "orange"
@@ -83,9 +83,9 @@ inputs:
 
 outputs:
   JSON_COLLECTION:
-    description: "Output file"
+    description: "JSON string with stats"
   MARKDOWN:
-    description: "Markdown text"
+    description: "Markdown text with a report"
 runs:
   using: "node20"
   main: "build/index.js"
