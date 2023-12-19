@@ -13,4 +13,5 @@ export { createPieChart } from "./createPieChart";
 export { getDisplayUserList } from "./getDisplayUserList";
 export { createTimelineContent } from "./createTimelineContent";
 export { createTimelineMonthsGanttBar } from "./createTimelineMonthsGanttBar";
+export { createReferences } from "./createReferences";
 export { StatsType } from "./types";

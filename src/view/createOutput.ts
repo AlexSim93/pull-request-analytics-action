@@ -23,7 +23,7 @@ export const createOutput = async (
         data,
         users,
         ["total"],
-        `Pull Request report total`
+        "Pull Request report total"
       );
       const issue = await createIssue(
         markdown.concat(
@@ -56,16 +56,23 @@ export const createOutput = async (
         )
       );
       console.log("Issue successfully created.");
+      const comments = [];
       for (let date of dates) {
         if (date === "total") continue;
         const commentMarkdown = createMarkdown(
           data,
           users,
           [date],
-          `Pull Request report ${date}`
+          `Pull Request report ${date}`,
+          [
+            {
+              title: "Pull Request report total",
+              link: `${issue.data.html_url}#`,
+            },
+          ]
         );
         if (commentMarkdown === "") continue;
-        await octokit.rest.issues.createComment({
+        const comment = await octokit.rest.issues.createComment({
           repo:
             core.getInput("GITHUB_REPO_FOR_ISSUE") ||
             process.env.GITHUB_REPO_FOR_ISSUE!,
@@ -75,8 +82,29 @@ export const createOutput = async (
           issue_number: issue.data.number,
           body: commentMarkdown,
         });
+        comments.push({ comment, title: date });
       }
+      await octokit.rest.issues.update({
+        repo:
+          core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+          process.env.GITHUB_REPO_FOR_ISSUE!,
+        owner:
+          core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+          process.env.GITHUB_OWNER_FOR_ISSUE!,
+        issue_number: issue.data.number,
+        body: createMarkdown(
+          data,
+          users,
+          ["total"],
+          "Pull Request report total",
+          comments.map((comment) => ({
+            title: `Pull Request report ${comment.title}`,
+            link: comment.comment.data.html_url,
+          }))
+        ),
+      });
     }
+
     if (outcome === "markdown" || outcome === "output") {
       const markdown = createMarkdown(data, users, dates);
       console.log("Markdown successfully generated.");

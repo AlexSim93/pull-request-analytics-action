@@ -2,6 +2,7 @@ import { Collection } from "../converters/types";
 import {
   createConfigParamsCode,
   createPullRequestQualityTable,
+  createReferences,
   createReviewTable,
   createTimelineContent,
   createTotalTable,
@@ -12,7 +13,8 @@ export const createMarkdown = (
   data: Record<string, Record<string, Collection>>,
   users: string[],
   dates: string[],
-  title: string = "Pull Request report"
+  title: string = "Pull Request report",
+  references: { title: string; link: string }[] = []
 ) => {
   const contentTypes = getMultipleValuesInput("SHOW_STATS_TYPES");
 
@@ -42,6 +44,7 @@ This report based on ${
     data.total?.total?.closed || 0
   } last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${createConfigParamsCode()}
+  ${createReferences(references)}
     ${content.join("\n")}
   `;
 };

@@ -1756,7 +1756,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createMarkdown = void 0;
 const utils_1 = __nccwpck_require__(92884);
 const utils_2 = __nccwpck_require__(41002);
-const createMarkdown = (data, users, dates, title = "Pull Request report") => {
+const createMarkdown = (data, users, dates, title = "Pull Request report", references = []) => {
     const contentTypes = (0, utils_2.getMultipleValuesInput)("SHOW_STATS_TYPES");
     const content = dates.map((date) => {
         if (!data.total[date]?.merged)
@@ -1780,6 +1780,7 @@ const createMarkdown = (data, users, dates, title = "Pull Request report") => {
 ## ${title}
 This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${(0, utils_1.createConfigParamsCode)()}
+  ${(0, utils_1.createReferences)(references)}
     ${content.join("\n")}
   `;
 };
@@ -1830,7 +1831,7 @@ const createOutput = async (data) => {
         const users = (0, utils_2.getDisplayUserList)(data);
         const dates = (0, utils_2.sortCollectionsByDate)(data.total);
         if (outcome === "new-issue") {
-            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, ["total"], `Pull Request report total`);
+            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total");
             const issue = await (0, requests_1.createIssue)(markdown.concat(`\n${(0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
                 .filter((method) => ["average", "median", "percentile"].includes(method))
                 .map((type) => users
@@ -1841,13 +1842,19 @@ const createOutput = async (data) => {
                 .join("\n"))
                 .join("\n")}`));
             console.log("Issue successfully created.");
+            const comments = [];
             for (let date of dates) {
                 if (date === "total")
                     continue;
-                const commentMarkdown = (0, createMarkdown_1.createMarkdown)(data, users, [date], `Pull Request report ${date}`);
+                const commentMarkdown = (0, createMarkdown_1.createMarkdown)(data, users, [date], `Pull Request report ${date}`, [
+                    {
+                        title: "Pull Request report total",
+                        link: `${issue.data.html_url}#`,
+                    },
+                ]);
                 if (commentMarkdown === "")
                     continue;
-                await octokit_1.octokit.rest.issues.createComment({
+                const comment = await octokit_1.octokit.rest.issues.createComment({
                     repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
                         process.env.GITHUB_REPO_FOR_ISSUE,
                     owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
@@ -1855,7 +1862,19 @@ const createOutput = async (data) => {
                     issue_number: issue.data.number,
                     body: commentMarkdown,
                 });
+                comments.push({ comment, title: date });
             }
+            await octokit_1.octokit.rest.issues.update({
+                repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+                    process.env.GITHUB_REPO_FOR_ISSUE,
+                owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+                    process.env.GITHUB_OWNER_FOR_ISSUE,
+                issue_number: issue.data.number,
+                body: (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total", comments.map((comment) => ({
+                    title: `Pull Request report ${comment.title}`,
+                    link: comment.comment.data.html_url,
+                }))),
+            });
         }
         if (outcome === "markdown" || outcome === "output") {
             const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates);
@@ -2188,6 +2207,24 @@ const createPullRequestQualityTable = (data, users, date) => {
     ].join("\n");
 };
 exports.createPullRequestQualityTable = createPullRequestQualityTable;
+
+
+/***/ }),
+
+/***/ 96145:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createReferences = void 0;
+const createReferences = (links) => {
+    return `
+## References
+${links.map((link) => `- [${link.title}](${link.link})`).join("\n")}
+  `;
+};
+exports.createReferences = createReferences;
 
 
 /***/ }),
@@ -2547,7 +2584,7 @@ exports.getDisplayUserList = getDisplayUserList;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPieChart = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = void 0;
+exports.createReferences = exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPieChart = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = void 0;
 var createDiscussionsPieChart_1 = __nccwpck_require__(99622);
 Object.defineProperty(exports, "createDiscussionsPieChart", ({ enumerable: true, get: function () { return createDiscussionsPieChart_1.createDiscussionsPieChart; } }));
 var createConfigParamsCode_1 = __nccwpck_require__(96354);
@@ -2578,6 +2615,8 @@ var createTimelineContent_1 = __nccwpck_require__(50940);
 Object.defineProperty(exports, "createTimelineContent", ({ enumerable: true, get: function () { return createTimelineContent_1.createTimelineContent; } }));
 var createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
 Object.defineProperty(exports, "createTimelineMonthsGanttBar", ({ enumerable: true, get: function () { return createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar; } }));
+var createReferences_1 = __nccwpck_require__(96145);
+Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: function () { return createReferences_1.createReferences; } }));
 
 
 /***/ }),
