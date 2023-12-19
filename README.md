@@ -29,6 +29,7 @@
 | **dev5**  | 8 hours 6 minutes  | 10 hours 35 minutes | 44 hours 51 minutes |        26        |
 | **total** | 3 hours 20 minutes | 6 hours 59 minutes  | 25 hours 49 minutes |       171        |
 
+```mermaid
 gantt
 title Pull requests timeline(percentile75) total / minutes
 dateFormat X
@@ -67,6 +68,7 @@ section total
 Time to review(200) : 0, 200
 Time to approve(419) : 0, 419
 Time to merge(1549) : 0, 1549
+```
 
 - **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
 
