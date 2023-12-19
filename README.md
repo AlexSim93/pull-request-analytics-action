@@ -217,7 +217,7 @@ This setup allows you to fully leverage **pull-request-analytics-action** for co
 
 Explore how **pull-request-analytics-action** works with these report examples in the project:
 
-1. **Issue Creation with Comments**: Demonstrates the generation of a new issue with detailed comments for each report. [View Issue Example](#).
+1. **Issue Creation with Comments**: Demonstrates the generation of a new issue with detailed comments for each report. [View Issue Example](https://github.com/AlexSim93/pull-request-analytics-action/issues/16#).
 
 2. **Multi-Month Report**: Analysis over several months. [View Markdown Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/periodReport.md).
 
