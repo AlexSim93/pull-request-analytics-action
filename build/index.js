@@ -1873,7 +1873,15 @@ const createOutput = async (data) => {
                 body: (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total", comments.map((comment) => ({
                     title: `Pull Request report ${comment.title}`,
                     link: comment.comment.data.html_url,
-                }))),
+                }))).concat(`\n${(0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+                    .filter((method) => ["average", "median", "percentile"].includes(method))
+                    .map((type) => users
+                    .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
+                    value.timeToApprove &&
+                    value.timeToMerge).length > 2)
+                    .map((user) => (0, utils_2.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
+                    .join("\n"))
+                    .join("\n")}`),
             });
         }
         if (outcome === "markdown" || outcome === "output") {
@@ -2069,7 +2077,7 @@ ${sections
         .map((section) => {
         return `section ${section.name}
                 ${section.bars
-            .map((bar) => `${bar.name} :${bar.type ? `${bar.type},` : ""} ${bar.state ? `${bar.state},` : ""} ${bar.start}, ${bar.end}`)
+            .map((bar) => `${bar.name}(${bar.end}) :${bar.type ? `${bar.type},` : ""} ${bar.state ? `${bar.state},` : ""} ${bar.start}, ${bar.end}`)
             .join("\n")}
         `;
     })

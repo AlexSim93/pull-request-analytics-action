@@ -286,6 +286,7 @@ Use these parameters to tailor the **pull-request-analytics-action** to your pro
 
 Contributions to **pull-request-analytics-action** are always welcome, no matter how large or small. Here are some ways you can help:
 
+- **Star the Project**: If you find pull-request-analytics-action useful, consider giving it a star on GitHub. This helps increase its visibility and shows support for our work.
 - **Contribute to the Code**: Follow our contribution guidelines to make code contributions. Every pull request helps!
 - **Report Bugs**: Encountered an issue? Please let us know by opening an issue on GitHub. This is crucial for continuous improvement.
 - **Share Ideas**: Have ideas on how to improve **pull-request-analytics-action**? Open an issue and tell us about your suggestions.
@@ -297,4 +298,4 @@ Your support and contributions greatly enhance this project. Together, we can ma
 
 ## License
 
-**pull-request-analytics-action** is licensed under the [MIT License](https://opensource.org/licenses/MIT). This permits free use, modification, and distribution of the software, with the requirement of including the original copyright notice. For full license terms, see the [MIT License details](https://opensource.org/licenses/MIT).
+MIT

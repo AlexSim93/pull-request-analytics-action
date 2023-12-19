@@ -30,7 +30,7 @@ ${sections
                 ${section.bars
                   .map(
                     (bar) =>
-                      `${bar.name} :${bar.type ? `${bar.type},` : ""} ${
+                      `${bar.name}(${bar.end}) :${bar.type ? `${bar.type},` : ""} ${
                         bar.state ? `${bar.state},` : ""
                       } ${bar.start}, ${bar.end}`
                   )
