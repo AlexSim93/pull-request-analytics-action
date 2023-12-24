@@ -10,34 +10,27 @@ export const createTimelineMonthComparisonChart = (
   users: string[],
   references: { title: string; link: string }[] = []
 ) => {
-  return [createReferences(references)]
-    .concat(
-      getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
-        .filter((method) =>
-          ["average", "median", "percentile"].includes(method)
+  const charts = getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
+    .filter((method) => ["average", "median", "percentile"].includes(method))
+    .map((type) =>
+      users
+        .filter(
+          (user) =>
+            Object.values(data[user]).filter(
+              (value) =>
+                value.timeToReview && value.timeToApprove && value.timeToMerge
+            ).length > 2
         )
-        .map((type) =>
-          users
-            .filter(
-              (user) =>
-                Object.values(data[user]).filter(
-                  (value) =>
-                    value.timeToReview &&
-                    value.timeToApprove &&
-                    value.timeToMerge
-                ).length > 2
-            )
-            .map((user) =>
-              createTimelineMonthsGanttBar(
-                data,
-                type as StatsType,
-                dates.filter((date) => date !== "total"),
-                user
-              )
-            )
-            .join("\n")
+        .map((user) =>
+          createTimelineMonthsGanttBar(
+            data,
+            type as StatsType,
+            dates.filter((date) => date !== "total"),
+            user
+          )
         )
-    )
-    .join("\n")
-    .trim();
+        .join("\n")
+    );
+  if (charts.every((el) => !el.trim())) return "";
+  return [createReferences(references)].concat(charts).join("\n").trim();
 };

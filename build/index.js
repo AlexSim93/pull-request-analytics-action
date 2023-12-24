@@ -2442,17 +2442,15 @@ const _1 = __nccwpck_require__(92884);
 const utils_1 = __nccwpck_require__(41002);
 const createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
 const createTimelineMonthComparisonChart = (data, dates, users, references = []) => {
-    return [(0, _1.createReferences)(references)]
-        .concat((0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+    const charts = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
         .filter((method) => ["average", "median", "percentile"].includes(method))
         .map((type) => users
-        .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
-        value.timeToApprove &&
-        value.timeToMerge).length > 2)
+        .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview && value.timeToApprove && value.timeToMerge).length > 2)
         .map((user) => (0, createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
-        .join("\n")))
-        .join("\n")
-        .trim();
+        .join("\n"));
+    if (charts.every((el) => !el.trim()))
+        return "";
+    return [(0, _1.createReferences)(references)].concat(charts).join("\n").trim();
 };
 exports.createTimelineMonthComparisonChart = createTimelineMonthComparisonChart;
 
