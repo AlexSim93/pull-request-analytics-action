@@ -1851,7 +1851,7 @@ const createOutput = async (data) => {
                 });
                 comments.push({
                     comment: comparisonComment,
-                    title: "Pull request's retrospective timeline",
+                    title: "retrospective timeline",
                 });
             }
             console.log("Issue successfully created.");
