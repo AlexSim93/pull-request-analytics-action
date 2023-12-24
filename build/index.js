@@ -1830,10 +1830,15 @@ const createOutput = async (data) => {
     for (let outcome of outcomes) {
         const users = (0, utils_2.getDisplayUserList)(data);
         const dates = (0, utils_2.sortCollectionsByDate)(data.total);
-        const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users);
         if (outcome === "new-issue") {
             const markdown = (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total");
             const issue = await (0, requests_1.createIssue)(markdown);
+            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
+                {
+                    title: "Pull Request report total",
+                    link: `${issue.data.html_url}#`,
+                },
+            ]);
             const comments = [];
             if (monthComparison) {
                 const comparisonComment = await octokit_1.octokit.rest.issues.createComment({
@@ -1846,7 +1851,7 @@ const createOutput = async (data) => {
                 });
                 comments.push({
                     comment: comparisonComment,
-                    title: "Month to month timeline charts",
+                    title: "Pull request's retrospective timeline",
                 });
             }
             console.log("Issue successfully created.");
@@ -1884,6 +1889,7 @@ const createOutput = async (data) => {
             });
         }
         if (outcome === "markdown" || outcome === "output") {
+            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users);
             const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates).concat(`\n${monthComparison}`);
             console.log("Markdown successfully generated.");
             core.setOutput("MARKDOWN", markdown);
@@ -2432,15 +2438,19 @@ exports.createTimelineGanttBar = createTimelineGanttBar;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineMonthComparisonChart = void 0;
+const _1 = __nccwpck_require__(92884);
 const utils_1 = __nccwpck_require__(41002);
 const createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
-const createTimelineMonthComparisonChart = (data, dates, users) => {
-    return (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+const createTimelineMonthComparisonChart = (data, dates, users, references = []) => {
+    return [(0, _1.createReferences)(references)]
+        .concat((0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
         .filter((method) => ["average", "median", "percentile"].includes(method))
         .map((type) => users
-        .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview && value.timeToApprove && value.timeToMerge).length > 2)
+        .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
+        value.timeToApprove &&
+        value.timeToMerge).length > 2)
         .map((user) => (0, createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
-        .join("\n"))
+        .join("\n")))
         .join("\n")
         .trim();
 };

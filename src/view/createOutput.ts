@@ -17,11 +17,7 @@ export const createOutput = async (
   for (let outcome of outcomes) {
     const users = getDisplayUserList(data);
     const dates = sortCollectionsByDate(data.total);
-    const monthComparison = createTimelineMonthComparisonChart(
-      data,
-      dates,
-      users
-    );
+
     if (outcome === "new-issue") {
       const markdown = createMarkdown(
         data,
@@ -30,6 +26,17 @@ export const createOutput = async (
         "Pull Request report total"
       );
       const issue = await createIssue(markdown);
+      const monthComparison = createTimelineMonthComparisonChart(
+        data,
+        dates,
+        users,
+        [
+          {
+            title: "Pull Request report total",
+            link: `${issue.data.html_url}#`,
+          },
+        ]
+      );
       const comments = [];
       if (monthComparison) {
         const comparisonComment = await octokit.rest.issues.createComment({
@@ -44,7 +51,7 @@ export const createOutput = async (
         });
         comments.push({
           comment: comparisonComment,
-          title: "Month to month timeline charts",
+          title: "Pull request's retrospective timeline",
         });
       }
       console.log("Issue successfully created.");
@@ -97,6 +104,11 @@ export const createOutput = async (
     }
 
     if (outcome === "markdown" || outcome === "output") {
+      const monthComparison = createTimelineMonthComparisonChart(
+        data,
+        dates,
+        users
+      );
       const markdown = createMarkdown(data, users, dates).concat(
         `\n${monthComparison}`
       );
