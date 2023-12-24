@@ -5,7 +5,7 @@ import {
   timeToMergeHeader,
   timeToReviewHeader,
 } from "./constants";
-import { createGanttBar } from "./createGanttBar";
+import { createGanttBar } from "./common";
 import { StatsType } from "./types";
 
 export const createTimelineGanttBar = (

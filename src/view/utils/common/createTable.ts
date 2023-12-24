@@ -1,4 +1,4 @@
-export const createBlock = ({
+export const createTable = ({
   title,
   description,
   table,

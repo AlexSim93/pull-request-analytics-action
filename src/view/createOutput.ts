@@ -4,8 +4,7 @@ import { Collection } from "../converters/types";
 import { createMarkdown } from "./createMarkdown";
 import { createIssue } from "../requests";
 import {
-  StatsType,
-  createTimelineMonthsGanttBar,
+  createTimelineMonthComparisonChart,
   getDisplayUserList,
   sortCollectionsByDate,
 } from "./utils";
@@ -18,6 +17,7 @@ export const createOutput = async (
   for (let outcome of outcomes) {
     const users = getDisplayUserList(data);
     const dates = sortCollectionsByDate(data.total);
+
     if (outcome === "new-issue") {
       const markdown = createMarkdown(
         data,
@@ -25,38 +25,36 @@ export const createOutput = async (
         ["total"],
         "Pull Request report total"
       );
-      const issue = await createIssue(
-        markdown.concat(
-          `\n${getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
-            .filter((method) =>
-              ["average", "median", "percentile"].includes(method)
-            )
-            .map((type) =>
-              users
-                .filter(
-                  (user) =>
-                    Object.values(data[user]).filter(
-                      (value) =>
-                        value.timeToReview &&
-                        value.timeToApprove &&
-                        value.timeToMerge
-                    ).length > 2
-                )
-                .map((user) =>
-                  createTimelineMonthsGanttBar(
-                    data,
-                    type as StatsType,
-                    dates.filter((date) => date !== "total"),
-                    user
-                  )
-                )
-                .join("\n")
-            )
-            .join("\n")}`
-        )
+      const issue = await createIssue(markdown);
+      const monthComparison = createTimelineMonthComparisonChart(
+        data,
+        dates,
+        users,
+        [
+          {
+            title: "Pull Request report total",
+            link: `${issue.data.html_url}#`,
+          },
+        ]
       );
-      console.log("Issue successfully created.");
       const comments = [];
+      if (monthComparison) {
+        const comparisonComment = await octokit.rest.issues.createComment({
+          repo:
+            core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+            process.env.GITHUB_REPO_FOR_ISSUE!,
+          owner:
+            core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+            process.env.GITHUB_OWNER_FOR_ISSUE!,
+          issue_number: issue.data.number,
+          body: monthComparison,
+        });
+        comments.push({
+          comment: comparisonComment,
+          title: "retrospective timeline",
+        });
+      }
+      console.log("Issue successfully created.");
       for (let date of dates) {
         if (date === "total") continue;
         const commentMarkdown = createMarkdown(
@@ -101,65 +99,18 @@ export const createOutput = async (
             title: `Pull Request report ${comment.title}`,
             link: comment.comment.data.html_url,
           }))
-        ).concat(
-          `\n${getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
-            .filter((method) =>
-              ["average", "median", "percentile"].includes(method)
-            )
-            .map((type) =>
-              users
-                .filter(
-                  (user) =>
-                    Object.values(data[user]).filter(
-                      (value) =>
-                        value.timeToReview &&
-                        value.timeToApprove &&
-                        value.timeToMerge
-                    ).length > 2
-                )
-                .map((user) =>
-                  createTimelineMonthsGanttBar(
-                    data,
-                    type as StatsType,
-                    dates.filter((date) => date !== "total"),
-                    user
-                  )
-                )
-                .join("\n")
-            )
-            .join("\n")}`
         ),
       });
     }
 
     if (outcome === "markdown" || outcome === "output") {
+      const monthComparison = createTimelineMonthComparisonChart(
+        data,
+        dates,
+        users
+      );
       const markdown = createMarkdown(data, users, dates).concat(
-        `\n${getMultipleValuesInput("AGGREGATE_VALUE_METHODS")
-          .filter((method) =>
-            ["average", "median", "percentile"].includes(method)
-          )
-          .map((type) =>
-            users
-              .filter(
-                (user) =>
-                  Object.values(data[user]).filter(
-                    (value) =>
-                      value.timeToReview &&
-                      value.timeToApprove &&
-                      value.timeToMerge
-                  ).length > 2
-              )
-              .map((user) =>
-                createTimelineMonthsGanttBar(
-                  data,
-                  type as StatsType,
-                  dates.filter((date) => date !== "total"),
-                  user
-                )
-              )
-              .join("\n")
-          )
-          .join("\n")}`
+        `\n${monthComparison}`
       );
       console.log("Markdown successfully generated.");
       core.setOutput("MARKDOWN", markdown);

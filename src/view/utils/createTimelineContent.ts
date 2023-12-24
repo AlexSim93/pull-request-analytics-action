@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import { getMultipleValuesInput } from "../../common/utils";
 import { Collection } from "../../converters/types";
-import { createList } from "./createList";
+import { createList } from "./common";
 import { createTimelineGanttBar } from "./createTimelineGanttBar";
 import { createTimelineTable } from "./createTimelineTable";
 import { StatsType } from "./types";

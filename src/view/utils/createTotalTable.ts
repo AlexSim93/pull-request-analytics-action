@@ -7,7 +7,7 @@ import {
   totalMergedPrsHeader,
   totalOpenedPrsHeader,
 } from "./constants";
-import { createBlock } from "./createBlock";
+import { createTable } from "./common";
 
 export const createTotalTable = (
   data: Record<string, Record<string, Collection>>,
@@ -41,7 +41,7 @@ export const createTotalTable = (
       ];
     });
 
-  return createBlock({
+  return createTable({
     title: `Workload stats ${date}`,
     description:
       "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",

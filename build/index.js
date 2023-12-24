@@ -1832,17 +1832,29 @@ const createOutput = async (data) => {
         const dates = (0, utils_2.sortCollectionsByDate)(data.total);
         if (outcome === "new-issue") {
             const markdown = (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total");
-            const issue = await (0, requests_1.createIssue)(markdown.concat(`\n${(0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-                .filter((method) => ["average", "median", "percentile"].includes(method))
-                .map((type) => users
-                .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
-                value.timeToApprove &&
-                value.timeToMerge).length > 2)
-                .map((user) => (0, utils_2.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
-                .join("\n"))
-                .join("\n")}`));
-            console.log("Issue successfully created.");
+            const issue = await (0, requests_1.createIssue)(markdown);
+            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
+                {
+                    title: "Pull Request report total",
+                    link: `${issue.data.html_url}#`,
+                },
+            ]);
             const comments = [];
+            if (monthComparison) {
+                const comparisonComment = await octokit_1.octokit.rest.issues.createComment({
+                    repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+                        process.env.GITHUB_REPO_FOR_ISSUE,
+                    owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+                        process.env.GITHUB_OWNER_FOR_ISSUE,
+                    issue_number: issue.data.number,
+                    body: monthComparison,
+                });
+                comments.push({
+                    comment: comparisonComment,
+                    title: "retrospective timeline",
+                });
+            }
+            console.log("Issue successfully created.");
             for (let date of dates) {
                 if (date === "total")
                     continue;
@@ -1873,27 +1885,12 @@ const createOutput = async (data) => {
                 body: (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total", comments.map((comment) => ({
                     title: `Pull Request report ${comment.title}`,
                     link: comment.comment.data.html_url,
-                }))).concat(`\n${(0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-                    .filter((method) => ["average", "median", "percentile"].includes(method))
-                    .map((type) => users
-                    .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
-                    value.timeToApprove &&
-                    value.timeToMerge).length > 2)
-                    .map((user) => (0, utils_2.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
-                    .join("\n"))
-                    .join("\n")}`),
+                }))),
             });
         }
         if (outcome === "markdown" || outcome === "output") {
-            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates).concat(`\n${(0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-                .filter((method) => ["average", "median", "percentile"].includes(method))
-                .map((type) => users
-                .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview &&
-                value.timeToApprove &&
-                value.timeToMerge).length > 2)
-                .map((user) => (0, utils_2.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
-                .join("\n"))
-                .join("\n")}`);
+            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users);
+            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates).concat(`\n${monthComparison}`);
             console.log("Markdown successfully generated.");
             core.setOutput("MARKDOWN", markdown);
         }
@@ -1920,6 +1917,128 @@ Object.defineProperty(exports, "createOutput", ({ enumerable: true, get: functio
 
 /***/ }),
 
+/***/ 77655:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createGanttBar = void 0;
+const createGanttBar = ({ title, sections, }) => {
+    return `
+\`\`\`mermaid
+gantt
+title ${title}
+dateFormat X
+axisFormat %s
+${sections
+        .map((section) => {
+        return `section ${section.name}
+                ${section.bars
+            .map((bar) => `${bar.name}(${bar.end}) :${bar.type ? `${bar.type},` : ""} ${bar.state ? `${bar.state},` : ""} ${bar.start}, ${bar.end}`)
+            .join("\n")}
+        `;
+    })
+        .join("\n")}
+\`\`\`
+    `;
+};
+exports.createGanttBar = createGanttBar;
+
+
+/***/ }),
+
+/***/ 29132:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createList = void 0;
+const createList = (title, items) => {
+    if (items.length === 0)
+        return "";
+    return `
+### ${title}
+${items
+        .map((item, index) => `${index + 1}. [${item.text}](${item.link})`)
+        .join("\n")}
+    `;
+};
+exports.createList = createList;
+
+
+/***/ }),
+
+/***/ 58070:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createPieChart = void 0;
+const createPieChart = (title, values) => {
+    return `
+\`\`\`mermaid
+pie
+title ${title} 
+${Object.entries(values)
+        .map(([key, value]) => {
+        return `"${key}(${value})":${value}`;
+    })
+        .join("\n")}
+\`\`\`
+    `;
+};
+exports.createPieChart = createPieChart;
+
+
+/***/ }),
+
+/***/ 10584:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTable = void 0;
+const createTable = ({ title, description, table, }) => {
+    return `
+### ${title}
+${description}
+| ${table.headers.join(" | ")} |
+| ${table.headers.map(() => ":------:").join(" | ")} |
+${table.rows
+        .map((row) => {
+        return `| ${row.join(" | ")} |`;
+    })
+        .join("\n")}      
+    `;
+};
+exports.createTable = createTable;
+
+
+/***/ }),
+
+/***/ 64682:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createList = exports.createPieChart = exports.createGanttBar = exports.createTable = void 0;
+var createTable_1 = __nccwpck_require__(10584);
+Object.defineProperty(exports, "createTable", ({ enumerable: true, get: function () { return createTable_1.createTable; } }));
+var createGanttBar_1 = __nccwpck_require__(77655);
+Object.defineProperty(exports, "createGanttBar", ({ enumerable: true, get: function () { return createGanttBar_1.createGanttBar; } }));
+var createPieChart_1 = __nccwpck_require__(58070);
+Object.defineProperty(exports, "createPieChart", ({ enumerable: true, get: function () { return createPieChart_1.createPieChart; } }));
+var createList_1 = __nccwpck_require__(29132);
+Object.defineProperty(exports, "createList", ({ enumerable: true, get: function () { return createList_1.createList; } }));
+
+
+/***/ }),
+
 /***/ 11474:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -1942,31 +2061,6 @@ exports.commentsReceivedHeader = "Comments received";
 exports.reviewTypesHeader = "Changes requested / Comments / Approvals";
 exports.requestChangesReceived = "Changes requested received";
 exports.prSizesHeader = "PR size: xs / s / m / l / xl";
-
-
-/***/ }),
-
-/***/ 83454:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createBlock = void 0;
-const createBlock = ({ title, description, table, }) => {
-    return `
-### ${title}
-${description}
-| ${table.headers.join(" | ")} |
-| ${table.headers.map(() => ":------:").join(" | ")} |
-${table.rows
-        .map((row) => {
-        return `| ${row.join(" | ")} |`;
-    })
-        .join("\n")}      
-    `;
-};
-exports.createBlock = createBlock;
 
 
 /***/ }),
@@ -2067,84 +2161,6 @@ exports.createDiscussionsPieChart = createDiscussionsPieChart;
 
 /***/ }),
 
-/***/ 85095:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createGanttBar = void 0;
-const createGanttBar = ({ title, sections, }) => {
-    return `
-\`\`\`mermaid
-gantt
-title ${title}
-dateFormat X
-axisFormat %s
-${sections
-        .map((section) => {
-        return `section ${section.name}
-                ${section.bars
-            .map((bar) => `${bar.name}(${bar.end}) :${bar.type ? `${bar.type},` : ""} ${bar.state ? `${bar.state},` : ""} ${bar.start}, ${bar.end}`)
-            .join("\n")}
-        `;
-    })
-        .join("\n")}
-\`\`\`
-    `;
-};
-exports.createGanttBar = createGanttBar;
-
-
-/***/ }),
-
-/***/ 40638:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createList = void 0;
-const createList = (title, items) => {
-    if (items.length === 0)
-        return "";
-    return `
-### ${title}
-${items
-        .map((item, index) => `${index + 1}. [${item.text}](${item.link})`)
-        .join("\n")}
-    `;
-};
-exports.createList = createList;
-
-
-/***/ }),
-
-/***/ 15035:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPieChart = void 0;
-const createPieChart = (title, values) => {
-    return `
-\`\`\`mermaid
-pie
-title ${title} 
-${Object.entries(values)
-        .map(([key, value]) => {
-        return `"${key}(${value})":${value}`;
-    })
-        .join("\n")}
-\`\`\`
-    `;
-};
-exports.createPieChart = createPieChart;
-
-
-/***/ }),
-
 /***/ 64721:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -2177,9 +2193,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createPullRequestQualityTable = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const constants_1 = __nccwpck_require__(11474);
-const createBlock_1 = __nccwpck_require__(83454);
+const common_1 = __nccwpck_require__(64682);
 const createDiscussionsPieChart_1 = __nccwpck_require__(99622);
-const createList_1 = __nccwpck_require__(40638);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
@@ -2204,7 +2219,7 @@ const createPullRequestQualityTable = (data, users, date) => {
         link: item.link || "",
     })) || [];
     return [
-        (0, createBlock_1.createBlock)({
+        (0, common_1.createTable)({
             title: `Pull request quality ${date}`,
             description: "The table includes discussions and comments on closed pull requests.",
             table: {
@@ -2219,7 +2234,7 @@ const createPullRequestQualityTable = (data, users, date) => {
             },
         }),
         (0, createDiscussionsPieChart_1.createDiscussionsPieChart)(data, users, date),
-        (0, createList_1.createList)("The most commented PRs", items),
+        (0, common_1.createList)("The most commented PRs", items),
     ].join("\n");
 };
 exports.createPullRequestQualityTable = createPullRequestQualityTable;
@@ -2255,7 +2270,7 @@ exports.createReferences = createReferences;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createReviewTable = void 0;
 const constants_1 = __nccwpck_require__(11474);
-const createBlock_1 = __nccwpck_require__(83454);
+const common_1 = __nccwpck_require__(64682);
 const createReviewTable = (data, users, date) => {
     const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
@@ -2274,7 +2289,7 @@ const createReviewTable = (data, users, date) => {
                 0} / ${data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0}`,
         ];
     });
-    return (0, createBlock_1.createBlock)({
+    return (0, common_1.createTable)({
         title: `Code review engagement ${date}`,
         description: "**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Changes requested / Comments / Approvals** - number of Reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.",
         table: {
@@ -2327,7 +2342,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineContent = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const utils_1 = __nccwpck_require__(41002);
-const createList_1 = __nccwpck_require__(40638);
+const common_1 = __nccwpck_require__(64682);
 const createTimelineGanttBar_1 = __nccwpck_require__(5304);
 const createTimelineTable_1 = __nccwpck_require__(20194);
 const formatMinutesDuration_1 = __nccwpck_require__(92411);
@@ -2347,7 +2362,7 @@ const createTimelineContent = (data, users, date) => {
             text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone])})`,
             link: item.link || "",
         })) || [];
-        return (0, createList_1.createList)(milestoneTitle[milestone], items);
+        return (0, common_1.createList)(milestoneTitle[milestone], items);
     })
         .filter((item) => item)
         .join("\n");
@@ -2381,9 +2396,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineGanttBar = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const constants_2 = __nccwpck_require__(11474);
-const createGanttBar_1 = __nccwpck_require__(85095);
+const common_1 = __nccwpck_require__(64682);
 const createTimelineGanttBar = (data, type, users, date) => {
-    return (0, createGanttBar_1.createGanttBar)({
+    return (0, common_1.createGanttBar)({
         title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date} / minutes`,
         sections: users
             .filter((user) => data[user]?.[date]?.[type]?.timeToReview &&
@@ -2416,6 +2431,32 @@ exports.createTimelineGanttBar = createTimelineGanttBar;
 
 /***/ }),
 
+/***/ 82264:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTimelineMonthComparisonChart = void 0;
+const _1 = __nccwpck_require__(92884);
+const utils_1 = __nccwpck_require__(41002);
+const createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
+const createTimelineMonthComparisonChart = (data, dates, users, references = []) => {
+    const charts = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+        .filter((method) => ["average", "median", "percentile"].includes(method))
+        .map((type) => users
+        .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview && value.timeToApprove && value.timeToMerge).length > 2)
+        .map((user) => (0, createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
+        .join("\n"));
+    if (charts.every((el) => !el.trim()))
+        return "";
+    return [(0, _1.createReferences)(references)].concat(charts).join("\n").trim();
+};
+exports.createTimelineMonthComparisonChart = createTimelineMonthComparisonChart;
+
+
+/***/ }),
+
 /***/ 50193:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -2425,9 +2466,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineMonthsGanttBar = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const constants_2 = __nccwpck_require__(11474);
-const createGanttBar_1 = __nccwpck_require__(85095);
+const common_1 = __nccwpck_require__(64682);
 const createTimelineMonthsGanttBar = (data, type, dates, user) => {
-    return (0, createGanttBar_1.createGanttBar)({
+    return (0, common_1.createGanttBar)({
         title: `Pull request's retrospective timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${user} / minutes`,
         sections: dates
             .filter((date) => data[user]?.[date]?.[type]?.timeToReview &&
@@ -2469,7 +2510,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineTable = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const constants_2 = __nccwpck_require__(11474);
-const createBlock_1 = __nccwpck_require__(83454);
+const common_1 = __nccwpck_require__(64682);
 const formatMinutesDuration_1 = __nccwpck_require__(92411);
 const createTimelineTable = (data, type, users, date) => {
     const tableRows = users
@@ -2483,7 +2524,7 @@ const createTimelineTable = (data, type, users, date) => {
             data[user]?.[date]?.merged?.toString() || "0",
         ];
     });
-    const pullRequestTimeLine = (0, createBlock_1.createBlock)({
+    const pullRequestTimeLine = (0, common_1.createTable)({
         title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date}`,
         description: "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
         table: {
@@ -2512,7 +2553,7 @@ exports.createTimelineTable = createTimelineTable;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTotalTable = void 0;
 const constants_1 = __nccwpck_require__(11474);
-const createBlock_1 = __nccwpck_require__(83454);
+const common_1 = __nccwpck_require__(64682);
 const createTotalTable = (data, users, date) => {
     const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
@@ -2532,7 +2573,7 @@ const createTotalTable = (data, users, date) => {
             data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
         ];
     });
-    return (0, createBlock_1.createBlock)({
+    return (0, common_1.createTable)({
         title: `Workload stats ${date}`,
         description: "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",
         table: {
@@ -2602,7 +2643,9 @@ exports.getDisplayUserList = getDisplayUserList;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createReferences = exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPieChart = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createBlock = exports.createGanttBar = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = void 0;
+exports.createReferences = exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
+var createTimelineMonthComparisonChart_1 = __nccwpck_require__(82264);
+Object.defineProperty(exports, "createTimelineMonthComparisonChart", ({ enumerable: true, get: function () { return createTimelineMonthComparisonChart_1.createTimelineMonthComparisonChart; } }));
 var createDiscussionsPieChart_1 = __nccwpck_require__(99622);
 Object.defineProperty(exports, "createDiscussionsPieChart", ({ enumerable: true, get: function () { return createDiscussionsPieChart_1.createDiscussionsPieChart; } }));
 var createConfigParamsCode_1 = __nccwpck_require__(96354);
@@ -2611,10 +2654,10 @@ var createTotalTable_1 = __nccwpck_require__(29724);
 Object.defineProperty(exports, "createTotalTable", ({ enumerable: true, get: function () { return createTotalTable_1.createTotalTable; } }));
 var createReviewTable_1 = __nccwpck_require__(79243);
 Object.defineProperty(exports, "createReviewTable", ({ enumerable: true, get: function () { return createReviewTable_1.createReviewTable; } }));
-var createGanttBar_1 = __nccwpck_require__(85095);
-Object.defineProperty(exports, "createGanttBar", ({ enumerable: true, get: function () { return createGanttBar_1.createGanttBar; } }));
-var createBlock_1 = __nccwpck_require__(83454);
-Object.defineProperty(exports, "createBlock", ({ enumerable: true, get: function () { return createBlock_1.createBlock; } }));
+var common_1 = __nccwpck_require__(64682);
+Object.defineProperty(exports, "createTable", ({ enumerable: true, get: function () { return common_1.createTable; } }));
+Object.defineProperty(exports, "createGanttBar", ({ enumerable: true, get: function () { return common_1.createGanttBar; } }));
+Object.defineProperty(exports, "createPieChart", ({ enumerable: true, get: function () { return common_1.createPieChart; } }));
 var formatMinutesDuration_1 = __nccwpck_require__(92411);
 Object.defineProperty(exports, "formatMinutesDuration", ({ enumerable: true, get: function () { return formatMinutesDuration_1.formatMinutesDuration; } }));
 var sortCollectionsByDate_1 = __nccwpck_require__(49740);
@@ -2625,8 +2668,6 @@ var createTimelineTable_1 = __nccwpck_require__(20194);
 Object.defineProperty(exports, "createTimelineTable", ({ enumerable: true, get: function () { return createTimelineTable_1.createTimelineTable; } }));
 var createPullRequestQualityTable_1 = __nccwpck_require__(64721);
 Object.defineProperty(exports, "createPullRequestQualityTable", ({ enumerable: true, get: function () { return createPullRequestQualityTable_1.createPullRequestQualityTable; } }));
-var createPieChart_1 = __nccwpck_require__(15035);
-Object.defineProperty(exports, "createPieChart", ({ enumerable: true, get: function () { return createPieChart_1.createPieChart; } }));
 var getDisplayUserList_1 = __nccwpck_require__(88144);
 Object.defineProperty(exports, "getDisplayUserList", ({ enumerable: true, get: function () { return getDisplayUserList_1.getDisplayUserList; } }));
 var createTimelineContent_1 = __nccwpck_require__(50940);
