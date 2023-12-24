@@ -6,9 +6,8 @@ import {
   requestChangesReceived,
   totalMergedPrsHeader,
 } from "./constants";
-import { createBlock } from "./createBlock";
+import { createTable, createList } from "./common";
 import { createDiscussionsPieChart } from "./createDiscussionsPieChart";
-import { createList } from "./createList";
 
 export const createPullRequestQualityTable = (
   data: Record<string, Record<string, Collection>>,
@@ -51,7 +50,7 @@ export const createPullRequestQualityTable = (
       })) || [];
 
   return [
-    createBlock({
+    createTable({
       title: `Pull request quality ${date}`,
       description:
         "The table includes discussions and comments on closed pull requests.",

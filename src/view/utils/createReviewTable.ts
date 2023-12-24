@@ -6,7 +6,7 @@ import {
   reviewTypesHeader,
   totalMergedPrsHeader,
 } from "./constants";
-import { createBlock } from "./createBlock";
+import { createTable } from "./common";
 
 export const createReviewTable = (
   data: Record<string, Record<string, Collection>>,
@@ -47,7 +47,7 @@ export const createReviewTable = (
       ];
     });
 
-  return createBlock({
+  return createTable({
     title: `Code review engagement ${date}`,
     description:
       "**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Changes requested / Comments / Approvals** - number of Reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.",

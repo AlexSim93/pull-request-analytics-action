@@ -6,7 +6,7 @@ import {
   timeToReviewHeader,
   totalMergedPrsHeader,
 } from "./constants";
-import { createBlock } from "./createBlock";
+import { createTable } from "./common";
 import { formatMinutesDuration } from "./formatMinutesDuration";
 import { StatsType } from "./types";
 
@@ -28,7 +28,7 @@ export const createTimelineTable = (
       ];
     });
 
-  const pullRequestTimeLine = createBlock({
+  const pullRequestTimeLine = createTable({
     title: `Pull requests timeline(${type}${
       type === "percentile" ? percentile : ""
     }) ${date}`,
