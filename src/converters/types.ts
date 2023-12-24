@@ -34,6 +34,11 @@ type PullRequestTimelineInfo = {
   timeToApprove: number;
 };
 
+type Discussion = {
+  received?: DiscussionResult;
+  conducted?: DiscussionResult;
+};
+
 export type Collection = {
   opened: number;
   closed: number;
@@ -48,13 +53,12 @@ export type Collection = {
   timeToMerge?: number[];
   comments: number;
   totalReviewComments: number;
-  discussions?: number;
   reviewComments?: number;
   reviewsConducted?: {
     [key: string]: ReviewTypeStats;
   };
   commentsConducted?: number;
-  discussionsConducted?: number;
+  discussions?: Discussion;
   discussionsTypes?: DiscussionType;
   prSizes?: string[];
   reviewsConductedSize?: PullRequestSize[];

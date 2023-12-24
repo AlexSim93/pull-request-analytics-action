@@ -6,8 +6,10 @@ export const totalOpenedPrsHeader = "Total opened PRs";
 export const additionsDeletionsHeader = "Additions/Deletions";
 export const reviewCommentsHeader = "Total comments";
 export const reviewConductedHeader = "Reviews conducted";
-export const discussionsHeader = "Discussions received";
-export const discussionsConductedHeader = "Discussions conducted";
+export const discussionsHeader =
+  "Agreed / Disagreed / Total discussions received";
+export const discussionsConductedHeader =
+  "Agreed / Disagreed / Total discussions conducted";
 export const commentsConductedHeader = "Comments conducted";
 export const commentsReceivedHeader = "Comments received";
 export const reviewTypesHeader = "Changes requested / Comments / Approvals";

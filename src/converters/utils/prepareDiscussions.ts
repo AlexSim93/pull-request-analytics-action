@@ -38,6 +38,12 @@ export const prepareDiscussions = (
             total:
               (collection[userLogin][key].discussionsTypes![type]?.conducted
                 ?.total || 0) + 1,
+            agreed:
+              (collection[userLogin][key].discussionsTypes![type]?.conducted
+                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+            disagreed:
+              (collection[userLogin][key].discussionsTypes![type]?.conducted
+                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
           },
         };
         collection[pullRequestLogin][key].discussionsTypes![type] = {
@@ -46,6 +52,12 @@ export const prepareDiscussions = (
             total:
               (collection[pullRequestLogin][key].discussionsTypes![type]
                 ?.received?.total || 0) + 1,
+            agreed:
+              (collection[userLogin][key].discussionsTypes![type]?.received
+                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+            disagreed:
+              (collection[userLogin][key].discussionsTypes![type]?.received
+                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
           },
         };
         collection.total[key].discussionsTypes![type] = {
@@ -54,11 +66,23 @@ export const prepareDiscussions = (
             total:
               (collection.total[key].discussionsTypes![type]?.conducted
                 ?.total || 0) + 1,
+            agreed:
+              (collection.total[key].discussionsTypes![type]?.conducted
+                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+            disagreed:
+              (collection.total[key].discussionsTypes![type]?.conducted
+                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
           },
           received: {
             total:
               (collection.total[key].discussionsTypes![type]?.received?.total ||
                 0) + 1,
+            agreed:
+              (collection.total[key].discussionsTypes![type]?.received
+                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+            disagreed:
+              (collection.total[key].discussionsTypes![type]?.received
+                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
           },
         };
       });
@@ -85,18 +109,69 @@ export const prepareDiscussions = (
 
     discussions?.forEach((discussion) => {
       const userLogin = discussion.user?.login || invalidUserLogin;
-      collection[userLogin][key].discussionsConducted =
-        (collection[userLogin][key].discussionsConducted || 0) + 1;
-      collection.total[key].discussionsConducted =
-        (collection.total[key].discussionsConducted || 0) + 1;
+      collection[userLogin][key].discussions = {
+        ...collection[userLogin][key].discussions,
+        conducted: {
+          total:
+            (collection[userLogin][key].discussions?.conducted?.total || 0) + 1,
+          agreed:
+            (collection[userLogin][key].discussions?.conducted?.agreed || 0) +
+            (discussion.reactions?.["+1"] ? 1 : 0),
+          disagreed:
+            (collection[userLogin][key].discussions?.conducted?.disagreed ||
+              0) + (discussion.reactions?.["-1"] ? 1 : 0),
+        },
+      };
+      collection.total[key].discussions = {
+        ...collection.total[key].discussions,
+        conducted: {
+          total: (collection.total[key].discussions?.conducted?.total || 0) + 1,
+          agreed:
+            (collection.total[key].discussions?.conducted?.agreed || 0) +
+            (discussion.reactions?.["+1"] ? 1 : 0),
+          disagreed:
+            (collection.total[key].discussions?.conducted?.disagreed || 0) +
+            (discussion.reactions?.["-1"] ? 1 : 0),
+        },
+      };
     });
 
     if (pullRequestLogin) {
-      collection[pullRequestLogin][key]["discussions"] =
-        (discussions?.length || 0) +
-        (collection[pullRequestLogin][key].discussions || 0);
-      collection.total[key]["discussions"] =
-        (discussions?.length || 0) + (collection.total[key].discussions || 0);
+      const agreedDiscussions = discussions?.filter(
+        (discussion) => discussion.reactions?.["+1"]
+      );
+      const disagreedDiscussions = discussions?.filter(
+        (discussion) => discussion.reactions?.["-1"]
+      );
+
+      collection[pullRequestLogin][key].discussions = {
+        ...collection[pullRequestLogin][key].discussions,
+        received: {
+          total:
+            (collection[pullRequestLogin][key].discussions?.received?.total ||
+              0) + (discussions?.length || 0),
+          agreed:
+            (collection[pullRequestLogin][key].discussions?.received?.agreed ||
+              0) + (agreedDiscussions?.length || 0),
+          disagreed:
+            (collection[pullRequestLogin][key].discussions?.received
+              ?.disagreed || 0) + (disagreedDiscussions?.length || 0),
+        },
+      };
+      collection.total[key].discussions = {
+        ...collection.total[key].discussions,
+        received: {
+          total:
+            (collection.total[key].discussions?.received?.total || 0) +
+            (discussions?.length || 0),
+          agreed:
+            (collection.total[key].discussions?.received?.agreed || 0) +
+            (agreedDiscussions?.length || 0),
+          disagreed:
+            (collection.total[key].discussions?.received?.disagreed || 0) +
+            (disagreedDiscussions?.length || 0),
+        },
+      };
     }
   });
 };

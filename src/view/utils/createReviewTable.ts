@@ -24,7 +24,14 @@ export const createReviewTable = (
       return [
         `**${user}**`,
         data[user]?.[date]?.merged?.toString() || "0",
-        data[user]?.[date]?.discussionsConducted?.toString() || "0",
+        `${
+          data[user]?.[date]?.discussions?.conducted?.agreed?.toString() || "0"
+        } / ${
+          data[user]?.[date]?.discussions?.conducted?.disagreed?.toString() ||
+          "0"
+        } / ${
+          data[user]?.[date]?.discussions?.conducted?.total?.toString() || "0"
+        }`,
         data[user]?.[date]?.commentsConducted?.toString() || "0",
         `${sizes
           .map(

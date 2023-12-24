@@ -29,7 +29,14 @@ export const createPullRequestQualityTable = (
         data["total"]?.[date]?.reviewsConducted?.[user]?.[
           "CHANGES_REQUESTED"
         ]?.toString() || "0",
-        data[user]?.[date]?.discussions?.toString() || "0",
+        `${
+          data[user]?.[date]?.discussions?.received?.agreed?.toString() || "0"
+        } / ${
+          data[user]?.[date]?.discussions?.received?.disagreed?.toString() ||
+          "0"
+        } / ${
+          data[user]?.[date]?.discussions?.received?.total?.toString() || "0"
+        }`,
         data[user]?.[date]?.reviewComments?.toString() || "0",
       ];
     });

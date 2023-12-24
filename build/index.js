@@ -967,6 +967,10 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                     conducted: {
                         total: (collection[userLogin][key].discussionsTypes[type]?.conducted
                             ?.total || 0) + 1,
+                        agreed: (collection[userLogin][key].discussionsTypes[type]?.conducted
+                            ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                        disagreed: (collection[userLogin][key].discussionsTypes[type]?.conducted
+                            ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
                     },
                 };
                 collection[pullRequestLogin][key].discussionsTypes[type] = {
@@ -974,6 +978,10 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                     received: {
                         total: (collection[pullRequestLogin][key].discussionsTypes[type]
                             ?.received?.total || 0) + 1,
+                        agreed: (collection[userLogin][key].discussionsTypes[type]?.received
+                            ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                        disagreed: (collection[userLogin][key].discussionsTypes[type]?.received
+                            ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
                     },
                 };
                 collection.total[key].discussionsTypes[type] = {
@@ -981,10 +989,18 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                     conducted: {
                         total: (collection.total[key].discussionsTypes[type]?.conducted
                             ?.total || 0) + 1,
+                        agreed: (collection.total[key].discussionsTypes[type]?.conducted
+                            ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                        disagreed: (collection.total[key].discussionsTypes[type]?.conducted
+                            ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
                     },
                     received: {
                         total: (collection.total[key].discussionsTypes[type]?.received?.total ||
                             0) + 1,
+                        agreed: (collection.total[key].discussionsTypes[type]?.received
+                            ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                        disagreed: (collection.total[key].discussionsTypes[type]?.received
+                            ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
                     },
                 };
             });
@@ -1008,17 +1024,52 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
         }
         discussions?.forEach((discussion) => {
             const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
-            collection[userLogin][key].discussionsConducted =
-                (collection[userLogin][key].discussionsConducted || 0) + 1;
-            collection.total[key].discussionsConducted =
-                (collection.total[key].discussionsConducted || 0) + 1;
+            collection[userLogin][key].discussions = {
+                ...collection[userLogin][key].discussions,
+                conducted: {
+                    total: (collection[userLogin][key].discussions?.conducted?.total || 0) + 1,
+                    agreed: (collection[userLogin][key].discussions?.conducted?.agreed || 0) +
+                        (discussion.reactions?.["+1"] ? 1 : 0),
+                    disagreed: (collection[userLogin][key].discussions?.conducted?.disagreed ||
+                        0) + (discussion.reactions?.["-1"] ? 1 : 0),
+                },
+            };
+            collection.total[key].discussions = {
+                ...collection.total[key].discussions,
+                conducted: {
+                    total: (collection.total[key].discussions?.conducted?.total || 0) + 1,
+                    agreed: (collection.total[key].discussions?.conducted?.agreed || 0) +
+                        (discussion.reactions?.["+1"] ? 1 : 0),
+                    disagreed: (collection.total[key].discussions?.conducted?.disagreed || 0) +
+                        (discussion.reactions?.["-1"] ? 1 : 0),
+                },
+            };
         });
         if (pullRequestLogin) {
-            collection[pullRequestLogin][key]["discussions"] =
-                (discussions?.length || 0) +
-                    (collection[pullRequestLogin][key].discussions || 0);
-            collection.total[key]["discussions"] =
-                (discussions?.length || 0) + (collection.total[key].discussions || 0);
+            const agreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["+1"]);
+            const disagreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["-1"]);
+            collection[pullRequestLogin][key].discussions = {
+                ...collection[pullRequestLogin][key].discussions,
+                received: {
+                    total: (collection[pullRequestLogin][key].discussions?.received?.total ||
+                        0) + (discussions?.length || 0),
+                    agreed: (collection[pullRequestLogin][key].discussions?.received?.agreed ||
+                        0) + (agreedDiscussions?.length || 0),
+                    disagreed: (collection[pullRequestLogin][key].discussions?.received
+                        ?.disagreed || 0) + (disagreedDiscussions?.length || 0),
+                },
+            };
+            collection.total[key].discussions = {
+                ...collection.total[key].discussions,
+                received: {
+                    total: (collection.total[key].discussions?.received?.total || 0) +
+                        (discussions?.length || 0),
+                    agreed: (collection.total[key].discussions?.received?.agreed || 0) +
+                        (agreedDiscussions?.length || 0),
+                    disagreed: (collection.total[key].discussions?.received?.disagreed || 0) +
+                        (disagreedDiscussions?.length || 0),
+                },
+            };
         }
     });
 };
@@ -2054,8 +2105,8 @@ exports.totalOpenedPrsHeader = "Total opened PRs";
 exports.additionsDeletionsHeader = "Additions/Deletions";
 exports.reviewCommentsHeader = "Total comments";
 exports.reviewConductedHeader = "Reviews conducted";
-exports.discussionsHeader = "Discussions received";
-exports.discussionsConductedHeader = "Discussions conducted";
+exports.discussionsHeader = "Agreed / Disagreed / Total discussions received";
+exports.discussionsConductedHeader = "Agreed / Disagreed / Total discussions conducted";
 exports.commentsConductedHeader = "Comments conducted";
 exports.commentsReceivedHeader = "Comments received";
 exports.reviewTypesHeader = "Changes requested / Comments / Approvals";
@@ -2206,7 +2257,8 @@ const createPullRequestQualityTable = (data, users, date) => {
             `**${user}**`,
             data[user]?.[date]?.merged?.toString() || "0",
             data["total"]?.[date]?.reviewsConducted?.[user]?.["CHANGES_REQUESTED"]?.toString() || "0",
-            data[user]?.[date]?.discussions?.toString() || "0",
+            `${data[user]?.[date]?.discussions?.received?.agreed?.toString() || "0"} / ${data[user]?.[date]?.discussions?.received?.disagreed?.toString() ||
+                "0"} / ${data[user]?.[date]?.discussions?.received?.total?.toString() || "0"}`,
             data[user]?.[date]?.reviewComments?.toString() || "0",
         ];
     });
@@ -2280,7 +2332,8 @@ const createReviewTable = (data, users, date) => {
         return [
             `**${user}**`,
             data[user]?.[date]?.merged?.toString() || "0",
-            data[user]?.[date]?.discussionsConducted?.toString() || "0",
+            `${data[user]?.[date]?.discussions?.conducted?.agreed?.toString() || "0"} / ${data[user]?.[date]?.discussions?.conducted?.disagreed?.toString() ||
+                "0"} / ${data[user]?.[date]?.discussions?.conducted?.total?.toString() || "0"}`,
             data[user]?.[date]?.commentsConducted?.toString() || "0",
             `${sizes
                 .map((size) => data[user]?.[date]?.reviewsConductedSize?.filter((prSize) => prSize === size).length || 0)
