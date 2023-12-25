@@ -147,25 +147,6 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
            report_date_end:
              description: "Report date end(d/MM/yyyy)"
              required: false
-           aggregate_value_methods:
-             description: "Aggregate value methods for timelines separated by comma. Can take values average, percentile, medianÏ"
-             default: "percentile"
-           percentile:
-             description: "Percentile"
-             required: false
-             default: "75"
-           issue_title:
-             description: "Issue custom title"
-             required: false
-           hide_users:
-             description: "Hidden users"
-             required: false
-           show_users:
-             description: "Shown users"
-             required: false
-           exclude_labels:
-             description: "Labels to exclude"
-             required: false
      jobs:
        create-report:
          name: "Create report"
@@ -175,7 +156,6 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
              uses: AlexSim93/pull-request-analytics-action@master
              with:
                GITHUB_TOKEN: ${{ secrets.KEY }}
-               ISSUE_TITLE: ${{ inputs.issue_title }}
                ASSIGNEES: "user-1, user-2, user-3"
                LABELS: "Report"
                GITHUB_REPO_FOR_ISSUE: "repo"
@@ -184,12 +164,9 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
                CORE_HOURS_START: "9:00"
                CORE_HOURS_END: "19:00"
                TIMEZONE: "Europe/Berlin"
-               AGGREGATE_VALUE_METHODS: ${{inputs.aggregate_value_methods}}
-               PERCENTILE: ${{ inputs.percentile }}
                AMOUNT: ${{ inputs.amount }}
                REPORT_DATE_START: ${{ inputs.report_date_start }}
                REPORT_DATE_END: ${{ inputs.report_date_end }}
-               HIDE_USERS: ${{ inputs.hide_users }}
      ```
 
    - In the `workflow_dispatch` section of the yml file, I have specified various inputs that can be adjusted each time the action is triggered. By utilizing the `required` and `default` fields, I've designated whether each input is mandatory and set predetermined values for ease of use. In the `with` section, I've included parameters that remain constant for each action run. For a detailed understanding of which parameters the action accepts and their functions, please refer to the [Parameters Overview section](#configuration-parameters-overview).
