@@ -7,6 +7,7 @@ Below are the settings applied for this report:
 GITHUB_OWNERS_REPOS: ${
     process.env.GITHUB_OWNERS_REPOS || core.getInput("GITHUB_OWNERS_REPOS")
   }
+ORGANIZATIONS: ${process.env.ORGANIZATIONS || core.getInput("ORGANIZATIONS")}
 GITHUB_REPO_FOR_ISSUE: ${
     process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GITHUB_REPO_FOR_ISSUE")
   }
@@ -43,7 +44,9 @@ HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
 SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
 INCLUDE_LABELS: ${process.env.INCLUDE_LABELS || core.getInput("INCLUDE_LABELS")}
 EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
-EXECUTION_OUTCOME: ${process.env.EXECUTION_OUTCOME || core.getInput("EXECUTION_OUTCOME")}
+EXECUTION_OUTCOME: ${
+    process.env.EXECUTION_OUTCOME || core.getInput("EXECUTION_OUTCOME")
+  }
 \`\`\`
     `;
 };

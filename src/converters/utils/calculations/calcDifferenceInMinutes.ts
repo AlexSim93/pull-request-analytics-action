@@ -1,4 +1,4 @@
-import { differenceInMinutes, parseISO } from "date-fns";
+import { differenceInMinutes, parseISO, setSeconds } from "date-fns";
 import { calcWeekendMinutes } from "./calcWeekendMinutes";
 import { CoreHours, calcNonWorkingHours } from "./calcNonWorkingHours";
 
@@ -7,8 +7,10 @@ export const calcDifferenceInMinutes = (
   secondIsoDate: string | null | undefined,
   coreHours: CoreHours
 ) => {
-  const firstDate = firstIsoDate ? parseISO(firstIsoDate) : null;
-  const secondDate = secondIsoDate ? parseISO(secondIsoDate) : null;
+  const firstDate = firstIsoDate ? setSeconds(parseISO(firstIsoDate), 0) : null;
+  const secondDate = secondIsoDate
+    ? setSeconds(parseISO(secondIsoDate), 0)
+    : null;
   if (firstDate && secondDate) {
     return (
       differenceInMinutes(secondDate, firstDate) -

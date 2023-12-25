@@ -7,7 +7,7 @@ import { getValueAsIs } from "./getValueAsIs";
 export const validate = () => {
   const requiredErrors = validateRequired([
     "GITHUB_TOKEN",
-    "GITHUB_OWNERS_REPOS",
+    ["GITHUB_OWNERS_REPOS", "ORGANIZATIONS"],
     "GITHUB_OWNER_FOR_ISSUE",
     "GITHUB_REPO_FOR_ISSUE",
   ]);
@@ -28,7 +28,7 @@ export const validate = () => {
         required: false,
       },
       EXECUTION_OUTCOME: {
-        validValues: ["new-issue", "output", "collection", 'markdown'],
+        validValues: ["new-issue", "output", "collection", "markdown"],
         required: true,
       },
     });

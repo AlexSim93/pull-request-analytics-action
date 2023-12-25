@@ -199,7 +199,7 @@ const getValueAsIs_1 = __nccwpck_require__(18863);
 const validate = () => {
     const requiredErrors = (0, validators_1.validateRequired)([
         "GITHUB_TOKEN",
-        "GITHUB_OWNERS_REPOS",
+        ["GITHUB_OWNERS_REPOS", "ORGANIZATIONS"],
         "GITHUB_OWNER_FOR_ISSUE",
         "GITHUB_REPO_FOR_ISSUE",
     ]);
@@ -218,7 +218,7 @@ const validate = () => {
             required: false,
         },
         EXECUTION_OUTCOME: {
-            validValues: ["new-issue", "output", "collection", 'markdown'],
+            validValues: ["new-issue", "output", "collection", "markdown"],
             required: true,
         },
     });
@@ -469,10 +469,19 @@ exports.validateRequired = void 0;
 const getValueAsIs_1 = __nccwpck_require__(18863);
 const validateRequired = (names) => {
     return names.reduce((acc, name) => {
-        const value = (0, getValueAsIs_1.getValueAsIs)(name);
-        if (value)
-            return acc;
-        return { ...acc, [name]: `${name} is required` };
+        if (Array.isArray(name)) {
+            const isValid = name.some((el) => (0, getValueAsIs_1.getValueAsIs)(el));
+            if (isValid)
+                return acc;
+            return { ...acc, [name.join(", ")]: `${name.join(", ")} - One of these inputs must be filled` };
+        }
+        if (typeof name === "string") {
+            const value = (0, getValueAsIs_1.getValueAsIs)(name);
+            if (value)
+                return acc;
+            return { ...acc, [name]: `${name} is required` };
+        }
+        return acc;
     }, {});
 };
 exports.validateRequired = validateRequired;
@@ -607,8 +616,10 @@ const date_fns_1 = __nccwpck_require__(73314);
 const calcWeekendMinutes_1 = __nccwpck_require__(54409);
 const calcNonWorkingHours_1 = __nccwpck_require__(72096);
 const calcDifferenceInMinutes = (firstIsoDate, secondIsoDate, coreHours) => {
-    const firstDate = firstIsoDate ? (0, date_fns_1.parseISO)(firstIsoDate) : null;
-    const secondDate = secondIsoDate ? (0, date_fns_1.parseISO)(secondIsoDate) : null;
+    const firstDate = firstIsoDate ? (0, date_fns_1.setSeconds)((0, date_fns_1.parseISO)(firstIsoDate), 0) : null;
+    const secondDate = secondIsoDate
+        ? (0, date_fns_1.setSeconds)((0, date_fns_1.parseISO)(secondIsoDate), 0)
+        : null;
     if (firstDate && secondDate) {
         return ((0, date_fns_1.differenceInMinutes)(secondDate, firstDate) -
             (0, calcWeekendMinutes_1.calcWeekendMinutes)(firstDate, secondDate) -
@@ -1279,12 +1290,16 @@ async function main() {
     const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
     const ownersRepos = (0, requests_1.getOwnersRepositories)();
+    const organizationsRepos = await (0, requests_1.getOrganizationsRepositories)();
+    const repos = Object.keys([...ownersRepos, ...organizationsRepos].reduce((acc, element) => {
+        return { ...acc, [element.join("/")]: 1 };
+    }, {})).map((el) => el.split("/"));
     console.log("Initiating data request.");
     const data = [];
-    for (let i = 0; i < ownersRepos.length; i++) {
+    for (let i = 0; i < repos.length; i++) {
         const result = await (0, requests_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT, {
-            owner: ownersRepos[i][0],
-            repo: ownersRepos[i][1],
+            owner: repos[i][0],
+            repo: repos[i][1],
         }, {
             skipReviews: false,
             skipComments: (0, utils_1.checkCommentSkip)(),
@@ -1504,6 +1519,40 @@ exports.getDataWithThrottle = getDataWithThrottle;
 
 /***/ }),
 
+/***/ 79436:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getOrganizationsRepositories = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const octokit_1 = __nccwpck_require__(24641);
+const getOrganizationsRepositories = async () => {
+    const organizations = (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS");
+    const ownersRepos = [];
+    for (let i = 0; i < organizations.length; i++) {
+        const organizationRepositories = await octokit_1.octokit.rest.repos.listForOrg({
+            org: organizations[i],
+            type: "all",
+            sort: "pushed",
+            direction: "desc",
+            page: 1,
+            per_page: 100,
+        });
+        const repos = organizationRepositories.data.map((el) => [
+            el.owner.login,
+            el.name,
+        ]);
+        ownersRepos.push(...repos);
+    }
+    return ownersRepos.filter((el) => el && el[0] && el[1]) || [];
+};
+exports.getOrganizationsRepositories = getOrganizationsRepositories;
+
+
+/***/ }),
+
 /***/ 92041:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1658,9 +1707,11 @@ exports.getPullRequests = getPullRequests;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createIssue = exports.makeComplexRequest = exports.getOwnersRepositories = void 0;
+exports.createIssue = exports.makeComplexRequest = exports.getOrganizationsRepositories = exports.getOwnersRepositories = void 0;
 var getOwnersRepositories_1 = __nccwpck_require__(57288);
 Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return getOwnersRepositories_1.getOwnersRepositories; } }));
+var getOrganizationsRepositories_1 = __nccwpck_require__(79436);
+Object.defineProperty(exports, "getOrganizationsRepositories", ({ enumerable: true, get: function () { return getOrganizationsRepositories_1.getOrganizationsRepositories; } }));
 var makeComplexRequest_1 = __nccwpck_require__(99378);
 Object.defineProperty(exports, "makeComplexRequest", ({ enumerable: true, get: function () { return makeComplexRequest_1.makeComplexRequest; } }));
 var createIssue_1 = __nccwpck_require__(5891);
@@ -2152,6 +2203,7 @@ const createConfigParamsCode = () => {
 Below are the settings applied for this report:
 \`\`\`
 GITHUB_OWNERS_REPOS: ${process.env.GITHUB_OWNERS_REPOS || core.getInput("GITHUB_OWNERS_REPOS")}
+ORGANIZATIONS: ${process.env.ORGANIZATIONS || core.getInput("ORGANIZATIONS")}
 GITHUB_REPO_FOR_ISSUE: ${process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GITHUB_REPO_FOR_ISSUE")}
 GITHUB_OWNER_FOR_ISSUE: ${process.env.GITHUB_OWNER_FOR_ISSUE ||
         core.getInput("GITHUB_OWNER_FOR_ISSUE")}
@@ -2451,6 +2503,11 @@ const constants_1 = __nccwpck_require__(95354);
 const constants_2 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
 const createTimelineGanttBar = (data, type, users, date) => {
+    if (!users.some((user) => data[user]?.[date]?.[type]?.timeToReview &&
+        data[user]?.[date]?.[type]?.timeToApprove &&
+        data[user]?.[date]?.[type]?.timeToMerge)) {
+        return "";
+    }
     return (0, common_1.createGanttBar)({
         title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date} / minutes`,
         sections: users
