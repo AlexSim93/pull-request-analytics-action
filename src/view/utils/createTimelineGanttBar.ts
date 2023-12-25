@@ -14,6 +14,16 @@ export const createTimelineGanttBar = (
   users: string[],
   date: string
 ) => {
+  if (
+    !users.some(
+      (user) =>
+        data[user]?.[date]?.[type]?.timeToReview &&
+        data[user]?.[date]?.[type]?.timeToApprove &&
+        data[user]?.[date]?.[type]?.timeToMerge
+    )
+  ) {
+    return "";
+  }
   return createGanttBar({
     title: `Pull requests timeline(${type}${
       type === "percentile" ? percentile : ""

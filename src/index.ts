@@ -2,7 +2,11 @@ import "dotenv/config";
 import * as core from "@actions/core";
 
 import { createOutput } from "./view";
-import { getOwnersRepositories, makeComplexRequest } from "./requests";
+import {
+  getOrganizationsRepositories,
+  getOwnersRepositories,
+  makeComplexRequest,
+} from "./requests";
 import { collectData } from "./converters";
 import { octokit } from "./octokit/octokit";
 import { checkCommentSkip, setTimezone, validate } from "./common/utils";
@@ -23,14 +27,22 @@ async function main() {
   );
 
   const ownersRepos = getOwnersRepositories();
+  const organizationsRepos = await getOrganizationsRepositories();
+
+  const repos = Object.keys(
+    [...ownersRepos, ...organizationsRepos].reduce((acc, element) => {
+      return { ...acc, [element.join("/")]: 1 };
+    }, {})
+  ).map((el) => el.split("/"));
+
   console.log("Initiating data request.");
   const data = [];
-  for (let i = 0; i < ownersRepos.length; i++) {
+  for (let i = 0; i < repos.length; i++) {
     const result = await makeComplexRequest(
       parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
       {
-        owner: ownersRepos[i][0],
-        repo: ownersRepos[i][1],
+        owner: repos[i][0],
+        repo: repos[i][1],
       },
       {
         skipReviews: false,

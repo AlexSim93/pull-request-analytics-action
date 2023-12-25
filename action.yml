@@ -8,15 +8,18 @@ inputs:
   GITHUB_TOKEN:
     description: "Github token"
     required: true
-  GITHUB_OWNERS_REPOS:
-    description: "Github owner/repository list separated by comma"
-    required: true
   GITHUB_REPO_FOR_ISSUE:
     description: "Github repo for issue"
     required: true
   GITHUB_OWNER_FOR_ISSUE:
     description: "Github owner for issue"
     required: true
+  GITHUB_OWNERS_REPOS:
+    description: "Github owner/repository list separated by comma"
+    required: false
+  ORGANIZATIONS:
+    description: "Github organizations separated by comma"
+    required: false
   SHOW_STATS_TYPES:
     description: "Stats types that should be displayed in report. Values must be separated by comma. Can take values: 'timeline', 'workload', 'pr-quality', 'code-review-engagement'"
     required: false
