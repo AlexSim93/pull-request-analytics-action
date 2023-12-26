@@ -34,6 +34,9 @@ inputs:
   REPORT_DATE_END:
     description: "End date for report(d/MM/yyyy)"
     required: false
+  REPORT_PERIOD:
+    description: "Report period from now. Values format [unit]:value separated by commas. Supported units: 'years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'. Example: 'weeks:2'"
+    required: false
   CORE_HOURS_START:
     description: "Start time of core hours(HH:mm)"
     required: false

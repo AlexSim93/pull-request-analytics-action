@@ -37,7 +37,9 @@ export const validate = () => {
     AMOUNT: {
       min: 0,
       isCritical:
-        !getValueAsIs("REPORT_DATE_START") && !getValueAsIs("REPORT_DATE_END"),
+        !getValueAsIs("REPORT_DATE_START") &&
+        !getValueAsIs("REPORT_DATE_END") &&
+        !getValueAsIs("REPORT_PERIOD"),
     },
     PERCENTILE: {
       max: 100,

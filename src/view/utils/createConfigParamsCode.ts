@@ -30,6 +30,7 @@ REPORT_DATE_START: ${
 REPORT_DATE_END: ${
     process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")
   }
+REPORT_PERIOD: ${process.env.REPORT_PERIOD || core.getInput("REPORT_PERIOD")}
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
 AGGREGATE_VALUE_METHODS: ${
     process.env.AGGREGATE_VALUE_METHODS ||

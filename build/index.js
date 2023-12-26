@@ -225,7 +225,9 @@ const validate = () => {
     const { warnings: numbersWarnings, errors: numbersErrors } = (0, validators_1.validateNumber)({
         AMOUNT: {
             min: 0,
-            isCritical: !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") && !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END"),
+            isCritical: !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") &&
+                !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END") &&
+                !(0, getValueAsIs_1.getValueAsIs)("REPORT_PERIOD"),
         },
         PERCENTILE: {
             max: 100,
@@ -1815,13 +1817,22 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReportDates = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const date_fns_1 = __nccwpck_require__(73314);
+const utils_1 = __nccwpck_require__(41002);
 const getReportDates = () => {
     const startReportDate = process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START");
     const endReportDate = process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END");
-    const startDate = startReportDate
+    const subOptions = (0, utils_1.getMultipleValuesInput)("REPORT_PERIOD").reduce((acc, el) => {
+        const [key, value] = el.split(":");
+        return { ...acc, [key.toLowerCase().trim()]: parseInt(value.trim()) };
+    }, {});
+    const startPeriod = (0, utils_1.getMultipleValuesInput)("REPORT_PERIOD")?.length
+        ? (0, date_fns_1.sub)(new Date(), subOptions)
+        : null;
+    const startReportDateParsed = startReportDate
         ? (0, date_fns_1.parse)(startReportDate, "d/MM/yyyy", new Date())
         : null;
-    const endDate = endReportDate
+    const startDate = startReportDateParsed || startPeriod;
+    const endDate = endReportDate && !startPeriod
         ? (0, date_fns_1.parse)(endReportDate, "d/MM/yyyy", new Date())
         : null;
     return {
@@ -2214,6 +2225,7 @@ CORE_HOURS_END: ${process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END")}
 TIMEZONE: ${process.env.TIMEZONE || core.getInput("TIMEZONE")}
 REPORT_DATE_START: ${process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START")}
 REPORT_DATE_END: ${process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")}
+REPORT_PERIOD: ${process.env.REPORT_PERIOD || core.getInput("REPORT_PERIOD")}
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
 AGGREGATE_VALUE_METHODS: ${process.env.AGGREGATE_VALUE_METHODS ||
         core.getInput("AGGREGATE_VALUE_METHODS")}
