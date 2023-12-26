@@ -48,6 +48,9 @@ EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
 EXECUTION_OUTCOME: ${
     process.env.EXECUTION_OUTCOME || core.getInput("EXECUTION_OUTCOME")
   }
+ISSUE_NUMBER: ${
+    process.env.ISSUE_NUMBER || core.getInput("ISSUE_NUMBER")
+  }
 \`\`\`
     `;
 };

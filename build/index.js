@@ -218,7 +218,13 @@ const validate = () => {
             required: false,
         },
         EXECUTION_OUTCOME: {
-            validValues: ["new-issue", "output", "collection", "markdown"],
+            validValues: [
+                "new-issue",
+                "output",
+                "collection",
+                "markdown",
+                "existing-issue",
+            ],
             required: true,
         },
     });
@@ -234,6 +240,11 @@ const validate = () => {
             min: 0,
             isCritical: (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS").length === 1 &&
                 (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")[0] === "percentile",
+        },
+        ISSUE_NUMBER: {
+            min: 1,
+            isCritical: (0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME").length === 1 &&
+                (0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME")[0] === "existing-issue",
         },
         TOP_LIST_AMOUNT: { min: 0, isCritical: false },
     });
@@ -1388,6 +1399,36 @@ exports.octokit = new octokit_1.Octokit({
 
 /***/ }),
 
+/***/ 40396:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.clearComments = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const octokit_1 = __nccwpck_require__(24641);
+const clearComments = async (issueNumber) => {
+    if (!issueNumber)
+        return;
+    const comments = await octokit_1.octokit.rest.issues.listComments({
+        repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+        owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
+        issue_number: parseInt(issueNumber),
+    });
+    for (let comment of comments.data) {
+        await octokit_1.octokit.rest.issues.deleteComment({
+            repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+            owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
+            comment_id: comment.id,
+        });
+    }
+};
+exports.clearComments = clearComments;
+
+
+/***/ }),
+
 /***/ 8827:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -1434,22 +1475,38 @@ const core = __importStar(__nccwpck_require__(42186));
 const octokit_1 = __nccwpck_require__(24641);
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
-const createIssue = async (markdown) => {
+const createIssue = async (markdown, issueNumber) => {
     const issueTitle = core.getInput("ISSUE_TITLE") ||
         process.env.ISSUE_TITLE ||
         `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
     const labels = (0, utils_1.getMultipleValuesInput)("LABELS").filter((label) => label && typeof label === "string") || [];
     const assignees = (0, utils_1.getMultipleValuesInput)("ASSIGNEES").filter((assignee) => assignee && typeof assignee === "string") || [];
-    const result = await octokit_1.octokit.rest.issues.create({
-        repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-            process.env.GITHUB_REPO_FOR_ISSUE,
-        owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            process.env.GITHUB_OWNER_FOR_ISSUE,
-        title: issueTitle,
-        body: markdown,
-        labels,
-        assignees,
-    });
+    let result;
+    if (issueNumber) {
+        result = await octokit_1.octokit.rest.issues.update({
+            labels,
+            title: issueTitle,
+            assignees,
+            repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+                process.env.GITHUB_REPO_FOR_ISSUE,
+            owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+                process.env.GITHUB_OWNER_FOR_ISSUE,
+            body: markdown,
+            issue_number: parseInt(issueNumber),
+        });
+    }
+    else {
+        result = await octokit_1.octokit.rest.issues.create({
+            repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+                process.env.GITHUB_REPO_FOR_ISSUE,
+            owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+                process.env.GITHUB_OWNER_FOR_ISSUE,
+            title: issueTitle,
+            body: markdown,
+            labels,
+            assignees,
+        });
+    }
     return result;
 };
 exports.createIssue = createIssue;
@@ -1709,7 +1766,9 @@ exports.getPullRequests = getPullRequests;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createIssue = exports.makeComplexRequest = exports.getOrganizationsRepositories = exports.getOwnersRepositories = void 0;
+exports.createIssue = exports.makeComplexRequest = exports.getOrganizationsRepositories = exports.getOwnersRepositories = exports.clearComments = void 0;
+var clearComments_1 = __nccwpck_require__(40396);
+Object.defineProperty(exports, "clearComments", ({ enumerable: true, get: function () { return clearComments_1.clearComments; } }));
 var getOwnersRepositories_1 = __nccwpck_require__(57288);
 Object.defineProperty(exports, "getOwnersRepositories", ({ enumerable: true, get: function () { return getOwnersRepositories_1.getOwnersRepositories; } }));
 var getOrganizationsRepositories_1 = __nccwpck_require__(79436);
@@ -1943,9 +2002,13 @@ const createOutput = async (data) => {
     for (let outcome of outcomes) {
         const users = (0, utils_2.getDisplayUserList)(data);
         const dates = (0, utils_2.sortCollectionsByDate)(data.total);
-        if (outcome === "new-issue") {
+        if (outcome === "new-issue" || outcome === "existing-issue") {
+            const issueNumber = outcome === "existing-issue" ? (0, utils_1.getValueAsIs)("ISSUE_NUMBER") : undefined;
             const markdown = (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total");
-            const issue = await (0, requests_1.createIssue)(markdown);
+            if (outcome.includes("existing-issue")) {
+                await (0, requests_1.clearComments)(issueNumber);
+            }
+            const issue = await (0, requests_1.createIssue)(markdown, issueNumber);
             const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
                 {
                     title: "Pull Request report total",
@@ -2237,6 +2300,7 @@ SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
 INCLUDE_LABELS: ${process.env.INCLUDE_LABELS || core.getInput("INCLUDE_LABELS")}
 EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
 EXECUTION_OUTCOME: ${process.env.EXECUTION_OUTCOME || core.getInput("EXECUTION_OUTCOME")}
+ISSUE_NUMBER: ${process.env.ISSUE_NUMBER || core.getInput("ISSUE_NUMBER")}
 \`\`\`
     `;
 };

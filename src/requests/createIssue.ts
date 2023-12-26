@@ -3,7 +3,7 @@ import { octokit } from "../octokit/octokit";
 import { format } from "date-fns";
 import { getMultipleValuesInput } from "../common/utils";
 
-export const createIssue = async (markdown: string) => {
+export const createIssue = async (markdown: string, issueNumber?: string) => {
   const issueTitle =
     core.getInput("ISSUE_TITLE") ||
     process.env.ISSUE_TITLE ||
@@ -17,17 +17,35 @@ export const createIssue = async (markdown: string) => {
       (assignee) => assignee && typeof assignee === "string"
     ) || [];
 
-  const result = await octokit.rest.issues.create({
-    repo:
-      core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-      process.env.GITHUB_REPO_FOR_ISSUE!,
-    owner:
-      core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-      process.env.GITHUB_OWNER_FOR_ISSUE!,
-    title: issueTitle,
-    body: markdown,
-    labels,
-    assignees,
-  });
+  let result;
+  if (issueNumber) {
+    result = await octokit.rest.issues.update({
+      labels,
+      title: issueTitle,
+      assignees,
+      repo:
+        core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+        process.env.GITHUB_REPO_FOR_ISSUE!,
+      owner:
+        core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+        process.env.GITHUB_OWNER_FOR_ISSUE!,
+      body: markdown,
+      issue_number: parseInt(issueNumber),
+    });
+  } else {
+    result = await octokit.rest.issues.create({
+      repo:
+        core.getInput("GITHUB_REPO_FOR_ISSUE") ||
+        process.env.GITHUB_REPO_FOR_ISSUE!,
+      owner:
+        core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
+        process.env.GITHUB_OWNER_FOR_ISSUE!,
+      title: issueTitle,
+      body: markdown,
+      labels,
+      assignees,
+    });
+  }
+
   return result;
 };

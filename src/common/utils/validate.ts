@@ -28,7 +28,13 @@ export const validate = () => {
         required: false,
       },
       EXECUTION_OUTCOME: {
-        validValues: ["new-issue", "output", "collection", "markdown"],
+        validValues: [
+          "new-issue",
+          "output",
+          "collection",
+          "markdown",
+          "existing-issue",
+        ],
         required: true,
       },
     });
@@ -47,6 +53,12 @@ export const validate = () => {
       isCritical:
         getMultipleValuesInput("AGGREGATE_VALUE_METHODS").length === 1 &&
         getMultipleValuesInput("AGGREGATE_VALUE_METHODS")[0] === "percentile",
+    },
+    ISSUE_NUMBER: {
+      min: 1,
+      isCritical:
+        getMultipleValuesInput("EXECUTION_OUTCOME").length === 1 &&
+        getMultipleValuesInput("EXECUTION_OUTCOME")[0] === "existing-issue",
     },
     TOP_LIST_AMOUNT: { min: 0, isCritical: false },
   });

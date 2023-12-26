@@ -83,9 +83,12 @@ inputs:
     description: "Timezone to use in action"
     required: false
   EXECUTION_OUTCOME:
-    description: "Outcome format separated by comma. Can take values: 'markdown', 'new-issue', 'collection'"
+    description: "Outcome format separated by comma. Can take values: 'markdown', 'new-issue', 'collection', 'existing-issue'"
     required: false
     default: "new-issue"
+  ISSUE_NUMBER:
+    description: "Issue number"
+    required: false
 
 outputs:
   JSON_COLLECTION:

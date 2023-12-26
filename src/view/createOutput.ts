@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
-import { getMultipleValuesInput } from "../common/utils";
+import { getMultipleValuesInput, getValueAsIs } from "../common/utils";
 import { Collection } from "../converters/types";
 import { createMarkdown } from "./createMarkdown";
-import { createIssue } from "../requests";
+import { clearComments, createIssue } from "../requests";
 import {
   createTimelineMonthComparisonChart,
   getDisplayUserList,
@@ -18,14 +18,19 @@ export const createOutput = async (
     const users = getDisplayUserList(data);
     const dates = sortCollectionsByDate(data.total);
 
-    if (outcome === "new-issue") {
+    if (outcome === "new-issue" || outcome === "existing-issue") {
+      const issueNumber =
+        outcome === "existing-issue" ? getValueAsIs("ISSUE_NUMBER") : undefined;
       const markdown = createMarkdown(
         data,
         users,
         ["total"],
         "Pull Request report total"
       );
-      const issue = await createIssue(markdown);
+      if (outcome.includes("existing-issue")) {
+        await clearComments(issueNumber);
+      }
+      const issue = await createIssue(markdown, issueNumber);
       const monthComparison = createTimelineMonthComparisonChart(
         data,
         dates,
