@@ -7,6 +7,7 @@
 - [Key Features](#key-features)
 - [Getting started](#getting-started)
 - [Report examples](#report-examples)
+- [Using GitHub Enterprise Server](#using-github-enterprise-server)
 - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
 - [Pull Request Sizes](#pull-request-sizes)
 - [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
@@ -155,7 +156,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
            - name: "Run script for analytics"
              uses: AlexSim93/pull-request-analytics-action@master
              with:
-               GITHUB_TOKEN: ${{ secrets.KEY }}
+               GITHUB_TOKEN: ${{ secrets.TOKEN }}
                ASSIGNEES: "user-1, user-2, user-3"
                LABELS: "Report"
                GITHUB_REPO_FOR_ISSUE: "repo"
@@ -203,6 +204,22 @@ Explore how **pull-request-analytics-action** works with these report examples i
 4. **JSON Data Report**: Example of JSON data collected by the action, showcasing detailed analytics. [View JSON Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/collectionExample.json).
 
 Click the links for detailed report formats and insights.
+
+## Using GitHub Enterprise Server
+
+**pull-request-analytics-action** supports integration with GitHub Enterprise Server. To use this feature, you need to set the `GITHUB_API_URL` environment variable:
+
+1. In your workflow file, define the `GITHUB_API_URL` under the `env` key.
+2. Set the value to your GitHub Enterprise Server API endpoint.
+
+Example:
+
+```yaml
+env:
+  GITHUB_API_URL: http(s)://HOSTNAME/api/v3
+```
+
+This configuration allows **pull-request-analytics-action** to interface with your GitHub Enterprise instance, enabling you to leverage the full capabilities of the action within your enterprise environment.
 
 ## Detailed Report on Discussion Types
 
@@ -289,7 +306,7 @@ Below is a table describing the possible outputs of **pull-request-analytics-act
 
 Contributions to **pull-request-analytics-action** are always welcome, no matter how large or small. Here are some ways you can help:
 
-- **Star the Project**: If you find **pull-request-analytics-action** useful, consider giving it a star on GitHub. This helps increase its visibility and shows support for our work.
+- **Star the Project**: If you find **pull-request-analytics-action** useful, consider giving it a star :star2: on GitHub. This helps increase its visibility and shows support for our work.
 - **Spread the Word**: Mention **pull-request-analytics-action** in your articles, blog posts, and social media. The more people know about it, the better it gets.
 - **Contribute to the Code**: Follow our contribution guidelines to make code contributions. Every pull request helps!
 - **Report Bugs**: Encountered an issue? Please let us know by opening an issue on GitHub. This is crucial for continuous improvement.
