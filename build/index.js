@@ -1890,7 +1890,7 @@ const getReportDates = () => {
     const startReportDateParsed = startReportDate
         ? (0, date_fns_1.parse)(startReportDate, "d/MM/yyyy", new Date())
         : null;
-    const startDate = startReportDateParsed || startPeriod;
+    const startDate = startPeriod || startReportDateParsed;
     const endDate = endReportDate && !startPeriod
         ? (0, date_fns_1.parse)(endReportDate, "d/MM/yyyy", new Date())
         : null;

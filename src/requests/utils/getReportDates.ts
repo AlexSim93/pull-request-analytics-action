@@ -20,7 +20,7 @@ export const getReportDates = () => {
   const startReportDateParsed = startReportDate
     ? parse(startReportDate, "d/MM/yyyy", new Date())
     : null;
-  const startDate = startReportDateParsed || startPeriod;
+  const startDate = startPeriod || startReportDateParsed;
   const endDate =
     endReportDate && !startPeriod
       ? parse(endReportDate, "d/MM/yyyy", new Date())
