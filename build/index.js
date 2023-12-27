@@ -1,6 +1,22 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 11140:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.dateFormats = void 0;
+exports.dateFormats = {
+    months: "M/y",
+    quarters: "QQQ/y",
+    years: "y",
+};
+
+
+/***/ }),
+
 /***/ 61585:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -13,6 +29,24 @@ const checkCommentSkip = () => {
     return (!(0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes("code-review-engagement") && !(0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes("pr-quality"));
 };
 exports.checkCommentSkip = checkCommentSkip;
+
+
+/***/ }),
+
+/***/ 15010:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getDateFormat = void 0;
+const getValueAsIs_1 = __nccwpck_require__(18863);
+const constants_1 = __nccwpck_require__(11140);
+const getDateFormat = () => {
+    const input = (0, getValueAsIs_1.getValueAsIs)("PERIOD_SPLIT_UNIT");
+    return constants_1.dateFormats[input];
+};
+exports.getDateFormat = getDateFormat;
 
 
 /***/ }),
@@ -92,7 +126,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getValueAsIs = void 0;
 const core = __importStar(__nccwpck_require__(42186));
 const getValueAsIs = (name) => {
-    return process.env[name] || core.getInput(name);
+    return process.env[name]?.trim() || core.getInput(name)?.trim();
 };
 exports.getValueAsIs = getValueAsIs;
 
@@ -105,7 +139,9 @@ exports.getValueAsIs = getValueAsIs;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.checkCommentSkip = exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = void 0;
+exports.checkCommentSkip = exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = exports.getDateFormat = void 0;
+var getDateFormat_1 = __nccwpck_require__(15010);
+Object.defineProperty(exports, "getDateFormat", ({ enumerable: true, get: function () { return getDateFormat_1.getDateFormat; } }));
 var getValueAsIs_1 = __nccwpck_require__(18863);
 Object.defineProperty(exports, "getValueAsIs", ({ enumerable: true, get: function () { return getValueAsIs_1.getValueAsIs; } }));
 var setTimezone_1 = __nccwpck_require__(73220);
@@ -228,6 +264,12 @@ const validate = () => {
             required: true,
         },
     });
+    const { warnings: singleValueWarnings, errors: singleValueErrors } = (0, validators_1.validateSingleValue)({
+        PERIOD_SPLIT_UNIT: {
+            validValues: ["quarters", "none", "months", "years"],
+            required: false,
+        },
+    });
     const { warnings: numbersWarnings, errors: numbersErrors } = (0, validators_1.validateNumber)({
         AMOUNT: {
             min: 0,
@@ -253,9 +295,14 @@ const validate = () => {
         ...multipleValuesErrors,
         ...numbersErrors,
         ...dateErrors,
+        ...singleValueErrors,
         ...requiredErrors,
     };
-    const warnings = { ...multipleValuesWarnings, ...numbersWarnings };
+    const warnings = {
+        ...multipleValuesWarnings,
+        ...singleValueWarnings,
+        ...numbersWarnings,
+    };
     Object.values(errors).forEach((message) => {
         core.error(message);
     });
@@ -275,11 +322,13 @@ exports.validate = validate;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateDate = exports.validateNumber = exports.validateMultipleValues = exports.validateRequired = void 0;
+exports.validateDate = exports.validateNumber = exports.validateSingleValue = exports.validateMultipleValues = exports.validateRequired = void 0;
 var validateRequired_1 = __nccwpck_require__(85069);
 Object.defineProperty(exports, "validateRequired", ({ enumerable: true, get: function () { return validateRequired_1.validateRequired; } }));
 var validateMultipleValues_1 = __nccwpck_require__(11886);
 Object.defineProperty(exports, "validateMultipleValues", ({ enumerable: true, get: function () { return validateMultipleValues_1.validateMultipleValues; } }));
+var validateSingleValue_1 = __nccwpck_require__(14242);
+Object.defineProperty(exports, "validateSingleValue", ({ enumerable: true, get: function () { return validateSingleValue_1.validateSingleValue; } }));
 var validateNumber_1 = __nccwpck_require__(20839);
 Object.defineProperty(exports, "validateNumber", ({ enumerable: true, get: function () { return validateNumber_1.validateNumber; } }));
 var validateDate_1 = __nccwpck_require__(39974);
@@ -502,6 +551,46 @@ exports.validateRequired = validateRequired;
 
 /***/ }),
 
+/***/ 14242:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateSingleValue = void 0;
+const __1 = __nccwpck_require__(41002);
+const validateSingleValue = (fields) => {
+    return Object.entries(fields).reduce((acc, [key, value]) => {
+        const inputValue = (0, __1.getValueAsIs)(key);
+        if (value.required && !value.validValues.includes(inputValue)) {
+            return {
+                ...acc,
+                errors: {
+                    ...acc.errors,
+                    [key]: inputValue ? `${key} is invalid.` : `${key} is empty.`,
+                },
+            };
+        }
+        if (!value.required && !value.validValues.includes(inputValue)) {
+            return {
+                ...acc,
+                warnings: {
+                    ...acc.warnings,
+                    [key]: inputValue ? `${key} is invalid.` : `${key} is empty.`,
+                },
+            };
+        }
+        return acc;
+    }, {
+        errors: {},
+        warnings: {},
+    });
+};
+exports.validateSingleValue = validateSingleValue;
+
+
+/***/ }),
+
 /***/ 18465:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -513,6 +602,7 @@ const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(64266);
 const constants_1 = __nccwpck_require__(95354);
 const calculations_1 = __nccwpck_require__(16576);
+const utils_2 = __nccwpck_require__(41002);
 const collectData = (data) => {
     const collection = { total: {} };
     data.pullRequestInfo.forEach((pullRequest, index) => {
@@ -522,7 +612,9 @@ const collectData = (data) => {
         const closedDate = pullRequest.closed_at
             ? (0, date_fns_1.parseISO)(pullRequest.closed_at)
             : null;
-        const dateKey = closedDate ? (0, date_fns_1.format)(closedDate, "M/y") : "invalidDate";
+        const dateKey = closedDate && (0, utils_2.getDateFormat)()
+            ? (0, date_fns_1.format)(closedDate, (0, utils_2.getDateFormat)())
+            : "invalidDate";
         const userKey = pullRequest.user?.login || constants_1.invalidUserLogin;
         if (!collection[userKey]) {
             collection[userKey] = {};
@@ -2874,14 +2966,16 @@ Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: fun
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.sortCollectionsByDate = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
+const utils_1 = __nccwpck_require__(41002);
 const sortCollectionsByDate = (collections) => Object.keys(collections)
+    .filter((key) => key !== "invalidDate")
     .slice()
     .sort((a, b) => {
     if (a === "total")
         return 1;
     if (b === "total")
         return -1;
-    return (0, date_fns_1.isBefore)((0, date_fns_1.parse)(a, "M/y", new Date()), (0, date_fns_1.parse)(b, "M/y", new Date()))
+    return (0, date_fns_1.isBefore)((0, date_fns_1.parse)(a, (0, utils_1.getDateFormat)(), new Date()), (0, date_fns_1.parse)(b, (0, utils_1.getDateFormat)(), new Date()))
         ? 1
         : -1;
 });

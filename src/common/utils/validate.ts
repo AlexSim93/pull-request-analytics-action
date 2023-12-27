@@ -1,5 +1,10 @@
 import * as core from "@actions/core";
-import { validateDate, validateNumber, validateRequired } from "./validators";
+import {
+  validateDate,
+  validateNumber,
+  validateRequired,
+  validateSingleValue,
+} from "./validators";
 import { validateMultipleValues } from "./validators";
 import { getMultipleValuesInput } from "./getMultipleValuesInput";
 import { getValueAsIs } from "./getValueAsIs";
@@ -39,6 +44,14 @@ export const validate = () => {
       },
     });
 
+  const { warnings: singleValueWarnings, errors: singleValueErrors } =
+    validateSingleValue({
+      PERIOD_SPLIT_UNIT: {
+        validValues: ["quarters", "none", "months", "years"],
+        required: false,
+      },
+    });
+
   const { warnings: numbersWarnings, errors: numbersErrors } = validateNumber({
     AMOUNT: {
       min: 0,
@@ -68,9 +81,14 @@ export const validate = () => {
     ...multipleValuesErrors,
     ...numbersErrors,
     ...dateErrors,
+    ...singleValueErrors,
     ...requiredErrors,
   };
-  const warnings = { ...multipleValuesWarnings, ...numbersWarnings };
+  const warnings = {
+    ...multipleValuesWarnings,
+    ...singleValueWarnings,
+    ...numbersWarnings,
+  };
   Object.values(errors).forEach((message) => {
     core.error(message as string);
   });
