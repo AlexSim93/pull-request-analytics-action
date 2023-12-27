@@ -171,6 +171,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
      ```
 
    - In the `workflow_dispatch` section of the yml file, I have specified various inputs that can be adjusted each time the action is triggered. By utilizing the `required` and `default` fields, I've designated whether each input is mandatory and set predetermined values for ease of use. In the `with` section, I've included parameters that remain constant for each action run. For a detailed understanding of which parameters the action accepts and their functions, please refer to the [Parameters Overview section](#configuration-parameters-overview).
+   - **GitHub Token:** The `GITHUB_TOKEN` is a special token used by the GitHub Actions runner to interact with your repository. You can generate this token as per the [GitHub Documentation on Authentication](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28). When setting up the token, ensure you configure the necessary permissions. For **pull-request-analytics-action** to function correctly, the token requires read and write repository permissions for **Administration**, **Issues**, and **Pull Requests**. Insert the token in your workflow file under the secrets context.
    - Adjust parameters to match your project's needs.
 
 4. **Commit and Push the Workflow File**:
