@@ -2381,6 +2381,7 @@ TIMEZONE: ${process.env.TIMEZONE || core.getInput("TIMEZONE")}
 REPORT_DATE_START: ${process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START")}
 REPORT_DATE_END: ${process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")}
 REPORT_PERIOD: ${process.env.REPORT_PERIOD || core.getInput("REPORT_PERIOD")}
+PERIOD_SPLIT_UNIT: ${process.env.PERIOD_SPLIT_UNIT || core.getInput("PERIOD_SPLIT_UNIT")}
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
 AGGREGATE_VALUE_METHODS: ${process.env.AGGREGATE_VALUE_METHODS ||
         core.getInput("AGGREGATE_VALUE_METHODS")}

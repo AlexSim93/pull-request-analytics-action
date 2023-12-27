@@ -31,6 +31,9 @@ REPORT_DATE_END: ${
     process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")
   }
 REPORT_PERIOD: ${process.env.REPORT_PERIOD || core.getInput("REPORT_PERIOD")}
+PERIOD_SPLIT_UNIT: ${
+    process.env.PERIOD_SPLIT_UNIT || core.getInput("PERIOD_SPLIT_UNIT")
+  }
 PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
 AGGREGATE_VALUE_METHODS: ${
     process.env.AGGREGATE_VALUE_METHODS ||
@@ -48,9 +51,7 @@ EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
 EXECUTION_OUTCOME: ${
     process.env.EXECUTION_OUTCOME || core.getInput("EXECUTION_OUTCOME")
   }
-ISSUE_NUMBER: ${
-    process.env.ISSUE_NUMBER || core.getInput("ISSUE_NUMBER")
-  }
+ISSUE_NUMBER: ${process.env.ISSUE_NUMBER || core.getInput("ISSUE_NUMBER")}
 \`\`\`
     `;
 };
