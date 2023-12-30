@@ -236,8 +236,10 @@ const validate = () => {
     const requiredErrors = (0, validators_1.validateRequired)([
         "GITHUB_TOKEN",
         ["GITHUB_OWNERS_REPOS", "ORGANIZATIONS"],
-        "GITHUB_OWNER_FOR_ISSUE",
-        "GITHUB_REPO_FOR_ISSUE",
+        ...((0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME").includes("new-issue") ||
+            (0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME").includes("existing-issue")
+            ? ["GITHUB_OWNER_FOR_ISSUE", "GITHUB_REPO_FOR_ISSUE"]
+            : []),
     ]);
     const { errors: multipleValuesErrors, warnings: multipleValuesWarnings } = (0, validators_2.validateMultipleValues)({
         SHOW_STATS_TYPES: {
@@ -484,11 +486,11 @@ const validateNumber = (field) => {
     return Object.entries(field).reduce((acc, [key, value]) => {
         const input = (0, getValueAsIs_1.getValueAsIs)(key);
         const number = parseInt(input);
-        if (Number.isNaN(number)) {
+        if (Number.isNaN(number) && value.isCritical) {
             return {
                 ...acc,
-                [value.isCritical ? "errors" : "warnings"]: {
-                    ...acc[value.isCritical ? "errors" : "warnings"],
+                errors: {
+                    ...acc.errors,
                     [key]: `${key} is not a number`,
                 },
             };
@@ -1279,9 +1281,9 @@ const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
-    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
+    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
+    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime || pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
     const timeToMerge = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
-    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
     return {
         ...collection,
         timeToReview: timeToReview
@@ -1300,9 +1302,10 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
                 link: pullRequestInfo?._links?.html?.href,
                 title: pullRequestInfo?.title,
                 comments: pullRequestInfo?.review_comments,
-                timeToReview: timeToReview || 0,
-                timeToApprove: (timeToApprove || 0) - (timeToReview || 0),
-                timeToMerge: (timeToMerge || 0) - (timeToApprove || 0),
+                timeToReview: timeToReview || timeToMerge || 0,
+                timeToApprove: (timeToApprove || timeToMerge || 0) -
+                    (timeToReview || timeToMerge || 0),
+                timeToMerge: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
             },
         ],
     };

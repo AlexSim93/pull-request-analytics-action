@@ -20,19 +20,19 @@ export const preparePullRequestTimeline = (
 
   const timeToReview = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
-    firstReview?.submitted_at,
+    firstReview?.submitted_at || pullRequestInfo?.merged_at,
+    { endOfWorkingTime, startOfWorkingTime }
+  );
+
+  const timeToApprove = calcDifferenceInMinutes(
+    pullRequestInfo?.created_at,
+    approveTime || pullRequestInfo?.merged_at,
     { endOfWorkingTime, startOfWorkingTime }
   );
 
   const timeToMerge = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
     pullRequestInfo?.merged_at,
-    { endOfWorkingTime, startOfWorkingTime }
-  );
-
-  const timeToApprove = calcDifferenceInMinutes(
-    pullRequestInfo?.created_at,
-    approveTime,
     { endOfWorkingTime, startOfWorkingTime }
   );
 
@@ -54,9 +54,11 @@ export const preparePullRequestTimeline = (
         link: pullRequestInfo?._links?.html?.href,
         title: pullRequestInfo?.title,
         comments: pullRequestInfo?.review_comments,
-        timeToReview: timeToReview || 0,
-        timeToApprove: (timeToApprove || 0) - (timeToReview || 0),
-        timeToMerge: (timeToMerge || 0) - (timeToApprove || 0),
+        timeToReview: timeToReview || timeToMerge || 0,
+        timeToApprove:
+          (timeToApprove || timeToMerge || 0) -
+          (timeToReview || timeToMerge || 0),
+        timeToMerge: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
       },
     ],
   };

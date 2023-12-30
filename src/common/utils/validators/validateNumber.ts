@@ -9,11 +9,11 @@ export const validateNumber = (field: Field) => {
     (acc, [key, value]) => {
       const input = getValueAsIs(key);
       const number = parseInt(input);
-      if (Number.isNaN(number)) {
+      if (Number.isNaN(number) && value.isCritical) {
         return {
           ...acc,
-          [value.isCritical ? "errors" : "warnings"]: {
-            ...acc[value.isCritical ? "errors" : "warnings"],
+          errors: {
+            ...acc.errors,
             [key]: `${key} is not a number`,
           },
         };
