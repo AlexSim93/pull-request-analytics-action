@@ -18,7 +18,7 @@ type Stats = {
 };
 
 export type Config = {
-  key: string;
+  token: string;
   repos: Project[];
   since?: string;
   until?: string;

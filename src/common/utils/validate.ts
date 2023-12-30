@@ -13,8 +13,10 @@ export const validate = () => {
   const requiredErrors = validateRequired([
     "GITHUB_TOKEN",
     ["GITHUB_OWNERS_REPOS", "ORGANIZATIONS"],
-    "GITHUB_OWNER_FOR_ISSUE",
-    "GITHUB_REPO_FOR_ISSUE",
+    ...(getMultipleValuesInput("EXECUTION_OUTCOME").includes("new-issue") ||
+    getMultipleValuesInput("EXECUTION_OUTCOME").includes("existing-issue")
+      ? ["GITHUB_OWNER_FOR_ISSUE", "GITHUB_REPO_FOR_ISSUE"]
+      : []),
   ]);
 
   const { errors: multipleValuesErrors, warnings: multipleValuesWarnings } =
