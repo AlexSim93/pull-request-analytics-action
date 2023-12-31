@@ -14,9 +14,11 @@ type Section = {
 export const createGanttBar = ({
   title,
   sections,
+  formatValue,
 }: {
   title: string;
   sections: Section[];
+  formatValue?: (value: number) => string;
 }) => {
   return `
 \`\`\`mermaid
@@ -30,7 +32,9 @@ ${sections
                 ${section.bars
                   .map(
                     (bar) =>
-                      `${bar.name}(${bar.end}) :${bar.type ? `${bar.type},` : ""} ${
+                      `${bar.name}(${
+                        formatValue ? formatValue(bar.end) : bar.end
+                      }) :${bar.type ? `${bar.type},` : ""} ${
                         bar.state ? `${bar.state},` : ""
                       } ${bar.start}, ${bar.end}`
                   )

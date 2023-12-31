@@ -2195,7 +2195,7 @@ Object.defineProperty(exports, "createOutput", ({ enumerable: true, get: functio
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createGanttBar = void 0;
-const createGanttBar = ({ title, sections, }) => {
+const createGanttBar = ({ title, sections, formatValue, }) => {
     return `
 \`\`\`mermaid
 gantt
@@ -2206,7 +2206,7 @@ ${sections
         .map((section) => {
         return `section ${section.name}
                 ${section.bars
-            .map((bar) => `${bar.name}(${bar.end}) :${bar.type ? `${bar.type},` : ""} ${bar.state ? `${bar.state},` : ""} ${bar.start}, ${bar.end}`)
+            .map((bar) => `${bar.name}(${formatValue ? formatValue(bar.end) : bar.end}) :${bar.type ? `${bar.type},` : ""} ${bar.state ? `${bar.state},` : ""} ${bar.start}, ${bar.end}`)
             .join("\n")}
         `;
     })
@@ -2674,6 +2674,7 @@ exports.createTimelineGanttBar = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const constants_2 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
+const formatMinutesDuration_1 = __nccwpck_require__(92411);
 const createTimelineGanttBar = (data, type, users, date) => {
     if (!users.some((user) => data[user]?.[date]?.[type]?.timeToReview &&
         data[user]?.[date]?.[type]?.timeToApprove &&
@@ -2706,6 +2707,7 @@ const createTimelineGanttBar = (data, type, users, date) => {
                 },
             ],
         })),
+        formatValue: (value) => (0, formatMinutesDuration_1.formatMinutesDuration)(value),
     });
 };
 exports.createTimelineGanttBar = createTimelineGanttBar;
@@ -2749,6 +2751,7 @@ exports.createTimelineMonthsGanttBar = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const constants_2 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
+const _1 = __nccwpck_require__(92884);
 const createTimelineMonthsGanttBar = (data, type, dates, user) => {
     return (0, common_1.createGanttBar)({
         title: `Pull request's retrospective timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${user} / minutes`,
@@ -2776,6 +2779,7 @@ const createTimelineMonthsGanttBar = (data, type, dates, user) => {
                 },
             ],
         })),
+        formatValue: (value) => (0, _1.formatMinutesDuration)(value),
     });
 };
 exports.createTimelineMonthsGanttBar = createTimelineMonthsGanttBar;

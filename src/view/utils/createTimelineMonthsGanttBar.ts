@@ -7,6 +7,7 @@ import {
 } from "./constants";
 import { createGanttBar } from "./common";
 import { StatsType } from "./types";
+import { formatMinutesDuration } from ".";
 
 export const createTimelineMonthsGanttBar = (
   data: Record<string, Record<string, Collection>>,
@@ -45,5 +46,6 @@ export const createTimelineMonthsGanttBar = (
           },
         ],
       })),
+    formatValue: (value) => formatMinutesDuration(value),
   });
 };
