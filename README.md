@@ -1,5 +1,7 @@
 # Pull request analytics action
 
+![Version](https://img.shields.io/badge/version-1.12.4-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+
 **pull-request-analytics-action**: A powerful tool for analyzing the effectiveness of both teams and individual developers. This action generates reports based on data from pull requests, code reviews, and comments, enabling you to identify your team's strengths as well as areas needing improvement. The statistics collected by this GitHub Action can be displayed in the form of tables and graphs or passed on for further operations as markdown or a data collection. No information is transferred to external services; all operations are conducted exclusively within the GitHub environment. The tool offers numerous configuration parameters and can be customized to suit specific project needs.
 
 ## Table of Contents
@@ -16,7 +18,6 @@
 - [Privacy and Data Handling](#privacy-and-data-handling)
 - [Usage Limitations](#usage-limitations)
 - [How You Can Help](#how-you-can-help)
-- [License](#license)
 
 ## Key Features:
 
@@ -264,7 +265,7 @@ Below is a table outlining the various configuration parameters available for **
 | `GITHUB_REPO_FOR_ISSUE`   | GitHub repository for issue creation                                                                                                                                                                                    | No       | -                                                        |
 | `GITHUB_OWNER_FOR_ISSUE`  | Owner of the repository for issue                                                                                                                                                                                       | No       | -                                                        |
 | `GITHUB_OWNERS_REPOS`     | Github owner/repository list separated by commas                                                                                                                                                                        | No       | -                                                        |
-| `ORGANIZATIONS`           | GitHub organizations, separated by commas. The 100 most recently updated repositories from these organizations will be added to the `GITHUB_OWNERS_REPOS` list to create an array with unique repositories.             | No       | -                                                        |
+| `ORGANIZATIONS`           | GitHub organizations, separated by commas. Repositories from these organizations will be added to the `GITHUB_OWNERS_REPOS` list to create an array with unique repositories.                                           | No       | -                                                        |
 | `SHOW_STATS_TYPES`        | Stats types that should be displayed in report. Values must be separated by commas. Can take values: `timeline`, `workload`, `pr-quality`, `code-review-engagement`                                                     | No       | `timeline, workload, pr-quality, code-review-engagement` |
 | `AGGREGATE_VALUE_METHODS` | Aggregate value methods for timelines separated by commas. Can take values: `percentile`, `average`, `median`                                                                                                           | No       | `percentile`                                             |
 | `AMOUNT`                  | Number of pull requests in the report. Ignored if the `REPORT_DATE_START` is set                                                                                                                                        | No       | `100`                                                    |
@@ -310,7 +311,7 @@ Below is a table describing the possible outputs of **pull-request-analytics-act
 
 Contributions to **pull-request-analytics-action** are always welcome, no matter how large or small. Here are some ways you can help:
 
-- **Star the Project**: If you find **pull-request-analytics-action** useful, consider giving it a star :star2: on GitHub. This helps increase its visibility and shows support for our work.
+- **Star the Project**: If you find **pull-request-analytics-action** useful, consider giving it a star :star: on GitHub. This helps increase its visibility and shows support for our work.
 - **Spread the Word**: Mention **pull-request-analytics-action** in your articles, blog posts, and social media. The more people know about it, the better it gets.
 - **Contribute to the Code**: Follow our contribution guidelines to make code contributions. Every pull request helps!
 - **Report Bugs**: Encountered an issue? Please let us know by opening an issue on GitHub. This is crucial for continuous improvement.
@@ -319,7 +320,3 @@ Contributions to **pull-request-analytics-action** are always welcome, no matter
 - **Get Featured**: If your company or project uses **pull-request-analytics-action**, let us know! We'd be proud to mention your name in our list of users. It's a great way for you to showcase your commitment to quality in software development, and it helps us demonstrate the real-world effectiveness of our tool.
 
 Your support and contributions greatly enhance this project. Together, we can make it the best tool for analyzing pull requests!
-
-## License
-
-MIT
