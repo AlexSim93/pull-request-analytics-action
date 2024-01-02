@@ -1,6 +1,6 @@
 # Pull request analytics action
 
-![Version](https://img.shields.io/badge/version-1.12.3-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.12.4-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 **pull-request-analytics-action**: A powerful tool for analyzing the effectiveness of both teams and individual developers. This action generates reports based on data from pull requests, code reviews, and comments, enabling you to identify your team's strengths as well as areas needing improvement. The statistics collected by this GitHub Action can be displayed in the form of tables and graphs or passed on for further operations as markdown or a data collection. No information is transferred to external services; all operations are conducted exclusively within the GitHub environment. The tool offers numerous configuration parameters and can be customized to suit specific project needs.
 
@@ -311,7 +311,7 @@ Below is a table describing the possible outputs of **pull-request-analytics-act
 
 Contributions to **pull-request-analytics-action** are always welcome, no matter how large or small. Here are some ways you can help:
 
-- **Star the Project**: If you find **pull-request-analytics-action** useful, consider giving it a star :star2: on GitHub. This helps increase its visibility and shows support for our work.
+- **Star the Project**: If you find **pull-request-analytics-action** useful, consider giving it a star :star: on GitHub. This helps increase its visibility and shows support for our work.
 - **Spread the Word**: Mention **pull-request-analytics-action** in your articles, blog posts, and social media. The more people know about it, the better it gets.
 - **Contribute to the Code**: Follow our contribution guidelines to make code contributions. Every pull request helps!
 - **Report Bugs**: Encountered an issue? Please let us know by opening an issue on GitHub. This is crucial for continuous improvement.
