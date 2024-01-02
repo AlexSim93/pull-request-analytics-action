@@ -1686,15 +1686,8 @@ const getOrganizationsRepositories = async () => {
     const organizations = (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS");
     const ownersRepos = [];
     for (let i = 0; i < organizations.length; i++) {
-        const organizationRepositories = await octokit_1.octokit.rest.repos.listForOrg({
-            org: organizations[i],
-            type: "all",
-            sort: "pushed",
-            direction: "desc",
-            page: 1,
-            per_page: 100,
-        });
-        const repos = organizationRepositories.data.map((el) => [
+        const organizationRepositories = await octokit_1.octokit.paginate(octokit_1.octokit.rest.repos.listForOrg, { org: organizations[i], type: "all", sort: "pushed", direction: "desc" });
+        const repos = organizationRepositories.map((el) => [
             el.owner.login,
             el.name,
         ]);
