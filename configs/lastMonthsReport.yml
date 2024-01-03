@@ -20,7 +20,8 @@ jobs:
           CORE_HOURS_END: "19:00"
           TIMEZONE: "Europe/Berlin"
           REPORT_PERIOD: "months:3"
-          SHOW_STATS_TYPES: average
+          AGGREGATE_VALUE_METHODS: average
+          SHOW_STATS_TYPES: timeline
           PERIOD_SPLIT_UNIT: none
           TOP_LIST_AMOUNT: 5
           EXECUTION_OUTCOME: existing-issue
