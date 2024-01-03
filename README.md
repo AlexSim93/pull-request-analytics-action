@@ -24,72 +24,73 @@
 
 - **Customizable Tables and Graphs for Review Timelines**: Generates user-friendly tables and graphs that mark critical milestones from PR opening to review, approval, and merge. Users can select the calculation method best suited for them, choosing from median, mean (average), or a selected percentile. This feature helps to identify bottlenecks in the code review process.
 
-|   user    |   Time to review   |   Time to approve   |    Time to merge    | Total merged PRs |
-| :-------: | :----------------: | :-----------------: | :-----------------: | :--------------: |
-| **dev1**  | 3 hours 35 minutes | 10 hours 22 minutes | 20 hours 52 minutes |        34        |
-| **dev2**  | 2 hours 41 minutes | 3 hours 56 minutes  | 11 hours 30 minutes |        49        |
-| **dev3**  | 2 hours 5 minutes  | 2 hours 19 minutes  | 37 hours 46 minutes |        33        |
-| **dev4**  | 2 hours 41 minutes | 11 hours 23 minutes | 28 hours 15 minutes |        28        |
-| **dev5**  | 8 hours 6 minutes  | 10 hours 35 minutes | 44 hours 51 minutes |        26        |
-| **total** | 3 hours 20 minutes | 6 hours 59 minutes  | 25 hours 49 minutes |       171        |
+|   user    |   Time to review    |   Time to approve   |    Time to merge    | Total merged PRs |
+| :-------: | :-----------------: | :-----------------: | :-----------------: | :--------------: |
+| **dev1**  | 3 hours 34 minutes  | 7 hours 32 minutes  | 14 hours 9 minutes  |        22        |
+| **dev2**  |       4 hours       |       4 hours       |  23 hours 1 minute  |        13        |
+| **dev3**  | 15 hours 16 minutes | 24 hours 7 minutes  | 53 hours 43 minutes |        2         |
+| **dev4**  | 2 hours 41 minutes  | 9 hours 15 minutes  | 47 hours 41 minutes |        8         |
+| **dev5**  | 5 hours 59 minutes  | 18 hours 55 minutes | 40 hours 7 minutes  |        2         |
+| **total** | 4 hours 21 minutes  | 7 hours 36 minutes  | 26 hours 14 minutes |        47        |
 
 ```mermaid
 gantt
-title Pull requests timeline(percentile75) total / minutes
+title Pull requests timeline(percentile75) 12/2023 / minutes
 dateFormat X
 axisFormat %s
 section dev1
-Time to review(215) : 0, 215
-Time to approve(622) : 0, 622
-Time to merge(1252) : 0, 1252
+Time to review(3 hours 34 minutes) :  0, 214
+Time to approve(7 hours 32 minutes) :  0, 452
+Time to merge(14 hours 9 minutes) :  0, 849
 
 section dev2
-Time to review(161) : 0, 161
-Time to approve(236) : 0, 236
-Time to merge(690) : 0, 690
+Time to review(4 hours) :  0, 240
+Time to approve(4 hours) :  0, 240
+Time to merge(23 hours 1 minute) :  0, 1381
 
 section dev3
-Time to review(125) : 0, 125
-Time to approve(139) : 0, 139
-Time to merge(2266) : 0, 2266
+Time to review(15 hours 16 minutes) :  0, 916
+Time to approve(24 hours 7 minutes) :  0, 1447
+Time to merge(53 hours 43 minutes) :  0, 3223
 
 section dev4
-Time to review(161) : 0, 161
-Time to approve(683) : 0, 683
-Time to merge(1695) : 0, 1695
+Time to review(2 hours 41 minutes) :  0, 161
+Time to approve(9 hours 15 minutes) :  0, 555
+Time to merge(47 hours 41 minutes) :  0, 2861
 
 section dev5
-Time to review(486) : 0, 486
-Time to approve(635) : 0, 635
-Time to merge(2691) : 0, 2691
+Time to review(5 hours 59 minutes) :  0, 359
+Time to approve(18 hours 55 minutes) :  0, 1135
+Time to merge(40 hours 7 minutes) :  0, 2407
 
 section total
-Time to review(200) : 0, 200
-Time to approve(419) : 0, 419
-Time to merge(1549) : 0, 1549
+Time to review(4 hours 21 minutes) :  0, 261
+Time to approve(7 hours 36 minutes) :  0, 456
+Time to merge(26 hours 14 minutes) :  0, 1574
+
 ```
 
 - **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
 
-|   user    | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs / s / m / l / xl | Total comments | Reviews conducted |
-| :-------: | :--------------: | :--------------: | :-----------------: | :--------------------------: | :------------: | :---------------: |
-| **dev1**  |        42        |        34        |     +6759/-6457     |      23 / 6 / 7 / 3 / 3      |      254       |        33         |
-| **dev2**  |        54        |        49        |     +4011/-3296     |     37 / 12 / 3 / 0 / 2      |       7        |        65         |
-| **dev3**  |        35        |        33        |     +4729/-3413     |      18 / 8 / 3 / 3 / 3      |       70       |        43         |
-| **dev4**  |        29        |        28        |     +3489/-1322     |      14 / 8 / 4 / 2 / 1      |      152       |        19         |
-| **dev5**  |        28        |        26        |     +2529/-1361     |      18 / 4 / 4 / 2 / 0      |       16       |        40         |
-| **total** |       200        |       171        |    +71881/-16131    |   117 / 41 / 21 / 10 / 11    |      519       |        177        |
+|   user    | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments | Reviews conducted |
+| :-------: | :--------------: | :--------------: | :-----------------: | :------------------: | :------------: | :---------------: |
+| **dev1**  |        24        |        22        |     +1448/-3110     |      14/5/4/0/1      |       41       |         8         |
+| **dev2**  |        14        |        13        |     +813/-2062      |      7/4/1/2/0       |       6        |        20         |
+| **dev3**  |        2         |        2         |       +15/-3        |      2/0/0/0/0       |       1        |        10         |
+| **dev4**  |        8         |        8         |     +5416/-4600     |      6/0/1/0/1       |       7        |         9         |
+| **dev5**  |        2         |        2         |      +838/-362      |      1/0/0/0/1       |       16       |         2         |
+| **total** |        50        |        47        |    +8530/-10137     |      30/9/6/2/3      |       71       |        46         |
 
 - **Quality Report on devInitiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
 
-|   user    | Total merged PRs | Changes requested received | Discussions received | Comments received |
-| :-------: | :--------------: | :------------------------: | :------------------: | :---------------: |
-| **dev1**  |        34        |             14             |          82          |        124        |
-| **dev2**  |        49        |             0              |          4           |         4         |
-| **dev3**  |        33        |             5              |          36          |        38         |
-| **dev4**  |        28        |             9              |          61          |        76         |
-| **dev5**  |        26        |             1              |          6           |         8         |
-| **total** |       171        |             29             |         197          |        260        |
+|   user    | Total merged PRs | Changes requested received | Agreed / Disagreed / Total discussions received | Comments received |
+| :-------: | :--------------: | :------------------------: | :---------------------------------------------: | :---------------: |
+| **dev1**  |        22        |             3              |                   0 / 0 / 10                    |        20         |
+| **dev2**  |        13        |             1              |                    0 / 0 / 2                    |         3         |
+| **dev3**  |        2         |             0              |                    0 / 0 / 1                    |         1         |
+| **dev4**  |        8         |             1              |                    0 / 0 / 4                    |         4         |
+| **dev5**  |        2         |             1              |                    3 / 2 / 8                    |         9         |
+| **total** |        47        |             6              |                   3 / 2 / 25                    |        37         |
 
 ```mermaid
 pie
@@ -103,14 +104,14 @@ title Discussions types total 12/2023
 
 - **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
 
-|   user    | Total merged PRs | Discussions conducted | Comments conducted | PR size: xs / s / m / l / xl | Changes requested / Comments / Approvals |
-| :-------: | :--------------: | :-------------------: | :----------------: | :--------------------------: | :--------------------------------------: |
-| **dev1**  |        34        |          18           |         21         |     18 / 12 / 1 / 1 / 1      |               0 / 11 / 26                |
-| **dev2**  |        49        |          141          |        197         |     30 / 15 / 8 / 6 / 6      |               25 / 25 / 64               |
-| **dev3**  |        33        |           5           |         5          |      30 / 7 / 3 / 2 / 1      |                0 / 4 / 42                |
-| **dev4**  |        28        |           2           |         2          |      13 / 5 / 1 / 0 / 0      |                0 / 1 / 19                |
-| **dev5**  |        26        |          29           |         30         |      25 / 8 / 3 / 2 / 2      |                4 / 3 / 37                |
-| **total** |       171        |          197          |        260         |   117 / 41 / 21 / 10 / 11    |              29 / 50 / 175               |
+|   user    | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
+| :-------: | :--------------: | :----------------------------------------------: | :----------------: | :------------------: | :--------------------------------------: |
+| **dev1**  |        22        |                    0 / 0 / 0                     |         0          |      5/2/0/1/0       |                0 / 0 / 8                 |
+| **dev2**  |        13        |                    3 / 2 / 22                    |         33         |      10/3/4/0/3      |                5 / 8 / 20                |
+| **dev3**  |        2         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |
+| **dev4**  |        8         |                    0 / 0 / 0                     |         0          |      6/2/1/0/0       |                0 / 0 / 9                 |
+| **dev5**  |        2         |                    0 / 0 / 1                     |         1          |      2/0/0/0/0       |                0 / 1 / 2                 |
+| **total** |        47        |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |
 
 - **Highlighted PRs List by Key Metrics**: One of the standout features of **pull-request-analytics-action** is the ability to generate a list of the most notable pull requests based on four key metrics: time from opening to review, time from review to approval, time from approval to merge, and the number of comments. This feature provides a list of links directly to these exceptional PRs, allowing for quick access and detailed analysis.
 

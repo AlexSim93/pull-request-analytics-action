@@ -2036,10 +2036,11 @@ const createMarkdown = (data, users, dates, title = "Pull Request report", refer
     });
     if (content.join("").trim() === "")
         return "";
+    const issueDescription = `This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
+  ${(0, utils_1.createConfigParamsCode)()}`;
     return `
 ## ${title}
-This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
-  ${(0, utils_1.createConfigParamsCode)()}
+  ${dates.includes("total") ? issueDescription : ""}
   ${(0, utils_1.createReferences)(references)}
     ${content.join("\n")}
   `;
@@ -2322,74 +2323,54 @@ exports.discussionsHeader = "Agreed / Disagreed / Total discussions received";
 exports.discussionsConductedHeader = "Agreed / Disagreed / Total discussions conducted";
 exports.commentsConductedHeader = "Comments conducted";
 exports.commentsReceivedHeader = "Comments received";
-exports.reviewTypesHeader = "Changes requested / Comments / Approvals";
+exports.reviewTypesHeader = "Changes requested / Commented / Approved";
 exports.requestChangesReceived = "Changes requested received";
-exports.prSizesHeader = "PR size: xs / s / m / l / xl";
+exports.prSizesHeader = "PR size: xs/s/m/l/xl";
 
 
 /***/ }),
 
 /***/ 96354:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createConfigParamsCode = void 0;
-const core = __importStar(__nccwpck_require__(42186));
+const utils_1 = __nccwpck_require__(41002);
 const createConfigParamsCode = () => {
     return `
 Below are the settings applied for this report:
 \`\`\`
-GITHUB_OWNERS_REPOS: ${process.env.GITHUB_OWNERS_REPOS || core.getInput("GITHUB_OWNERS_REPOS")}
-ORGANIZATIONS: ${process.env.ORGANIZATIONS || core.getInput("ORGANIZATIONS")}
-GITHUB_REPO_FOR_ISSUE: ${process.env.GITHUB_REPO_FOR_ISSUE || core.getInput("GITHUB_REPO_FOR_ISSUE")}
-GITHUB_OWNER_FOR_ISSUE: ${process.env.GITHUB_OWNER_FOR_ISSUE ||
-        core.getInput("GITHUB_OWNER_FOR_ISSUE")}
-AMOUNT: ${process.env.AMOUNT || core.getInput("AMOUNT")}
-TOP_LIST_AMOUNT: ${process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")}
-CORE_HOURS_START: ${process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START")}
-CORE_HOURS_END: ${process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END")}
-TIMEZONE: ${process.env.TIMEZONE || core.getInput("TIMEZONE")}
-REPORT_DATE_START: ${process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START")}
-REPORT_DATE_END: ${process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END")}
-REPORT_PERIOD: ${process.env.REPORT_PERIOD || core.getInput("REPORT_PERIOD")}
-PERIOD_SPLIT_UNIT: ${process.env.PERIOD_SPLIT_UNIT || core.getInput("PERIOD_SPLIT_UNIT")}
-PERCENTILE: ${process.env.PERCENTILE || core.getInput("PERCENTILE")}
-AGGREGATE_VALUE_METHODS: ${process.env.AGGREGATE_VALUE_METHODS ||
-        core.getInput("AGGREGATE_VALUE_METHODS")}
-SHOW_STATS_TYPES: ${process.env.SHOW_STATS_TYPES || core.getInput("SHOW_STATS_TYPES")}
-LABELS: ${process.env.LABELS || core.getInput("LABELS")}
-ASSIGNEES: ${process.env.ASSIGNEES || core.getInput("ASSIGNEES")}
-HIDE_USERS: ${process.env.HIDE_USERS || core.getInput("HIDE_USERS")}
-SHOW_USERS: ${process.env.SHOW_USERS || core.getInput("SHOW_USERS")}
-INCLUDE_LABELS: ${process.env.INCLUDE_LABELS || core.getInput("INCLUDE_LABELS")}
-EXCLUDE_LABELS: ${process.env.EXCLUDE_LABELS || core.getInput("EXCLUDE_LABELS")}
-EXECUTION_OUTCOME: ${process.env.EXECUTION_OUTCOME || core.getInput("EXECUTION_OUTCOME")}
-ISSUE_NUMBER: ${process.env.ISSUE_NUMBER || core.getInput("ISSUE_NUMBER")}
+${[
+        "GITHUB_OWNERS_REPOS",
+        "ORGANIZATIONS",
+        "GITHUB_OWNER_FOR_ISSUE",
+        "GITHUB_REPO_FOR_ISSUE",
+        "ASSIGNEES",
+        "LABELS",
+        "SHOW_STATS_TYPES",
+        "TOP_LIST_AMOUNT",
+        "AGGREGATE_VALUE_METHODS",
+        "PERCENTILE",
+        "HIDE_USERS",
+        "SHOW_USERS",
+        "TIMEZONE",
+        "CORE_HOURS_START",
+        "CORE_HOURS_END",
+        "REPORT_PERIOD",
+        "REPORT_DATE_START",
+        "REPORT_DATE_END",
+        "AMOUNT",
+        "PERIOD_SPLIT_UNIT",
+        "INCLUDE_LABELS",
+        "EXCLUDE_LABELS",
+        "EXECUTION_OUTCOME",
+        "ISSUE_NUMBER",
+    ]
+        .filter((name) => (0, utils_1.getValueAsIs)(name))
+        .map((name) => `${name}: ${(0, utils_1.getValueAsIs)(name)}`)
+        .join("\n")}
 \`\`\`
     `;
 };
@@ -2490,7 +2471,7 @@ const createPullRequestQualityTable = (data, users, date) => {
     return [
         (0, common_1.createTable)({
             title: `Pull request quality ${date}`,
-            description: "The table includes discussions and comments on closed pull requests.",
+            description: "**Agreed** - discussions with at least 1 reaction :+1:.\n**Disagreed** - discussions with at least 1 reaction :-1:.",
             table: {
                 headers: [
                     "user",
@@ -2554,14 +2535,14 @@ const createReviewTable = (data, users, date) => {
             data[user]?.[date]?.commentsConducted?.toString() || "0",
             `${sizes
                 .map((size) => data[user]?.[date]?.reviewsConductedSize?.filter((prSize) => prSize === size).length || 0)
-                .join(" / ")}`,
+                .join("/")}`,
             `${data[user]?.[date]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() ||
                 0} / ${data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0}`,
         ];
     });
     return (0, common_1.createTable)({
         title: `Code review engagement ${date}`,
-        description: "**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Changes requested / Comments / Approvals** - number of Reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.",
+        description: "**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Changes requested / Comments / Approvals** - number of reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.\n**Agreed** - discussions with at least 1 reaction :+1:.\n**Disagreed** - discussions with at least 1 reaction :-1:.",
         table: {
             headers: [
                 "user",
@@ -2847,14 +2828,14 @@ const createTotalTable = (data, users, date) => {
             `${sizes
                 .map((size) => data[user]?.[date]?.prSizes?.filter((prSize) => prSize === size)
                 .length || 0)
-                .join(" / ")}`,
+                .join("/")}`,
             data[user]?.[date]?.totalReviewComments?.toString() || "0",
             data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
         ];
     });
     return (0, common_1.createTable)({
         title: `Workload stats ${date}`,
-        description: "**Reviews conducted** - number of Reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",
+        description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",
         table: {
             headers: [
                 "user",

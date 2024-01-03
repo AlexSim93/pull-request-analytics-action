@@ -38,12 +38,14 @@ export const createMarkdown = (
 
   if (content.join("").trim() === "") return "";
 
-  return `
-## ${title}
-This report based on ${
+  const issueDescription = `This report based on ${
     data.total?.total?.closed || 0
   } last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
-  ${createConfigParamsCode()}
+  ${createConfigParamsCode()}`;
+
+  return `
+## ${title}
+  ${dates.includes("total") ? issueDescription : ""}
   ${createReferences(references)}
     ${content.join("\n")}
   `;

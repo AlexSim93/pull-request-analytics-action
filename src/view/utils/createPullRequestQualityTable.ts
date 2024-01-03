@@ -60,7 +60,7 @@ export const createPullRequestQualityTable = (
     createTable({
       title: `Pull request quality ${date}`,
       description:
-        "The table includes discussions and comments on closed pull requests.",
+        "**Agreed** - discussions with at least 1 reaction :+1:.\n**Disagreed** - discussions with at least 1 reaction :-1:.",
       table: {
         headers: [
           "user",

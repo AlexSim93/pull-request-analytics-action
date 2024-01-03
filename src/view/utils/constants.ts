@@ -12,6 +12,6 @@ export const discussionsConductedHeader =
   "Agreed / Disagreed / Total discussions conducted";
 export const commentsConductedHeader = "Comments conducted";
 export const commentsReceivedHeader = "Comments received";
-export const reviewTypesHeader = "Changes requested / Comments / Approvals";
+export const reviewTypesHeader = "Changes requested / Commented / Approved";
 export const requestChangesReceived = "Changes requested received";
-export const prSizesHeader = "PR size: xs / s / m / l / xl";
+export const prSizesHeader = "PR size: xs/s/m/l/xl";
