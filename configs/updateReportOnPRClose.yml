@@ -1,0 +1,22 @@
+name: "Up-to-Date Statistics for Latest 200 Closed PRs"
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  create-report:
+    name: "Create report"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Run script for analytics"
+        uses: AlexSim93/pull-request-analytics-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          LABELS: "Report"
+          GITHUB_OWNER_FOR_ISSUE: "owner"
+          GITHUB_REPO_FOR_ISSUE: "repo"
+          GITHUB_OWNERS_REPOS: "owner/repo"
+          CORE_HOURS_START: "9:00"
+          CORE_HOURS_END: "19:00"
+          TIMEZONE: "Europe/Berlin"
+          PERIOD_SPLIT_UNIT: none
+          AMOUNT: 200

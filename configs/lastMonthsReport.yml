@@ -1,0 +1,27 @@
+name: "Quarterly Report Update on the 1st of Each Month"
+on:
+  schedule:
+    - cron: "0 1 1 * *"
+jobs:
+  create-report:
+    name: "Create report"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Runs script for analytics"
+        uses: AlexSim93/pull-request-analytics-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          LABELS: "Report"
+          ASSIGNEES: "user-1, user-2, user-3"
+          GITHUB_OWNER_FOR_ISSUE: "owner"
+          GITHUB_REPO_FOR_ISSUE: "repo"
+          GITHUB_OWNERS_REPOS: "owner/repo"
+          CORE_HOURS_START: "9:00"
+          CORE_HOURS_END: "19:00"
+          TIMEZONE: "Europe/Berlin"
+          REPORT_PERIOD: "months:3"
+          SHOW_STATS_TYPES: average
+          PERIOD_SPLIT_UNIT: none
+          TOP_LIST_AMOUNT: 5
+          EXECUTION_OUTCOME: existing-issue
+          ISSUE_NUMBER: 1

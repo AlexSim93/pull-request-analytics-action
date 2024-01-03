@@ -8,6 +8,7 @@
 
 - [Key Features](#key-features)
 - [Getting started](#getting-started)
+- [Configuration Examples](#configuration-examples)
 - [Report examples](#report-examples)
 - [Using GitHub Enterprise Server](#using-github-enterprise-server)
 - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
@@ -139,10 +140,6 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
      on:
        workflow_dispatch:
          inputs:
-           amount:
-             description: "Amount of PRs"
-             required: false
-             default: "100"
            report_date_start:
              description: "Report date start(d/MM/yyyy)"
              required: false
@@ -158,15 +155,12 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
              uses: AlexSim93/pull-request-analytics-action@master
              with:
                GITHUB_TOKEN: ${{ secrets.TOKEN }}
-               ASSIGNEES: "user-1, user-2, user-3"
-               LABELS: "Report"
                GITHUB_REPO_FOR_ISSUE: "repo"
                GITHUB_OWNER_FOR_ISSUE: "owner"
                GITHUB_OWNERS_REPOS: "owner-1/repo-1"
                CORE_HOURS_START: "9:00"
                CORE_HOURS_END: "19:00"
                TIMEZONE: "Europe/Berlin"
-               AMOUNT: ${{ inputs.amount }}
                REPORT_DATE_START: ${{ inputs.report_date_start }}
                REPORT_DATE_END: ${{ inputs.report_date_end }}
      ```
@@ -192,6 +186,16 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
    - If configured, check for a new issue in the specified repository containing the report.
 
 This setup allows you to fully leverage **pull-request-analytics-action** for comprehensive PR analysis, tailored to your project’s needs.
+
+## Configuration Examples
+
+1. **Manual Execution for All Organization Repositories**: Includes options to set start and end dates for the statistics period and to customize the report title. [View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/manualTriggerForAllReposOfOrg.yml)
+
+2. **Up-to-Date Statistics for Latest 200 Closed PRs**: Automatically updates the report with every PR closure, maintaining current statistics for the last 200 updated closed PRs.[View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/updateReportOnPRClose.yml)
+
+3. **Yearly Statistics Update Every Monday**: Configured to update yearly statistics every Monday, with assignees set and excluding individual developer statistics. [View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/yearReportWithoutDevelopers.yml)
+
+4. **Quarterly Report Update on the 1st of Each Month**: Updates the report for the last three months on the first day of each month, displaying only the average values for timelines and specifying assignees. [View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/lastMonthsReport.yml)
 
 ## Report Examples
 
