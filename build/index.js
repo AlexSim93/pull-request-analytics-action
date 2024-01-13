@@ -629,7 +629,7 @@ const collectData = (data) => {
             : null;
         const dateKey = closedDate && (0, utils_2.getDateFormat)()
             ? (0, date_fns_1.format)(closedDate, (0, utils_2.getDateFormat)())
-            : "invalidDate";
+            : constants_1.invalidDate;
         const userKey = pullRequest.user?.login || constants_1.invalidUserLogin;
         if (!collection[userKey]) {
             collection[userKey] = {};
@@ -661,8 +661,9 @@ exports.collectData = collectData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.invalidUserLogin = void 0;
+exports.invalidDate = exports.invalidUserLogin = void 0;
 exports.invalidUserLogin = "Invalid-User-PRAA";
+exports.invalidDate = "invalidDate";
 
 
 /***/ }),
@@ -1469,8 +1470,9 @@ const core = __importStar(__nccwpck_require__(42186));
 const plugin_throttling_1 = __nccwpck_require__(9968);
 const utils_1 = __nccwpck_require__(41002);
 octokit_1.Octokit.plugin(plugin_throttling_1.throttling);
+const defaultBaseUrl = "https://api.github.com";
 exports.octokit = new octokit_1.Octokit({
-    baseUrl: process.env['GITHUB_API_URL'] || 'https://api.github.com',
+    baseUrl: process.env["GITHUB_API_URL"] || defaultBaseUrl,
     auth: (0, utils_1.getValueAsIs)("GITHUB_TOKEN"),
     throttle: {
         onSecondaryRateLimit: (_, options) => {
@@ -2815,10 +2817,11 @@ Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: fun
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.sortCollectionsByDate = void 0;
+const constants_1 = __nccwpck_require__(95354);
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
 const sortCollectionsByDate = (collections) => Object.keys(collections)
-    .filter((key) => key !== "invalidDate")
+    .filter((key) => key !== constants_1.invalidDate)
     .slice()
     .sort((a, b) => {
     if (a === "total")

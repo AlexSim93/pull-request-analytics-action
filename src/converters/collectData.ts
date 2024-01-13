@@ -8,7 +8,7 @@ import {
   preparePullRequestStats,
   preparePullRequestTimeline,
 } from "./utils";
-import { invalidUserLogin } from "./constants";
+import { invalidUserLogin, invalidDate } from "./constants";
 import { getPullRequestSize } from "./utils/calculations";
 import { getDateFormat } from "../common/utils";
 
@@ -28,7 +28,7 @@ export const collectData = (
     const dateKey =
       closedDate && getDateFormat()
         ? format(closedDate, getDateFormat())
-        : "invalidDate";
+        : invalidDate;
 
     const userKey = pullRequest.user?.login || invalidUserLogin;
     if (!collection[userKey]) {
