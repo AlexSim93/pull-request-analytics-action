@@ -1,4 +1,3 @@
-import * as core from "@actions/core";
 import { Collection } from "../../converters/types";
 import {
   commentsReceivedHeader,
@@ -8,6 +7,7 @@ import {
 } from "./constants";
 import { createTable, createList } from "./common";
 import { createDiscussionsPieChart } from "./createDiscussionsPieChart";
+import { getValueAsIs } from "../../common/utils";
 
 export const createPullRequestQualityTable = (
   data: Record<string, Record<string, Collection>>,
@@ -48,7 +48,7 @@ export const createPullRequestQualityTable = (
       .slice(
         0,
         parseInt(
-          process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")
+          getValueAsIs("TOP_LIST_AMOUNT")
         )
       )
       .map((item) => ({

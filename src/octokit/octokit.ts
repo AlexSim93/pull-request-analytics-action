@@ -1,12 +1,15 @@
 import { Octokit } from "octokit";
 import * as core from "@actions/core";
 import { throttling } from "@octokit/plugin-throttling";
+import { getValueAsIs } from "../common/utils";
 
 Octokit.plugin(throttling);
 
+const defaultBaseUrl = "https://api.github.com";
+
 export const octokit = new Octokit({
-  baseUrl: process.env['GITHUB_API_URL'] || 'https://api.github.com',
-  auth: core.getInput("GITHUB_TOKEN") || process.env.GITHUB_TOKEN,
+  baseUrl: process.env["GITHUB_API_URL"] || defaultBaseUrl,
+  auth: getValueAsIs("GITHUB_TOKEN"),
   throttle: {
     onSecondaryRateLimit: (_, options) => {
       octokit.log.error(

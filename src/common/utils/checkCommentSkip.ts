@@ -1,9 +1,9 @@
+import { showStatsTypes } from "../constants";
 import { getMultipleValuesInput } from "./getMultipleValuesInput";
 
 export const checkCommentSkip = () => {
-  return (
-    !getMultipleValuesInput("SHOW_STATS_TYPES").includes(
-      "code-review-engagement"
-    ) && !getMultipleValuesInput("SHOW_STATS_TYPES").includes("pr-quality")
-  );
+  return ![
+    showStatsTypes["pr-quality"],
+    showStatsTypes["code-review-engagement"],
+  ].some((block) => getMultipleValuesInput("SHOW_STATS_TYPES").includes(block));
 };

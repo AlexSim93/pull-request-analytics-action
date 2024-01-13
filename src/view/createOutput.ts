@@ -45,12 +45,8 @@ export const createOutput = async (
       const comments = [];
       if (monthComparison) {
         const comparisonComment = await octokit.rest.issues.createComment({
-          repo:
-            core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-            process.env.GITHUB_REPO_FOR_ISSUE!,
-          owner:
-            core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            process.env.GITHUB_OWNER_FOR_ISSUE!,
+          repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
+          owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
           issue_number: issue.data.number,
           body: monthComparison,
         });
@@ -76,24 +72,16 @@ export const createOutput = async (
         );
         if (commentMarkdown === "") continue;
         const comment = await octokit.rest.issues.createComment({
-          repo:
-            core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-            process.env.GITHUB_REPO_FOR_ISSUE!,
-          owner:
-            core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-            process.env.GITHUB_OWNER_FOR_ISSUE!,
+          repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
+          owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
           issue_number: issue.data.number,
           body: commentMarkdown,
         });
         comments.push({ comment, title: date });
       }
       await octokit.rest.issues.update({
-        repo:
-          core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-          process.env.GITHUB_REPO_FOR_ISSUE!,
-        owner:
-          core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-          process.env.GITHUB_OWNER_FOR_ISSUE!,
+        repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
+        owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
         issue_number: issue.data.number,
         body: createMarkdown(
           data,

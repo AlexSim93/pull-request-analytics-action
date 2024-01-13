@@ -1,7 +1,8 @@
-import * as core from "@actions/core";
+import { getValueAsIs } from "./getValueAsIs";
 
 export const setTimezone = () => {
-  if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
-    process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
+  const timezone = getValueAsIs("TIMEZONE");
+  if (timezone) {
+    process.env.TZ = timezone;
   }
 };

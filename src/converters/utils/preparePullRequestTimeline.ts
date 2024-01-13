@@ -1,4 +1,4 @@
-import { endOfWorkingTime, startOfWorkingTime } from "../constants";
+import { getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 import { getApproveTime } from "./calculations";
@@ -21,19 +21,28 @@ export const preparePullRequestTimeline = (
   const timeToReview = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
     firstReview?.submitted_at || pullRequestInfo?.merged_at,
-    { endOfWorkingTime, startOfWorkingTime }
+    {
+      endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
+      startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
+    }
   );
 
   const timeToApprove = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
     approveTime || pullRequestInfo?.merged_at,
-    { endOfWorkingTime, startOfWorkingTime }
+    {
+      endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
+      startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
+    }
   );
 
   const timeToMerge = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
     pullRequestInfo?.merged_at,
-    { endOfWorkingTime, startOfWorkingTime }
+    {
+      endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
+      startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
+    }
   );
 
   return {

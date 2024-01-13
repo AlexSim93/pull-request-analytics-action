@@ -9,7 +9,12 @@ import {
 } from "./requests";
 import { collectData } from "./converters";
 import { octokit } from "./octokit/octokit";
-import { checkCommentSkip, setTimezone, validate } from "./common/utils";
+import {
+  checkCommentSkip,
+  getValueAsIs,
+  setTimezone,
+  validate,
+} from "./common/utils";
 
 async function main() {
   setTimezone();
@@ -39,7 +44,7 @@ async function main() {
   const data = [];
   for (let i = 0; i < repos.length; i++) {
     const result = await makeComplexRequest(
-      parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT!,
+      parseInt(getValueAsIs("AMOUNT")),
       {
         owner: repos[i][0],
         repo: repos[i][1],

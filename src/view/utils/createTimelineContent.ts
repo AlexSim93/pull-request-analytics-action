@@ -1,5 +1,4 @@
-import * as core from "@actions/core";
-import { getMultipleValuesInput } from "../../common/utils";
+import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { Collection } from "../../converters/types";
 import { createList } from "./common";
 import { createTimelineGanttBar } from "./createTimelineGanttBar";
@@ -27,12 +26,7 @@ export const createTimelineContent = (
         data.total?.[date]?.pullRequestsInfo
           ?.slice()
           ?.sort((a, b) => b[milestone] - a[milestone])
-          .slice(
-            0,
-            parseInt(
-              process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")
-            )
-          )
+          .slice(0, parseInt(getValueAsIs("TOP_LIST_AMOUNT")))
           .map((item) => ({
             text: `${item.title}(${formatMinutesDuration(item[milestone])})`,
             link: item.link || "",

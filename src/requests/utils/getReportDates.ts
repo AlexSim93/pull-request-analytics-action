@@ -1,12 +1,9 @@
-import * as core from "@actions/core";
 import { parse, sub } from "date-fns";
-import { getMultipleValuesInput } from "../../common/utils";
+import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 
 export const getReportDates = () => {
-  const startReportDate =
-    process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START");
-  const endReportDate =
-    process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END");
+  const startReportDate = getValueAsIs("REPORT_DATE_START");
+  const endReportDate = getValueAsIs("REPORT_DATE_END");
   const subOptions = getMultipleValuesInput("REPORT_PERIOD").reduce(
     (acc, el) => {
       const [key, value] = el.split(":");

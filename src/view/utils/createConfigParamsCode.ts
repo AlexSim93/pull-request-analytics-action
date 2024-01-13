@@ -1,4 +1,3 @@
-import * as core from "@actions/core";
 import { getValueAsIs } from "../../common/utils";
 
 export const createConfigParamsCode = () => {

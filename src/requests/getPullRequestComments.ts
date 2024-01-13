@@ -9,21 +9,12 @@ export const getPullRequestComments = async (
   const { owner, repo } = repository;
   return !options?.skip
     ? pullRequestNumbers.map(async (number) => {
-        const data = [];
-        for (let i = 1, shouldStop = false; shouldStop === false; i++) {
-          const comments = await octokit.rest.pulls.listReviewComments({
-            owner,
-            repo,
-            pull_number: number,
-            per_page: 100,
-            page: i,
-          });
-          if (comments.data.length < 100) {
-            shouldStop = true;
-          }
-          data.push(...comments.data);
-        }
-        return { data };
+        const comments = await octokit.paginate(
+          octokit.rest.pulls.listReviewComments,
+          { owner, repo, pull_number: number }
+        );
+
+        return { data: comments };
       })
     : [];
 };
