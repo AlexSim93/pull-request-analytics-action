@@ -55,9 +55,13 @@ exports.periodSplitUnit = {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.checkCommentSkip = void 0;
+const constants_1 = __nccwpck_require__(11140);
 const getMultipleValuesInput_1 = __nccwpck_require__(31437);
 const checkCommentSkip = () => {
-    return (!(0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes("code-review-engagement") && !(0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes("pr-quality"));
+    return ![
+        constants_1.showStatsTypes["pr-quality"],
+        constants_1.showStatsTypes["code-review-engagement"],
+    ].some((block) => (0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes(block));
 };
 exports.checkCommentSkip = checkCommentSkip;
 
