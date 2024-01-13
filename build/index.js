@@ -7,11 +7,42 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.dateFormats = void 0;
+exports.periodSplitUnit = exports.executionOutcomes = exports.pullRequestSize = exports.showStatsTypes = exports.aggregateValueMethods = exports.dateFormats = void 0;
 exports.dateFormats = {
     months: "M/y",
     quarters: "QQQ/y",
     years: "y",
+};
+exports.aggregateValueMethods = {
+    average: "average",
+    median: "median",
+    percentile: "percentile",
+};
+exports.showStatsTypes = {
+    timeline: "timeline",
+    workload: "workload",
+    ["pr-quality"]: "pr-quality",
+    ["code-review-engagement"]: "code-review-engagement",
+};
+exports.pullRequestSize = {
+    xs: "xs",
+    s: "s",
+    m: "m",
+    l: "l",
+    xl: "xl",
+};
+exports.executionOutcomes = {
+    "new-issue": "new-issue",
+    "existing-issue": "existing-issue",
+    markdown: "markdown",
+    collection: "collection",
+    output: "output",
+};
+exports.periodSplitUnit = {
+    years: "years",
+    quarters: "quarters",
+    months: "months",
+    none: "none",
 };
 
 
@@ -157,39 +188,17 @@ Object.defineProperty(exports, "checkCommentSkip", ({ enumerable: true, get: fun
 /***/ }),
 
 /***/ 73220:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setTimezone = void 0;
-const core = __importStar(__nccwpck_require__(42186));
+const getValueAsIs_1 = __nccwpck_require__(18863);
 const setTimezone = () => {
-    if (process.env.TIMEZONE || core.getInput("TIMEZONE")) {
-        process.env.TZ = process.env.TIMEZONE || core.getInput("TIMEZONE");
+    const timezone = (0, getValueAsIs_1.getValueAsIs)("TIMEZONE");
+    if (timezone) {
+        process.env.TZ = timezone;
     }
 };
 exports.setTimezone = setTimezone;
@@ -643,40 +652,17 @@ exports.collectData = collectData;
 /***/ }),
 
 /***/ 95354:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.invalidUserLogin = exports.percentile = exports.endOfWorkingTime = exports.startOfWorkingTime = void 0;
-const core = __importStar(__nccwpck_require__(42186));
-exports.startOfWorkingTime = process.env.CORE_HOURS_START || core.getInput("CORE_HOURS_START");
-exports.endOfWorkingTime = process.env.CORE_HOURS_END || core.getInput("CORE_HOURS_END");
-exports.percentile = parseInt(process.env.PERCENTILE || core.getInput("PERCENTILE"));
-exports.invalidUserLogin = 'Invalid-User-PRAA';
+const utils_1 = __nccwpck_require__(41002);
+exports.startOfWorkingTime = (0, utils_1.getValueAsIs)("CORE_HOURS_START");
+exports.endOfWorkingTime = (0, utils_1.getValueAsIs)("CORE_HOURS_END");
+exports.percentile = parseInt((0, utils_1.getValueAsIs)("PERCENTILE"));
+exports.invalidUserLogin = "Invalid-User-PRAA";
 
 
 /***/ }),
@@ -1405,7 +1391,7 @@ async function main() {
     console.log("Initiating data request.");
     const data = [];
     for (let i = 0; i < repos.length; i++) {
-        const result = await (0, requests_1.makeComplexRequest)(parseInt(core.getInput("AMOUNT")) || +process.env.AMOUNT, {
+        const result = await (0, requests_1.makeComplexRequest)(parseInt((0, utils_1.getValueAsIs)("AMOUNT")), {
             owner: repos[i][0],
             repo: repos[i][1],
         }, {
@@ -1472,10 +1458,11 @@ exports.octokit = void 0;
 const octokit_1 = __nccwpck_require__(57467);
 const core = __importStar(__nccwpck_require__(42186));
 const plugin_throttling_1 = __nccwpck_require__(9968);
+const utils_1 = __nccwpck_require__(41002);
 octokit_1.Octokit.plugin(plugin_throttling_1.throttling);
 exports.octokit = new octokit_1.Octokit({
     baseUrl: process.env['GITHUB_API_URL'] || 'https://api.github.com',
-    auth: core.getInput("GITHUB_TOKEN") || process.env.GITHUB_TOKEN,
+    auth: (0, utils_1.getValueAsIs)("GITHUB_TOKEN"),
     throttle: {
         onSecondaryRateLimit: (_, options) => {
             exports.octokit.log.error(`SecondaryRateLimit detected for request ${options.method} ${options.url}`);
@@ -1537,42 +1524,17 @@ exports.concurrentLimit = 25;
 /***/ }),
 
 /***/ 5891:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createIssue = void 0;
-const core = __importStar(__nccwpck_require__(42186));
 const octokit_1 = __nccwpck_require__(24641);
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
 const createIssue = async (markdown, issueNumber) => {
-    const issueTitle = core.getInput("ISSUE_TITLE") ||
-        process.env.ISSUE_TITLE ||
+    const issueTitle = (0, utils_1.getValueAsIs)("ISSUE_TITLE") ||
         `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
     const labels = (0, utils_1.getMultipleValuesInput)("LABELS").filter((label) => label && typeof label === "string") || [];
     const assignees = (0, utils_1.getMultipleValuesInput)("ASSIGNEES").filter((assignee) => assignee && typeof assignee === "string") || [];
@@ -1582,20 +1544,16 @@ const createIssue = async (markdown, issueNumber) => {
             labels,
             title: issueTitle,
             assignees,
-            repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-                process.env.GITHUB_REPO_FOR_ISSUE,
-            owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-                process.env.GITHUB_OWNER_FOR_ISSUE,
+            repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+            owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
             body: markdown,
             issue_number: parseInt(issueNumber),
         });
     }
     else {
         result = await octokit_1.octokit.rest.issues.create({
-            repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-                process.env.GITHUB_REPO_FOR_ISSUE,
-            owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-                process.env.GITHUB_OWNER_FOR_ISSUE,
+            repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+            owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
             title: issueTitle,
             body: markdown,
             labels,
@@ -1933,41 +1891,17 @@ exports.getOwnersRepositories = getOwnersRepositories;
 /***/ }),
 
 /***/ 30183:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReportDates = void 0;
-const core = __importStar(__nccwpck_require__(42186));
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
 const getReportDates = () => {
-    const startReportDate = process.env.REPORT_DATE_START || core.getInput("REPORT_DATE_START");
-    const endReportDate = process.env.REPORT_DATE_END || core.getInput("REPORT_DATE_END");
+    const startReportDate = (0, utils_1.getValueAsIs)("REPORT_DATE_START");
+    const endReportDate = (0, utils_1.getValueAsIs)("REPORT_DATE_END");
     const subOptions = (0, utils_1.getMultipleValuesInput)("REPORT_PERIOD").reduce((acc, el) => {
         const [key, value] = el.split(":");
         return { ...acc, [key.toLowerCase().trim()]: parseInt(value.trim()) };
@@ -2107,10 +2041,8 @@ const createOutput = async (data) => {
             const comments = [];
             if (monthComparison) {
                 const comparisonComment = await octokit_1.octokit.rest.issues.createComment({
-                    repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-                        process.env.GITHUB_REPO_FOR_ISSUE,
-                    owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-                        process.env.GITHUB_OWNER_FOR_ISSUE,
+                    repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+                    owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
                     issue_number: issue.data.number,
                     body: monthComparison,
                 });
@@ -2132,20 +2064,16 @@ const createOutput = async (data) => {
                 if (commentMarkdown === "")
                     continue;
                 const comment = await octokit_1.octokit.rest.issues.createComment({
-                    repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-                        process.env.GITHUB_REPO_FOR_ISSUE,
-                    owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-                        process.env.GITHUB_OWNER_FOR_ISSUE,
+                    repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+                    owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
                     issue_number: issue.data.number,
                     body: commentMarkdown,
                 });
                 comments.push({ comment, title: date });
             }
             await octokit_1.octokit.rest.issues.update({
-                repo: core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-                    process.env.GITHUB_REPO_FOR_ISSUE,
-                owner: core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-                    process.env.GITHUB_OWNER_FOR_ISSUE,
+                repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+                owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
                 issue_number: issue.data.number,
                 body: (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total", comments.map((comment) => ({
                     title: `Pull Request report ${comment.title}`,
@@ -2411,39 +2339,16 @@ exports.createDiscussionsPieChart = createDiscussionsPieChart;
 /***/ }),
 
 /***/ 64721:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createPullRequestQualityTable = void 0;
-const core = __importStar(__nccwpck_require__(42186));
 const constants_1 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
 const createDiscussionsPieChart_1 = __nccwpck_require__(99622);
+const utils_1 = __nccwpck_require__(41002);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
@@ -2463,7 +2368,7 @@ const createPullRequestQualityTable = (data, users, date) => {
     const items = data.total?.[date]?.pullRequestsInfo
         ?.slice()
         ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
-        .slice(0, parseInt(process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")))
+        .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
         .map((item) => ({
         text: `${item.title}(${item.comments || 0})`,
         link: item.link || "",
@@ -2562,36 +2467,12 @@ exports.createReviewTable = createReviewTable;
 /***/ }),
 
 /***/ 50940:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineContent = void 0;
-const core = __importStar(__nccwpck_require__(42186));
 const utils_1 = __nccwpck_require__(41002);
 const common_1 = __nccwpck_require__(64682);
 const createTimelineGanttBar_1 = __nccwpck_require__(5304);
@@ -2608,7 +2489,7 @@ const createTimelineContent = (data, users, date) => {
         const items = data.total?.[date]?.pullRequestsInfo
             ?.slice()
             ?.sort((a, b) => b[milestone] - a[milestone])
-            .slice(0, parseInt(process.env.TOP_LIST_AMOUNT || core.getInput("TOP_LIST_AMOUNT")))
+            .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
             .map((item) => ({
             text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone])})`,
             link: item.link || "",

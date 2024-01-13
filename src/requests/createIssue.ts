@@ -1,12 +1,10 @@
-import * as core from "@actions/core";
 import { octokit } from "../octokit/octokit";
 import { format } from "date-fns";
-import { getMultipleValuesInput } from "../common/utils";
+import { getMultipleValuesInput, getValueAsIs } from "../common/utils";
 
 export const createIssue = async (markdown: string, issueNumber?: string) => {
   const issueTitle =
-    core.getInput("ISSUE_TITLE") ||
-    process.env.ISSUE_TITLE ||
+    getValueAsIs("ISSUE_TITLE") ||
     `Pull requests report(${format(new Date(), "d/MM/yyyy HH:mm")})`;
   const labels =
     getMultipleValuesInput("LABELS").filter(
@@ -23,23 +21,15 @@ export const createIssue = async (markdown: string, issueNumber?: string) => {
       labels,
       title: issueTitle,
       assignees,
-      repo:
-        core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-        process.env.GITHUB_REPO_FOR_ISSUE!,
-      owner:
-        core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-        process.env.GITHUB_OWNER_FOR_ISSUE!,
+      repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
+      owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
       body: markdown,
       issue_number: parseInt(issueNumber),
     });
   } else {
     result = await octokit.rest.issues.create({
-      repo:
-        core.getInput("GITHUB_REPO_FOR_ISSUE") ||
-        process.env.GITHUB_REPO_FOR_ISSUE!,
-      owner:
-        core.getInput("GITHUB_OWNER_FOR_ISSUE") ||
-        process.env.GITHUB_OWNER_FOR_ISSUE!,
+      repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
+      owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
       title: issueTitle,
       body: markdown,
       labels,
