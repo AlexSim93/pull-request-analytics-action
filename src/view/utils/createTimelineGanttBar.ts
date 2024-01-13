@@ -1,4 +1,3 @@
-import { percentile } from "../../converters/constants";
 import { Collection } from "../../converters/types";
 import {
   timeToApproveHeader,
@@ -8,6 +7,7 @@ import {
 import { createGanttBar } from "./common";
 import { StatsType } from "./types";
 import { formatMinutesDuration } from "./formatMinutesDuration";
+import { getValueAsIs } from "../../common/utils";
 
 export const createTimelineGanttBar = (
   data: Record<string, Record<string, Collection>>,
@@ -27,7 +27,7 @@ export const createTimelineGanttBar = (
   }
   return createGanttBar({
     title: `Pull requests timeline(${type}${
-      type === "percentile" ? percentile : ""
+      type === "percentile" ? parseInt(getValueAsIs("PERCENTILE")) : ""
     }) ${date} / minutes`,
     sections: users
       .filter(

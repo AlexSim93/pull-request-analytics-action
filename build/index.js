@@ -652,16 +652,12 @@ exports.collectData = collectData;
 /***/ }),
 
 /***/ 95354:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.invalidUserLogin = exports.percentile = exports.endOfWorkingTime = exports.startOfWorkingTime = void 0;
-const utils_1 = __nccwpck_require__(41002);
-exports.startOfWorkingTime = (0, utils_1.getValueAsIs)("CORE_HOURS_START");
-exports.endOfWorkingTime = (0, utils_1.getValueAsIs)("CORE_HOURS_END");
-exports.percentile = parseInt((0, utils_1.getValueAsIs)("PERCENTILE"));
+exports.invalidUserLogin = void 0;
 exports.invalidUserLogin = "Invalid-User-PRAA";
 
 
@@ -817,12 +813,12 @@ exports.calcNonWorkingHours = calcNonWorkingHours;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcPercentileValue = void 0;
-const constants_1 = __nccwpck_require__(95354);
+const utils_1 = __nccwpck_require__(41002);
 const calcPercentileValue = (values) => {
     if (!values?.length)
         return 0;
     const sortedValues = values.slice().sort((a, b) => a - b);
-    const percentilePart = Math.ceil(sortedValues.length * (constants_1.percentile / 100));
+    const percentilePart = Math.ceil(sortedValues.length * (parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) / 100));
     const percentileValues = sortedValues.slice(0, percentilePart);
     return percentileValues[percentileValues.length - 1];
 };
@@ -1261,15 +1257,24 @@ exports.preparePullRequestStats = preparePullRequestStats;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestTimeline = void 0;
-const constants_1 = __nccwpck_require__(95354);
+const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
-    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
-    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime || pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
-    const timeToMerge = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.merged_at, { endOfWorkingTime: constants_1.endOfWorkingTime, startOfWorkingTime: constants_1.startOfWorkingTime });
+    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, {
+        endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+        startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+    });
+    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime || pullRequestInfo?.merged_at, {
+        endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+        startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+    });
+    const timeToMerge = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.merged_at, {
+        endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+        startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+    });
     return {
         ...collection,
         timeToReview: timeToReview
@@ -2504,10 +2509,10 @@ exports.createTimelineContent = createTimelineContent;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineGanttBar = void 0;
-const constants_1 = __nccwpck_require__(95354);
-const constants_2 = __nccwpck_require__(11474);
+const constants_1 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
 const formatMinutesDuration_1 = __nccwpck_require__(92411);
+const utils_1 = __nccwpck_require__(41002);
 const createTimelineGanttBar = (data, type, users, date) => {
     if (!users.some((user) => data[user]?.[date]?.[type]?.timeToReview &&
         data[user]?.[date]?.[type]?.timeToApprove &&
@@ -2515,7 +2520,7 @@ const createTimelineGanttBar = (data, type, users, date) => {
         return "";
     }
     return (0, common_1.createGanttBar)({
-        title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date} / minutes`,
+        title: `Pull requests timeline(${type}${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}) ${date} / minutes`,
         sections: users
             .filter((user) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -2524,17 +2529,17 @@ const createTimelineGanttBar = (data, type, users, date) => {
             name: user,
             bars: [
                 {
-                    name: constants_2.timeToReviewHeader,
+                    name: constants_1.timeToReviewHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToReview || 0,
                 },
                 {
-                    name: constants_2.timeToApproveHeader,
+                    name: constants_1.timeToApproveHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToApprove || 0,
                 },
                 {
-                    name: constants_2.timeToMergeHeader,
+                    name: constants_1.timeToMergeHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToMerge || 0,
                 },
@@ -2581,13 +2586,13 @@ exports.createTimelineMonthComparisonChart = createTimelineMonthComparisonChart;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineMonthsGanttBar = void 0;
-const constants_1 = __nccwpck_require__(95354);
-const constants_2 = __nccwpck_require__(11474);
+const constants_1 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
 const _1 = __nccwpck_require__(92884);
+const utils_1 = __nccwpck_require__(41002);
 const createTimelineMonthsGanttBar = (data, type, dates, user) => {
     return (0, common_1.createGanttBar)({
-        title: `Pull request's retrospective timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${user} / minutes`,
+        title: `Pull request's retrospective timeline(${type}${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}) ${user} / minutes`,
         sections: dates
             .filter((date) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -2596,17 +2601,17 @@ const createTimelineMonthsGanttBar = (data, type, dates, user) => {
             name: date,
             bars: [
                 {
-                    name: constants_2.timeToReviewHeader,
+                    name: constants_1.timeToReviewHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToReview || 0,
                 },
                 {
-                    name: constants_2.timeToApproveHeader,
+                    name: constants_1.timeToApproveHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToApprove || 0,
                 },
                 {
-                    name: constants_2.timeToMergeHeader,
+                    name: constants_1.timeToMergeHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToMerge || 0,
                 },
@@ -2627,10 +2632,10 @@ exports.createTimelineMonthsGanttBar = createTimelineMonthsGanttBar;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineTable = void 0;
-const constants_1 = __nccwpck_require__(95354);
-const constants_2 = __nccwpck_require__(11474);
+const constants_1 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
 const formatMinutesDuration_1 = __nccwpck_require__(92411);
+const utils_1 = __nccwpck_require__(41002);
 const createTimelineTable = (data, type, users, date) => {
     const tableRows = users
         .filter((user) => data[user]?.[date]?.merged)
@@ -2644,15 +2649,15 @@ const createTimelineTable = (data, type, users, date) => {
         ];
     });
     const pullRequestTimeLine = (0, common_1.createTable)({
-        title: `Pull requests timeline(${type}${type === "percentile" ? constants_1.percentile : ""}) ${date}`,
+        title: `Pull requests timeline(${type}${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}) ${date}`,
         description: "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
         table: {
             headers: [
                 "user",
-                constants_2.timeToReviewHeader,
-                constants_2.timeToApproveHeader,
-                constants_2.timeToMergeHeader,
-                constants_2.totalMergedPrsHeader,
+                constants_1.timeToReviewHeader,
+                constants_1.timeToApproveHeader,
+                constants_1.timeToMergeHeader,
+                constants_1.totalMergedPrsHeader,
             ],
             rows: tableRows,
         },
