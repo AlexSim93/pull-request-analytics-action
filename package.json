@@ -1,6 +1,6 @@
 {
   "name": "pull-request-analytics-action",
-  "version": "1.12.5",
+  "version": "1.12.6",
   "description": "Generates detailed PR analytics reports within GitHub, focusing on review efficiency and team performance.",
   "main": "build/index.js",
   "scripts": {
