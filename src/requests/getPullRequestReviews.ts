@@ -1,5 +1,5 @@
 import { commonHeaders } from './constants';
-import { octokit } from "../octokit/octokit";
+import { octokit } from "../octokit";
 import { Repository } from "./types";
 
 export const getPullRequestReviews = async (

@@ -1,7 +1,7 @@
 import { commonHeaders } from "./constants";
 import { isAfter, isBefore, parseISO } from "date-fns";
 
-import { octokit } from "../octokit/octokit";
+import { octokit } from "../octokit";
 import { getReportDates } from "./utils";
 import { Repository } from "./types";
 

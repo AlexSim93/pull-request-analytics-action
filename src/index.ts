@@ -8,13 +8,13 @@ import {
   makeComplexRequest,
 } from "./requests";
 import { collectData } from "./converters";
-import { octokit } from "./octokit/octokit";
 import {
   checkCommentSkip,
   getValueAsIs,
   setTimezone,
   validate,
 } from "./common/utils";
+import { getRateLimit } from "./requests/getRateLimit";
 
 async function main() {
   setTimezone();
@@ -25,7 +25,7 @@ async function main() {
     );
     return;
   }
-  const rateLimitAtBeginning = await octokit.rest.rateLimit.get();
+  const rateLimitAtBeginning = await getRateLimit();
   console.log(
     "RATE LIMIT REMAINING BEFORE REQUESTS: ",
     rateLimitAtBeginning.data.rate.remaining
@@ -81,7 +81,7 @@ async function main() {
   console.log("Calculation complete. Generating markdown.");
   await createOutput(preparedData);
 
-  const rateLimitAtEnd = await octokit.rest.rateLimit.get();
+  const rateLimitAtEnd = await getRateLimit();
   console.log(
     "RATE LIMIT REMAINING AFTER REQUESTS: ",
     rateLimitAtEnd.data.rate.remaining

@@ -1383,7 +1383,7 @@ const utils_1 = __nccwpck_require__(41002);
 const view_1 = __nccwpck_require__(55379);
 const requests_1 = __nccwpck_require__(49591);
 const utils_2 = __nccwpck_require__(92884);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const createOutput = async (data) => {
     const outcomes = (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME");
     for (let outcome of outcomes) {
@@ -1485,8 +1485,8 @@ const core = __importStar(__nccwpck_require__(42186));
 const createOutput_1 = __nccwpck_require__(63119);
 const requests_1 = __nccwpck_require__(49591);
 const converters_1 = __nccwpck_require__(86200);
-const octokit_1 = __nccwpck_require__(24641);
 const utils_1 = __nccwpck_require__(41002);
+const getRateLimit_1 = __nccwpck_require__(78028);
 async function main() {
     (0, utils_1.setTimezone)();
     const errors = (0, utils_1.validate)();
@@ -1494,7 +1494,7 @@ async function main() {
         core.setFailed("Inputs are invalid. Action is failed with validation error");
         return;
     }
-    const rateLimitAtBeginning = await octokit_1.octokit.rest.rateLimit.get();
+    const rateLimitAtBeginning = await (0, getRateLimit_1.getRateLimit)();
     console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
     const ownersRepos = (0, requests_1.getOwnersRepositories)();
     const organizationsRepos = await (0, requests_1.getOrganizationsRepositories)();
@@ -1530,10 +1530,23 @@ async function main() {
     const preparedData = (0, converters_1.collectData)(mergedData);
     console.log("Calculation complete. Generating markdown.");
     await (0, createOutput_1.createOutput)(preparedData);
-    const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
+    const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
     console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
 }
 main();
+
+
+/***/ }),
+
+/***/ 75455:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.octokit = void 0;
+var octokit_1 = __nccwpck_require__(24641);
+Object.defineProperty(exports, "octokit", ({ enumerable: true, get: function () { return octokit_1.octokit; } }));
 
 
 /***/ }),
@@ -1603,7 +1616,7 @@ exports.octokit = new octokit_1.Octokit({
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.clearComments = void 0;
 const utils_1 = __nccwpck_require__(41002);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const constants_1 = __nccwpck_require__(8827);
 const clearComments = async (issueNumber) => {
     if (!issueNumber)
@@ -1650,7 +1663,7 @@ exports.commonHeaders = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createComment = void 0;
 const utils_1 = __nccwpck_require__(41002);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const constants_1 = __nccwpck_require__(8827);
 const createComment = async (issueNumber, commentMarkdown) => octokit_1.octokit.rest.issues.createComment({
     repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
@@ -1672,7 +1685,7 @@ exports.createComment = createComment;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createIssue = void 0;
 const constants_1 = __nccwpck_require__(8827);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
 const createIssue = async (markdown, issueNumber) => {
@@ -1783,7 +1796,7 @@ exports.getDataWithThrottle = getDataWithThrottle;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOrganizationsRepositories = void 0;
 const utils_1 = __nccwpck_require__(41002);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const constants_1 = __nccwpck_require__(8827);
 const getOrganizationsRepositories = async () => {
     const organizations = (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS");
@@ -1817,7 +1830,7 @@ exports.getOrganizationsRepositories = getOrganizationsRepositories;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestComments = void 0;
 const constants_1 = __nccwpck_require__(8827);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const getPullRequestComments = async (pullRequestNumbers, repository, options) => {
     const { owner, repo } = repository;
     return !options?.skip
@@ -1839,7 +1852,7 @@ exports.getPullRequestComments = getPullRequestComments;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestDatas = void 0;
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const constants_1 = __nccwpck_require__(8827);
 const getPullRequestDatas = async (pullRequestNumbers, repository) => {
     const { repo, owner } = repository;
@@ -1863,7 +1876,7 @@ exports.getPullRequestDatas = getPullRequestDatas;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestReviews = void 0;
 const constants_1 = __nccwpck_require__(8827);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const getPullRequestReviews = async (pullRequestNumbers, repository, options) => {
     const { owner, repo } = repository;
     return !options?.skip
@@ -1892,7 +1905,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequests = void 0;
 const constants_1 = __nccwpck_require__(8827);
 const date_fns_1 = __nccwpck_require__(73314);
-const octokit_1 = __nccwpck_require__(24641);
+const octokit_1 = __nccwpck_require__(75455);
 const utils_1 = __nccwpck_require__(50426);
 const getPullRequests = async (amount = 10, repository) => {
     const { startDate, endDate } = (0, utils_1.getReportDates)();
@@ -1938,6 +1951,21 @@ const getPullRequests = async (amount = 10, repository) => {
     return data;
 };
 exports.getPullRequests = getPullRequests;
+
+
+/***/ }),
+
+/***/ 78028:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getRateLimit = void 0;
+const octokit_1 = __nccwpck_require__(75455);
+const constants_1 = __nccwpck_require__(8827);
+const getRateLimit = async () => octokit_1.octokit.rest.rateLimit.get({ headers: constants_1.commonHeaders });
+exports.getRateLimit = getRateLimit;
 
 
 /***/ }),

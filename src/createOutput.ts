@@ -8,7 +8,7 @@ import {
   getDisplayUserList,
   sortCollectionsByDate,
 } from "./view/utils";
-import { octokit } from "./octokit/octokit";
+import { octokit } from "./octokit";
 
 export const createOutput = async (
   data: Record<string, Record<string, Collection>>

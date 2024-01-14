@@ -1,5 +1,5 @@
 import { getMultipleValuesInput } from "../common/utils";
-import { octokit } from "../octokit/octokit";
+import { octokit } from "../octokit";
 import { commonHeaders } from "./constants";
 
 export const getOrganizationsRepositories = async () => {

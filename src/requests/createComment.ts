@@ -1,5 +1,5 @@
 import { getValueAsIs } from "../common/utils";
-import { octokit } from "../octokit/octokit";
+import { octokit } from "../octokit";
 import { commonHeaders } from "./constants";
 
 export const createComment = async (

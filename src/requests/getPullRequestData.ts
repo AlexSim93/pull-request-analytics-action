@@ -1,6 +1,6 @@
 import { Repository } from "./types";
 
-import { octokit } from "../octokit/octokit";
+import { octokit } from "../octokit";
 import { commonHeaders } from "./constants";
 
 export const getPullRequestDatas = async (
