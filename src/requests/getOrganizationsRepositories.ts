@@ -1,5 +1,6 @@
 import { getMultipleValuesInput } from "../common/utils";
-import { octokit } from "../octokit/octokit";
+import { octokit } from "../octokit";
+import { commonHeaders } from "./constants";
 
 export const getOrganizationsRepositories = async () => {
   const organizations = getMultipleValuesInput("ORGANIZATIONS");
@@ -7,7 +8,13 @@ export const getOrganizationsRepositories = async () => {
   for (let i = 0; i < organizations.length; i++) {
     const organizationRepositories = await octokit.paginate(
       octokit.rest.repos.listForOrg,
-      { org: organizations[i], type: "all", sort: "pushed", direction: "desc" }
+      {
+        org: organizations[i],
+        type: "all",
+        sort: "pushed",
+        direction: "desc",
+        headers: commonHeaders,
+      }
     );
 
     const repos = organizationRepositories.map((el) => [

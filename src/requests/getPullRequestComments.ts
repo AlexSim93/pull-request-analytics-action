@@ -1,4 +1,5 @@
-import { octokit } from "../octokit/octokit";
+import { commonHeaders } from "./constants";
+import { octokit } from "../octokit";
 import { Repository } from "./types";
 
 export const getPullRequestComments = async (
@@ -11,7 +12,7 @@ export const getPullRequestComments = async (
     ? pullRequestNumbers.map(async (number) => {
         const comments = await octokit.paginate(
           octokit.rest.pulls.listReviewComments,
-          { owner, repo, pull_number: number }
+          { owner, repo, pull_number: number, headers: commonHeaders }
         );
 
         return { data: comments };

@@ -9,7 +9,7 @@ export { sortCollectionsByDate } from "./sortCollectionsByDate";
 export { createTimelineGanttBar } from "./createTimelineGanttBar";
 export { createTimelineTable } from "./createTimelineTable";
 export { createPullRequestQualityTable } from "./createPullRequestQualityTable";
-export { getDisplayUserList } from "./getDisplayUserList";
+export { getDisplayUserList } from "./common";
 export { createTimelineContent } from "./createTimelineContent";
 export { createTimelineMonthsGanttBar } from "./createTimelineMonthsGanttBar";
 export { createReferences } from "./createReferences";

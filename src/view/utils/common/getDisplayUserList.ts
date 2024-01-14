@@ -1,5 +1,5 @@
-import { getMultipleValuesInput } from "../../common/utils";
-import { Collection } from "../../converters/types";
+import { getMultipleValuesInput } from "../../../common/utils";
+import { Collection } from "../../../converters/types";
 
 export const getDisplayUserList = (
   data: Record<string, Record<string, Collection>>
