@@ -1266,7 +1266,6 @@ const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
-    const topListAmount = parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT"));
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
     const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, {
@@ -1292,61 +1291,19 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
         timeToMerge: timeToMerge
             ? [...(collection?.timeToMerge || []), timeToMerge]
             : collection.timeToMerge,
-        pullRequestsList: {
-            comments: topListAmount
-                ? [
-                    ...(collection?.pullRequestsList?.comments || []),
-                    {
-                        number: pullRequestInfo?.number,
-                        link: pullRequestInfo?._links?.html?.href,
-                        title: pullRequestInfo?.title,
-                        value: pullRequestInfo?.comments || 0,
-                    },
-                ]
-                    .sort((a, b) => (b.value || 0) - (a.value || 0))
-                    .slice(0, topListAmount)
-                : [],
-            timeToApprove: topListAmount
-                ? [
-                    ...(collection?.pullRequestsList?.comments || []),
-                    {
-                        number: pullRequestInfo?.number,
-                        link: pullRequestInfo?._links?.html?.href,
-                        title: pullRequestInfo?.title,
-                        value: (timeToApprove || timeToMerge || 0) -
-                            (timeToReview || timeToMerge || 0),
-                    },
-                ]
-                    .sort((a, b) => (b.value || 0) - (a.value || 0))
-                    .slice(0, topListAmount)
-                : [],
-            timeToReview: topListAmount
-                ? [
-                    ...(collection?.pullRequestsList?.comments || []),
-                    {
-                        number: pullRequestInfo?.number,
-                        link: pullRequestInfo?._links?.html?.href,
-                        title: pullRequestInfo?.title,
-                        value: timeToReview || timeToMerge || 0,
-                    },
-                ]
-                    .sort((a, b) => (b.value || 0) - (a.value || 0))
-                    .slice(0, topListAmount)
-                : [],
-            timeToMerge: topListAmount
-                ? [
-                    ...(collection?.pullRequestsList?.comments || []),
-                    {
-                        number: pullRequestInfo?.number,
-                        link: pullRequestInfo?._links?.html?.href,
-                        title: pullRequestInfo?.title,
-                        value: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
-                    },
-                ]
-                    .sort((a, b) => (b.value || 0) - (a.value || 0))
-                    .slice(0, topListAmount)
-                : [],
-        },
+        pullRequestsInfo: [
+            ...(collection?.pullRequestsInfo || []),
+            {
+                number: pullRequestInfo?.number,
+                link: pullRequestInfo?._links?.html?.href,
+                title: pullRequestInfo?.title,
+                comments: pullRequestInfo?.review_comments,
+                timeToReview: timeToReview || timeToMerge || 0,
+                timeToApprove: (timeToApprove || timeToMerge || 0) -
+                    (timeToReview || timeToMerge || 0),
+                timeToMerge: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
+            },
+        ],
     };
 };
 exports.preparePullRequestTimeline = preparePullRequestTimeline;
@@ -2470,6 +2427,7 @@ exports.createPullRequestQualityTable = void 0;
 const constants_1 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
 const createDiscussionsPieChart_1 = __nccwpck_require__(99622);
+const utils_1 = __nccwpck_require__(41002);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
@@ -2486,8 +2444,12 @@ const createPullRequestQualityTable = (data, users, date) => {
             data[user]?.[date]?.reviewComments?.toString() || "0",
         ];
     });
-    const items = data.total?.[date]?.pullRequestsList?.comments.map((item) => ({
-        text: `${item.title}(${item.value || 0})`,
+    const items = data.total?.[date]?.pullRequestsInfo
+        ?.slice()
+        ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
+        .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
+        .map((item) => ({
+        text: `${item.title}(${item.comments || 0})`,
         link: item.link || "",
     })) || [];
     return [
@@ -2603,8 +2565,12 @@ const createTimelineContent = (data, users, date) => {
     };
     const problematicList = ["timeToReview", "timeToApprove", "timeToMerge"]
         .map((milestone) => {
-        const items = data.total?.[date]?.pullRequestsList?.[milestone].map((item) => ({
-            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item.value)})`,
+        const items = data.total?.[date]?.pullRequestsInfo
+            ?.slice()
+            ?.sort((a, b) => b[milestone] - a[milestone])
+            .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
+            .map((item) => ({
+            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone])})`,
             link: item.link || "",
         })) || [];
         return (0, common_1.createList)(milestoneTitle[milestone], items);
