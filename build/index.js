@@ -1348,6 +1348,109 @@ exports.prepareReviews = prepareReviews;
 
 /***/ }),
 
+/***/ 63119:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createOutput = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const utils_1 = __nccwpck_require__(41002);
+const view_1 = __nccwpck_require__(55379);
+const requests_1 = __nccwpck_require__(49591);
+const utils_2 = __nccwpck_require__(92884);
+const octokit_1 = __nccwpck_require__(24641);
+const createOutput = async (data) => {
+    const outcomes = (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME");
+    for (let outcome of outcomes) {
+        const users = (0, utils_2.getDisplayUserList)(data);
+        const dates = (0, utils_2.sortCollectionsByDate)(data.total);
+        if (outcome === "new-issue" || outcome === "existing-issue") {
+            const issueNumber = outcome === "existing-issue" ? (0, utils_1.getValueAsIs)("ISSUE_NUMBER") : undefined;
+            const markdown = (0, view_1.createMarkdown)(data, users, ["total"], "Pull Request report total");
+            if (outcome.includes("existing-issue")) {
+                await (0, requests_1.clearComments)(issueNumber);
+            }
+            const issue = await (0, requests_1.createIssue)(markdown, issueNumber);
+            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
+                {
+                    title: "Pull Request report total",
+                    link: `${issue.data.html_url}#`,
+                },
+            ]);
+            const comments = [];
+            if (monthComparison) {
+                const comparisonComment = await octokit_1.octokit.rest.issues.createComment({
+                    repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+                    owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
+                    issue_number: issue.data.number,
+                    body: monthComparison,
+                });
+                comments.push({
+                    comment: comparisonComment,
+                    title: "retrospective timeline",
+                });
+            }
+            console.log("Issue successfully created.");
+            for (let date of dates) {
+                if (date === "total")
+                    continue;
+                const commentMarkdown = (0, view_1.createMarkdown)(data, users, [date], `Pull Request report ${date}`, [
+                    {
+                        title: "Pull Request report total",
+                        link: `${issue.data.html_url}#`,
+                    },
+                ]);
+                if (commentMarkdown === "")
+                    continue;
+                const comment = await (0, requests_1.createComment)(issue.data.number, commentMarkdown);
+                comments.push({ comment, title: date });
+            }
+            await (0, requests_1.createIssue)((0, view_1.createMarkdown)(data, users, ["total"], "Pull Request report total", comments.map((comment) => ({
+                title: `Pull Request report ${comment.title}`,
+                link: comment.comment.data.html_url,
+            }))), issue.data.number);
+        }
+        if (outcome === "markdown" || outcome === "output") {
+            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users);
+            const markdown = (0, view_1.createMarkdown)(data, users, dates).concat(`\n${monthComparison}`);
+            console.log("Markdown successfully generated.");
+            core.setOutput("MARKDOWN", markdown);
+        }
+        if (outcome === "collection") {
+            core.setOutput("JSON_COLLECTION", JSON.stringify(data));
+        }
+    }
+};
+exports.createOutput = createOutput;
+
+
+/***/ }),
+
 /***/ 79283:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -1379,7 +1482,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __nccwpck_require__(44227);
 const core = __importStar(__nccwpck_require__(42186));
-const view_1 = __nccwpck_require__(55379);
+const createOutput_1 = __nccwpck_require__(63119);
 const requests_1 = __nccwpck_require__(49591);
 const converters_1 = __nccwpck_require__(86200);
 const octokit_1 = __nccwpck_require__(24641);
@@ -1426,7 +1529,7 @@ async function main() {
     });
     const preparedData = (0, converters_1.collectData)(mergedData);
     console.log("Calculation complete. Generating markdown.");
-    await (0, view_1.createOutput)(preparedData);
+    await (0, createOutput_1.createOutput)(preparedData);
     const rateLimitAtEnd = await octokit_1.octokit.rest.rateLimit.get();
     console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
 }
@@ -1501,6 +1604,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.clearComments = void 0;
 const utils_1 = __nccwpck_require__(41002);
 const octokit_1 = __nccwpck_require__(24641);
+const constants_1 = __nccwpck_require__(8827);
 const clearComments = async (issueNumber) => {
     if (!issueNumber)
         return;
@@ -1514,6 +1618,7 @@ const clearComments = async (issueNumber) => {
             repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
             owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
             comment_id: comment.id,
+            headers: constants_1.commonHeaders,
         });
     }
 };
@@ -1528,8 +1633,33 @@ exports.clearComments = clearComments;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.concurrentLimit = void 0;
+exports.commonHeaders = exports.concurrentLimit = void 0;
 exports.concurrentLimit = 25;
+exports.commonHeaders = {
+    "X-GitHub-Api-Version": "2022-11-28",
+};
+
+
+/***/ }),
+
+/***/ 82634:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createComment = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const octokit_1 = __nccwpck_require__(24641);
+const constants_1 = __nccwpck_require__(8827);
+const createComment = async (issueNumber, commentMarkdown) => octokit_1.octokit.rest.issues.createComment({
+    repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+    owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
+    issue_number: issueNumber,
+    body: commentMarkdown,
+    headers: constants_1.commonHeaders,
+});
+exports.createComment = createComment;
 
 
 /***/ }),
@@ -1541,6 +1671,7 @@ exports.concurrentLimit = 25;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createIssue = void 0;
+const constants_1 = __nccwpck_require__(8827);
 const octokit_1 = __nccwpck_require__(24641);
 const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
@@ -1558,7 +1689,8 @@ const createIssue = async (markdown, issueNumber) => {
             repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
             owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
             body: markdown,
-            issue_number: parseInt(issueNumber),
+            issue_number: typeof issueNumber === "number" ? issueNumber : parseInt(issueNumber),
+            headers: constants_1.commonHeaders,
         });
     }
     else {
@@ -1569,6 +1701,7 @@ const createIssue = async (markdown, issueNumber) => {
             body: markdown,
             labels,
             assignees,
+            headers: constants_1.commonHeaders,
         });
     }
     return result;
@@ -1651,11 +1784,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOrganizationsRepositories = void 0;
 const utils_1 = __nccwpck_require__(41002);
 const octokit_1 = __nccwpck_require__(24641);
+const constants_1 = __nccwpck_require__(8827);
 const getOrganizationsRepositories = async () => {
     const organizations = (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS");
     const ownersRepos = [];
     for (let i = 0; i < organizations.length; i++) {
-        const organizationRepositories = await octokit_1.octokit.paginate(octokit_1.octokit.rest.repos.listForOrg, { org: organizations[i], type: "all", sort: "pushed", direction: "desc" });
+        const organizationRepositories = await octokit_1.octokit.paginate(octokit_1.octokit.rest.repos.listForOrg, {
+            org: organizations[i],
+            type: "all",
+            sort: "pushed",
+            direction: "desc",
+            headers: constants_1.commonHeaders,
+        });
         const repos = organizationRepositories.map((el) => [
             el.owner.login,
             el.name,
@@ -1676,12 +1816,13 @@ exports.getOrganizationsRepositories = getOrganizationsRepositories;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestComments = void 0;
+const constants_1 = __nccwpck_require__(8827);
 const octokit_1 = __nccwpck_require__(24641);
 const getPullRequestComments = async (pullRequestNumbers, repository, options) => {
     const { owner, repo } = repository;
     return !options?.skip
         ? pullRequestNumbers.map(async (number) => {
-            const comments = await octokit_1.octokit.paginate(octokit_1.octokit.rest.pulls.listReviewComments, { owner, repo, pull_number: number });
+            const comments = await octokit_1.octokit.paginate(octokit_1.octokit.rest.pulls.listReviewComments, { owner, repo, pull_number: number, headers: constants_1.commonHeaders });
             return { data: comments };
         })
         : [];
@@ -1699,12 +1840,14 @@ exports.getPullRequestComments = getPullRequestComments;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestDatas = void 0;
 const octokit_1 = __nccwpck_require__(24641);
+const constants_1 = __nccwpck_require__(8827);
 const getPullRequestDatas = async (pullRequestNumbers, repository) => {
     const { repo, owner } = repository;
     return pullRequestNumbers.map((number) => octokit_1.octokit.rest.pulls.get({
         owner,
         repo,
         pull_number: number,
+        headers: constants_1.commonHeaders,
     }));
 };
 exports.getPullRequestDatas = getPullRequestDatas;
@@ -1719,6 +1862,7 @@ exports.getPullRequestDatas = getPullRequestDatas;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestReviews = void 0;
+const constants_1 = __nccwpck_require__(8827);
 const octokit_1 = __nccwpck_require__(24641);
 const getPullRequestReviews = async (pullRequestNumbers, repository, options) => {
     const { owner, repo } = repository;
@@ -1728,6 +1872,7 @@ const getPullRequestReviews = async (pullRequestNumbers, repository, options) =>
                 owner,
                 repo,
                 pull_number: number,
+                headers: constants_1.commonHeaders,
             });
             return { data: reviews };
         })
@@ -1745,6 +1890,7 @@ exports.getPullRequestReviews = getPullRequestReviews;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequests = void 0;
+const constants_1 = __nccwpck_require__(8827);
 const date_fns_1 = __nccwpck_require__(73314);
 const octokit_1 = __nccwpck_require__(24641);
 const utils_1 = __nccwpck_require__(50426);
@@ -1761,6 +1907,7 @@ const getPullRequests = async (amount = 10, repository) => {
             state: "closed",
             sort: "updated",
             direction: "desc",
+            headers: constants_1.commonHeaders,
         });
         if (startDate || endDate) {
             const filteredPulls = pulls.data.filter((pr) => {
@@ -1801,7 +1948,9 @@ exports.getPullRequests = getPullRequests;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createIssue = exports.makeComplexRequest = exports.getOrganizationsRepositories = exports.getOwnersRepositories = exports.clearComments = void 0;
+exports.createIssue = exports.makeComplexRequest = exports.getOrganizationsRepositories = exports.getOwnersRepositories = exports.clearComments = exports.createComment = void 0;
+var createComment_1 = __nccwpck_require__(82634);
+Object.defineProperty(exports, "createComment", ({ enumerable: true, get: function () { return createComment_1.createComment; } }));
 var clearComments_1 = __nccwpck_require__(40396);
 Object.defineProperty(exports, "clearComments", ({ enumerable: true, get: function () { return clearComments_1.clearComments; } }));
 var getOwnersRepositories_1 = __nccwpck_require__(57288);
@@ -1973,128 +2122,15 @@ exports.createMarkdown = createMarkdown;
 
 /***/ }),
 
-/***/ 26207:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createOutput = void 0;
-const core = __importStar(__nccwpck_require__(42186));
-const utils_1 = __nccwpck_require__(41002);
-const createMarkdown_1 = __nccwpck_require__(54184);
-const requests_1 = __nccwpck_require__(49591);
-const utils_2 = __nccwpck_require__(92884);
-const octokit_1 = __nccwpck_require__(24641);
-const createOutput = async (data) => {
-    const outcomes = (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME");
-    for (let outcome of outcomes) {
-        const users = (0, utils_2.getDisplayUserList)(data);
-        const dates = (0, utils_2.sortCollectionsByDate)(data.total);
-        if (outcome === "new-issue" || outcome === "existing-issue") {
-            const issueNumber = outcome === "existing-issue" ? (0, utils_1.getValueAsIs)("ISSUE_NUMBER") : undefined;
-            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total");
-            if (outcome.includes("existing-issue")) {
-                await (0, requests_1.clearComments)(issueNumber);
-            }
-            const issue = await (0, requests_1.createIssue)(markdown, issueNumber);
-            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
-                {
-                    title: "Pull Request report total",
-                    link: `${issue.data.html_url}#`,
-                },
-            ]);
-            const comments = [];
-            if (monthComparison) {
-                const comparisonComment = await octokit_1.octokit.rest.issues.createComment({
-                    repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
-                    owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
-                    issue_number: issue.data.number,
-                    body: monthComparison,
-                });
-                comments.push({
-                    comment: comparisonComment,
-                    title: "retrospective timeline",
-                });
-            }
-            console.log("Issue successfully created.");
-            for (let date of dates) {
-                if (date === "total")
-                    continue;
-                const commentMarkdown = (0, createMarkdown_1.createMarkdown)(data, users, [date], `Pull Request report ${date}`, [
-                    {
-                        title: "Pull Request report total",
-                        link: `${issue.data.html_url}#`,
-                    },
-                ]);
-                if (commentMarkdown === "")
-                    continue;
-                const comment = await octokit_1.octokit.rest.issues.createComment({
-                    repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
-                    owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
-                    issue_number: issue.data.number,
-                    body: commentMarkdown,
-                });
-                comments.push({ comment, title: date });
-            }
-            await octokit_1.octokit.rest.issues.update({
-                repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
-                owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
-                issue_number: issue.data.number,
-                body: (0, createMarkdown_1.createMarkdown)(data, users, ["total"], "Pull Request report total", comments.map((comment) => ({
-                    title: `Pull Request report ${comment.title}`,
-                    link: comment.comment.data.html_url,
-                }))),
-            });
-        }
-        if (outcome === "markdown" || outcome === "output") {
-            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users);
-            const markdown = (0, createMarkdown_1.createMarkdown)(data, users, dates).concat(`\n${monthComparison}`);
-            console.log("Markdown successfully generated.");
-            core.setOutput("MARKDOWN", markdown);
-        }
-        if (outcome === "collection") {
-            core.setOutput("JSON_COLLECTION", JSON.stringify(data));
-        }
-    }
-};
-exports.createOutput = createOutput;
-
-
-/***/ }),
-
 /***/ 55379:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createOutput = void 0;
-var createOutput_1 = __nccwpck_require__(26207);
-Object.defineProperty(exports, "createOutput", ({ enumerable: true, get: function () { return createOutput_1.createOutput; } }));
+exports.createMarkdown = void 0;
+var createMarkdown_1 = __nccwpck_require__(54184);
+Object.defineProperty(exports, "createMarkdown", ({ enumerable: true, get: function () { return createMarkdown_1.createMarkdown; } }));
 
 
 /***/ }),

@@ -1,6 +1,7 @@
 import { Repository } from "./types";
 
 import { octokit } from "../octokit/octokit";
+import { commonHeaders } from "./constants";
 
 export const getPullRequestDatas = async (
   pullRequestNumbers: number[],
@@ -12,6 +13,7 @@ export const getPullRequestDatas = async (
       owner,
       repo,
       pull_number: number,
+      headers: commonHeaders,
     })
   );
 };

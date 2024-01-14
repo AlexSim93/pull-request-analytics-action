@@ -1,7 +1,7 @@
 import "dotenv/config";
 import * as core from "@actions/core";
 
-import { createOutput } from "./view";
+import { createOutput } from "./createOutput";
 import {
   getOrganizationsRepositories,
   getOwnersRepositories,

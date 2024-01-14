@@ -1,5 +1,6 @@
 import { getValueAsIs } from "../common/utils";
 import { octokit } from "../octokit/octokit";
+import { commonHeaders } from "./constants";
 
 export const clearComments = async (issueNumber?: string) => {
   if (!issueNumber) return;
@@ -13,6 +14,7 @@ export const clearComments = async (issueNumber?: string) => {
       repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
       owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
       comment_id: comment.id,
+      headers: commonHeaders,
     });
   }
 };

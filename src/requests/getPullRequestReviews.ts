@@ -1,3 +1,4 @@
+import { commonHeaders } from './constants';
 import { octokit } from "../octokit/octokit";
 import { Repository } from "./types";
 
@@ -13,6 +14,7 @@ export const getPullRequestReviews = async (
           owner,
           repo,
           pull_number: number,
+          headers: commonHeaders,
         });
         return { data: reviews };
       })
