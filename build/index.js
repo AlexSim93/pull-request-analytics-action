@@ -1266,6 +1266,7 @@ const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
+    const topListAmount = parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT"));
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
     const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, {
@@ -1291,19 +1292,61 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
         timeToMerge: timeToMerge
             ? [...(collection?.timeToMerge || []), timeToMerge]
             : collection.timeToMerge,
-        pullRequestsInfo: [
-            ...(collection?.pullRequestsInfo || []),
-            {
-                number: pullRequestInfo?.number,
-                link: pullRequestInfo?._links?.html?.href,
-                title: pullRequestInfo?.title,
-                comments: pullRequestInfo?.review_comments,
-                timeToReview: timeToReview || timeToMerge || 0,
-                timeToApprove: (timeToApprove || timeToMerge || 0) -
-                    (timeToReview || timeToMerge || 0),
-                timeToMerge: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
-            },
-        ],
+        pullRequestsList: {
+            comments: topListAmount
+                ? [
+                    ...(collection?.pullRequestsList?.comments || []),
+                    {
+                        number: pullRequestInfo?.number,
+                        link: pullRequestInfo?._links?.html?.href,
+                        title: pullRequestInfo?.title,
+                        value: pullRequestInfo?.comments || 0,
+                    },
+                ]
+                    .sort((a, b) => (b.value || 0) - (a.value || 0))
+                    .slice(0, topListAmount)
+                : [],
+            timeToApprove: topListAmount
+                ? [
+                    ...(collection?.pullRequestsList?.comments || []),
+                    {
+                        number: pullRequestInfo?.number,
+                        link: pullRequestInfo?._links?.html?.href,
+                        title: pullRequestInfo?.title,
+                        value: (timeToApprove || timeToMerge || 0) -
+                            (timeToReview || timeToMerge || 0),
+                    },
+                ]
+                    .sort((a, b) => (b.value || 0) - (a.value || 0))
+                    .slice(0, topListAmount)
+                : [],
+            timeToReview: topListAmount
+                ? [
+                    ...(collection?.pullRequestsList?.comments || []),
+                    {
+                        number: pullRequestInfo?.number,
+                        link: pullRequestInfo?._links?.html?.href,
+                        title: pullRequestInfo?.title,
+                        value: timeToReview || timeToMerge || 0,
+                    },
+                ]
+                    .sort((a, b) => (b.value || 0) - (a.value || 0))
+                    .slice(0, topListAmount)
+                : [],
+            timeToMerge: topListAmount
+                ? [
+                    ...(collection?.pullRequestsList?.comments || []),
+                    {
+                        number: pullRequestInfo?.number,
+                        link: pullRequestInfo?._links?.html?.href,
+                        title: pullRequestInfo?.title,
+                        value: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
+                    },
+                ]
+                    .sort((a, b) => (b.value || 0) - (a.value || 0))
+                    .slice(0, topListAmount)
+                : [],
+        },
     };
 };
 exports.preparePullRequestTimeline = preparePullRequestTimeline;
@@ -2266,13 +2309,39 @@ exports.createTable = createTable;
 
 /***/ }),
 
+/***/ 90052:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getDisplayUserList = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const getDisplayUserList = (data) => {
+    const usersToHide = (0, utils_1.getMultipleValuesInput)("HIDE_USERS") || [];
+    const usersToShow = (0, utils_1.getMultipleValuesInput)("SHOW_USERS") || [];
+    return Object.keys(data)
+        .filter((key) => key !== "total")
+        .concat("total")
+        .filter((key) => {
+        return (!usersToHide.includes(key) &&
+            (usersToShow.length > 0 ? usersToShow.includes(key) : true));
+    });
+};
+exports.getDisplayUserList = getDisplayUserList;
+
+
+/***/ }),
+
 /***/ 64682:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createList = exports.createPieChart = exports.createGanttBar = exports.createTable = void 0;
+exports.createList = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.getDisplayUserList = void 0;
+var getDisplayUserList_1 = __nccwpck_require__(90052);
+Object.defineProperty(exports, "getDisplayUserList", ({ enumerable: true, get: function () { return getDisplayUserList_1.getDisplayUserList; } }));
 var createTable_1 = __nccwpck_require__(10584);
 Object.defineProperty(exports, "createTable", ({ enumerable: true, get: function () { return createTable_1.createTable; } }));
 var createGanttBar_1 = __nccwpck_require__(77655);
@@ -2401,7 +2470,6 @@ exports.createPullRequestQualityTable = void 0;
 const constants_1 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
 const createDiscussionsPieChart_1 = __nccwpck_require__(99622);
-const utils_1 = __nccwpck_require__(41002);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
@@ -2418,12 +2486,8 @@ const createPullRequestQualityTable = (data, users, date) => {
             data[user]?.[date]?.reviewComments?.toString() || "0",
         ];
     });
-    const items = data.total?.[date]?.pullRequestsInfo
-        ?.slice()
-        ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
-        .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
-        .map((item) => ({
-        text: `${item.title}(${item.comments || 0})`,
+    const items = data.total?.[date]?.pullRequestsList?.comments.map((item) => ({
+        text: `${item.title}(${item.value || 0})`,
         link: item.link || "",
     })) || [];
     return [
@@ -2539,12 +2603,8 @@ const createTimelineContent = (data, users, date) => {
     };
     const problematicList = ["timeToReview", "timeToApprove", "timeToMerge"]
         .map((milestone) => {
-        const items = data.total?.[date]?.pullRequestsInfo
-            ?.slice()
-            ?.sort((a, b) => b[milestone] - a[milestone])
-            .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
-            .map((item) => ({
-            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone])})`,
+        const items = data.total?.[date]?.pullRequestsList?.[milestone].map((item) => ({
+            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item.value)})`,
             link: item.link || "",
         })) || [];
         return (0, common_1.createList)(milestoneTitle[milestone], items);
@@ -2807,30 +2867,6 @@ exports.formatMinutesDuration = formatMinutesDuration;
 
 /***/ }),
 
-/***/ 88144:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getDisplayUserList = void 0;
-const utils_1 = __nccwpck_require__(41002);
-const getDisplayUserList = (data) => {
-    const usersToHide = (0, utils_1.getMultipleValuesInput)("HIDE_USERS") || [];
-    const usersToShow = (0, utils_1.getMultipleValuesInput)("SHOW_USERS") || [];
-    return Object.keys(data)
-        .filter((key) => key !== "total")
-        .concat("total")
-        .filter((key) => {
-        return (!usersToHide.includes(key) &&
-            (usersToShow.length > 0 ? usersToShow.includes(key) : true));
-    });
-};
-exports.getDisplayUserList = getDisplayUserList;
-
-
-/***/ }),
-
 /***/ 92884:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -2862,8 +2898,8 @@ var createTimelineTable_1 = __nccwpck_require__(20194);
 Object.defineProperty(exports, "createTimelineTable", ({ enumerable: true, get: function () { return createTimelineTable_1.createTimelineTable; } }));
 var createPullRequestQualityTable_1 = __nccwpck_require__(64721);
 Object.defineProperty(exports, "createPullRequestQualityTable", ({ enumerable: true, get: function () { return createPullRequestQualityTable_1.createPullRequestQualityTable; } }));
-var getDisplayUserList_1 = __nccwpck_require__(88144);
-Object.defineProperty(exports, "getDisplayUserList", ({ enumerable: true, get: function () { return getDisplayUserList_1.getDisplayUserList; } }));
+var common_2 = __nccwpck_require__(64682);
+Object.defineProperty(exports, "getDisplayUserList", ({ enumerable: true, get: function () { return common_2.getDisplayUserList; } }));
 var createTimelineContent_1 = __nccwpck_require__(50940);
 Object.defineProperty(exports, "createTimelineContent", ({ enumerable: true, get: function () { return createTimelineContent_1.createTimelineContent; } }));
 var createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
