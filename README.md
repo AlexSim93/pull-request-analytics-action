@@ -153,7 +153,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
          runs-on: ubuntu-latest
          steps:
            - name: "Run script for analytics"
-             uses: AlexSim93/pull-request-analytics-action@master
+             uses: AlexSim93/pull-request-analytics-action@v1
              with:
                GITHUB_TOKEN: ${{ secrets.TOKEN }}
                GITHUB_REPO_FOR_ISSUE: "repo"
