@@ -45,6 +45,15 @@ export const preparePullRequestTimeline = (
     }
   );
 
+  const timeToClose = calcDifferenceInMinutes(
+    pullRequestInfo?.created_at,
+    pullRequestInfo?.closed_at,
+    {
+      endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
+      startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
+    }
+  );
+
   return {
     ...collection,
     timeToReview: timeToReview
@@ -67,7 +76,9 @@ export const preparePullRequestTimeline = (
         timeToApprove:
           (timeToApprove || timeToMerge || 0) -
           (timeToReview || timeToMerge || 0),
-        timeToMerge: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
+        timeToMerge:
+          (timeToMerge || timeToClose || 0) -
+          (timeToApprove || timeToMerge || 0),
       },
     ],
   };

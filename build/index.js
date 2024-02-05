@@ -1280,6 +1280,10 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
     });
+    const timeToClose = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.closed_at, {
+        endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+        startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+    });
     return {
         ...collection,
         timeToReview: timeToReview
@@ -1301,7 +1305,8 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
                 timeToReview: timeToReview || timeToMerge || 0,
                 timeToApprove: (timeToApprove || timeToMerge || 0) -
                     (timeToReview || timeToMerge || 0),
-                timeToMerge: (timeToMerge || 0) - (timeToApprove || timeToMerge || 0),
+                timeToMerge: (timeToMerge || timeToClose || 0) -
+                    (timeToApprove || timeToMerge || 0),
             },
         ],
     };
