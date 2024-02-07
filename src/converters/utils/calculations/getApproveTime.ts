@@ -1,4 +1,4 @@
-import { formatISO, max, parseISO } from "date-fns";
+import { isBefore, parseISO } from "date-fns";
 import { makeComplexRequest } from "../../../requests";
 import { invalidUserLogin } from "../../constants";
 
@@ -42,6 +42,8 @@ export const getApproveTime = (
     !statuses.some((status) => status.state === "CHANGES_REQUESTED");
 
   return isApproved
-    ? formatISO(max(statuses.map((status) => parseISO(status.submittedAt))))
+    ? statuses.sort((a, b) =>
+        isBefore(parseISO(a.submittedAt), parseISO(b.submittedAt)) ? 1 : -1
+      )[0]?.submittedAt
     : null;
 };

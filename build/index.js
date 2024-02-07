@@ -895,7 +895,7 @@ const getApproveTime = (reviews) => {
     const isApproved = statuses.some((status) => status.state === "APPROVED") &&
         !statuses.some((status) => status.state === "CHANGES_REQUESTED");
     return isApproved
-        ? (0, date_fns_1.formatISO)((0, date_fns_1.max)(statuses.map((status) => (0, date_fns_1.parseISO)(status.submittedAt))))
+        ? statuses.sort((a, b) => (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(a.submittedAt), (0, date_fns_1.parseISO)(b.submittedAt)) ? 1 : -1)[0]?.submittedAt
         : null;
 };
 exports.getApproveTime = getApproveTime;
