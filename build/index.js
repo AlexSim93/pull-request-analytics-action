@@ -863,41 +863,40 @@ exports.calcWeekendMinutes = calcWeekendMinutes;
 /***/ }),
 
 /***/ 39922:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getApproveTime = void 0;
+const date_fns_1 = __nccwpck_require__(73314);
+const constants_1 = __nccwpck_require__(95354);
 const getApproveTime = (reviews) => {
-    const reviewChangesRequested = reviews?.reduce((acc, review) => {
-        if (review.state === "CHANGES_REQUESTED") {
-            const login = review.user?.login || "invalid";
-            return { ...acc, [login]: true };
+    const statuses = Object.values(reviews?.reduce((acc, review) => {
+        const user = review.user.login || constants_1.invalidUserLogin;
+        const statusesEntries = Object.keys(acc);
+        const isApproved = statusesEntries.some((user) => acc[user].state === "APPROVED") &&
+            !statusesEntries.some((user) => acc[user].state === "CHANGES_REQUESTED") &&
+            review.state !== "CHANGES_REQUESTED";
+        if (isApproved) {
+            return acc;
         }
-        return acc;
-    }, {});
-    const reviewApproved = reviews?.reduce((acc, review) => {
-        if (review.state === "APPROVED") {
-            const login = review.user?.login || "invalid";
-            return { ...acc, [login]: review.submitted_at };
+        if (["APPROVED", "CHANGES_REQUESTED"].includes(review.state)) {
+            return {
+                ...acc,
+                [user]: { state: review.state, submittedAt: review.submitted_at },
+            };
         }
-        return acc;
-    }, {});
-    const usersRequestedChanges = reviewChangesRequested
-        ? Object.keys(reviewChangesRequested)
-        : [];
-    if (usersRequestedChanges.length === 0) {
-        return reviews?.find((review) => review.state === "APPROVED")?.submitted_at;
-    }
-    const approveEntry = Object.entries(reviewApproved || {}).find(([user]) => {
-        if (reviewChangesRequested?.[user]) {
-            reviewChangesRequested[user] = false;
-            return !Object.values(reviewChangesRequested).some((value) => value === true);
-        }
-        return false;
-    });
-    return approveEntry?.[1];
+        return {
+            ...acc,
+            [user]: { state: review.state, submittedAt: review.submitted_at },
+        };
+    }, {}) || {});
+    const isApproved = statuses.some((status) => status.state === "APPROVED") &&
+        !statuses.some((status) => status.state === "CHANGES_REQUESTED");
+    return isApproved
+        ? (0, date_fns_1.formatISO)((0, date_fns_1.max)(statuses.map((status) => (0, date_fns_1.parseISO)(status.submittedAt))))
+        : null;
 };
 exports.getApproveTime = getApproveTime;
 

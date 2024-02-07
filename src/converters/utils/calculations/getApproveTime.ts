@@ -1,39 +1,47 @@
+import { formatISO, max, parseISO } from "date-fns";
 import { makeComplexRequest } from "../../../requests";
+import { invalidUserLogin } from "../../constants";
 
 export const getApproveTime = (
   reviews: Awaited<ReturnType<typeof makeComplexRequest>>["reviews"][number]
 ) => {
-  const reviewChangesRequested = reviews?.reduce((acc, review) => {
-    if (review.state === "CHANGES_REQUESTED") {
-      const login = review.user?.login || "invalid";
-      return { ...acc, [login]: true };
-    }
-    return acc;
-  }, {}) as Record<string, boolean> | undefined;
-  const reviewApproved = reviews?.reduce((acc, review) => {
-    if (review.state === "APPROVED") {
-      const login = review.user?.login || "invalid";
-      return { ...acc, [login]: review.submitted_at };
-    }
-    return acc;
-  }, {}) as Record<string, string> | undefined;
-  const usersRequestedChanges = reviewChangesRequested
-    ? Object.keys(reviewChangesRequested)
-    : [];
-  if (usersRequestedChanges.length === 0) {
-    return reviews?.find((review) => review.state === "APPROVED")?.submitted_at;
-  }
+  const statuses = Object.values(
+    reviews?.reduce(
+      (
+        acc: Record<string, { state: string; submittedAt: string }>,
+        review: any
+      ) => {
+        const user = review.user.login || invalidUserLogin;
+        const statusesEntries = Object.keys(acc) as string[];
+        const isApproved =
+          statusesEntries.some((user) => acc[user].state === "APPROVED") &&
+          !statusesEntries.some(
+            (user) => acc[user].state === "CHANGES_REQUESTED"
+          ) &&
+          review.state !== "CHANGES_REQUESTED";
+        if (isApproved) {
+          return acc;
+        }
+        if (["APPROVED", "CHANGES_REQUESTED"].includes(review.state)) {
+          return {
+            ...acc,
+            [user]: { state: review.state, submittedAt: review.submitted_at },
+          };
+        }
+        return {
+          ...acc,
+          [user]: { state: review.state, submittedAt: review.submitted_at },
+        };
+      },
+      {}
+    ) || {}
+  );
 
-  const approveEntry = Object.entries(reviewApproved || {}).find(([user]) => {
-    if (reviewChangesRequested?.[user]) {
-      reviewChangesRequested[user] = false;
+  const isApproved =
+    statuses.some((status) => status.state === "APPROVED") &&
+    !statuses.some((status) => status.state === "CHANGES_REQUESTED");
 
-      return !Object.values(reviewChangesRequested).some(
-        (value) => value === true
-      );
-    }
-    return false;
-  });
-
-  return approveEntry?.[1];
+  return isApproved
+    ? formatISO(max(statuses.map((status) => parseISO(status.submittedAt))))
+    : null;
 };
