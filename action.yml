@@ -92,7 +92,8 @@ inputs:
     required: false
   ALLOW_ANALYTICS:
     description: "Allows sending non-sensitive inputs to mixpanel"
-    required: true
+    required: false
+    default: true
 
 outputs:
   JSON_COLLECTION:
