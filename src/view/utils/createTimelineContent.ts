@@ -28,7 +28,9 @@ export const createTimelineContent = (
           ?.sort((a, b) => b[milestone] - a[milestone])
           .slice(0, parseInt(getValueAsIs("TOP_LIST_AMOUNT")))
           .map((item) => ({
-            text: `${item.title}(${formatMinutesDuration(item[milestone])})`,
+            text: `${item.title}(${
+              formatMinutesDuration(item[milestone]) || "-"
+            })`,
             link: item.link || "",
           })) || [];
       return createList(milestoneTitle[milestone], items);

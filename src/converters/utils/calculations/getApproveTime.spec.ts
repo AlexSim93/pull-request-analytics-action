@@ -5,7 +5,7 @@ const notReviewed = [];
 
 const approvedReview = [
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T07:00:00Z",
     user: { login: "dev1" },
   },
@@ -13,12 +13,12 @@ const approvedReview = [
 
 const approvedTwiceReview = [
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T07:00:00Z",
     user: { login: "dev1" },
   },
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T09:00:00Z",
     user: { login: "dev2" },
   },
@@ -26,12 +26,12 @@ const approvedTwiceReview = [
 
 const approvedAfterChangesRequestedReview = [
   {
-    state: "CHANGES_REQUESTED",
+    state: "changes_requested",
     submitted_at: "2024-01-11T07:00:00Z",
     user: { login: "dev1" },
   },
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T09:00:00Z",
     user: { login: "dev1" },
   },
@@ -39,17 +39,17 @@ const approvedAfterChangesRequestedReview = [
 
 const oneApprovedOneChangesRequestedReview = [
   {
-    state: "CHANGES_REQUESTED",
+    state: "changes_requested",
     submitted_at: "2024-01-11T07:00:00Z",
     user: { login: "dev1" },
   },
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T09:00:00Z",
     user: { login: "dev2" },
   },
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-12T05:00:00Z",
     user: { login: "dev1" },
   },
@@ -57,17 +57,17 @@ const oneApprovedOneChangesRequestedReview = [
 
 const approvedRequestedChangesApprovedReview = [
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T09:00:00Z",
     user: { login: "dev2" },
   },
   {
-    state: "CHANGES_REQUESTED",
+    state: "changes_requested",
     submitted_at: "2024-01-12T05:00:00Z",
     user: { login: "dev2" },
   },
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-12T09:00:00Z",
     user: { login: "dev2" },
   },
@@ -75,17 +75,12 @@ const approvedRequestedChangesApprovedReview = [
 
 const dismissedChangesRequestedReview = [
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T09:00:00Z",
     user: { login: "dev1" },
   },
   {
-    state: "CHANGES_REQUESTED",
-    submitted_at: "2024-01-12T05:00:00Z",
-    user: { login: "dev2" },
-  },
-  {
-    state: "DISMISSED",
+    state: "dismissed",
     submitted_at: "2024-01-12T09:00:00Z",
     user: { login: "dev2" },
   },
@@ -93,12 +88,12 @@ const dismissedChangesRequestedReview = [
 
 const changesRequestedReview = [
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-11T09:00:00Z",
     user: { login: "dev1" },
   },
   {
-    state: "CHANGES_REQUESTED",
+    state: "changes_requested",
     submitted_at: "2024-01-12T05:00:00Z",
     user: { login: "dev2" },
   },
@@ -106,12 +101,12 @@ const changesRequestedReview = [
 
 const commentedReview = [
   {
-    state: "COMMENTED",
+    state: "commented",
     submitted_at: "2024-01-11T09:00:00Z",
     user: { login: "dev1" },
   },
   {
-    state: "APPROVED",
+    state: "approved",
     submitted_at: "2024-01-12T05:00:00Z",
     user: { login: "dev2" },
   },
@@ -143,15 +138,15 @@ describe("check getApproveTime", () => {
       "2024-01-12T09:00:00Z"
     );
   });
-  it("Check PR with dismissed changes requested and return time of the last dismiss", () => {
+  it("Check PR with dismissed changes requested and return time of the approval", () => {
     expect(getApproveTime(dismissedChangesRequestedReview)).toBe(
-      "2024-01-12T09:00:00Z"
+      "2024-01-11T09:00:00Z"
     );
   });
   it("Check PR with changes requested and return null", () => {
     expect(getApproveTime(changesRequestedReview)).toBe(null);
   });
-  it("Check COMMENTED PR and return time of the approval", () => {
+  it("Check commented PR and return time of the approval", () => {
     expect(getApproveTime(commentedReview)).toBe("2024-01-12T05:00:00Z");
   });
 });

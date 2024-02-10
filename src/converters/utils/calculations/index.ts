@@ -6,3 +6,4 @@ export { calcMedianValue } from "./calcMedianValue";
 export { calcDifferenceInMinutes } from "./calcDifferenceInMinutes";
 export { calcAverageValue } from "./calcAverageValue";
 export { getPullRequestSize } from "./getPullRequestSize";
+export { calcDraftTime } from "./calcDraftTime";

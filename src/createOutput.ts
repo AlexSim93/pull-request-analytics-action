@@ -9,6 +9,7 @@ import {
   sortCollectionsByDate,
 } from "./view/utils";
 import { octokit } from "./octokit";
+import { showStatsTypes } from "./common/constants";
 
 export const createOutput = async (
   data: Record<string, Record<string, Collection>>
@@ -31,17 +32,16 @@ export const createOutput = async (
         await clearComments(issueNumber);
       }
       const issue = await createIssue(markdown, issueNumber);
-      const monthComparison = createTimelineMonthComparisonChart(
-        data,
-        dates,
-        users,
-        [
-          {
-            title: "Pull Request report total",
-            link: `${issue.data.html_url}#`,
-          },
-        ]
-      );
+      const monthComparison = getMultipleValuesInput(
+        "SHOW_STATS_TYPES"
+      ).includes(showStatsTypes.timeline)
+        ? createTimelineMonthComparisonChart(data, dates, users, [
+            {
+              title: "Pull Request report total",
+              link: `${issue.data.html_url}#`,
+            },
+          ])
+        : null;
       const comments = [];
       if (monthComparison) {
         const comparisonComment = await octokit.rest.issues.createComment({
@@ -89,12 +89,12 @@ export const createOutput = async (
       );
     }
 
-    if (outcome === "markdown" || outcome === "output") {
-      const monthComparison = createTimelineMonthComparisonChart(
-        data,
-        dates,
-        users
-      );
+    if (outcome === "markdown") {
+      const monthComparison = getMultipleValuesInput(
+        "SHOW_STATS_TYPES"
+      ).includes(showStatsTypes.timeline)
+        ? createTimelineMonthComparisonChart(data, dates, users)
+        : "";
       const markdown = createMarkdown(data, users, dates).concat(
         `\n${monthComparison}`
       );

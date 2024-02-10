@@ -1,3 +1,4 @@
+export { prepareRequestedReviews } from './prepareRequestedReviews';
 export { preparePullRequestTimeline } from "./preparePullRequestTimeline";
 export { preparePullRequestStats } from "./preparePullRequestStats";
 export { preparePullRequestInfo } from "./preparePullRequestInfo";

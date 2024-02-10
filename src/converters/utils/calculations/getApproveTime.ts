@@ -3,7 +3,7 @@ import { makeComplexRequest } from "../../../requests";
 import { invalidUserLogin } from "../../constants";
 
 export const getApproveTime = (
-  reviews: Awaited<ReturnType<typeof makeComplexRequest>>["reviews"][number]
+  reviews: Awaited<ReturnType<typeof makeComplexRequest>>["events"][number]
 ) => {
   const statuses = Object.values(
     reviews?.reduce(
@@ -14,15 +14,15 @@ export const getApproveTime = (
         const user = review.user.login || invalidUserLogin;
         const statusesEntries = Object.keys(acc) as string[];
         const isApproved =
-          statusesEntries.some((user) => acc[user].state === "APPROVED") &&
+          statusesEntries.some((user) => acc[user].state === "approved") &&
           !statusesEntries.some(
-            (user) => acc[user].state === "CHANGES_REQUESTED"
+            (user) => acc[user].state === "changes_requested"
           ) &&
-          review.state !== "CHANGES_REQUESTED";
+          review.state !== "changes_requested";
         if (isApproved) {
           return acc;
         }
-        if (["APPROVED", "CHANGES_REQUESTED"].includes(review.state)) {
+        if (["approved", "changes_requested"].includes(review.state)) {
           return {
             ...acc,
             [user]: { state: review.state, submittedAt: review.submitted_at },
@@ -38,8 +38,8 @@ export const getApproveTime = (
   );
 
   const isApproved =
-    statuses.some((status) => status.state === "APPROVED") &&
-    !statuses.some((status) => status.state === "CHANGES_REQUESTED");
+    statuses.some((status) => status.state === "approved") &&
+    !statuses.some((status) => status.state === "changes_requested");
 
   return isApproved
     ? statuses.sort((a, b) =>

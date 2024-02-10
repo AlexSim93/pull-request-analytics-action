@@ -5,15 +5,14 @@ import { PullRequestSize } from "./calculations/getPullRequestSize";
 import { prepareConductedReviews } from "./prepareConductedReviews";
 
 export const prepareReviews = (
-  data: Awaited<ReturnType<typeof makeComplexRequest>>,
+  reviews: any[] = [],
   collection: Record<string, Record<string, Collection>>,
-  index: number,
   dateKey: string,
   pullRequestLogin: string,
   pullRequestSize: PullRequestSize
 ) => {
   const users = Object.keys(
-    data.reviews[index]?.reduce((acc, review) => {
+    reviews?.reduce((acc, review) => {
       const userLogin = review.user?.login || invalidUserLogin;
       if (userLogin !== pullRequestLogin) {
         return { ...acc, [userLogin]: 1 };
@@ -27,12 +26,12 @@ export const prepareReviews = (
       collection[user] = {};
     }
     const userReviews =
-      Array.isArray(data.reviews[index]) && user !== "total"
-        ? data.reviews[index]?.filter((review) => {
+      Array.isArray(reviews) && user !== "total"
+        ? reviews?.filter((review) => {
             const userLogin = review.user?.login || invalidUserLogin;
             return userLogin === user;
           })
-        : data.reviews[index];
+        : reviews;
     [dateKey, "total"].forEach((key) => {
       collection[user][key] = prepareConductedReviews(
         pullRequestLogin,
