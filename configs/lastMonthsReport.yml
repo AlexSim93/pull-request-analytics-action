@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Runs script for analytics"
-        uses: AlexSim93/pull-request-analytics-action@master
+        uses: AlexSim93/pull-request-analytics-action@v2
         with:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           LABELS: "Report"
