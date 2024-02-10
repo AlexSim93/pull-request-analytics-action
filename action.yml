@@ -64,9 +64,6 @@ inputs:
   ISSUE_TITLE:
     description: "Title for issue"
     required: false
-  ASSIGNEE:
-    description: "assignee for issue"
-    required: false
   AGGREGATE_VALUE_METHODS:
     description: "Aggregate value methods separated by comma. Can take values: 'percentile', 'average', 'median'"
     required: false
@@ -93,6 +90,9 @@ inputs:
   ISSUE_NUMBER:
     description: "Issue number"
     required: false
+  ALLOW_ANALYTICS:
+    description: "Allows sending non-sensitive inputs to mixpanel"
+    required: true
 
 outputs:
   JSON_COLLECTION:

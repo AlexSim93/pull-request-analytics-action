@@ -9,7 +9,6 @@ export const makeComplexRequest = async (
   repository: Repository,
   options: Options = {
     skipComments: true,
-    skipReviews: true,
   }
 ) => {
   const pullRequests = await getPullRequests(amount, repository);
@@ -36,7 +35,7 @@ export const makeComplexRequest = async (
     options
   );
 
-  const reviews = PREvents.map((element) =>
+  const events = PREvents.map((element) =>
     element.status === "fulfilled" ? element.value.data : null
   );
 
@@ -48,10 +47,9 @@ export const makeComplexRequest = async (
     element.status === "fulfilled" ? element.value.data : null
   );
 
-
   return {
     ownerRepo: `${repository.owner}/${repository.repo}`,
-    reviews,
+    events,
     pullRequestInfo,
     comments,
   };

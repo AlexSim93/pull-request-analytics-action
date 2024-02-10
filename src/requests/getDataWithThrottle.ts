@@ -1,9 +1,9 @@
 import { checkCommentSkip } from "../common/utils";
 import { concurrentLimit } from "./constants";
 import { delay } from "./delay";
+import { getIssueTimelineEvents } from "./getIssueTimelineEvents";
 import { getPullRequestComments } from "./getPullRequestComments";
 import { getPullRequestDatas } from "./getPullRequestData";
-import { getPullRequestReviews } from "./getPullRequestReviews";
 import { Options, Repository } from "./types";
 
 export const getDataWithThrottle = async (
@@ -15,7 +15,7 @@ export const getDataWithThrottle = async (
   const PREvents = [];
   const PRComments = [];
   let counter = 0;
-  const { skipComments = true, skipReviews = true } = options;
+  const { skipComments = true } = options;
   while (pullRequestNumbers.length > PRs.length) {
     const startIndex = counter * concurrentLimit;
     const endIndex = (counter + 1) * concurrentLimit;
@@ -35,15 +35,11 @@ export const getDataWithThrottle = async (
     const prs = await Promise.allSettled(pullRequestDatas);
     await delay(4000);
 
-    const pullRequestReviews = await getPullRequestReviews(
+    const pullRequestEvents = await getIssueTimelineEvents(
       pullRequestNumbersChunks,
-      repository,
-      {
-        skip: skipReviews,
-      }
+      repository
     );
-
-    const reviews = await Promise.allSettled(pullRequestReviews);
+    const events = await Promise.allSettled(pullRequestEvents);
     await delay(4000);
 
     const pullRequestComments = await getPullRequestComments(
@@ -58,8 +54,8 @@ export const getDataWithThrottle = async (
     await delay(checkCommentSkip() ? 0 : 4000);
     counter++;
     PRs.push(...prs);
-    PREvents.push(...reviews);
     PRComments.push(...comments);
+    PREvents.push(...events);
   }
   return { PRs, PREvents, PRComments };
 };

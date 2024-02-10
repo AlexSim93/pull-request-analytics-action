@@ -1,6 +1,94 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 88345:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sendActionRun = void 0;
+var sendActionRun_1 = __nccwpck_require__(7293);
+Object.defineProperty(exports, "sendActionRun", ({ enumerable: true, get: function () { return sendActionRun_1.sendActionRun; } }));
+
+
+/***/ }),
+
+/***/ 7293:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sendActionRun = void 0;
+const mixpanel_1 = __importDefault(__nccwpck_require__(32424));
+const utils_1 = __nccwpck_require__(41002);
+const crypto_1 = __importDefault(__nccwpck_require__(6113));
+const mixpanel = mixpanel_1.default.init("8d55eb8bf093d728a0c42616f890bad1");
+const sendActionRun = () => {
+    if ((0, utils_1.getValueAsIs)("ALLOW_ANALYTICS") === "true") {
+        const nonSensitiveInputs = [
+            "SHOW_STATS_TYPES",
+            "AMOUNT",
+            "REPORT_DATE_START",
+            "REPORT_DATE_END",
+            "REPORT_PERIOD",
+            "CORE_HOURS_START",
+            "CORE_HOURS_END",
+            "PERCENTILE",
+            "TOP_LIST_AMOUNT",
+            "EXECUTION_OUTCOME",
+            "TIMEZONE",
+            "AGGREGATE_VALUE_METHODS",
+        ].map((el) => (0, utils_1.getValueAsIs)(el));
+        const convertedInputs = [
+            "GITHUB_OWNERS_REPOS",
+            "ORGANIZATIONS",
+            "ISSUE_TITLE",
+            "HIDE_USERS",
+            "SHOW_USERS",
+            "INCLUDE_LABELS",
+            "EXCLUDE_LABELS",
+        ].map((el) => (0, utils_1.getValueAsIs)(el).length);
+        const stringToHash = [...nonSensitiveInputs, ...convertedInputs].join("");
+        mixpanel.track("Action run with params", {
+            distinct_id: crypto_1.default
+                .createHash("sha256")
+                .update(stringToHash)
+                .digest("hex"),
+            GITHUB_OWNERS_REPOS: (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS").length,
+            ORGANIZATIONS: (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS").length,
+            SHOW_STATS_TYPES: (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES"),
+            AMOUNT: (0, utils_1.getValueAsIs)("AMOUNT"),
+            TIMEZONE: (0, utils_1.getValueAsIs)("TIMEZONE"),
+            REPORT_DATE_START: (0, utils_1.getValueAsIs)("REPORT_DATE_START"),
+            REPORT_DATE_END: (0, utils_1.getValueAsIs)("REPORT_DATE_END"),
+            REPORT_PERIOD: (0, utils_1.getValueAsIs)("REPORT_PERIOD"),
+            CORE_HOURS_START: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+            CORE_HOURS_END: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+            PERCENTILE: (0, utils_1.getMultipleValuesInput)("PERCENTILE"),
+            TOP_LIST_AMOUNT: (0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT"),
+            PERIOD_SPLIT_UNIT: (0, utils_1.getValueAsIs)("PERIOD_SPLIT_UNIT"),
+            LABELS: (0, utils_1.getMultipleValuesInput)("LABELS").length,
+            ASSIGNEES: (0, utils_1.getMultipleValuesInput)("ASSIGNEES").length,
+            ISSUE_TITLE: !!(0, utils_1.getValueAsIs)("ISSUE_TITLE"),
+            AGGREGATE_VALUE_METHODS: (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS"),
+            HIDE_USERS: (0, utils_1.getMultipleValuesInput)("HIDE_USERS").length,
+            SHOW_USERS: (0, utils_1.getMultipleValuesInput)("SHOW_USERS").length,
+            INCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS").length,
+            EXCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS").length,
+            EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
+        });
+    }
+};
+exports.sendActionRun = sendActionRun;
+
+
+/***/ }),
+
 /***/ 11140:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -36,7 +124,6 @@ exports.executionOutcomes = {
     "existing-issue": "existing-issue",
     markdown: "markdown",
     collection: "collection",
-    output: "output",
 };
 exports.periodSplitUnit = {
     years: "years",
@@ -271,7 +358,6 @@ const validate = () => {
         EXECUTION_OUTCOME: {
             validValues: [
                 "new-issue",
-                "output",
                 "collection",
                 "markdown",
                 "existing-issue",
@@ -624,6 +710,9 @@ const collectData = (data) => {
         if (pullRequest === undefined || pullRequest === null) {
             return;
         }
+        const reviews = data.events[index]?.filter((el) => el.event === constants_1.reviewedTimelineEvent);
+        const reviewRequests = data.events[index]?.filter((el) => el.event === constants_1.reviewRequestedTimelineEvent);
+        const statuses = data.events[index]?.filter((el) => [constants_1.readyForReviewTimelineEvent, constants_1.convertToDraftTimelineEvent].includes(el.event));
         const closedDate = pullRequest.closed_at
             ? (0, date_fns_1.parseISO)(pullRequest.closed_at)
             : null;
@@ -634,13 +723,14 @@ const collectData = (data) => {
         if (!collection[userKey]) {
             collection[userKey] = {};
         }
+        (0, utils_1.prepareRequestedReviews)(reviewRequests, collection, dateKey);
         ["total", userKey].forEach((key) => {
             ["total", dateKey].forEach((innerKey) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestInfo)(pullRequest, collection[key][innerKey]);
-                collection[key][innerKey] = (0, utils_1.preparePullRequestTimeline)(pullRequest, data.reviews[index], collection[key][innerKey]);
+                collection[key][innerKey] = (0, utils_1.preparePullRequestTimeline)(pullRequest, reviews, reviewRequests?.[0], statuses, collection[key][innerKey]);
             });
         });
-        (0, utils_1.prepareReviews)(data, collection, index, dateKey, userKey, (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions));
+        (0, utils_1.prepareReviews)(reviews, collection, dateKey, userKey, (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions));
         (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, userKey);
     });
     Object.entries(collection).map(([key, value]) => {
@@ -661,9 +751,13 @@ exports.collectData = collectData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.invalidDate = exports.invalidUserLogin = void 0;
+exports.reviewedTimelineEvent = exports.convertToDraftTimelineEvent = exports.readyForReviewTimelineEvent = exports.reviewRequestedTimelineEvent = exports.invalidDate = exports.invalidUserLogin = void 0;
 exports.invalidUserLogin = "Invalid-User-PRAA";
 exports.invalidDate = "invalidDate";
+exports.reviewRequestedTimelineEvent = "review_requested";
+exports.readyForReviewTimelineEvent = "ready_for_review";
+exports.convertToDraftTimelineEvent = "convert_to_draft";
+exports.reviewedTimelineEvent = "reviewed";
 
 
 /***/ }),
@@ -728,6 +822,33 @@ exports.calcDifferenceInMinutes = calcDifferenceInMinutes;
 
 /***/ }),
 
+/***/ 63506:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.calcDraftTime = void 0;
+const constants_1 = __nccwpck_require__(95354);
+const calcDraftTime = (createdAt, closedAt, statuses = []) => {
+    return statuses.reduce((acc, status, index, arr) => {
+        if (index === 0 && status.event === constants_1.readyForReviewTimelineEvent) {
+            return [[createdAt, status.created_at]];
+        }
+        if (index === arr.length - 1 &&
+            status.event === constants_1.convertToDraftTimelineEvent) {
+            return [...acc, [status.created_at, closedAt]];
+        }
+        return status.event === constants_1.readyForReviewTimelineEvent
+            ? [...acc, [arr[index - 1].created_at, status.created_at]]
+            : acc;
+    }, []);
+};
+exports.calcDraftTime = calcDraftTime;
+
+
+/***/ }),
+
 /***/ 17745:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -738,8 +859,12 @@ exports.calcMedianValue = void 0;
 const calcMedianValue = (values) => {
     if (!values?.length)
         return 0;
-    const medianIndex = Math.floor(values.length / 2);
-    return values.slice().sort((a, b) => a - b)[medianIndex];
+    const sortedValues = values.slice().sort((a, b) => a - b);
+    const medianIndex = Math.floor(sortedValues.length / 2);
+    if (sortedValues.length % 2 === 0) {
+        return (sortedValues[medianIndex] + sortedValues[medianIndex - 1]) / 2;
+    }
+    return sortedValues[medianIndex];
 };
 exports.calcMedianValue = calcMedianValue;
 
@@ -823,9 +948,11 @@ const calcPercentileValue = (values) => {
     if (!values?.length)
         return 0;
     const sortedValues = values.slice().sort((a, b) => a - b);
-    const percentilePart = Math.ceil(sortedValues.length * (parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) / 100));
-    const percentileValues = sortedValues.slice(0, percentilePart);
-    return percentileValues[percentileValues.length - 1];
+    const percentileIndex = sortedValues.length * (parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) / 100) - 1;
+    const lowerIndex = Math.floor(percentileIndex);
+    const upperIndex = lowerIndex + 1;
+    const weight = percentileIndex - lowerIndex;
+    return Math.floor(sortedValues[lowerIndex] * (1 - weight) + sortedValues[upperIndex] * weight);
 };
 exports.calcPercentileValue = calcPercentileValue;
 
@@ -875,13 +1002,13 @@ const getApproveTime = (reviews) => {
     const statuses = Object.values(reviews?.reduce((acc, review) => {
         const user = review.user.login || constants_1.invalidUserLogin;
         const statusesEntries = Object.keys(acc);
-        const isApproved = statusesEntries.some((user) => acc[user].state === "APPROVED") &&
-            !statusesEntries.some((user) => acc[user].state === "CHANGES_REQUESTED") &&
-            review.state !== "CHANGES_REQUESTED";
+        const isApproved = statusesEntries.some((user) => acc[user].state === "approved") &&
+            !statusesEntries.some((user) => acc[user].state === "changes_requested") &&
+            review.state !== "changes_requested";
         if (isApproved) {
             return acc;
         }
-        if (["APPROVED", "CHANGES_REQUESTED"].includes(review.state)) {
+        if (["approved", "changes_requested"].includes(review.state)) {
             return {
                 ...acc,
                 [user]: { state: review.state, submittedAt: review.submitted_at },
@@ -892,8 +1019,8 @@ const getApproveTime = (reviews) => {
             [user]: { state: review.state, submittedAt: review.submitted_at },
         };
     }, {}) || {});
-    const isApproved = statuses.some((status) => status.state === "APPROVED") &&
-        !statuses.some((status) => status.state === "CHANGES_REQUESTED");
+    const isApproved = statuses.some((status) => status.state === "approved") &&
+        !statuses.some((status) => status.state === "changes_requested");
     return isApproved
         ? statuses.sort((a, b) => (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(a.submittedAt), (0, date_fns_1.parseISO)(b.submittedAt)) ? 1 : -1)[0]?.submittedAt
         : null;
@@ -937,7 +1064,7 @@ exports.getPullRequestSize = getPullRequestSize;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = void 0;
+exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = void 0;
 var calcPercentileValue_1 = __nccwpck_require__(24684);
 Object.defineProperty(exports, "calcPercentileValue", ({ enumerable: true, get: function () { return calcPercentileValue_1.calcPercentileValue; } }));
 var getApproveTime_1 = __nccwpck_require__(39922);
@@ -954,6 +1081,8 @@ var calcAverageValue_1 = __nccwpck_require__(9101);
 Object.defineProperty(exports, "calcAverageValue", ({ enumerable: true, get: function () { return calcAverageValue_1.calcAverageValue; } }));
 var getPullRequestSize_1 = __nccwpck_require__(73882);
 Object.defineProperty(exports, "getPullRequestSize", ({ enumerable: true, get: function () { return getPullRequestSize_1.getPullRequestSize; } }));
+var calcDraftTime_1 = __nccwpck_require__(63506);
+Object.defineProperty(exports, "calcDraftTime", ({ enumerable: true, get: function () { return calcDraftTime_1.calcDraftTime; } }));
 
 
 /***/ }),
@@ -983,7 +1112,9 @@ exports.getDiscussionType = getDiscussionType;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = void 0;
+exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = exports.prepareRequestedReviews = void 0;
+var prepareRequestedReviews_1 = __nccwpck_require__(62381);
+Object.defineProperty(exports, "prepareRequestedReviews", ({ enumerable: true, get: function () { return prepareRequestedReviews_1.prepareRequestedReviews; } }));
 var preparePullRequestTimeline_1 = __nccwpck_require__(63787);
 Object.defineProperty(exports, "preparePullRequestTimeline", ({ enumerable: true, get: function () { return preparePullRequestTimeline_1.preparePullRequestTimeline; } }));
 var preparePullRequestStats_1 = __nccwpck_require__(46710);
@@ -1005,7 +1136,7 @@ Object.defineProperty(exports, "prepareReviews", ({ enumerable: true, get: funct
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareConductedReviews = void 0;
-const prepareConductedReviews = (pullRequestLogin, pullRequestReviews, collection, pullRequestSize) => {
+const prepareConductedReviews = (pullRequestLogin, pullRequestReviews = [], collection, pullRequestSize) => {
     const reviewsConducted = {
         ...(collection?.reviewsConducted || {}),
     };
@@ -1236,16 +1367,22 @@ const preparePullRequestStats = (collection) => {
             timeToReview: (0, calculations_1.calcMedianValue)(collection.timeToReview),
             timeToApprove: (0, calculations_1.calcMedianValue)(collection.timeToApprove),
             timeToMerge: (0, calculations_1.calcMedianValue)(collection.timeToMerge),
+            timeToReviewRequest: (0, calculations_1.calcMedianValue)(collection.timeToReviewRequest),
+            timeInDraft: (0, calculations_1.calcMedianValue)(collection.timeInDraft),
         },
         percentile: {
             timeToReview: (0, calculations_1.calcPercentileValue)(collection.timeToReview),
             timeToApprove: (0, calculations_1.calcPercentileValue)(collection.timeToApprove),
             timeToMerge: (0, calculations_1.calcPercentileValue)(collection.timeToMerge),
+            timeToReviewRequest: (0, calculations_1.calcPercentileValue)(collection.timeToReviewRequest),
+            timeInDraft: (0, calculations_1.calcPercentileValue)(collection.timeInDraft),
         },
         average: {
             timeToReview: (0, calculations_1.calcAverageValue)(collection.timeToReview),
             timeToApprove: (0, calculations_1.calcAverageValue)(collection.timeToApprove),
             timeToMerge: (0, calculations_1.calcAverageValue)(collection.timeToMerge),
+            timeToReviewRequest: (0, calculations_1.calcAverageValue)(collection.timeToReviewRequest),
+            timeInDraft: (0, calculations_1.calcAverageValue)(collection.timeInDraft),
         },
     };
 };
@@ -1264,9 +1401,18 @@ exports.preparePullRequestTimeline = void 0;
 const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
-const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collection) => {
+const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], reviewRequest, statuses = [], collection) => {
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
+    const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at || pullRequestInfo?.merged_at, {
+        endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+        startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+    });
+    const timeInDraft = (0, calculations_1.calcDraftTime)(pullRequestInfo?.created_at, pullRequestInfo?.closed_at, statuses).reduce((acc, period) => acc +
+        ((0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(period[0], period[1], {
+            endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+            startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+        }) || 0), 0);
     const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
@@ -1294,6 +1440,12 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews, collect
         timeToMerge: timeToMerge
             ? [...(collection?.timeToMerge || []), timeToMerge]
             : collection.timeToMerge,
+        timeToReviewRequest: timeToReviewRequest
+            ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
+            : collection.timeToReviewRequest,
+        timeInDraft: timeInDraft
+            ? [...(collection?.timeInDraft || []), timeInDraft]
+            : collection.timeInDraft,
         pullRequestsInfo: [
             ...(collection?.pullRequestsInfo || []),
             {
@@ -1315,6 +1467,38 @@ exports.preparePullRequestTimeline = preparePullRequestTimeline;
 
 /***/ }),
 
+/***/ 62381:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prepareRequestedReviews = void 0;
+const constants_1 = __nccwpck_require__(95354);
+const prepareRequestedReviews = (requests = [], collection, dateKey) => {
+    const requestedReviewers = requests.reduce((acc, request) => {
+        const user = request.requested_reviewer?.login || constants_1.invalidUserLogin;
+        return { ...acc, [user]: 1 };
+    }, {});
+    requestedReviewers["total"] = Object.keys(requestedReviewers).length;
+    [dateKey, "total"].forEach((date) => {
+        Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
+            if (!collection[user]) {
+                collection[user] = {};
+            }
+            collection[user][date] = {
+                ...collection[user][date],
+                reviewRequestsConducted: (collection[user][date]?.reviewRequestsConducted || 0) +
+                    value,
+            };
+        });
+    });
+};
+exports.prepareRequestedReviews = prepareRequestedReviews;
+
+
+/***/ }),
+
 /***/ 60934:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1324,8 +1508,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareReviews = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const prepareConductedReviews_1 = __nccwpck_require__(15278);
-const prepareReviews = (data, collection, index, dateKey, pullRequestLogin, pullRequestSize) => {
-    const users = Object.keys(data.reviews[index]?.reduce((acc, review) => {
+const prepareReviews = (reviews = [], collection, dateKey, pullRequestLogin, pullRequestSize) => {
+    const users = Object.keys(reviews?.reduce((acc, review) => {
         const userLogin = review.user?.login || constants_1.invalidUserLogin;
         if (userLogin !== pullRequestLogin) {
             return { ...acc, [userLogin]: 1 };
@@ -1336,12 +1520,12 @@ const prepareReviews = (data, collection, index, dateKey, pullRequestLogin, pull
         if (!collection[user]) {
             collection[user] = {};
         }
-        const userReviews = Array.isArray(data.reviews[index]) && user !== "total"
-            ? data.reviews[index]?.filter((review) => {
+        const userReviews = Array.isArray(reviews) && user !== "total"
+            ? reviews?.filter((review) => {
                 const userLogin = review.user?.login || constants_1.invalidUserLogin;
                 return userLogin === user;
             })
-            : data.reviews[index];
+            : reviews;
         [dateKey, "total"].forEach((key) => {
             collection[user][key] = (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, collection[user][key], pullRequestSize);
         });
@@ -1388,6 +1572,7 @@ const view_1 = __nccwpck_require__(55379);
 const requests_1 = __nccwpck_require__(49591);
 const utils_2 = __nccwpck_require__(92884);
 const octokit_1 = __nccwpck_require__(75455);
+const constants_1 = __nccwpck_require__(11140);
 const createOutput = async (data) => {
     const outcomes = (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME");
     for (let outcome of outcomes) {
@@ -1400,12 +1585,14 @@ const createOutput = async (data) => {
                 await (0, requests_1.clearComments)(issueNumber);
             }
             const issue = await (0, requests_1.createIssue)(markdown, issueNumber);
-            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
-                {
-                    title: "Pull Request report total",
-                    link: `${issue.data.html_url}#`,
-                },
-            ]);
+            const monthComparison = (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes(constants_1.showStatsTypes.timeline)
+                ? (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
+                    {
+                        title: "Pull Request report total",
+                        link: `${issue.data.html_url}#`,
+                    },
+                ])
+                : null;
             const comments = [];
             if (monthComparison) {
                 const comparisonComment = await octokit_1.octokit.rest.issues.createComment({
@@ -1439,8 +1626,10 @@ const createOutput = async (data) => {
                 link: comment.comment.data.html_url,
             }))), issue.data.number);
         }
-        if (outcome === "markdown" || outcome === "output") {
-            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users);
+        if (outcome === "markdown") {
+            const monthComparison = (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes(constants_1.showStatsTypes.timeline)
+                ? (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users)
+                : "";
             const markdown = (0, view_1.createMarkdown)(data, users, dates).concat(`\n${monthComparison}`);
             console.log("Markdown successfully generated.");
             core.setOutput("MARKDOWN", markdown);
@@ -1491,9 +1680,11 @@ const requests_1 = __nccwpck_require__(49591);
 const converters_1 = __nccwpck_require__(86200);
 const utils_1 = __nccwpck_require__(41002);
 const getRateLimit_1 = __nccwpck_require__(78028);
+const analytics_1 = __nccwpck_require__(88345);
 async function main() {
     (0, utils_1.setTimezone)();
     const errors = (0, utils_1.validate)();
+    (0, analytics_1.sendActionRun)();
     if (Object.entries(errors).length > 0) {
         core.setFailed("Inputs are invalid. Action is failed with validation error");
         return;
@@ -1512,7 +1703,6 @@ async function main() {
             owner: repos[i][0],
             repo: repos[i][1],
         }, {
-            skipReviews: false,
             skipComments: (0, utils_1.checkCommentSkip)(),
         });
         data.push(result);
@@ -1522,12 +1712,12 @@ async function main() {
         ownerRepo: acc.ownerRepo
             ? acc.ownerRepo.concat(",", element.ownerRepo)
             : element.ownerRepo,
-        reviews: [...acc.reviews, ...element.reviews],
+        events: [...acc.events, ...element.events],
         pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
         comments: [...acc?.comments, ...element.comments],
     }), {
         ownerRepo: "",
-        reviews: [],
+        events: [],
         pullRequestInfo: [],
         comments: [],
     });
@@ -1753,15 +1943,15 @@ exports.getDataWithThrottle = void 0;
 const utils_1 = __nccwpck_require__(41002);
 const constants_1 = __nccwpck_require__(8827);
 const delay_1 = __nccwpck_require__(1847);
+const getIssueTimelineEvents_1 = __nccwpck_require__(39684);
 const getPullRequestComments_1 = __nccwpck_require__(92041);
 const getPullRequestData_1 = __nccwpck_require__(6382);
-const getPullRequestReviews_1 = __nccwpck_require__(34712);
 const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
     const PRs = [];
     const PREvents = [];
     const PRComments = [];
     let counter = 0;
-    const { skipComments = true, skipReviews = true } = options;
+    const { skipComments = true } = options;
     while (pullRequestNumbers.length > PRs.length) {
         const startIndex = counter * constants_1.concurrentLimit;
         const endIndex = (counter + 1) * constants_1.concurrentLimit;
@@ -1770,10 +1960,8 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
         console.log(`Batch request #${counter + 1} out of ${Math.ceil(pullRequestNumbers.length / constants_1.concurrentLimit)}(${repository.owner}/${repository.repo})`);
         const prs = await Promise.allSettled(pullRequestDatas);
         await (0, delay_1.delay)(4000);
-        const pullRequestReviews = await (0, getPullRequestReviews_1.getPullRequestReviews)(pullRequestNumbersChunks, repository, {
-            skip: skipReviews,
-        });
-        const reviews = await Promise.allSettled(pullRequestReviews);
+        const pullRequestEvents = await (0, getIssueTimelineEvents_1.getIssueTimelineEvents)(pullRequestNumbersChunks, repository);
+        const events = await Promise.allSettled(pullRequestEvents);
         await (0, delay_1.delay)(4000);
         const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbersChunks, repository, {
             skip: skipComments,
@@ -1782,12 +1970,39 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
         await (0, delay_1.delay)((0, utils_1.checkCommentSkip)() ? 0 : 4000);
         counter++;
         PRs.push(...prs);
-        PREvents.push(...reviews);
         PRComments.push(...comments);
+        PREvents.push(...events);
     }
     return { PRs, PREvents, PRComments };
 };
 exports.getDataWithThrottle = getDataWithThrottle;
+
+
+/***/ }),
+
+/***/ 39684:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getIssueTimelineEvents = void 0;
+const constants_1 = __nccwpck_require__(8827);
+const octokit_1 = __nccwpck_require__(75455);
+const getIssueTimelineEvents = async (issueNumbers, repository) => {
+    const { owner, repo } = repository;
+    return issueNumbers.map(async (number) => {
+        const events = await octokit_1.octokit.paginate(octokit_1.octokit.rest.issues.listEventsForTimeline, {
+            owner,
+            repo,
+            issue_number: number,
+            headers: constants_1.commonHeaders,
+            per_page: 100
+        });
+        return { data: events };
+    });
+};
+exports.getIssueTimelineEvents = getIssueTimelineEvents;
 
 
 /***/ }),
@@ -1812,6 +2027,7 @@ const getOrganizationsRepositories = async () => {
             sort: "pushed",
             direction: "desc",
             headers: constants_1.commonHeaders,
+            per_page: 100,
         });
         const repos = organizationRepositories.map((el) => [
             el.owner.login,
@@ -1839,7 +2055,13 @@ const getPullRequestComments = async (pullRequestNumbers, repository, options) =
     const { owner, repo } = repository;
     return !options?.skip
         ? pullRequestNumbers.map(async (number) => {
-            const comments = await octokit_1.octokit.paginate(octokit_1.octokit.rest.pulls.listReviewComments, { owner, repo, pull_number: number, headers: constants_1.commonHeaders });
+            const comments = await octokit_1.octokit.paginate(octokit_1.octokit.rest.pulls.listReviewComments, {
+                owner,
+                repo,
+                pull_number: number,
+                headers: constants_1.commonHeaders,
+                per_page: 100,
+            });
             return { data: comments };
         })
         : [];
@@ -1868,34 +2090,6 @@ const getPullRequestDatas = async (pullRequestNumbers, repository) => {
     }));
 };
 exports.getPullRequestDatas = getPullRequestDatas;
-
-
-/***/ }),
-
-/***/ 34712:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequestReviews = void 0;
-const constants_1 = __nccwpck_require__(8827);
-const octokit_1 = __nccwpck_require__(75455);
-const getPullRequestReviews = async (pullRequestNumbers, repository, options) => {
-    const { owner, repo } = repository;
-    return !options?.skip
-        ? pullRequestNumbers.map(async (number) => {
-            const reviews = await octokit_1.octokit.paginate(octokit_1.octokit.rest.pulls.listReviews, {
-                owner,
-                repo,
-                pull_number: number,
-                headers: constants_1.commonHeaders,
-            });
-            return { data: reviews };
-        })
-        : [];
-};
-exports.getPullRequestReviews = getPullRequestReviews;
 
 
 /***/ }),
@@ -2009,7 +2203,6 @@ const getDataWithThrottle_1 = __nccwpck_require__(17227);
 const getPullRequests_1 = __nccwpck_require__(21341);
 const makeComplexRequest = async (amount = 100, repository, options = {
     skipComments: true,
-    skipReviews: true,
 }) => {
     const pullRequests = await (0, getPullRequests_1.getPullRequests)(amount, repository);
     const pullRequestNumbers = pullRequests
@@ -2026,12 +2219,12 @@ const makeComplexRequest = async (amount = 100, repository, options = {
     })
         .map((item) => item.number);
     const { PRs, PREvents, PRComments } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, repository, options);
-    const reviews = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
+    const events = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const pullRequestInfo = PRs.map((element) => element.status === "fulfilled" ? element.value.data : null);
     const comments = PRComments.map((element) => element.status === "fulfilled" ? element.value.data : null);
     return {
         ownerRepo: `${repository.owner}/${repository.repo}`,
-        reviews,
+        events,
         pullRequestInfo,
         comments,
     };
@@ -2321,7 +2514,9 @@ Object.defineProperty(exports, "createList", ({ enumerable: true, get: function 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = void 0;
+exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
+exports.timeToReviewRequestHeader = "Time to review request";
+exports.timeInDraftHeader = "Time in draft";
 exports.timeToReviewHeader = "Time to review";
 exports.timeToApproveHeader = "Time to approve";
 exports.timeToMergeHeader = "Time to merge";
@@ -2330,6 +2525,7 @@ exports.totalOpenedPrsHeader = "Total opened PRs";
 exports.additionsDeletionsHeader = "Additions/Deletions";
 exports.reviewCommentsHeader = "Total comments";
 exports.reviewConductedHeader = "Reviews conducted";
+exports.reviewRequestConductedHeader = "Review requests conducted";
 exports.discussionsHeader = "Agreed / Disagreed / Total discussions received";
 exports.discussionsConductedHeader = "Agreed / Disagreed / Total discussions conducted";
 exports.commentsConductedHeader = "Comments conducted";
@@ -2437,12 +2633,12 @@ const createPullRequestQualityTable = (data, users, date) => {
         .filter((user) => data[user]?.[date]?.merged ||
         data[user]?.[date]?.discussions ||
         data[user]?.[date]?.reviewComments ||
-        data["total"]?.[date]?.reviewsConducted?.[user]?.["CHANGES_REQUESTED"])
+        data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"])
         .map((user) => {
         return [
             `**${user}**`,
             data[user]?.[date]?.merged?.toString() || "0",
-            data["total"]?.[date]?.reviewsConducted?.[user]?.["CHANGES_REQUESTED"]?.toString() || "0",
+            data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"]?.toString() || "0",
             `${data[user]?.[date]?.discussions?.received?.agreed?.toString() || "0"} / ${data[user]?.[date]?.discussions?.received?.disagreed?.toString() ||
                 "0"} / ${data[user]?.[date]?.discussions?.received?.total?.toString() || "0"}`,
             data[user]?.[date]?.reviewComments?.toString() || "0",
@@ -2524,8 +2720,9 @@ const createReviewTable = (data, users, date) => {
             `${sizes
                 .map((size) => data[user]?.[date]?.reviewsConductedSize?.filter((prSize) => prSize === size).length || 0)
                 .join("/")}`,
-            `${data[user]?.[date]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() ||
-                0} / ${data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0}`,
+            `${data[user]?.[date]?.reviewsConducted?.total?.changes_requested?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.commented?.toString() ||
+                0} / ${data[user]?.[date]?.reviewsConducted?.total?.approved?.toString() || 0}`,
+            data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
         ];
     });
     return (0, common_1.createTable)({
@@ -2539,6 +2736,7 @@ const createReviewTable = (data, users, date) => {
                 constants_1.commentsConductedHeader,
                 constants_1.prSizesHeader,
                 constants_1.reviewTypesHeader,
+                constants_1.reviewRequestConductedHeader,
             ],
             rows: tableRowsTotal,
         },
@@ -2574,7 +2772,7 @@ const createTimelineContent = (data, users, date) => {
             ?.sort((a, b) => b[milestone] - a[milestone])
             .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
             .map((item) => ({
-            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone])})`,
+            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone]) || "-"})`,
             link: item.link || "",
         })) || [];
         return (0, common_1.createList)(milestoneTitle[milestone], items);
@@ -2628,6 +2826,16 @@ const createTimelineGanttBar = (data, type, users, date) => {
             .map((user) => ({
             name: user,
             bars: [
+                {
+                    name: constants_1.timeInDraftHeader,
+                    start: 0,
+                    end: data[user]?.[date]?.[type]?.timeInDraft || 0,
+                },
+                {
+                    name: constants_1.timeToReviewRequestHeader,
+                    start: 0,
+                    end: data[user]?.[date]?.[type]?.timeToReviewRequest || 0,
+                },
                 {
                     name: constants_1.timeToReviewHeader,
                     start: 0,
@@ -2701,6 +2909,16 @@ const createTimelineMonthsGanttBar = (data, type, dates, user) => {
             name: date,
             bars: [
                 {
+                    name: constants_1.timeInDraftHeader,
+                    start: 0,
+                    end: data[user]?.[date]?.[type]?.timeInDraft || 0,
+                },
+                {
+                    name: constants_1.timeToReviewRequestHeader,
+                    start: 0,
+                    end: data[user]?.[date]?.[type]?.timeToReviewRequest || 0,
+                },
+                {
                     name: constants_1.timeToReviewHeader,
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToReview || 0,
@@ -2742,6 +2960,8 @@ const createTimelineTable = (data, type, users, date) => {
         .map((user) => {
         return [
             `**${user}**`,
+            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeInDraft || 0),
+            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToReviewRequest || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToReview || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToApprove || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToMerge || 0),
@@ -2754,6 +2974,8 @@ const createTimelineTable = (data, type, users, date) => {
         table: {
             headers: [
                 "user",
+                constants_1.timeInDraftHeader,
+                constants_1.timeToReviewRequestHeader,
                 constants_1.timeToReviewHeader,
                 constants_1.timeToApproveHeader,
                 constants_1.timeToMergeHeader,
@@ -12488,6 +12710,241 @@ var Webhooks = class {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (0);
 
+
+/***/ }),
+
+/***/ 49690:
+/***/ (function(module, __unused_webpack_exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const events_1 = __nccwpck_require__(82361);
+const debug_1 = __importDefault(__nccwpck_require__(38237));
+const promisify_1 = __importDefault(__nccwpck_require__(66570));
+const debug = debug_1.default('agent-base');
+function isAgent(v) {
+    return Boolean(v) && typeof v.addRequest === 'function';
+}
+function isSecureEndpoint() {
+    const { stack } = new Error();
+    if (typeof stack !== 'string')
+        return false;
+    return stack.split('\n').some(l => l.indexOf('(https.js:') !== -1 || l.indexOf('node:https:') !== -1);
+}
+function createAgent(callback, opts) {
+    return new createAgent.Agent(callback, opts);
+}
+(function (createAgent) {
+    /**
+     * Base `http.Agent` implementation.
+     * No pooling/keep-alive is implemented by default.
+     *
+     * @param {Function} callback
+     * @api public
+     */
+    class Agent extends events_1.EventEmitter {
+        constructor(callback, _opts) {
+            super();
+            let opts = _opts;
+            if (typeof callback === 'function') {
+                this.callback = callback;
+            }
+            else if (callback) {
+                opts = callback;
+            }
+            // Timeout for the socket to be returned from the callback
+            this.timeout = null;
+            if (opts && typeof opts.timeout === 'number') {
+                this.timeout = opts.timeout;
+            }
+            // These aren't actually used by `agent-base`, but are required
+            // for the TypeScript definition files in `@types/node` :/
+            this.maxFreeSockets = 1;
+            this.maxSockets = 1;
+            this.maxTotalSockets = Infinity;
+            this.sockets = {};
+            this.freeSockets = {};
+            this.requests = {};
+            this.options = {};
+        }
+        get defaultPort() {
+            if (typeof this.explicitDefaultPort === 'number') {
+                return this.explicitDefaultPort;
+            }
+            return isSecureEndpoint() ? 443 : 80;
+        }
+        set defaultPort(v) {
+            this.explicitDefaultPort = v;
+        }
+        get protocol() {
+            if (typeof this.explicitProtocol === 'string') {
+                return this.explicitProtocol;
+            }
+            return isSecureEndpoint() ? 'https:' : 'http:';
+        }
+        set protocol(v) {
+            this.explicitProtocol = v;
+        }
+        callback(req, opts, fn) {
+            throw new Error('"agent-base" has no default implementation, you must subclass and override `callback()`');
+        }
+        /**
+         * Called by node-core's "_http_client.js" module when creating
+         * a new HTTP request with this Agent instance.
+         *
+         * @api public
+         */
+        addRequest(req, _opts) {
+            const opts = Object.assign({}, _opts);
+            if (typeof opts.secureEndpoint !== 'boolean') {
+                opts.secureEndpoint = isSecureEndpoint();
+            }
+            if (opts.host == null) {
+                opts.host = 'localhost';
+            }
+            if (opts.port == null) {
+                opts.port = opts.secureEndpoint ? 443 : 80;
+            }
+            if (opts.protocol == null) {
+                opts.protocol = opts.secureEndpoint ? 'https:' : 'http:';
+            }
+            if (opts.host && opts.path) {
+                // If both a `host` and `path` are specified then it's most
+                // likely the result of a `url.parse()` call... we need to
+                // remove the `path` portion so that `net.connect()` doesn't
+                // attempt to open that as a unix socket file.
+                delete opts.path;
+            }
+            delete opts.agent;
+            delete opts.hostname;
+            delete opts._defaultAgent;
+            delete opts.defaultPort;
+            delete opts.createConnection;
+            // Hint to use "Connection: close"
+            // XXX: non-documented `http` module API :(
+            req._last = true;
+            req.shouldKeepAlive = false;
+            let timedOut = false;
+            let timeoutId = null;
+            const timeoutMs = opts.timeout || this.timeout;
+            const onerror = (err) => {
+                if (req._hadError)
+                    return;
+                req.emit('error', err);
+                // For Safety. Some additional errors might fire later on
+                // and we need to make sure we don't double-fire the error event.
+                req._hadError = true;
+            };
+            const ontimeout = () => {
+                timeoutId = null;
+                timedOut = true;
+                const err = new Error(`A "socket" was not created for HTTP request before ${timeoutMs}ms`);
+                err.code = 'ETIMEOUT';
+                onerror(err);
+            };
+            const callbackError = (err) => {
+                if (timedOut)
+                    return;
+                if (timeoutId !== null) {
+                    clearTimeout(timeoutId);
+                    timeoutId = null;
+                }
+                onerror(err);
+            };
+            const onsocket = (socket) => {
+                if (timedOut)
+                    return;
+                if (timeoutId != null) {
+                    clearTimeout(timeoutId);
+                    timeoutId = null;
+                }
+                if (isAgent(socket)) {
+                    // `socket` is actually an `http.Agent` instance, so
+                    // relinquish responsibility for this `req` to the Agent
+                    // from here on
+                    debug('Callback returned another Agent instance %o', socket.constructor.name);
+                    socket.addRequest(req, opts);
+                    return;
+                }
+                if (socket) {
+                    socket.once('free', () => {
+                        this.freeSocket(socket, opts);
+                    });
+                    req.onSocket(socket);
+                    return;
+                }
+                const err = new Error(`no Duplex stream was returned to agent-base for \`${req.method} ${req.path}\``);
+                onerror(err);
+            };
+            if (typeof this.callback !== 'function') {
+                onerror(new Error('`callback` is not defined'));
+                return;
+            }
+            if (!this.promisifiedCallback) {
+                if (this.callback.length >= 3) {
+                    debug('Converting legacy callback function to promise');
+                    this.promisifiedCallback = promisify_1.default(this.callback);
+                }
+                else {
+                    this.promisifiedCallback = this.callback;
+                }
+            }
+            if (typeof timeoutMs === 'number' && timeoutMs > 0) {
+                timeoutId = setTimeout(ontimeout, timeoutMs);
+            }
+            if ('port' in opts && typeof opts.port !== 'number') {
+                opts.port = Number(opts.port);
+            }
+            try {
+                debug('Resolving socket for %o request: %o', opts.protocol, `${req.method} ${req.path}`);
+                Promise.resolve(this.promisifiedCallback(req, opts)).then(onsocket, callbackError);
+            }
+            catch (err) {
+                Promise.reject(err).catch(callbackError);
+            }
+        }
+        freeSocket(socket, opts) {
+            debug('Freeing socket %o %o', socket.constructor.name, opts);
+            socket.destroy();
+        }
+        destroy() {
+            debug('Destroying agent %o', this.constructor.name);
+        }
+    }
+    createAgent.Agent = Agent;
+    // So that `instanceof` works correctly
+    createAgent.prototype = createAgent.Agent.prototype;
+})(createAgent || (createAgent = {}));
+module.exports = createAgent;
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ 66570:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+function promisify(fn) {
+    return function (req, opts) {
+        return new Promise((resolve, reject) => {
+            fn.call(this, req, opts, (err, rtn) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(rtn);
+                }
+            });
+        });
+    };
+}
+exports["default"] = promisify;
+//# sourceMappingURL=promisify.js.map
 
 /***/ }),
 
@@ -35725,6 +36182,1019 @@ module.exports = exports.default;
 
 /***/ }),
 
+/***/ 84697:
+/***/ ((module) => {
+
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var w = d * 7;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} [options]
+ * @throws {Error} throw an error if val is not a non-empty string or a number
+ * @return {String|Number}
+ * @api public
+ */
+
+module.exports = function(val, options) {
+  options = options || {};
+  var type = typeof val;
+  if (type === 'string' && val.length > 0) {
+    return parse(val);
+  } else if (type === 'number' && isFinite(val)) {
+    return options.long ? fmtLong(val) : fmtShort(val);
+  }
+  throw new Error(
+    'val is not a non-empty string or a valid number. val=' +
+      JSON.stringify(val)
+  );
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  str = String(str);
+  if (str.length > 100) {
+    return;
+  }
+  var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
+    str
+  );
+  if (!match) {
+    return;
+  }
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * y;
+    case 'weeks':
+    case 'week':
+    case 'w':
+      return n * w;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtShort(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return Math.round(ms / d) + 'd';
+  }
+  if (msAbs >= h) {
+    return Math.round(ms / h) + 'h';
+  }
+  if (msAbs >= m) {
+    return Math.round(ms / m) + 'm';
+  }
+  if (msAbs >= s) {
+    return Math.round(ms / s) + 's';
+  }
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtLong(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return plural(ms, msAbs, d, 'day');
+  }
+  if (msAbs >= h) {
+    return plural(ms, msAbs, h, 'hour');
+  }
+  if (msAbs >= m) {
+    return plural(ms, msAbs, m, 'minute');
+  }
+  if (msAbs >= s) {
+    return plural(ms, msAbs, s, 'second');
+  }
+  return ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, msAbs, n, name) {
+  var isPlural = msAbs >= n * 1.5;
+  return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
+}
+
+
+/***/ }),
+
+/***/ 28222:
+/***/ ((module, exports, __nccwpck_require__) => {
+
+/* eslint-env browser */
+
+/**
+ * This is the web browser implementation of `debug()`.
+ */
+
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.storage = localstorage();
+exports.destroy = (() => {
+	let warned = false;
+
+	return () => {
+		if (!warned) {
+			warned = true;
+			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+		}
+	};
+})();
+
+/**
+ * Colors.
+ */
+
+exports.colors = [
+	'#0000CC',
+	'#0000FF',
+	'#0033CC',
+	'#0033FF',
+	'#0066CC',
+	'#0066FF',
+	'#0099CC',
+	'#0099FF',
+	'#00CC00',
+	'#00CC33',
+	'#00CC66',
+	'#00CC99',
+	'#00CCCC',
+	'#00CCFF',
+	'#3300CC',
+	'#3300FF',
+	'#3333CC',
+	'#3333FF',
+	'#3366CC',
+	'#3366FF',
+	'#3399CC',
+	'#3399FF',
+	'#33CC00',
+	'#33CC33',
+	'#33CC66',
+	'#33CC99',
+	'#33CCCC',
+	'#33CCFF',
+	'#6600CC',
+	'#6600FF',
+	'#6633CC',
+	'#6633FF',
+	'#66CC00',
+	'#66CC33',
+	'#9900CC',
+	'#9900FF',
+	'#9933CC',
+	'#9933FF',
+	'#99CC00',
+	'#99CC33',
+	'#CC0000',
+	'#CC0033',
+	'#CC0066',
+	'#CC0099',
+	'#CC00CC',
+	'#CC00FF',
+	'#CC3300',
+	'#CC3333',
+	'#CC3366',
+	'#CC3399',
+	'#CC33CC',
+	'#CC33FF',
+	'#CC6600',
+	'#CC6633',
+	'#CC9900',
+	'#CC9933',
+	'#CCCC00',
+	'#CCCC33',
+	'#FF0000',
+	'#FF0033',
+	'#FF0066',
+	'#FF0099',
+	'#FF00CC',
+	'#FF00FF',
+	'#FF3300',
+	'#FF3333',
+	'#FF3366',
+	'#FF3399',
+	'#FF33CC',
+	'#FF33FF',
+	'#FF6600',
+	'#FF6633',
+	'#FF9900',
+	'#FF9933',
+	'#FFCC00',
+	'#FFCC33'
+];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+// eslint-disable-next-line complexity
+function useColors() {
+	// NB: In an Electron preload script, document will be defined but not fully
+	// initialized. Since we know we're in Chrome, we'll just detect this case
+	// explicitly
+	if (typeof window !== 'undefined' && window.process && (window.process.type === 'renderer' || window.process.__nwjs)) {
+		return true;
+	}
+
+	// Internet Explorer and Edge do not support colors.
+	if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
+		return false;
+	}
+
+	// Is webkit? http://stackoverflow.com/a/16459606/376773
+	// document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
+	return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
+		// Is firebug? http://stackoverflow.com/a/398120/376773
+		(typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
+		// Is firefox >= v31?
+		// https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+		// Double check webkit in userAgent just in case we are in a worker
+		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+}
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs(args) {
+	args[0] = (this.useColors ? '%c' : '') +
+		this.namespace +
+		(this.useColors ? ' %c' : ' ') +
+		args[0] +
+		(this.useColors ? '%c ' : ' ') +
+		'+' + module.exports.humanize(this.diff);
+
+	if (!this.useColors) {
+		return;
+	}
+
+	const c = 'color: ' + this.color;
+	args.splice(1, 0, c, 'color: inherit');
+
+	// The final "%c" is somewhat tricky, because there could be other
+	// arguments passed either before or after the %c, so we need to
+	// figure out the correct index to insert the CSS into
+	let index = 0;
+	let lastC = 0;
+	args[0].replace(/%[a-zA-Z%]/g, match => {
+		if (match === '%%') {
+			return;
+		}
+		index++;
+		if (match === '%c') {
+			// We only are interested in the *last* %c
+			// (the user may have provided their own)
+			lastC = index;
+		}
+	});
+
+	args.splice(lastC, 0, c);
+}
+
+/**
+ * Invokes `console.debug()` when available.
+ * No-op when `console.debug` is not a "function".
+ * If `console.debug` is not available, falls back
+ * to `console.log`.
+ *
+ * @api public
+ */
+exports.log = console.debug || console.log || (() => {});
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+function save(namespaces) {
+	try {
+		if (namespaces) {
+			exports.storage.setItem('debug', namespaces);
+		} else {
+			exports.storage.removeItem('debug');
+		}
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+function load() {
+	let r;
+	try {
+		r = exports.storage.getItem('debug');
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+
+	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
+	if (!r && typeof process !== 'undefined' && 'env' in process) {
+		r = process.env.DEBUG;
+	}
+
+	return r;
+}
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage() {
+	try {
+		// TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
+		// The Browser also has localStorage in the global context.
+		return localStorage;
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+}
+
+module.exports = __nccwpck_require__(46243)(exports);
+
+const {formatters} = module.exports;
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+formatters.j = function (v) {
+	try {
+		return JSON.stringify(v);
+	} catch (error) {
+		return '[UnexpectedJSONParseError]: ' + error.message;
+	}
+};
+
+
+/***/ }),
+
+/***/ 46243:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ */
+
+function setup(env) {
+	createDebug.debug = createDebug;
+	createDebug.default = createDebug;
+	createDebug.coerce = coerce;
+	createDebug.disable = disable;
+	createDebug.enable = enable;
+	createDebug.enabled = enabled;
+	createDebug.humanize = __nccwpck_require__(84697);
+	createDebug.destroy = destroy;
+
+	Object.keys(env).forEach(key => {
+		createDebug[key] = env[key];
+	});
+
+	/**
+	* The currently active debug mode names, and names to skip.
+	*/
+
+	createDebug.names = [];
+	createDebug.skips = [];
+
+	/**
+	* Map of special "%n" handling functions, for the debug "format" argument.
+	*
+	* Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
+	*/
+	createDebug.formatters = {};
+
+	/**
+	* Selects a color for a debug namespace
+	* @param {String} namespace The namespace string for the debug instance to be colored
+	* @return {Number|String} An ANSI color code for the given namespace
+	* @api private
+	*/
+	function selectColor(namespace) {
+		let hash = 0;
+
+		for (let i = 0; i < namespace.length; i++) {
+			hash = ((hash << 5) - hash) + namespace.charCodeAt(i);
+			hash |= 0; // Convert to 32bit integer
+		}
+
+		return createDebug.colors[Math.abs(hash) % createDebug.colors.length];
+	}
+	createDebug.selectColor = selectColor;
+
+	/**
+	* Create a debugger with the given `namespace`.
+	*
+	* @param {String} namespace
+	* @return {Function}
+	* @api public
+	*/
+	function createDebug(namespace) {
+		let prevTime;
+		let enableOverride = null;
+		let namespacesCache;
+		let enabledCache;
+
+		function debug(...args) {
+			// Disabled?
+			if (!debug.enabled) {
+				return;
+			}
+
+			const self = debug;
+
+			// Set `diff` timestamp
+			const curr = Number(new Date());
+			const ms = curr - (prevTime || curr);
+			self.diff = ms;
+			self.prev = prevTime;
+			self.curr = curr;
+			prevTime = curr;
+
+			args[0] = createDebug.coerce(args[0]);
+
+			if (typeof args[0] !== 'string') {
+				// Anything else let's inspect with %O
+				args.unshift('%O');
+			}
+
+			// Apply any `formatters` transformations
+			let index = 0;
+			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
+				// If we encounter an escaped % then don't increase the array index
+				if (match === '%%') {
+					return '%';
+				}
+				index++;
+				const formatter = createDebug.formatters[format];
+				if (typeof formatter === 'function') {
+					const val = args[index];
+					match = formatter.call(self, val);
+
+					// Now we need to remove `args[index]` since it's inlined in the `format`
+					args.splice(index, 1);
+					index--;
+				}
+				return match;
+			});
+
+			// Apply env-specific formatting (colors, etc.)
+			createDebug.formatArgs.call(self, args);
+
+			const logFn = self.log || createDebug.log;
+			logFn.apply(self, args);
+		}
+
+		debug.namespace = namespace;
+		debug.useColors = createDebug.useColors();
+		debug.color = createDebug.selectColor(namespace);
+		debug.extend = extend;
+		debug.destroy = createDebug.destroy; // XXX Temporary. Will be removed in the next major release.
+
+		Object.defineProperty(debug, 'enabled', {
+			enumerable: true,
+			configurable: false,
+			get: () => {
+				if (enableOverride !== null) {
+					return enableOverride;
+				}
+				if (namespacesCache !== createDebug.namespaces) {
+					namespacesCache = createDebug.namespaces;
+					enabledCache = createDebug.enabled(namespace);
+				}
+
+				return enabledCache;
+			},
+			set: v => {
+				enableOverride = v;
+			}
+		});
+
+		// Env-specific initialization logic for debug instances
+		if (typeof createDebug.init === 'function') {
+			createDebug.init(debug);
+		}
+
+		return debug;
+	}
+
+	function extend(namespace, delimiter) {
+		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
+		newDebug.log = this.log;
+		return newDebug;
+	}
+
+	/**
+	* Enables a debug mode by namespaces. This can include modes
+	* separated by a colon and wildcards.
+	*
+	* @param {String} namespaces
+	* @api public
+	*/
+	function enable(namespaces) {
+		createDebug.save(namespaces);
+		createDebug.namespaces = namespaces;
+
+		createDebug.names = [];
+		createDebug.skips = [];
+
+		let i;
+		const split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
+		const len = split.length;
+
+		for (i = 0; i < len; i++) {
+			if (!split[i]) {
+				// ignore empty strings
+				continue;
+			}
+
+			namespaces = split[i].replace(/\*/g, '.*?');
+
+			if (namespaces[0] === '-') {
+				createDebug.skips.push(new RegExp('^' + namespaces.slice(1) + '$'));
+			} else {
+				createDebug.names.push(new RegExp('^' + namespaces + '$'));
+			}
+		}
+	}
+
+	/**
+	* Disable debug output.
+	*
+	* @return {String} namespaces
+	* @api public
+	*/
+	function disable() {
+		const namespaces = [
+			...createDebug.names.map(toNamespace),
+			...createDebug.skips.map(toNamespace).map(namespace => '-' + namespace)
+		].join(',');
+		createDebug.enable('');
+		return namespaces;
+	}
+
+	/**
+	* Returns true if the given mode name is enabled, false otherwise.
+	*
+	* @param {String} name
+	* @return {Boolean}
+	* @api public
+	*/
+	function enabled(name) {
+		if (name[name.length - 1] === '*') {
+			return true;
+		}
+
+		let i;
+		let len;
+
+		for (i = 0, len = createDebug.skips.length; i < len; i++) {
+			if (createDebug.skips[i].test(name)) {
+				return false;
+			}
+		}
+
+		for (i = 0, len = createDebug.names.length; i < len; i++) {
+			if (createDebug.names[i].test(name)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* Convert regexp to namespace
+	*
+	* @param {RegExp} regxep
+	* @return {String} namespace
+	* @api private
+	*/
+	function toNamespace(regexp) {
+		return regexp.toString()
+			.substring(2, regexp.toString().length - 2)
+			.replace(/\.\*\?$/, '*');
+	}
+
+	/**
+	* Coerce `val`.
+	*
+	* @param {Mixed} val
+	* @return {Mixed}
+	* @api private
+	*/
+	function coerce(val) {
+		if (val instanceof Error) {
+			return val.stack || val.message;
+		}
+		return val;
+	}
+
+	/**
+	* XXX DO NOT USE. This is a temporary stub function.
+	* XXX It WILL be removed in the next major release.
+	*/
+	function destroy() {
+		console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+	}
+
+	createDebug.enable(createDebug.load());
+
+	return createDebug;
+}
+
+module.exports = setup;
+
+
+/***/ }),
+
+/***/ 38237:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+/**
+ * Detect Electron renderer / nwjs process, which is node, but we should
+ * treat as a browser.
+ */
+
+if (typeof process === 'undefined' || process.type === 'renderer' || process.browser === true || process.__nwjs) {
+	module.exports = __nccwpck_require__(28222);
+} else {
+	module.exports = __nccwpck_require__(35332);
+}
+
+
+/***/ }),
+
+/***/ 35332:
+/***/ ((module, exports, __nccwpck_require__) => {
+
+/**
+ * Module dependencies.
+ */
+
+const tty = __nccwpck_require__(76224);
+const util = __nccwpck_require__(73837);
+
+/**
+ * This is the Node.js implementation of `debug()`.
+ */
+
+exports.init = init;
+exports.log = log;
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.destroy = util.deprecate(
+	() => {},
+	'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
+);
+
+/**
+ * Colors.
+ */
+
+exports.colors = [6, 2, 3, 4, 5, 1];
+
+try {
+	// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
+	// eslint-disable-next-line import/no-extraneous-dependencies
+	const supportsColor = __nccwpck_require__(59318);
+
+	if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
+		exports.colors = [
+			20,
+			21,
+			26,
+			27,
+			32,
+			33,
+			38,
+			39,
+			40,
+			41,
+			42,
+			43,
+			44,
+			45,
+			56,
+			57,
+			62,
+			63,
+			68,
+			69,
+			74,
+			75,
+			76,
+			77,
+			78,
+			79,
+			80,
+			81,
+			92,
+			93,
+			98,
+			99,
+			112,
+			113,
+			128,
+			129,
+			134,
+			135,
+			148,
+			149,
+			160,
+			161,
+			162,
+			163,
+			164,
+			165,
+			166,
+			167,
+			168,
+			169,
+			170,
+			171,
+			172,
+			173,
+			178,
+			179,
+			184,
+			185,
+			196,
+			197,
+			198,
+			199,
+			200,
+			201,
+			202,
+			203,
+			204,
+			205,
+			206,
+			207,
+			208,
+			209,
+			214,
+			215,
+			220,
+			221
+		];
+	}
+} catch (error) {
+	// Swallow - we only care if `supports-color` is available; it doesn't have to be.
+}
+
+/**
+ * Build up the default `inspectOpts` object from the environment variables.
+ *
+ *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
+ */
+
+exports.inspectOpts = Object.keys(process.env).filter(key => {
+	return /^debug_/i.test(key);
+}).reduce((obj, key) => {
+	// Camel-case
+	const prop = key
+		.substring(6)
+		.toLowerCase()
+		.replace(/_([a-z])/g, (_, k) => {
+			return k.toUpperCase();
+		});
+
+	// Coerce string value into JS value
+	let val = process.env[key];
+	if (/^(yes|on|true|enabled)$/i.test(val)) {
+		val = true;
+	} else if (/^(no|off|false|disabled)$/i.test(val)) {
+		val = false;
+	} else if (val === 'null') {
+		val = null;
+	} else {
+		val = Number(val);
+	}
+
+	obj[prop] = val;
+	return obj;
+}, {});
+
+/**
+ * Is stdout a TTY? Colored output is enabled when `true`.
+ */
+
+function useColors() {
+	return 'colors' in exports.inspectOpts ?
+		Boolean(exports.inspectOpts.colors) :
+		tty.isatty(process.stderr.fd);
+}
+
+/**
+ * Adds ANSI color escape codes if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs(args) {
+	const {namespace: name, useColors} = this;
+
+	if (useColors) {
+		const c = this.color;
+		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
+		const prefix = `  ${colorCode};1m${name} \u001B[0m`;
+
+		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
+		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
+	} else {
+		args[0] = getDate() + name + ' ' + args[0];
+	}
+}
+
+function getDate() {
+	if (exports.inspectOpts.hideDate) {
+		return '';
+	}
+	return new Date().toISOString() + ' ';
+}
+
+/**
+ * Invokes `util.format()` with the specified arguments and writes to stderr.
+ */
+
+function log(...args) {
+	return process.stderr.write(util.format(...args) + '\n');
+}
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+function save(namespaces) {
+	if (namespaces) {
+		process.env.DEBUG = namespaces;
+	} else {
+		// If you set a process.env field to null or undefined, it gets cast to the
+		// string 'null' or 'undefined'. Just delete instead.
+		delete process.env.DEBUG;
+	}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+
+function load() {
+	return process.env.DEBUG;
+}
+
+/**
+ * Init logic for `debug` instances.
+ *
+ * Create a new `inspectOpts` object in case `useColors` is set
+ * differently for a particular `debug` instance.
+ */
+
+function init(debug) {
+	debug.inspectOpts = {};
+
+	const keys = Object.keys(exports.inspectOpts);
+	for (let i = 0; i < keys.length; i++) {
+		debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
+	}
+}
+
+module.exports = __nccwpck_require__(46243)(exports);
+
+const {formatters} = module.exports;
+
+/**
+ * Map %o to `util.inspect()`, all on a single line.
+ */
+
+formatters.o = function (v) {
+	this.inspectOpts.colors = this.useColors;
+	return util.inspect(v, this.inspectOpts)
+		.split('\n')
+		.map(str => str.trim())
+		.join(' ');
+};
+
+/**
+ * Map %O to `util.inspect()`, allowing multiple lines if needed.
+ */
+
+formatters.O = function (v) {
+	this.inspectOpts.colors = this.useColors;
+	return util.inspect(v, this.inspectOpts);
+};
+
+
+/***/ }),
+
 /***/ 58932:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -36362,6 +37832,303 @@ function getParamBytesForAlg(alg) {
 
 module.exports = getParamBytesForAlg;
 
+
+/***/ }),
+
+/***/ 31621:
+/***/ ((module) => {
+
+"use strict";
+
+
+module.exports = (flag, argv = process.argv) => {
+	const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
+	const position = argv.indexOf(prefix + flag);
+	const terminatorPosition = argv.indexOf('--');
+	return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
+};
+
+
+/***/ }),
+
+/***/ 15098:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const net_1 = __importDefault(__nccwpck_require__(41808));
+const tls_1 = __importDefault(__nccwpck_require__(24404));
+const url_1 = __importDefault(__nccwpck_require__(57310));
+const assert_1 = __importDefault(__nccwpck_require__(39491));
+const debug_1 = __importDefault(__nccwpck_require__(38237));
+const agent_base_1 = __nccwpck_require__(49690);
+const parse_proxy_response_1 = __importDefault(__nccwpck_require__(595));
+const debug = debug_1.default('https-proxy-agent:agent');
+/**
+ * The `HttpsProxyAgent` implements an HTTP Agent subclass that connects to
+ * the specified "HTTP(s) proxy server" in order to proxy HTTPS requests.
+ *
+ * Outgoing HTTP requests are first tunneled through the proxy server using the
+ * `CONNECT` HTTP request method to establish a connection to the proxy server,
+ * and then the proxy server connects to the destination target and issues the
+ * HTTP request from the proxy server.
+ *
+ * `https:` requests have their socket connection upgraded to TLS once
+ * the connection to the proxy server has been established.
+ *
+ * @api public
+ */
+class HttpsProxyAgent extends agent_base_1.Agent {
+    constructor(_opts) {
+        let opts;
+        if (typeof _opts === 'string') {
+            opts = url_1.default.parse(_opts);
+        }
+        else {
+            opts = _opts;
+        }
+        if (!opts) {
+            throw new Error('an HTTP(S) proxy server `host` and `port` must be specified!');
+        }
+        debug('creating new HttpsProxyAgent instance: %o', opts);
+        super(opts);
+        const proxy = Object.assign({}, opts);
+        // If `true`, then connect to the proxy server over TLS.
+        // Defaults to `false`.
+        this.secureProxy = opts.secureProxy || isHTTPS(proxy.protocol);
+        // Prefer `hostname` over `host`, and set the `port` if needed.
+        proxy.host = proxy.hostname || proxy.host;
+        if (typeof proxy.port === 'string') {
+            proxy.port = parseInt(proxy.port, 10);
+        }
+        if (!proxy.port && proxy.host) {
+            proxy.port = this.secureProxy ? 443 : 80;
+        }
+        // ALPN is supported by Node.js >= v5.
+        // attempt to negotiate http/1.1 for proxy servers that support http/2
+        if (this.secureProxy && !('ALPNProtocols' in proxy)) {
+            proxy.ALPNProtocols = ['http 1.1'];
+        }
+        if (proxy.host && proxy.path) {
+            // If both a `host` and `path` are specified then it's most likely
+            // the result of a `url.parse()` call... we need to remove the
+            // `path` portion so that `net.connect()` doesn't attempt to open
+            // that as a Unix socket file.
+            delete proxy.path;
+            delete proxy.pathname;
+        }
+        this.proxy = proxy;
+    }
+    /**
+     * Called when the node-core HTTP client library is creating a
+     * new HTTP request.
+     *
+     * @api protected
+     */
+    callback(req, opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { proxy, secureProxy } = this;
+            // Create a socket connection to the proxy server.
+            let socket;
+            if (secureProxy) {
+                debug('Creating `tls.Socket`: %o', proxy);
+                socket = tls_1.default.connect(proxy);
+            }
+            else {
+                debug('Creating `net.Socket`: %o', proxy);
+                socket = net_1.default.connect(proxy);
+            }
+            const headers = Object.assign({}, proxy.headers);
+            const hostname = `${opts.host}:${opts.port}`;
+            let payload = `CONNECT ${hostname} HTTP/1.1\r\n`;
+            // Inject the `Proxy-Authorization` header if necessary.
+            if (proxy.auth) {
+                headers['Proxy-Authorization'] = `Basic ${Buffer.from(proxy.auth).toString('base64')}`;
+            }
+            // The `Host` header should only include the port
+            // number when it is not the default port.
+            let { host, port, secureEndpoint } = opts;
+            if (!isDefaultPort(port, secureEndpoint)) {
+                host += `:${port}`;
+            }
+            headers.Host = host;
+            headers.Connection = 'close';
+            for (const name of Object.keys(headers)) {
+                payload += `${name}: ${headers[name]}\r\n`;
+            }
+            const proxyResponsePromise = parse_proxy_response_1.default(socket);
+            socket.write(`${payload}\r\n`);
+            const { statusCode, buffered } = yield proxyResponsePromise;
+            if (statusCode === 200) {
+                req.once('socket', resume);
+                if (opts.secureEndpoint) {
+                    const servername = opts.servername || opts.host;
+                    if (!servername) {
+                        throw new Error('Could not determine "servername"');
+                    }
+                    // The proxy is connecting to a TLS server, so upgrade
+                    // this socket connection to a TLS connection.
+                    debug('Upgrading socket connection to TLS');
+                    return tls_1.default.connect(Object.assign(Object.assign({}, omit(opts, 'host', 'hostname', 'path', 'port')), { socket,
+                        servername }));
+                }
+                return socket;
+            }
+            // Some other status code that's not 200... need to re-play the HTTP
+            // header "data" events onto the socket once the HTTP machinery is
+            // attached so that the node core `http` can parse and handle the
+            // error status code.
+            // Close the original socket, and a new "fake" socket is returned
+            // instead, so that the proxy doesn't get the HTTP request
+            // written to it (which may contain `Authorization` headers or other
+            // sensitive data).
+            //
+            // See: https://hackerone.com/reports/541502
+            socket.destroy();
+            const fakeSocket = new net_1.default.Socket();
+            fakeSocket.readable = true;
+            // Need to wait for the "socket" event to re-play the "data" events.
+            req.once('socket', (s) => {
+                debug('replaying proxy buffer for failed request');
+                assert_1.default(s.listenerCount('data') > 0);
+                // Replay the "buffered" Buffer onto the fake `socket`, since at
+                // this point the HTTP module machinery has been hooked up for
+                // the user.
+                s.push(buffered);
+                s.push(null);
+            });
+            return fakeSocket;
+        });
+    }
+}
+exports["default"] = HttpsProxyAgent;
+function resume(socket) {
+    socket.resume();
+}
+function isDefaultPort(port, secure) {
+    return Boolean((!secure && port === 80) || (secure && port === 443));
+}
+function isHTTPS(protocol) {
+    return typeof protocol === 'string' ? /^https:?$/i.test(protocol) : false;
+}
+function omit(obj, ...keys) {
+    const ret = {};
+    let key;
+    for (key in obj) {
+        if (!keys.includes(key)) {
+            ret[key] = obj[key];
+        }
+    }
+    return ret;
+}
+//# sourceMappingURL=agent.js.map
+
+/***/ }),
+
+/***/ 77219:
+/***/ (function(module, __unused_webpack_exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const agent_1 = __importDefault(__nccwpck_require__(15098));
+function createHttpsProxyAgent(opts) {
+    return new agent_1.default(opts);
+}
+(function (createHttpsProxyAgent) {
+    createHttpsProxyAgent.HttpsProxyAgent = agent_1.default;
+    createHttpsProxyAgent.prototype = agent_1.default.prototype;
+})(createHttpsProxyAgent || (createHttpsProxyAgent = {}));
+module.exports = createHttpsProxyAgent;
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ 595:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const debug_1 = __importDefault(__nccwpck_require__(38237));
+const debug = debug_1.default('https-proxy-agent:parse-proxy-response');
+function parseProxyResponse(socket) {
+    return new Promise((resolve, reject) => {
+        // we need to buffer any HTTP traffic that happens with the proxy before we get
+        // the CONNECT response, so that if the response is anything other than an "200"
+        // response code, then we can re-play the "data" events on the socket once the
+        // HTTP parser is hooked up...
+        let buffersLength = 0;
+        const buffers = [];
+        function read() {
+            const b = socket.read();
+            if (b)
+                ondata(b);
+            else
+                socket.once('readable', read);
+        }
+        function cleanup() {
+            socket.removeListener('end', onend);
+            socket.removeListener('error', onerror);
+            socket.removeListener('close', onclose);
+            socket.removeListener('readable', read);
+        }
+        function onclose(err) {
+            debug('onclose had error %o', err);
+        }
+        function onend() {
+            debug('onend');
+        }
+        function onerror(err) {
+            cleanup();
+            debug('onerror %o', err);
+            reject(err);
+        }
+        function ondata(b) {
+            buffers.push(b);
+            buffersLength += b.length;
+            const buffered = Buffer.concat(buffers, buffersLength);
+            const endOfHeaders = buffered.indexOf('\r\n\r\n');
+            if (endOfHeaders === -1) {
+                // keep buffering
+                debug('have not received end of HTTP headers yet...');
+                read();
+                return;
+            }
+            const firstLine = buffered.toString('ascii', 0, buffered.indexOf('\r\n'));
+            const statusCode = +firstLine.split(' ')[1];
+            debug('got proxy server response: %o', firstLine);
+            resolve({
+                statusCode,
+                buffered
+            });
+        }
+        socket.on('error', onerror);
+        socket.on('close', onclose);
+        socket.on('end', onend);
+        read();
+    });
+}
+exports["default"] = parseProxyResponse;
+//# sourceMappingURL=parse-proxy-response.js.map
 
 /***/ }),
 
@@ -39487,6 +41254,1262 @@ function toNumber(value) {
 }
 
 module.exports = once;
+
+
+/***/ }),
+
+/***/ 28869:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+/**
+ * Group profile methods. Learn more: https://help.mixpanel.com/hc/en-us/articles/360025333632
+ */
+
+const {ProfileHelpers} = __nccwpck_require__(67691);
+
+class MixpanelGroups extends ProfileHelpers() {
+    constructor(mp_instance) {
+        super();
+        this.mixpanel = mp_instance;
+        this.endpoint = '/groups';
+    }
+
+    /** groups.set_once(group_key, group_id, prop, to, modifiers, callback)
+        ---
+        The same as groups.set, but adds a property value to a group only if it has not been set before.
+    */
+    set_once(group_key, group_id, prop, to, modifiers, callback) {
+        const identifiers = {$group_key: group_key, $group_id: group_id};
+        this._set(prop, to, modifiers, callback, {identifiers, set_once: true});
+    }
+
+    /**
+        groups.set(group_key, group_id, prop, to, modifiers, callback)
+        ---
+        set properties on a group profile
+
+        usage:
+
+            mixpanel.groups.set('company', 'Acme Inc.', '$name', 'Acme Inc.');
+
+            mixpanel.groups.set('company', 'Acme Inc.', {
+                'Industry': 'widgets',
+                '$name': 'Acme Inc.',
+            });
+    */
+    set(group_key, group_id, prop, to, modifiers, callback) {
+        const identifiers = {$group_key: group_key, $group_id: group_id};
+        this._set(prop, to, modifiers, callback, {identifiers});
+    }
+
+    /**
+     groups.delete_group(group_key, group_id, modifiers, callback)
+        ---
+        delete a group profile permanently
+
+        usage:
+
+        mixpanel.groups.delete_group('company', 'Acme Inc.');
+        */
+    delete_group(group_key, group_id, modifiers, callback) {
+        const identifiers = {$group_key: group_key, $group_id: group_id};
+        this._delete_profile({identifiers, modifiers, callback});
+    }
+
+    /**
+     groups.remove(group_key, group_id, data, modifiers, callback)
+        ---
+        remove a value from a list-valued group profile property.
+
+        usage:
+
+        mixpanel.groups.remove('company', 'Acme Inc.', {'products': 'anvil'});
+
+        mixpanel.groups.remove('company', 'Acme Inc.', {
+            'products': 'anvil',
+            'customer segments': 'coyotes'
+        });
+        */
+    remove(group_key, group_id, data, modifiers, callback) {
+        const identifiers = {$group_key: group_key, $group_id: group_id};
+        this._remove({identifiers, data, modifiers, callback});
+    }
+
+    /**
+     groups.union(group_key, group_id, data, modifiers, callback)
+        ---
+        merge value(s) into a list-valued group profile property.
+
+        usage:
+
+        mixpanel.groups.union('company', 'Acme Inc.', {'products': 'anvil'});
+
+        mixpanel.groups.union('company', 'Acme Inc.', {'products': ['anvil'], 'customer segments': ['coyotes']});
+        */
+    union(group_key, group_id, data, modifiers, callback) {
+        const identifiers = {$group_key: group_key, $group_id: group_id};
+        this._union({identifiers, data, modifiers, callback})
+    }
+
+    /**
+     groups.unset(group_key, group_id, prop, modifiers, callback)
+        ---
+        delete a property on a group profile
+
+        usage:
+
+        mixpanel.groups.unset('company', 'Acme Inc.', 'products');
+
+        mixpanel.groups.unset('company', 'Acme Inc.', ['products', 'customer segments']);
+        */
+    unset(group_key, group_id, prop, modifiers, callback) {
+        const identifiers = {$group_key: group_key, $group_id: group_id};
+        this._unset({identifiers, prop, modifiers, callback})
+    }
+}
+
+exports.MixpanelGroups = MixpanelGroups;
+
+
+/***/ }),
+
+/***/ 32424:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+/*
+    Heavily inspired by the original js library copyright Mixpanel, Inc.
+    (http://mixpanel.com/)
+
+    Copyright (c) 2012 Carl Sverre
+
+    Released under the MIT license.
+*/
+
+const querystring = __nccwpck_require__(63477);
+const Buffer = (__nccwpck_require__(14300).Buffer);
+const http = __nccwpck_require__(13685);
+const https = __nccwpck_require__(95687);
+const HttpsProxyAgent = __nccwpck_require__(77219);
+const url = __nccwpck_require__(57310);
+const packageInfo = __nccwpck_require__(69000)
+
+const {async_all, ensure_timestamp, assert_logger} = __nccwpck_require__(15147);
+const {MixpanelGroups} = __nccwpck_require__(28869);
+const {MixpanelPeople} = __nccwpck_require__(99073);
+
+const DEFAULT_CONFIG = {
+    test: false,
+    debug: false,
+    verbose: false,
+    host: 'api.mixpanel.com',
+    protocol: 'https',
+    path: '',
+    keepAlive: true,
+    // set this to true to automatically geolocate based on the client's ip.
+    // e.g., when running under electron
+    geolocate: false,
+    logger: console,
+};
+
+var create_client = function(token, config) {
+    if (!token) {
+        throw new Error("The Mixpanel Client needs a Mixpanel token: `init(token)`");
+    }
+
+    const metrics = {
+        token,
+        config: {...DEFAULT_CONFIG},
+    };
+    const {keepAlive} = metrics.config;
+
+    // mixpanel constants
+    const MAX_BATCH_SIZE = 50;
+    const REQUEST_LIBS = {http, https};
+    const REQUEST_AGENTS = {
+        http: new http.Agent({keepAlive}),
+        https: new https.Agent({keepAlive}),
+    };
+    const proxyPath = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
+    const proxyAgent = proxyPath ? new HttpsProxyAgent(Object.assign(url.parse(proxyPath), {
+      keepAlive,
+    })) : null;
+
+    /**
+     * sends an async GET or POST request to mixpanel
+     * for batch processes data must be send in the body of a POST
+     * @param {object} options
+     * @param {string} options.endpoint
+     * @param {object} options.data         the data to send in the request
+     * @param {string} [options.method]     e.g. `get` or `post`, defaults to `get`
+     * @param {function} callback           called on request completion or error
+     */
+    metrics.send_request = function(options, callback) {
+        callback = callback || function() {};
+
+        let content = Buffer.from(JSON.stringify(options.data)).toString('base64');
+        const endpoint = options.endpoint;
+        const method = (options.method || 'GET').toUpperCase();
+        let query_params = {
+            'ip': metrics.config.geolocate ? 1 : 0,
+            'verbose': metrics.config.verbose ? 1 : 0
+        };
+        const key = metrics.config.key;
+        const secret = metrics.config.secret;
+        const request_lib = REQUEST_LIBS[metrics.config.protocol];
+        let request_options = {
+            host: metrics.config.host,
+            port: metrics.config.port,
+            headers: {},
+            method: method
+        };
+        let request;
+
+        if (!request_lib) {
+            throw new Error(
+                "Mixpanel Initialization Error: Unsupported protocol " + metrics.config.protocol + ". " +
+                "Supported protocols are: " + Object.keys(REQUEST_LIBS)
+            );
+        }
+
+
+        if (method === 'POST') {
+            content = 'data=' + content;
+            request_options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            request_options.headers['Content-Length'] = Buffer.byteLength(content);
+        } else if (method === 'GET') {
+            query_params.data = content;
+        }
+
+
+        // add auth params
+        if (secret) {
+            if (request_lib !== https) {
+                throw new Error("Must use HTTPS if authenticating with API Secret");
+            }
+            const encoded = Buffer.from(secret + ':').toString('base64');
+            request_options.headers['Authorization'] = 'Basic ' + encoded;
+        } else if (key) {
+            query_params.api_key = key;
+        } else if (endpoint === '/import') {
+            throw new Error("The Mixpanel Client needs a Mixpanel API Secret when importing old events: `init(token, { secret: ... })`");
+        }
+
+        request_options.agent = proxyAgent || REQUEST_AGENTS[metrics.config.protocol];
+
+        if (metrics.config.test) {
+            query_params.test = 1;
+        }
+
+        request_options.path = metrics.config.path + endpoint + "?" + querystring.stringify(query_params);
+
+        request = request_lib.request(request_options, function(res) {
+            var data = "";
+            res.on('data', function(chunk) {
+                data += chunk;
+            });
+
+            res.on('end', function() {
+                var e;
+                if (metrics.config.verbose) {
+                    try {
+                        var result = JSON.parse(data);
+                        if(result.status != 1) {
+                            e = new Error("Mixpanel Server Error: " + result.error);
+                        }
+                    }
+                    catch(ex) {
+                        e = new Error("Could not parse response from Mixpanel");
+                    }
+                }
+                else {
+                    e = (data !== '1') ? new Error("Mixpanel Server Error: " + data) : undefined;
+                }
+
+                callback(e);
+            });
+        });
+
+        request.on('error', function(e) {
+            if (metrics.config.debug) {
+                metrics.config.logger.error("Got Error: " + e.message);
+            }
+            callback(e);
+        });
+
+        if (method === 'POST') {
+            request.write(content);
+        }
+        request.end();
+    };
+
+    /**
+     * Send an event to Mixpanel, using the specified endpoint (e.g., track/import)
+     * @param {string} endpoint - API endpoint name
+     * @param {string} event - event name
+     * @param {object} properties - event properties
+     * @param {Function} [callback] - callback for request completion/error
+     */
+    metrics.send_event_request = function(endpoint, event, properties, callback) {
+        properties.token = metrics.token;
+        properties.mp_lib = "node";
+        properties.$lib_version = packageInfo.version;
+
+        var data = {
+            event: event,
+            properties: properties
+        };
+
+        if (metrics.config.debug) {
+            metrics.config.logger.debug("Sending the following event to Mixpanel", { data });
+        }
+
+        metrics.send_request({ method: "GET", endpoint: endpoint, data: data }, callback);
+    };
+
+    /**
+     * breaks array into equal-sized chunks, with the last chunk being the remainder
+     * @param {Array} arr
+     * @param {number} size
+     * @returns {Array}
+     */
+    var chunk = function(arr, size) {
+        var chunks = [],
+            i = 0,
+            total = arr.length;
+
+        while (i < total) {
+            chunks.push(arr.slice(i, i += size));
+        }
+        return chunks;
+    };
+
+    /**
+     * sends events in batches
+     * @param {object}   options
+     * @param {[{}]}     options.event_list                 array of event objects
+     * @param {string}   options.endpoint                   e.g. `/track` or `/import`
+     * @param {number}   [options.max_concurrent_requests]  limits concurrent async requests over the network
+     * @param {number}   [options.max_batch_size]           limits number of events sent to mixpanel per request
+     * @param {Function} [callback]                         callback receives array of errors if any
+     *
+     */
+    var send_batch_requests = function(options, callback) {
+        var event_list = options.event_list,
+            endpoint = options.endpoint,
+            max_batch_size = options.max_batch_size ? Math.min(MAX_BATCH_SIZE, options.max_batch_size) : MAX_BATCH_SIZE,
+            // to maintain original intention of max_batch_size; if max_batch_size is greater than 50, we assume the user is trying to set max_concurrent_requests
+            max_concurrent_requests = options.max_concurrent_requests || (options.max_batch_size > MAX_BATCH_SIZE && Math.ceil(options.max_batch_size / MAX_BATCH_SIZE)),
+            event_batches = chunk(event_list, max_batch_size),
+            request_batches = max_concurrent_requests ? chunk(event_batches, max_concurrent_requests) : [event_batches],
+            total_event_batches = event_batches.length,
+            total_request_batches = request_batches.length;
+
+        /**
+         * sends a batch of events to mixpanel through http api
+         * @param {Array} batch
+         * @param {Function} cb
+         */
+        function send_event_batch(batch, cb) {
+            if (batch.length > 0) {
+                batch = batch.map(function (event) {
+                    var properties = event.properties;
+                    if (endpoint === '/import' || event.properties.time) {
+                        // usually there will be a time property, but not required for `/track` endpoint
+                        event.properties.time = ensure_timestamp(event.properties.time);
+                    }
+                    event.properties.token = event.properties.token || metrics.token;
+                    return event;
+                });
+
+                // must be a POST
+                metrics.send_request({ method: "POST", endpoint: endpoint, data: batch }, cb);
+            }
+        }
+
+        /**
+         * Asynchronously sends batches of requests
+         * @param {number} index
+         */
+        function send_next_request_batch(index) {
+            var request_batch = request_batches[index],
+                cb = function (errors, results) {
+                    index += 1;
+                    if (index === total_request_batches) {
+                        callback && callback(errors, results);
+                    } else {
+                        send_next_request_batch(index);
+                    }
+                };
+
+            async_all(request_batch, send_event_batch, cb);
+        }
+
+        // init recursive function
+        send_next_request_batch(0);
+
+        if (metrics.config.debug) {
+            metrics.config.logger.debug(
+                "Sending " + event_list.length + " events to Mixpanel in " +
+                total_event_batches + " batches of events and " +
+                total_request_batches + " batches of requests"
+            );
+        }
+    };
+
+    /**
+         track(event, properties, callback)
+         ---
+         this function sends an event to mixpanel.
+
+         event:string                    the event name
+         properties:object               additional event properties to send
+         callback:function(err:Error)    callback is called when the request is
+                                         finished or an error occurs
+     */
+    metrics.track = function(event, properties, callback) {
+        if (!properties || typeof properties === "function") {
+            callback = properties;
+            properties = {};
+        }
+
+        // time is optional for `track`
+        if (properties.time) {
+            properties.time = ensure_timestamp(properties.time);
+        }
+
+        metrics.send_event_request("/track", event, properties, callback);
+    };
+
+    /**
+     * send a batch of events to mixpanel `track` endpoint: this should only be used if events are less than 5 days old
+     * @param {Array}    event_list                         array of event objects to track
+     * @param {object}   [options]
+     * @param {number}   [options.max_concurrent_requests]  number of concurrent http requests that can be made to mixpanel
+     * @param {number}   [options.max_batch_size]           number of events that can be sent to mixpanel per request
+     * @param {Function} [callback]                         callback receives array of errors if any
+     */
+    metrics.track_batch = function(event_list, options, callback) {
+        options = options || {};
+        if (typeof options === 'function') {
+            callback = options;
+            options = {};
+        }
+        var batch_options = {
+            event_list: event_list,
+            endpoint: "/track",
+            max_concurrent_requests: options.max_concurrent_requests,
+            max_batch_size: options.max_batch_size
+        };
+
+        send_batch_requests(batch_options, callback);
+    };
+
+    /**
+        import(event, time, properties, callback)
+        ---
+        This function sends an event to mixpanel using the import
+        endpoint.  The time argument should be either a Date or Number,
+        and should signify the time the event occurred.
+
+        It is highly recommended that you specify the distinct_id
+        property for each event you import, otherwise the events will be
+        tied to the IP address of the sending machine.
+
+        For more information look at:
+        https://mixpanel.com/docs/api-documentation/importing-events-older-than-31-days
+
+        event:string                    the event name
+        time:date|number                the time of the event
+        properties:object               additional event properties to send
+        callback:function(err:Error)    callback is called when the request is
+                                        finished or an error occurs
+    */
+    metrics.import = function(event, time, properties, callback) {
+        if (!properties || typeof properties === "function") {
+            callback = properties;
+            properties = {};
+        }
+
+        properties.time = ensure_timestamp(time);
+
+        metrics.send_event_request("/import", event, properties, callback);
+    };
+
+    /**
+        import_batch(event_list, options, callback)
+        ---
+        This function sends a list of events to mixpanel using the import
+        endpoint. The format of the event array should be:
+
+        [
+            {
+                "event": "event name",
+                "properties": {
+                    "time": new Date(), // Number or Date; required for each event
+                    "key": "val",
+                    ...
+                }
+            },
+            {
+                "event": "event name",
+                "properties": {
+                    "time": new Date()  // Number or Date; required for each event
+                }
+            },
+            ...
+        ]
+
+        See import() for further information about the import endpoint.
+
+        Options:
+            max_batch_size: the maximum number of events to be transmitted over
+                            the network simultaneously. useful for capping bandwidth
+                            usage.
+            max_concurrent_requests: the maximum number of concurrent http requests that
+                            can be made to mixpanel; also useful for capping bandwidth.
+
+        N.B.: the Mixpanel API only accepts 50 events per request, so regardless
+        of max_batch_size, larger lists of events will be chunked further into
+        groups of 50.
+
+        event_list:array                    list of event names and properties
+        options:object                      optional batch configuration
+        callback:function(error_list:array) callback is called when the request is
+                                            finished or an error occurs
+    */
+    metrics.import_batch = function(event_list, options, callback) {
+        var batch_options;
+
+        if (typeof(options) === "function" || !options) {
+            callback = options;
+            options = {};
+        }
+        batch_options = {
+            event_list: event_list,
+            endpoint: "/import",
+            max_concurrent_requests: options.max_concurrent_requests,
+            max_batch_size: options.max_batch_size
+        };
+        send_batch_requests(batch_options, callback);
+    };
+
+    /**
+        alias(distinct_id, alias)
+        ---
+        This function creates an alias for distinct_id
+
+        For more information look at:
+        https://mixpanel.com/docs/integration-libraries/using-mixpanel-alias
+
+        distinct_id:string              the current identifier
+        alias:string                    the future alias
+    */
+    metrics.alias = function(distinct_id, alias, callback) {
+        var properties = {
+            distinct_id: distinct_id,
+            alias: alias
+        };
+
+        metrics.track('$create_alias', properties, callback);
+    };
+
+    metrics.groups = new MixpanelGroups(metrics);
+    metrics.people = new MixpanelPeople(metrics);
+
+    /**
+        set_config(config)
+        ---
+        Modifies the mixpanel config
+
+        config:object       an object with properties to override in the
+                            mixpanel client config
+    */
+    metrics.set_config = function(config) {
+        if (config && config.logger !== undefined) {
+            assert_logger(config.logger);
+        }
+        Object.assign(metrics.config, config);
+        if (config.host) {
+            // Split host into host and port
+            const [host, port] =  config.host.split(':');
+            metrics.config.host = host;
+            if (port) {
+                metrics.config.port = Number(port);
+            }
+        }
+    };
+
+    if (config) {
+        metrics.set_config(config);
+    }
+
+    return metrics;
+};
+
+// module exporting
+module.exports = {
+    init: create_client,
+};
+
+
+/***/ }),
+
+/***/ 99073:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+const {merge_modifiers, ProfileHelpers} = __nccwpck_require__(67691);
+
+class MixpanelPeople extends ProfileHelpers() {
+    constructor(mp_instance) {
+        super();
+        this.mixpanel = mp_instance;
+        this.endpoint = '/engage';
+    }
+
+    /** people.set_once(distinct_id, prop, to, modifiers, callback)
+        ---
+        The same as people.set but in the words of mixpanel:
+        mixpanel.people.set_once
+
+        " This method allows you to set a user attribute, only if
+            it is not currently set. It can be called multiple times
+            safely, so is perfect for storing things like the first date
+            you saw a user, or the referrer that brought them to your
+            website for the first time. "
+
+    */
+    set_once(distinct_id, prop, to, modifiers, callback) {
+        const identifiers = {$distinct_id: distinct_id};
+        this._set(prop, to, modifiers, callback, {identifiers, set_once: true});
+    }
+
+    /**
+        people.set(distinct_id, prop, to, modifiers, callback)
+        ---
+        set properties on an user record in engage
+
+        usage:
+
+            mixpanel.people.set('bob', 'gender', 'm');
+
+            mixpanel.people.set('joe', {
+                'company': 'acme',
+                'plan': 'premium'
+            });
+    */
+    set(distinct_id, prop, to, modifiers, callback) {
+        const identifiers = {$distinct_id: distinct_id};
+        this._set(prop, to, modifiers, callback, {identifiers});
+    }
+
+    /**
+        people.increment(distinct_id, prop, by, modifiers, callback)
+        ---
+        increment/decrement properties on an user record in engage
+
+        usage:
+
+            mixpanel.people.increment('bob', 'page_views', 1);
+
+            // or, for convenience, if you're just incrementing a counter by 1, you can
+            // simply do
+            mixpanel.people.increment('bob', 'page_views');
+
+            // to decrement a counter, pass a negative number
+            mixpanel.people.increment('bob', 'credits_left', -1);
+
+            // like mixpanel.people.set(), you can increment multiple properties at once:
+            mixpanel.people.increment('bob', {
+                counter1: 1,
+                counter2: 3,
+                counter3: -2
+            });
+    */
+    increment(distinct_id, prop, by, modifiers, callback) {
+        // TODO extract to ProfileHelpers
+
+        var $add = {};
+
+        if (typeof(prop) === 'object') {
+            if (typeof(by) === 'object') {
+                callback = modifiers;
+                modifiers = by;
+            } else {
+                callback = by;
+            }
+            for (const [key, val] of Object.entries(prop)) {
+                if (isNaN(parseFloat(val))) {
+                    if (this.mixpanel.config.debug) {
+                        this.mixpanel.config.logger.error(
+                            "Invalid increment value passed to mixpanel.people.increment - must be a number",
+                            {key, value: val}
+                        );
+                    }
+                } else {
+                    $add[key] = val;
+                }
+            };
+        } else {
+            if (typeof(by) === 'number' || !by) {
+                by = by || 1;
+                $add[prop] = by;
+                if (typeof(modifiers) === 'function') {
+                    callback = modifiers;
+                }
+            } else if (typeof(by) === 'function') {
+                callback = by;
+                $add[prop] = 1;
+            } else {
+                callback = modifiers;
+                modifiers = (typeof(by) === 'object') ? by : {};
+                $add[prop] = 1;
+            }
+        }
+
+        var data = {
+            '$add': $add,
+            '$token': this.mixpanel.token,
+            '$distinct_id': distinct_id
+        };
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.mixpanel.config.debug) {
+            this.mixpanel.config.logger.debug("Sending the following data to Mixpanel (Engage)", { data });
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
+    }
+
+    /**
+        people.append(distinct_id, prop, value, modifiers, callback)
+        ---
+        Append a value to a list-valued people analytics property.
+
+        usage:
+
+            // append a value to a list, creating it if needed
+            mixpanel.people.append('bob', 'pages_visited', 'homepage');
+
+            // like mixpanel.people.set(), you can append multiple properties at once:
+            mixpanel.people.append('bob', {
+                list1: 'bob',
+                list2: 123
+            });
+    */
+    append(distinct_id, prop, value, modifiers, callback) {
+        // TODO extract to ProfileHelpers
+
+        var $append = {};
+
+        if (typeof(prop) === 'object') {
+            if (typeof(value) === 'object') {
+                callback = modifiers;
+                modifiers = value;
+            } else {
+                callback = value;
+            }
+            Object.keys(prop).forEach(function(key) {
+                $append[key] = prop[key];
+            });
+        } else {
+            $append[prop] = value;
+            if (typeof(modifiers) === 'function') {
+                callback = modifiers;
+            }
+        }
+
+        var data = {
+            '$append': $append,
+            '$token': this.mixpanel.token,
+            '$distinct_id': distinct_id
+        };
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.mixpanel.config.debug) {
+            this.mixpanel.config.logger.debug("Sending the following data to Mixpanel (Engage)", { data });
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
+    }
+
+    /**
+        people.track_charge(distinct_id, amount, properties, modifiers, callback)
+        ---
+        Record that you have charged the current user a certain
+        amount of money.
+
+        usage:
+
+            // charge a user $29.99
+            mixpanel.people.track_charge('bob', 29.99);
+
+            // charge a user $19 on the 1st of february
+            mixpanel.people.track_charge('bob', 19, { '$time': new Date('feb 1 2012') });
+    */
+    track_charge(distinct_id, amount, properties, modifiers, callback) {
+        if (typeof(properties) === 'function' || !properties) {
+            callback = properties || function() {};
+            properties = {};
+        } else {
+            if (typeof(modifiers) === 'function' || !modifiers) {
+                callback = modifiers || function() {};
+                if (properties.$ignore_time || properties.hasOwnProperty("$ip")) {
+                    modifiers = {};
+                    Object.keys(properties).forEach(function(key) {
+                        modifiers[key] = properties[key];
+                        delete properties[key];
+                    });
+                }
+            }
+        }
+
+        if (typeof(amount) !== 'number') {
+            amount = parseFloat(amount);
+            if (isNaN(amount)) {
+                this.mixpanel.config.logger.error("Invalid value passed to mixpanel.people.track_charge - must be a number");
+                return;
+            }
+        }
+
+        properties.$amount = amount;
+
+        if (properties.hasOwnProperty('$time')) {
+            var time = properties.$time;
+            if (Object.prototype.toString.call(time) === '[object Date]') {
+                properties.$time = time.toISOString();
+            }
+        }
+
+        var data = {
+            '$append': { '$transactions': properties },
+            '$token': this.mixpanel.token,
+            '$distinct_id': distinct_id
+        };
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.mixpanel.config.debug) {
+            this.mixpanel.config.logger.debug("Sending the following data to Mixpanel (Engage)", { data });
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
+    }
+
+    /**
+        people.clear_charges(distinct_id, modifiers, callback)
+        ---
+        Clear all the current user's transactions.
+
+        usage:
+
+            mixpanel.people.clear_charges('bob');
+    */
+    clear_charges(distinct_id, modifiers, callback) {
+        var data = {
+            '$set': { '$transactions': [] },
+            '$token': this.mixpanel.token,
+            '$distinct_id': distinct_id
+        };
+
+        if (typeof(modifiers) === 'function') { callback = modifiers; }
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.mixpanel.config.debug) {
+            this.mixpanel.config.logger.debug("Clearing this user's charges", { '$distinct_id': distinct_id });
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: "/engage", data: data }, callback);
+    }
+
+    /**
+        people.delete_user(distinct_id, modifiers, callback)
+        ---
+        delete an user record in engage
+
+        usage:
+
+            mixpanel.people.delete_user('bob');
+    */
+    delete_user(distinct_id, modifiers, callback) {
+        const identifiers = {$distinct_id: distinct_id};
+        this._delete_profile({identifiers, modifiers, callback});
+    }
+
+    /**
+        people.remove(distinct_id, data, modifiers, callback)
+        ---
+        remove a value from a list-valued user profile property.
+
+        usage:
+
+            mixpanel.people.remove('bob', {'browsers': 'firefox'});
+
+            mixpanel.people.remove('bob', {'browsers': 'chrome', 'os': 'linux'});
+    */
+    remove(distinct_id, data, modifiers, callback) {
+        const identifiers = {'$distinct_id': distinct_id};
+        this._remove({identifiers, data, modifiers, callback})
+    }
+
+    /**
+        people.union(distinct_id, data, modifiers, callback)
+        ---
+        merge value(s) into a list-valued people analytics property.
+
+        usage:
+
+            mixpanel.people.union('bob', {'browsers': 'firefox'});
+
+            mixpanel.people.union('bob', {'browsers': ['chrome'], os: ['linux']});
+    */
+    union(distinct_id, data, modifiers, callback) {
+        const identifiers = {$distinct_id: distinct_id};
+        this._union({identifiers, data, modifiers, callback});
+    }
+
+    /**
+        people.unset(distinct_id, prop, modifiers, callback)
+        ---
+        delete a property on an user record in engage
+
+        usage:
+
+            mixpanel.people.unset('bob', 'page_views');
+
+            mixpanel.people.unset('bob', ['page_views', 'last_login']);
+    */
+    unset(distinct_id, prop, modifiers, callback) {
+        const identifiers = {$distinct_id: distinct_id};
+        this._unset({identifiers, prop, modifiers, callback});
+    }
+};
+
+exports.MixpanelPeople = MixpanelPeople;
+
+
+/***/ }),
+
+/***/ 67691:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+/**
+ * Mixin with profile-related helpers (for people and groups)
+ */
+
+const util = __nccwpck_require__(73837);
+const {ensure_timestamp} = __nccwpck_require__(15147);
+
+function merge_modifiers(data, modifiers) {
+    if (modifiers) {
+        if (modifiers.$ignore_alias) {
+            data.$ignore_alias = modifiers.$ignore_alias;
+        }
+        if (modifiers.$ignore_time) {
+            data.$ignore_time = modifiers.$ignore_time;
+        }
+        if (modifiers.hasOwnProperty("$ip")) {
+            data.$ip = modifiers.$ip;
+        }
+        if (modifiers.hasOwnProperty("$time")) {
+            data.$time = ensure_timestamp(modifiers.$time);
+        }
+        if (modifiers.hasOwnProperty("$latitude") && modifiers.hasOwnProperty('$longitude')) {
+            data.$latitude = modifiers.$latitude;
+            data.$longitude = modifiers.$longitude;
+        }
+    }
+    return data;
+};
+exports.merge_modifiers = merge_modifiers;
+
+exports.ProfileHelpers = (Base = Object) => class extends Base {
+    get token() {
+        return this.mixpanel.token;
+    }
+
+    get config() {
+        return this.mixpanel.config;
+    }
+
+    _set(prop, to, modifiers, callback, {identifiers, set_once = false}) {
+        let $set = {};
+
+        if (typeof(prop) === 'object') {
+            if (typeof(to) === 'object') {
+                callback = modifiers;
+                modifiers = to;
+            } else {
+                callback = to;
+            }
+            $set = prop;
+        } else {
+            $set[prop] = to;
+            if (typeof(modifiers) === 'function' || !modifiers) {
+                callback = modifiers;
+            }
+        }
+
+        let data = {
+            '$token': this.token,
+            ...identifiers,
+        };
+
+        const set_key = set_once ? "$set_once" : "$set";
+        data[set_key] = $set;
+
+        if ('ip' in $set) {
+            data.$ip = $set.ip;
+            delete $set.ip;
+        }
+
+        if ($set.$ignore_time) {
+            data.$ignore_time = $set.$ignore_time;
+            delete $set.$ignore_time;
+        }
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.config.debug) {
+            this.mixpanel.config.logger.debug(`Sending the following data to Mixpanel (${this.endpoint})`, { data });
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
+    }
+
+    _delete_profile({identifiers, modifiers, callback}){
+        let data = {
+            '$delete': '',
+            '$token': this.token,
+            ...identifiers,
+        };
+
+        if (typeof(modifiers) === 'function') { callback = modifiers; }
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.config.debug) {
+            this.mixpanel.config.logger.debug('Deleting profile', { identifiers });
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
+    }
+
+    _remove({identifiers, data, modifiers, callback}) {
+        let $remove = {};
+
+        if (typeof(data) !== 'object' || util.isArray(data)) {
+            if (this.config.debug) {
+                this.mixpanel.config.logger.error("Invalid value passed to #remove - data must be an object with scalar values");
+            }
+            return;
+        }
+
+        for (const [key, val] of Object.entries(data)) {
+            if (typeof(val) === 'string' || typeof(val) === 'number') {
+                $remove[key] = val;
+            } else {
+                if (this.config.debug) {
+                    this.mixpanel.config.logger.error(
+                        "Invalid argument passed to #remove - values must be scalar",
+                        { key, value: val }
+                    );
+                }
+                return;
+            }
+        }
+
+        if (Object.keys($remove).length === 0) {
+            return;
+        }
+
+        data = {
+            '$remove': $remove,
+            '$token': this.token,
+            ...identifiers
+        };
+
+        if (typeof(modifiers) === 'function') {
+            callback = modifiers;
+        }
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.config.debug) {
+            this.mixpanel.config.logger.debug(
+                `Sending the following data to Mixpanel (${this.endpoint})`,
+                { data }
+            );
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
+    }
+
+    _union({identifiers, data, modifiers, callback}) {
+        let $union = {};
+
+        if (typeof(data) !== 'object' || util.isArray(data)) {
+            if (this.config.debug) {
+                this.mixpanel.config.logger.error("Invalid value passed to #union - data must be an object with scalar or array values");
+            }
+            return;
+        }
+
+        for (const [key, val] of Object.entries(data)) {
+            if (util.isArray(val)) {
+                var merge_values = val.filter(function(v) {
+                    return typeof(v) === 'string' || typeof(v) === 'number';
+                });
+                if (merge_values.length > 0) {
+                    $union[key] = merge_values;
+                }
+            } else if (typeof(val) === 'string' || typeof(val) === 'number') {
+                $union[key] = [val];
+            } else {
+                if (this.config.debug) {
+                    this.mixpanel.config.logger.error(
+                        "Invalid argument passed to #union - values must be a scalar value or array",
+                        { key, value: val }
+                    );
+                }
+            }
+        }
+
+        if (Object.keys($union).length === 0) {
+            return;
+        }
+
+        data = {
+            '$union': $union,
+            '$token': this.token,
+            ...identifiers,
+        };
+
+        if (typeof(modifiers) === 'function') {
+            callback = modifiers;
+        }
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.config.debug) {
+            this.mixpanel.config.logger.debug(
+                `Sending the following data to Mixpanel (${this.endpoint})`,
+                { data }
+            );
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
+    }
+
+    _unset({identifiers, prop, modifiers, callback}){
+        let $unset = [];
+
+        if (util.isArray(prop)) {
+            $unset = prop;
+        } else if (typeof(prop) === 'string') {
+            $unset = [prop];
+        } else {
+            if (this.config.debug) {
+                this.mixpanel.config.logger.error(
+                    "Invalid argument passed to #unset - must be a string or array",
+                    { prop }
+                );
+            }
+            return;
+        }
+
+        let data = {
+            '$unset': $unset,
+            '$token': this.token,
+            ...identifiers,
+        };
+
+        if (typeof(modifiers) === 'function') {
+            callback = modifiers;
+        }
+
+        data = merge_modifiers(data, modifiers);
+
+        if (this.config.debug) {
+            this.mixpanel.config.logger.debug(
+                `Sending the following data to Mixpanel (${this.endpoint})`,
+                { data }
+            );
+        }
+
+        this.mixpanel.send_request({ method: "GET", endpoint: this.endpoint, data }, callback);
+    }
+};
+
+
+/***/ }),
+
+/***/ 15147:
+/***/ ((__unused_webpack_module, exports) => {
+
+/**
+ * helper to wait for all callbacks to complete; similar to `Promise.all`
+ * exposed to metrics object for unit tests
+ * @param {Array} requests
+ * @param {Function} handler
+ * @param {Function} callback
+ */
+exports.async_all = function(requests, handler, callback) {
+    var total = requests.length,
+        errors = null,
+        results = [],
+        done = function (err, result) {
+            if (err) {
+                // errors are `null` unless there is an error, which allows for promisification
+                errors = errors || [];
+                errors.push(err);
+            }
+            results.push(result);
+            if (--total === 0) {
+                callback(errors, results)
+            }
+        };
+
+    if (total === 0) {
+        callback(errors, results);
+    } else {
+        for(var i = 0, l = requests.length; i < l; i++) {
+            handler(requests[i], done);
+        }
+    }
+};
+
+/**
+ * Validate type of time property, and convert to Unix timestamp if necessary
+ * @param {Date|number} time - value to check
+ * @returns {number} Unix timestamp
+ */
+exports.ensure_timestamp = function(time) {
+    if (!(time instanceof Date || typeof time === "number")) {
+        throw new Error("`time` property must be a Date or Unix timestamp and is only required for `import` endpoint");
+    }
+    return time instanceof Date ? time.getTime() : time;
+};
+
+/**
+* Asserts that the provided logger object is valid
+* @param {CustomLogger} logger - The logger object to be validated
+* @throws {TypeError} If the logger object is not a valid Logger object or
+*   if it is missing any of the required methods
+*/
+exports.assert_logger = function(logger) {
+    if (typeof logger !== 'object') {
+        throw new TypeError(`"logger" must be a valid Logger object`);
+    }
+    
+    ['trace', 'debug', 'info', 'warn', 'error'].forEach((method) => {
+        if (typeof logger[method] !== 'function') {
+            throw new TypeError(`Logger object missing "${method}" method`);
+        }
+    });
+};
 
 
 /***/ }),
@@ -42684,6 +45707,149 @@ const validRange = (range, options) => {
   }
 }
 module.exports = validRange
+
+
+/***/ }),
+
+/***/ 59318:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+const os = __nccwpck_require__(22037);
+const tty = __nccwpck_require__(76224);
+const hasFlag = __nccwpck_require__(31621);
+
+const {env} = process;
+
+let forceColor;
+if (hasFlag('no-color') ||
+	hasFlag('no-colors') ||
+	hasFlag('color=false') ||
+	hasFlag('color=never')) {
+	forceColor = 0;
+} else if (hasFlag('color') ||
+	hasFlag('colors') ||
+	hasFlag('color=true') ||
+	hasFlag('color=always')) {
+	forceColor = 1;
+}
+
+if ('FORCE_COLOR' in env) {
+	if (env.FORCE_COLOR === 'true') {
+		forceColor = 1;
+	} else if (env.FORCE_COLOR === 'false') {
+		forceColor = 0;
+	} else {
+		forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+	}
+}
+
+function translateLevel(level) {
+	if (level === 0) {
+		return false;
+	}
+
+	return {
+		level,
+		hasBasic: true,
+		has256: level >= 2,
+		has16m: level >= 3
+	};
+}
+
+function supportsColor(haveStream, streamIsTTY) {
+	if (forceColor === 0) {
+		return 0;
+	}
+
+	if (hasFlag('color=16m') ||
+		hasFlag('color=full') ||
+		hasFlag('color=truecolor')) {
+		return 3;
+	}
+
+	if (hasFlag('color=256')) {
+		return 2;
+	}
+
+	if (haveStream && !streamIsTTY && forceColor === undefined) {
+		return 0;
+	}
+
+	const min = forceColor || 0;
+
+	if (env.TERM === 'dumb') {
+		return min;
+	}
+
+	if (process.platform === 'win32') {
+		// Windows 10 build 10586 is the first Windows release that supports 256 colors.
+		// Windows 10 build 14931 is the first release that supports 16m/TrueColor.
+		const osRelease = os.release().split('.');
+		if (
+			Number(osRelease[0]) >= 10 &&
+			Number(osRelease[2]) >= 10586
+		) {
+			return Number(osRelease[2]) >= 14931 ? 3 : 2;
+		}
+
+		return 1;
+	}
+
+	if ('CI' in env) {
+		if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI', 'GITHUB_ACTIONS', 'BUILDKITE'].some(sign => sign in env) || env.CI_NAME === 'codeship') {
+			return 1;
+		}
+
+		return min;
+	}
+
+	if ('TEAMCITY_VERSION' in env) {
+		return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
+	}
+
+	if (env.COLORTERM === 'truecolor') {
+		return 3;
+	}
+
+	if ('TERM_PROGRAM' in env) {
+		const version = parseInt((env.TERM_PROGRAM_VERSION || '').split('.')[0], 10);
+
+		switch (env.TERM_PROGRAM) {
+			case 'iTerm.app':
+				return version >= 3 ? 3 : 2;
+			case 'Apple_Terminal':
+				return 2;
+			// No default
+		}
+	}
+
+	if (/-256(color)?$/i.test(env.TERM)) {
+		return 2;
+	}
+
+	if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) {
+		return 1;
+	}
+
+	if ('COLORTERM' in env) {
+		return 1;
+	}
+
+	return min;
+}
+
+function getSupportLevel(stream) {
+	const level = supportsColor(stream, stream && stream.isTTY);
+	return translateLevel(level);
+}
+
+module.exports = {
+	supportsColor: getSupportLevel,
+	stdout: translateLevel(supportsColor(true, tty.isatty(1))),
+	stderr: translateLevel(supportsColor(true, tty.isatty(2)))
+};
 
 
 /***/ }),
@@ -66279,6 +69445,14 @@ module.exports = require("tls");
 
 /***/ }),
 
+/***/ 76224:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("tty");
+
+/***/ }),
+
 /***/ 57310:
 /***/ ((module) => {
 
@@ -69719,6 +72893,14 @@ exports.LRUCache = LRUCache;
 
 "use strict";
 module.exports = JSON.parse('{"name":"dotenv","version":"16.3.1","description":"Loads environment variables from .env file","main":"lib/main.js","types":"lib/main.d.ts","exports":{".":{"types":"./lib/main.d.ts","require":"./lib/main.js","default":"./lib/main.js"},"./config":"./config.js","./config.js":"./config.js","./lib/env-options":"./lib/env-options.js","./lib/env-options.js":"./lib/env-options.js","./lib/cli-options":"./lib/cli-options.js","./lib/cli-options.js":"./lib/cli-options.js","./package.json":"./package.json"},"scripts":{"dts-check":"tsc --project tests/types/tsconfig.json","lint":"standard","lint-readme":"standard-markdown","pretest":"npm run lint && npm run dts-check","test":"tap tests/*.js --100 -Rspec","prerelease":"npm test","release":"standard-version"},"repository":{"type":"git","url":"git://github.com/motdotla/dotenv.git"},"funding":"https://github.com/motdotla/dotenv?sponsor=1","keywords":["dotenv","env",".env","environment","variables","config","settings"],"readmeFilename":"README.md","license":"BSD-2-Clause","devDependencies":{"@definitelytyped/dtslint":"^0.0.133","@types/node":"^18.11.3","decache":"^4.6.1","sinon":"^14.0.1","standard":"^17.0.0","standard-markdown":"^7.1.0","standard-version":"^9.5.0","tap":"^16.3.0","tar":"^6.1.11","typescript":"^4.8.4"},"engines":{"node":">=12"},"browser":{"fs":false}}');
+
+/***/ }),
+
+/***/ 69000:
+/***/ ((module) => {
+
+"use strict";
+module.exports = JSON.parse('{"name":"mixpanel","description":"A simple server-side API for mixpanel","keywords":["mixpanel","analytics","api","stats"],"version":"0.18.0","homepage":"https://github.com/mixpanel/mixpanel-node","author":"Carl Sverre","license":"MIT","main":"lib/mixpanel-node","directories":{"lib":"lib"},"repository":{"type":"git","url":"git+ssh://git@github.com/mixpanel/mixpanel-node.git"},"engines":{"node":">=10.0"},"scripts":{"test":"nodeunit"},"types":"./lib/mixpanel-node.d.ts","devDependencies":{"nodeunit":"^0.11.3","proxyquire":"^1.7.11","sinon":"^7.1.1"},"dependencies":{"https-proxy-agent":"5.0.0"}}');
 
 /***/ })
 

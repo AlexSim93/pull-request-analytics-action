@@ -1,5 +1,9 @@
 export const calcMedianValue = (values?: number[]) => {
   if (!values?.length) return 0;
-  const medianIndex = Math.floor(values.length / 2);
-  return values.slice().sort((a, b) => a - b)[medianIndex];
+  const sortedValues = values.slice().sort((a, b) => a - b);
+  const medianIndex = Math.floor(sortedValues.length / 2);
+  if (sortedValues.length % 2 === 0) {
+    return (sortedValues[medianIndex] + sortedValues[medianIndex - 1]) / 2;
+  }
+  return sortedValues[medianIndex];
 };

@@ -3,6 +3,7 @@ import {
   commentsConductedHeader,
   discussionsConductedHeader,
   prSizesHeader,
+  reviewRequestConductedHeader,
   reviewTypesHeader,
   totalMergedPrsHeader,
 } from "./constants";
@@ -44,13 +45,14 @@ export const createReviewTable = (
         `${
           data[user]?.[
             date
-          ]?.reviewsConducted?.total?.CHANGES_REQUESTED?.toString() || 0
+          ]?.reviewsConducted?.total?.changes_requested?.toString() || 0
         } / ${
-          data[user]?.[date]?.reviewsConducted?.total?.COMMENTED?.toString() ||
+          data[user]?.[date]?.reviewsConducted?.total?.commented?.toString() ||
           0
         } / ${
-          data[user]?.[date]?.reviewsConducted?.total?.APPROVED?.toString() || 0
+          data[user]?.[date]?.reviewsConducted?.total?.approved?.toString() || 0
         }`,
+        data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
       ];
     });
 
@@ -66,6 +68,7 @@ export const createReviewTable = (
         commentsConductedHeader,
         prSizesHeader,
         reviewTypesHeader,
+        reviewRequestConductedHeader,
       ],
       rows: tableRowsTotal,
     },

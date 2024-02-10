@@ -37,7 +37,6 @@ export const validate = () => {
       EXECUTION_OUTCOME: {
         validValues: [
           "new-issue",
-          "output",
           "collection",
           "markdown",
           "existing-issue",

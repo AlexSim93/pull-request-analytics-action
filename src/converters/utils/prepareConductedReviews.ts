@@ -4,9 +4,7 @@ import { PullRequestSize } from "./calculations/getPullRequestSize";
 
 export const prepareConductedReviews = (
   pullRequestLogin: string,
-  pullRequestReviews:
-    | Awaited<ReturnType<typeof makeComplexRequest>>["reviews"][number]
-    | undefined,
+  pullRequestReviews: any[] = [],
   collection: Collection,
   pullRequestSize: PullRequestSize
 ) => {

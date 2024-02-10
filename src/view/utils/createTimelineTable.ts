@@ -1,8 +1,10 @@
 import { Collection } from "../../converters/types";
 import {
+  timeInDraftHeader,
   timeToApproveHeader,
   timeToMergeHeader,
   timeToReviewHeader,
+  timeToReviewRequestHeader,
   totalMergedPrsHeader,
 } from "./constants";
 import { createTable } from "./common";
@@ -21,6 +23,10 @@ export const createTimelineTable = (
     .map((user) => {
       return [
         `**${user}**`,
+        formatMinutesDuration(data[user]?.[date]?.[type]?.timeInDraft || 0),
+        formatMinutesDuration(
+          data[user]?.[date]?.[type]?.timeToReviewRequest || 0
+        ),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToReview || 0),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToApprove || 0),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToMerge || 0),
@@ -37,6 +43,8 @@ export const createTimelineTable = (
     table: {
       headers: [
         "user",
+        timeInDraftHeader,
+        timeToReviewRequestHeader,
         timeToReviewHeader,
         timeToApproveHeader,
         timeToMergeHeader,
