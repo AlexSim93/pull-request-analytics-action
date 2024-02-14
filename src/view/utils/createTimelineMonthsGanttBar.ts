@@ -18,9 +18,9 @@ export const createTimelineMonthsGanttBar = (
   user: string
 ) => {
   return createGanttBar({
-    title: `Pull request's retrospective timeline(${type}${
+    title: `Pull request's retrospective timeline(${
       type === "percentile" ? parseInt(getValueAsIs("PERCENTILE")) : ""
-    }) ${user} / minutes`,
+    }th ${type}) ${user} / minutes`,
     sections: dates
       .filter(
         (date) =>
