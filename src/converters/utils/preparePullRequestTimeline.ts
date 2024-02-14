@@ -1,4 +1,4 @@
-import { getValueAsIs } from "../../common/utils";
+import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 import { calcDraftTime, getApproveTime } from "./calculations";
@@ -24,7 +24,8 @@ export const preparePullRequestTimeline = (
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
-    }
+    },
+    getMultipleValuesInput("HOLIDAYS")
   );
 
   const timeInDraft = calcDraftTime(
@@ -34,10 +35,15 @@ export const preparePullRequestTimeline = (
   ).reduce(
     (acc, period) =>
       acc +
-      (calcDifferenceInMinutes(period[0], period[1], {
-        endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
-        startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
-      }) || 0),
+      (calcDifferenceInMinutes(
+        period[0],
+        period[1],
+        {
+          endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
+          startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
+        },
+        getMultipleValuesInput("HOLIDAYS")
+      ) || 0),
     0
   );
 
@@ -47,7 +53,8 @@ export const preparePullRequestTimeline = (
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
-    }
+    },
+    getMultipleValuesInput("HOLIDAYS")
   );
 
   const timeToApprove = calcDifferenceInMinutes(
@@ -56,7 +63,8 @@ export const preparePullRequestTimeline = (
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
-    }
+    },
+    getMultipleValuesInput("HOLIDAYS")
   );
 
   const timeToMerge = calcDifferenceInMinutes(
@@ -65,7 +73,8 @@ export const preparePullRequestTimeline = (
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
-    }
+    },
+    getMultipleValuesInput("HOLIDAYS")
   );
 
   const timeToClose = calcDifferenceInMinutes(
@@ -74,7 +83,8 @@ export const preparePullRequestTimeline = (
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
-    }
+    },
+    getMultipleValuesInput("HOLIDAYS")
   );
 
   return {

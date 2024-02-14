@@ -6,6 +6,7 @@ import {
   setHours,
   setMinutes,
 } from "date-fns";
+import { isHoliday } from "./isHoliday";
 
 export type CoreHours = {
   startOfWorkingTime: string;
@@ -15,7 +16,8 @@ export type CoreHours = {
 export const calcNonWorkingHours = (
   firstDate: Date,
   secondDate: Date,
-  { startOfWorkingTime, endOfWorkingTime }: CoreHours
+  { startOfWorkingTime, endOfWorkingTime }: CoreHours,
+  holidays?: string[]
 ) => {
   const daysOfInterval = eachDayOfInterval({
     start: firstDate,
@@ -33,7 +35,8 @@ export const calcNonWorkingHours = (
     );
     const endOfWorkingHours = setMinutes(setHours(day, endHours), endMinutes);
     const endOfDay = setMinutes(setHours(day, 23), 59);
-    if (isWeekend(day)) return acc;
+
+    if (isWeekend(day) || isHoliday(day, holidays)) return acc;
     if (arr.length === 1) {
       if (
         isBefore(secondDate, startOfWorkingHours) ||
