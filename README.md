@@ -1,6 +1,6 @@
 # Pull request analytics action
 
-![Version](https://img.shields.io/badge/version-2.0.1-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-2.1.0-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 **pull-request-analytics-action**: A powerful tool for analyzing the effectiveness of both teams and individual developers. This action generates reports based on data from pull requests, code reviews, and comments, enabling you to identify your team's strengths as well as areas needing improvement. The statistics collected by this GitHub Action can be displayed in the form of tables and graphs or passed on for further operations as markdown or a data collection. No information is transferred to external services; all operations are conducted exclusively within the GitHub environment. The tool offers numerous configuration parameters and can be customized to suit specific project needs.
 
@@ -293,6 +293,7 @@ Below is a table outlining the various configuration parameters available for **
 | `PERIOD_SPLIT_UNIT`       | Unit for time segmentation. Can take values: `years`, `quarters`, `months`, `none`                                                                                               | No       | `months`                                                 |
 | `CORE_HOURS_START`        | Start of core hours (HH:mm). By default in UTC                                                                                                                                   | No       | -                                                        |
 | `CORE_HOURS_END`          | End of core hours (HH:mm). By default in UTC                                                                                                                                     | No       | -                                                        |
+| `HOLIDAYS`                | Holidays separated by comma (d/MM/yyyy)                                                                                                                                          | No       | -                                                        |
 | `TIMEZONE`                | Timezone that will be used in action                                                                                                                                             | No       | `UTC`                                                    |
 | `PERCENTILE`              | Percentile value for timeline                                                                                                                                                    | No       | `75`                                                     |
 | `ISSUE_TITLE`             | Title for the created issue                                                                                                                                                      | No       | `Pull requests report(d/MM/yyyy HH:mm)`                  |

@@ -803,16 +803,16 @@ exports.calcDifferenceInMinutes = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const calcWeekendMinutes_1 = __nccwpck_require__(54409);
 const calcNonWorkingHours_1 = __nccwpck_require__(72096);
-const calcDifferenceInMinutes = (firstIsoDate, secondIsoDate, coreHours) => {
+const calcDifferenceInMinutes = (firstIsoDate, secondIsoDate, coreHours, holidays) => {
     const firstDate = firstIsoDate ? (0, date_fns_1.setSeconds)((0, date_fns_1.parseISO)(firstIsoDate), 0) : null;
     const secondDate = secondIsoDate
         ? (0, date_fns_1.setSeconds)((0, date_fns_1.parseISO)(secondIsoDate), 0)
         : null;
     if (firstDate && secondDate) {
         return ((0, date_fns_1.differenceInMinutes)(secondDate, firstDate) -
-            (0, calcWeekendMinutes_1.calcWeekendMinutes)(firstDate, secondDate) -
+            (0, calcWeekendMinutes_1.calcWeekendMinutes)(firstDate, secondDate, holidays) -
             (coreHours.startOfWorkingTime && coreHours.endOfWorkingTime
-                ? (0, calcNonWorkingHours_1.calcNonWorkingHours)(firstDate, secondDate, coreHours)
+                ? (0, calcNonWorkingHours_1.calcNonWorkingHours)(firstDate, secondDate, coreHours, holidays)
                 : 0));
     }
     return null;
@@ -879,7 +879,8 @@ exports.calcMedianValue = calcMedianValue;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcNonWorkingHours = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
-const calcNonWorkingHours = (firstDate, secondDate, { startOfWorkingTime, endOfWorkingTime }) => {
+const isHoliday_1 = __nccwpck_require__(33345);
+const calcNonWorkingHours = (firstDate, secondDate, { startOfWorkingTime, endOfWorkingTime }, holidays) => {
     const daysOfInterval = (0, date_fns_1.eachDayOfInterval)({
         start: firstDate,
         end: secondDate,
@@ -892,7 +893,7 @@ const calcNonWorkingHours = (firstDate, secondDate, { startOfWorkingTime, endOfW
         const startOfWorkingHours = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, startHours), startMinutes);
         const endOfWorkingHours = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, endHours), endMinutes);
         const endOfDay = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, 23), 59);
-        if ((0, date_fns_1.isWeekend)(day))
+        if ((0, date_fns_1.isWeekend)(day) || (0, isHoliday_1.isHoliday)(day, holidays))
             return acc;
         if (arr.length === 1) {
             if ((0, date_fns_1.isBefore)(secondDate, startOfWorkingHours) ||
@@ -967,20 +968,39 @@ exports.calcPercentileValue = calcPercentileValue;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcWeekendMinutes = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
-const calcWeekendMinutes = (firstDate, secondDate) => {
+const isHoliday_1 = __nccwpck_require__(33345);
+const calcWeekendMinutes = (firstDate, secondDate, holidays) => {
     const weekendsOfInterval = (0, date_fns_1.eachWeekendOfInterval)({
         start: firstDate,
         end: secondDate,
     });
-    let minutesInWeekend = 24 * 60 * weekendsOfInterval.length;
+    const days = (0, date_fns_1.eachDayOfInterval)({
+        start: firstDate,
+        end: secondDate,
+    });
+    const minutesOnHolidays = days.reduce((acc, day) => {
+        if ((0, isHoliday_1.isHoliday)(day, holidays) && !(0, date_fns_1.isWeekend)(day))
+            return acc + 24 * 60;
+        return acc;
+    }, 0);
+    let minutesInWeekend = 24 * 60 * weekendsOfInterval.length + (minutesOnHolidays || 0);
     const isStartedAtWeekend = (0, date_fns_1.isWeekend)(firstDate);
+    const isStartedOnHoliday = (0, isHoliday_1.isHoliday)(firstDate, holidays);
     const isEndedAtWeekend = (0, date_fns_1.isWeekend)(secondDate);
+    const isEndedOnHoliday = (0, isHoliday_1.isHoliday)(secondDate, holidays);
     if (isStartedAtWeekend) {
         minutesInWeekend -= (0, date_fns_1.differenceInMinutes)(firstDate, weekendsOfInterval[0]);
+    }
+    else if (isStartedOnHoliday) {
+        minutesInWeekend -= (0, date_fns_1.differenceInMinutes)(firstDate, days[0]);
     }
     if (isEndedAtWeekend) {
         minutesInWeekend -=
             (0, date_fns_1.differenceInMinutes)((0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(weekendsOfInterval[weekendsOfInterval.length - 1], 23), 59), secondDate) + 1;
+    }
+    else if (isEndedOnHoliday) {
+        minutesInWeekend -=
+            (0, date_fns_1.differenceInMinutes)((0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(days[days.length - 1], 23), 59), secondDate) + 1;
     }
     return minutesInWeekend;
 };
@@ -1083,6 +1103,27 @@ var getPullRequestSize_1 = __nccwpck_require__(73882);
 Object.defineProperty(exports, "getPullRequestSize", ({ enumerable: true, get: function () { return getPullRequestSize_1.getPullRequestSize; } }));
 var calcDraftTime_1 = __nccwpck_require__(63506);
 Object.defineProperty(exports, "calcDraftTime", ({ enumerable: true, get: function () { return calcDraftTime_1.calcDraftTime; } }));
+
+
+/***/ }),
+
+/***/ 33345:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isHoliday = void 0;
+const date_fns_1 = __nccwpck_require__(73314);
+const isHoliday = (date, holidays) => {
+    if (!holidays)
+        return false;
+    return holidays.some((holiday) => {
+        const holidayDate = (0, date_fns_1.parse)(holiday, "d/MM/yyyy", new Date());
+        return (0, date_fns_1.isSameDay)(date, holidayDate);
+    });
+};
+exports.isHoliday = isHoliday;
 
 
 /***/ }),
@@ -1407,28 +1448,28 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
     const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at || pullRequestInfo?.merged_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-    });
+    }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
     const timeInDraft = (0, calculations_1.calcDraftTime)(pullRequestInfo?.created_at, pullRequestInfo?.closed_at, statuses).reduce((acc, period) => acc +
         ((0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(period[0], period[1], {
             endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
             startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-        }) || 0), 0);
+        }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")) || 0), 0);
     const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-    });
+    }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
     const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime || pullRequestInfo?.merged_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-    });
+    }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
     const timeToMerge = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.merged_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-    });
+    }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
     const timeToClose = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.closed_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-    });
+    }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
     return {
         ...collection,
         timeToReview: timeToReview
@@ -2565,6 +2606,7 @@ ${[
         "TIMEZONE",
         "CORE_HOURS_START",
         "CORE_HOURS_END",
+        "HOLIDAYS",
         "REPORT_PERIOD",
         "REPORT_DATE_START",
         "REPORT_DATE_END",
@@ -2818,7 +2860,7 @@ const createTimelineGanttBar = (data, type, users, date) => {
         return "";
     }
     return (0, common_1.createGanttBar)({
-        title: `Pull requests timeline(${type}${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}) ${date} / minutes`,
+        title: `Pull requests timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}th ${type}) ${date} / minutes`,
         sections: users
             .filter((user) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -2900,7 +2942,7 @@ const _1 = __nccwpck_require__(92884);
 const utils_1 = __nccwpck_require__(41002);
 const createTimelineMonthsGanttBar = (data, type, dates, user) => {
     return (0, common_1.createGanttBar)({
-        title: `Pull request's retrospective timeline(${type}${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}) ${user} / minutes`,
+        title: `Pull request's retrospective timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}th ${type}) ${user} / minutes`,
         sections: dates
             .filter((date) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -2969,7 +3011,7 @@ const createTimelineTable = (data, type, users, date) => {
         ];
     });
     const pullRequestTimeLine = (0, common_1.createTable)({
-        title: `Pull requests timeline(${type}${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}) ${date}`,
+        title: `Pull requests timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}th ${type}) ${date}`,
         description: "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
         table: {
             headers: [

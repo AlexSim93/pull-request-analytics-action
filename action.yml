@@ -43,6 +43,9 @@ inputs:
   CORE_HOURS_END:
     description: "End time of core hours(HH:mm)"
     required: false
+  HOLIDAYS:
+    description: "Holidays separated by comma(d/MM/yyyy)"
+    required: false
   PERCENTILE:
     description: "Percentile value for timeline"
     required: false

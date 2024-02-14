@@ -5,7 +5,8 @@ import { CoreHours, calcNonWorkingHours } from "./calcNonWorkingHours";
 export const calcDifferenceInMinutes = (
   firstIsoDate: string | null | undefined,
   secondIsoDate: string | null | undefined,
-  coreHours: CoreHours
+  coreHours: CoreHours,
+  holidays?: string[]
 ) => {
   const firstDate = firstIsoDate ? setSeconds(parseISO(firstIsoDate), 0) : null;
   const secondDate = secondIsoDate
@@ -14,9 +15,9 @@ export const calcDifferenceInMinutes = (
   if (firstDate && secondDate) {
     return (
       differenceInMinutes(secondDate, firstDate) -
-      calcWeekendMinutes(firstDate, secondDate) -
+      calcWeekendMinutes(firstDate, secondDate, holidays) -
       (coreHours.startOfWorkingTime && coreHours.endOfWorkingTime
-        ? calcNonWorkingHours(firstDate, secondDate, coreHours)
+        ? calcNonWorkingHours(firstDate, secondDate, coreHours, holidays)
         : 0)
     );
   }
