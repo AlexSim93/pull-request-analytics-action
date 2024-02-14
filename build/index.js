@@ -1493,6 +1493,7 @@ const utils_1 = __nccwpck_require__(41002);
 const getRateLimit_1 = __nccwpck_require__(78028);
 async function main() {
     (0, utils_1.setTimezone)();
+    core.info("Version 2 has been released. Upgrade to v2 for new features!");
     const errors = (0, utils_1.validate)();
     if (Object.entries(errors).length > 0) {
         core.setFailed("Inputs are invalid. Action is failed with validation error");

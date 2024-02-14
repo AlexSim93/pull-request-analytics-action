@@ -18,6 +18,7 @@ import { getRateLimit } from "./requests/getRateLimit";
 
 async function main() {
   setTimezone();
+  core.info("Version 2 has been released. Upgrade to v2 for new features!");
   const errors = validate();
   if (Object.entries(errors).length > 0) {
     core.setFailed(
