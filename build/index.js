@@ -849,6 +849,30 @@ exports.calcDraftTime = calcDraftTime;
 
 /***/ }),
 
+/***/ 2414:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.calcIntervals = void 0;
+const calcIntervals = (values, intervals) => {
+    const initial = intervals?.reduce((acc, interval) => ({ ...acc, [`${interval?.[0]}-${interval?.[1]}`]: 0 }), {});
+    return values
+        ?.map((value) => value)
+        .reduce((acc, value) => {
+        const interval = intervals?.find((interval) => value >= interval[0] && value < interval[1]);
+        if (!interval)
+            return acc;
+        const key = `${interval?.[0]}-${interval?.[1]}`;
+        return { ...acc, [key]: (acc[key] || 0) + 1 };
+    }, initial);
+};
+exports.calcIntervals = calcIntervals;
+
+
+/***/ }),
+
 /***/ 17745:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -1084,7 +1108,11 @@ exports.getPullRequestSize = getPullRequestSize;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = void 0;
+exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = exports.calcIntervals = exports.prepareIntervals = void 0;
+var prepareIntervals_1 = __nccwpck_require__(22723);
+Object.defineProperty(exports, "prepareIntervals", ({ enumerable: true, get: function () { return prepareIntervals_1.prepareIntervals; } }));
+var calcIntervals_1 = __nccwpck_require__(2414);
+Object.defineProperty(exports, "calcIntervals", ({ enumerable: true, get: function () { return calcIntervals_1.calcIntervals; } }));
 var calcPercentileValue_1 = __nccwpck_require__(24684);
 Object.defineProperty(exports, "calcPercentileValue", ({ enumerable: true, get: function () { return calcPercentileValue_1.calcPercentileValue; } }));
 var getApproveTime_1 = __nccwpck_require__(39922);
@@ -1124,6 +1152,32 @@ const isHoliday = (date, holidays) => {
     });
 };
 exports.isHoliday = isHoliday;
+
+
+/***/ }),
+
+/***/ 22723:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prepareIntervals = void 0;
+const prepareIntervals = (numbers) => {
+    return numbers.length > 0
+        ? numbers
+            .slice()
+            .concat(Infinity)
+            .sort((a, b) => a - b)
+            .map((point, index, arr) => {
+            if (index === 0) {
+                return [0, point];
+            }
+            return [arr[index - 1], point];
+        })
+        : [];
+};
+exports.prepareIntervals = prepareIntervals;
 
 
 /***/ }),
@@ -1400,10 +1454,17 @@ exports.preparePullRequestInfo = preparePullRequestInfo;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestStats = void 0;
+const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const preparePullRequestStats = (collection) => {
+    const reviewIntervals = (0, calculations_1.prepareIntervals)((0, utils_1.getMultipleValuesInput)("REVIEW_TIME_INTERVALS").map((el) => parseFloat(el)));
+    const approvalIntervals = (0, calculations_1.prepareIntervals)((0, utils_1.getMultipleValuesInput)("APPROVAL_TIME_INTERVALS").map((el) => parseFloat(el)));
+    const mergeIntervals = (0, calculations_1.prepareIntervals)((0, utils_1.getMultipleValuesInput)("MERGE_TIME_INTERVALS").map((el) => parseFloat(el)));
     return {
         ...collection,
+        reviewTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToReview?.map((el) => el / 60), reviewIntervals),
+        approvalTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToApprove?.map((el) => el / 60), approvalIntervals),
+        mergeTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToMerge?.map((el) => el / 60), mergeIntervals),
         median: {
             timeToReview: (0, calculations_1.calcMedianValue)(collection.timeToReview),
             timeToApprove: (0, calculations_1.calcMedianValue)(collection.timeToApprove),
@@ -2598,6 +2659,9 @@ ${[
         "ASSIGNEES",
         "LABELS",
         "SHOW_STATS_TYPES",
+        "REVIEW_TIME_INTERVALS",
+        "APPROVAL_TIME_INTERVALS",
+        "MERGE_TIME_INTERVALS",
         "TOP_LIST_AMOUNT",
         "AGGREGATE_VALUE_METHODS",
         "PERCENTILE",
@@ -2635,7 +2699,7 @@ exports.createConfigParamsCode = createConfigParamsCode;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createDiscussionsPieChart = void 0;
-const _1 = __nccwpck_require__(92884);
+const common_1 = __nccwpck_require__(64682);
 const createDiscussionsPieChart = (data, users, date) => {
     return users
         .map((user) => ({ user, values: data[user][date]?.discussionsTypes }))
@@ -2650,7 +2714,7 @@ const createDiscussionsPieChart = (data, users, date) => {
                 [value[0]]: value[1].received?.total,
             };
         }, {});
-        return (0, _1.createPieChart)(`Discussion's types ${data.user} ${date}`, values);
+        return (0, common_1.createPieChart)(`Discussion's types ${data.user} ${date}`, values);
     })
         .join("\n");
 };
@@ -2801,6 +2865,7 @@ const common_1 = __nccwpck_require__(64682);
 const createTimelineGanttBar_1 = __nccwpck_require__(5304);
 const createTimelineTable_1 = __nccwpck_require__(20194);
 const formatMinutesDuration_1 = __nccwpck_require__(92411);
+const createTimelinePieChart_1 = __nccwpck_require__(254);
 const createTimelineContent = (data, users, date) => {
     const milestoneTitle = {
         timeToReview: "longest-pending reviews",
@@ -2834,6 +2899,9 @@ ${pullRequestTimelineBar}
         .join("\n");
     return `
   ${timeline}
+  ${(0, createTimelinePieChart_1.createTimelinePieChart)(data, users, date, "reviewTimeIntervals")}
+  ${(0, createTimelinePieChart_1.createTimelinePieChart)(data, users, date, "approvalTimeIntervals")}
+  ${(0, createTimelinePieChart_1.createTimelinePieChart)(data, users, date, "mergeTimeIntervals")}
   ${problematicList}
   `;
 };
@@ -2981,6 +3049,44 @@ const createTimelineMonthsGanttBar = (data, type, dates, user) => {
     });
 };
 exports.createTimelineMonthsGanttBar = createTimelineMonthsGanttBar;
+
+
+/***/ }),
+
+/***/ 254:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createTimelinePieChart = void 0;
+const common_1 = __nccwpck_require__(64682);
+const titleMap = {
+    reviewTimeIntervals: "Review time",
+    approvalTimeIntervals: "Approval time",
+    mergeTimeIntervals: "Merge time",
+};
+const createTimelinePieChart = (data, users, date, key) => {
+    return users
+        .map((user) => ({
+        user,
+        values: data[user][date]?.[key],
+    }))
+        .filter((types) => types.values && Object.values(types.values).some((value) => value))
+        .map((data) => {
+        const values = Object.entries(data.values)
+            .filter(([key, value]) => value)
+            .reduce((acc, value) => {
+            return {
+                ...acc,
+                [`${value[0].replace("-Infinity", "+")} hours`]: value[1],
+            };
+        }, {});
+        return (0, common_1.createPieChart)(`${titleMap[key]} ${data.user} ${date}`, values);
+    })
+        .join("\n");
+};
+exports.createTimelinePieChart = createTimelinePieChart;
 
 
 /***/ }),

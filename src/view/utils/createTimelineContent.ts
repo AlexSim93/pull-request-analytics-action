@@ -5,6 +5,7 @@ import { createTimelineGanttBar } from "./createTimelineGanttBar";
 import { createTimelineTable } from "./createTimelineTable";
 import { StatsType } from "./types";
 import { formatMinutesDuration } from "./formatMinutesDuration";
+import { createTimelinePieChart } from "./createTimelinePieChart";
 
 type Type = "timeToReview" | "timeToApprove" | "timeToMerge";
 
@@ -63,6 +64,9 @@ ${pullRequestTimelineBar}
 
   return `
   ${timeline}
+  ${createTimelinePieChart(data, users, date, "reviewTimeIntervals")}
+  ${createTimelinePieChart(data, users, date, "approvalTimeIntervals")}
+  ${createTimelinePieChart(data, users, date, "mergeTimeIntervals")}
   ${problematicList}
   `;
 };

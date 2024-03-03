@@ -1,13 +1,39 @@
+import { getMultipleValuesInput } from "../../common/utils";
 import { Collection } from "../types";
 import {
   calcAverageValue,
+  calcIntervals,
   calcMedianValue,
   calcPercentileValue,
+  prepareIntervals,
 } from "./calculations";
 
 export const preparePullRequestStats = (collection: Collection) => {
+  const reviewIntervals = prepareIntervals(
+    getMultipleValuesInput("REVIEW_TIME_INTERVALS").map((el) => parseFloat(el))
+  );
+  const approvalIntervals = prepareIntervals(
+    getMultipleValuesInput("APPROVAL_TIME_INTERVALS").map((el) =>
+      parseFloat(el)
+    )
+  );
+  const mergeIntervals = prepareIntervals(
+    getMultipleValuesInput("MERGE_TIME_INTERVALS").map((el) => parseFloat(el))
+  );
   return {
     ...collection,
+    reviewTimeIntervals: calcIntervals(
+      collection.timeToReview?.map((el) => el / 60),
+      reviewIntervals
+    ),
+    approvalTimeIntervals: calcIntervals(
+      collection.timeToApprove?.map((el) => el / 60),
+      approvalIntervals
+    ),
+    mergeTimeIntervals: calcIntervals(
+      collection.timeToMerge?.map((el) => el / 60),
+      mergeIntervals
+    ),
     median: {
       timeToReview: calcMedianValue(collection.timeToReview),
       timeToApprove: calcMedianValue(collection.timeToApprove),
