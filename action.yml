@@ -54,6 +54,15 @@ inputs:
     description: "Amount of items in lists"
     required: false
     default: "5"
+  REVIEW_TIME_INTERVALS:
+    description: "Intervals for determining review times distribution"
+    required: false
+  APPROVAL_TIME_INTERVALS:
+    description: "Intervals for determining approval times distribution"
+    required: false
+  MERGE_TIME_INTERVALS:
+    description: "Intervals for determining merge times distribution"
+    required: false
   PERIOD_SPLIT_UNIT:
     description: "Unit for time segmentation. Can take values: 'years', 'quarters', 'months', 'none'"
     required: false

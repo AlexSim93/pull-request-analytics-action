@@ -50,6 +50,9 @@ export type Collection = {
   median?: TimelinePoints;
   percentile?: TimelinePoints;
   average?: TimelinePoints;
+  reviewTimeIntervals?: { [key: string]: number };
+  approvalTimeIntervals?: { [key: string]: number };
+  mergeTimeIntervals?: { [key: string]: number };
   timeInDraft?: number[];
   timeToReviewRequest?: number[];
   timeToReview?: number[];

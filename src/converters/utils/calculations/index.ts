@@ -1,3 +1,5 @@
+export { prepareIntervals } from './prepareIntervals';
+export { calcIntervals } from './calcIntervals';
 export { calcPercentileValue } from "./calcPercentileValue";
 export { getApproveTime } from "./getApproveTime";
 export { calcWeekendMinutes } from "./calcWeekendMinutes";
