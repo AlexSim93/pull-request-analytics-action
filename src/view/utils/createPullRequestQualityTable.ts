@@ -20,14 +20,14 @@ export const createPullRequestQualityTable = (
         data[user]?.[date]?.merged ||
         data[user]?.[date]?.discussions ||
         data[user]?.[date]?.reviewComments ||
-        data["total"]?.[date]?.reviewsConducted?.[user]?.["CHANGES_REQUESTED"]
+        data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"]
     )
     .map((user) => {
       return [
         `**${user}**`,
         data[user]?.[date]?.merged?.toString() || "0",
         data["total"]?.[date]?.reviewsConducted?.[user]?.[
-          "CHANGES_REQUESTED"
+          "changes_requested"
         ]?.toString() || "0",
         `${
           data[user]?.[date]?.discussions?.received?.agreed?.toString() || "0"

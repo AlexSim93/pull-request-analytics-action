@@ -31,7 +31,49 @@ describe("check calcDifferenceInMinutes", () => {
     const endDate = "2023-10-20T21:30:00Z";
     expect(calcDifferenceInMinutes(startDate, endDate, coreHours)).toBe(330);
   });
-  //   // review with weekend
+  // review with holidays
+  it("check if interval inside holidays", () => {
+    const startDate = "2023-10-19T13:30:00Z";
+    const endDate = "2023-10-19T21:30:00Z";
+    expect(
+      calcDifferenceInMinutes(startDate, endDate, coreHours, ["19/10/2023"])
+    ).toBe(0);
+  });
+  it("check if interval on holidays with 2 days", () => {
+    const startDate = "2023-10-23T13:30:00Z";
+    const endDate = "2023-10-24T21:30:00Z";
+    expect(
+      calcDifferenceInMinutes(startDate, endDate, coreHours, [
+        "23/10/2023",
+        "24/10/2023",
+      ])
+    ).toBe(0);
+  });
+  it("check if interval starts before holiday", () => {
+    const startDate = "2023-10-24T13:30:00Z";
+    const endDate = "2023-10-25T21:30:00Z";
+    expect(
+      calcDifferenceInMinutes(startDate, endDate, coreHours, ["25/10/2023"])
+    ).toBe(330);
+  });
+  it("check if interval ends after holiday", () => {
+    const startDate = "2023-10-23T19:30:00Z";
+    const endDate = "2023-10-24T10:30:00Z";
+    expect(
+      calcDifferenceInMinutes(startDate, endDate, coreHours, ["23/10/2023"])
+    ).toBe(30);
+  });
+  it("check if holiday inside interval", () => {
+    const startDate = "2023-10-23T12:30:00Z";
+    const endDate = "2023-10-26T10:30:00Z";
+    expect(
+      calcDifferenceInMinutes(startDate, endDate, coreHours, [
+        "24/10/2023",
+        "25/10/2023",
+      ])
+    ).toBe(420);
+  });
+  // review with weekend
   it("check if interval inside weekend", () => {
     const startDate = "2023-10-21T13:30:00Z";
     const endDate = "2023-10-21T21:30:00Z";
@@ -57,7 +99,7 @@ describe("check calcDifferenceInMinutes", () => {
     const endDate = "2023-10-23T10:30:00Z";
     expect(calcDifferenceInMinutes(startDate, endDate, coreHours)).toBe(420);
   });
-  //   // 2 days
+  // 2 days
   it("check if interval with 2 days and starts after working hours", () => {
     const startDate = "2023-10-18T20:30:00Z";
     const endDate = "2023-10-19T10:30:00Z";

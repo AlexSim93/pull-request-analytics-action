@@ -5,6 +5,7 @@ import { createTimelineGanttBar } from "./createTimelineGanttBar";
 import { createTimelineTable } from "./createTimelineTable";
 import { StatsType } from "./types";
 import { formatMinutesDuration } from "./formatMinutesDuration";
+import { createTimelinePieChart } from "./createTimelinePieChart";
 
 type Type = "timeToReview" | "timeToApprove" | "timeToMerge";
 
@@ -28,7 +29,9 @@ export const createTimelineContent = (
           ?.sort((a, b) => b[milestone] - a[milestone])
           .slice(0, parseInt(getValueAsIs("TOP_LIST_AMOUNT")))
           .map((item) => ({
-            text: `${item.title}(${formatMinutesDuration(item[milestone])})`,
+            text: `${item.title}(${
+              formatMinutesDuration(item[milestone]) || "-"
+            })`,
             link: item.link || "",
           })) || [];
       return createList(milestoneTitle[milestone], items);
@@ -61,6 +64,9 @@ ${pullRequestTimelineBar}
 
   return `
   ${timeline}
+  ${createTimelinePieChart(data, users, date, "reviewTimeIntervals")}
+  ${createTimelinePieChart(data, users, date, "approvalTimeIntervals")}
+  ${createTimelinePieChart(data, users, date, "mergeTimeIntervals")}
   ${problematicList}
   `;
 };

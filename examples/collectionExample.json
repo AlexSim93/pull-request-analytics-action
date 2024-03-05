@@ -104,36 +104,36 @@
             ],
             "reviewsConducted": {
                 "dev5": {
-                    "APPROVED": 6,
+                    "approved": 6,
                     "total": 6,
-                    "CHANGES_REQUESTED": 2,
-                    "COMMENTED": 2
+                    "changes_requested": 2,
+                    "commented": 2
                 },
                 "total": {
-                    "APPROVED": 18,
+                    "approved": 18,
                     "total": 18,
-                    "CHANGES_REQUESTED": 4,
-                    "COMMENTED": 5
+                    "changes_requested": 4,
+                    "commented": 5
                 },
                 "dev4": {
-                    "CHANGES_REQUESTED": 1,
+                    "changes_requested": 1,
                     "total": 1,
-                    "COMMENTED": 1,
-                    "APPROVED": 1
+                    "commented": 1,
+                    "approved": 1
                 },
                 "dev3": {
-                    "APPROVED": 3,
+                    "approved": 3,
                     "total": 3,
-                    "CHANGES_REQUESTED": 1,
-                    "COMMENTED": 1
+                    "changes_requested": 1,
+                    "commented": 1
                 },
                 "dev2": {
-                    "COMMENTED": 1,
+                    "commented": 1,
                     "total": 1,
-                    "APPROVED": 1
+                    "approved": 1
                 },
                 "dev1": {
-                    "APPROVED": 7,
+                    "approved": 7,
                     "total": 7
                 }
             },
@@ -293,36 +293,36 @@
             ],
             "reviewsConducted": {
                 "dev5": {
-                    "APPROVED": 6,
+                    "approved": 6,
                     "total": 6,
-                    "CHANGES_REQUESTED": 2,
-                    "COMMENTED": 2
+                    "changes_requested": 2,
+                    "commented": 2
                 },
                 "total": {
-                    "APPROVED": 18,
+                    "approved": 18,
                     "total": 18,
-                    "CHANGES_REQUESTED": 4,
-                    "COMMENTED": 5
+                    "changes_requested": 4,
+                    "commented": 5
                 },
                 "dev4": {
-                    "CHANGES_REQUESTED": 1,
+                    "changes_requested": 1,
                     "total": 1,
-                    "COMMENTED": 1,
-                    "APPROVED": 1
+                    "commented": 1,
+                    "approved": 1
                 },
                 "dev3": {
-                    "APPROVED": 3,
+                    "approved": 3,
                     "total": 3,
-                    "CHANGES_REQUESTED": 1,
-                    "COMMENTED": 1
+                    "changes_requested": 1,
+                    "commented": 1
                 },
                 "dev2": {
-                    "COMMENTED": 1,
+                    "commented": 1,
                     "total": 1,
-                    "APPROVED": 1
+                    "approved": 1
                 },
                 "dev1": {
-                    "APPROVED": 7,
+                    "approved": 7,
                     "total": 7
                 }
             },
@@ -418,15 +418,15 @@
             "discussionsTypes": {},
             "reviewsConducted": {
                 "dev3": {
-                    "APPROVED": 1,
+                    "approved": 1,
                     "total": 1
                 },
                 "total": {
-                    "APPROVED": 5,
+                    "approved": 5,
                     "total": 5
                 },
                 "dev1": {
-                    "APPROVED": 4,
+                    "approved": 4,
                     "total": 4
                 }
             },
@@ -510,15 +510,15 @@
             "discussionsTypes": {},
             "reviewsConducted": {
                 "dev3": {
-                    "APPROVED": 1,
+                    "approved": 1,
                     "total": 1
                 },
                 "total": {
-                    "APPROVED": 5,
+                    "approved": 5,
                     "total": 5
                 },
                 "dev1": {
-                    "APPROVED": 4,
+                    "approved": 4,
                     "total": 4
                 }
             },
@@ -550,27 +550,27 @@
         "12/2023": {
             "reviewsConducted": {
                 "dev5": {
-                    "APPROVED": 5,
+                    "approved": 5,
                     "total": 5,
-                    "CHANGES_REQUESTED": 2,
-                    "COMMENTED": 1
+                    "changes_requested": 2,
+                    "commented": 1
                 },
                 "total": {
-                    "APPROVED": 8,
+                    "approved": 8,
                     "total": 8,
-                    "CHANGES_REQUESTED": 4,
-                    "COMMENTED": 2
+                    "changes_requested": 4,
+                    "commented": 2
                 },
                 "dev4": {
-                    "CHANGES_REQUESTED": 1,
+                    "changes_requested": 1,
                     "total": 1,
-                    "COMMENTED": 1,
-                    "APPROVED": 1
+                    "commented": 1,
+                    "approved": 1
                 },
                 "dev3": {
-                    "APPROVED": 2,
+                    "approved": 2,
                     "total": 2,
-                    "CHANGES_REQUESTED": 1
+                    "changes_requested": 1
                 }
             },
             "reviewsConductedSize": [
@@ -653,27 +653,27 @@
         "total": {
             "reviewsConducted": {
                 "dev5": {
-                    "APPROVED": 5,
+                    "approved": 5,
                     "total": 5,
-                    "CHANGES_REQUESTED": 2,
-                    "COMMENTED": 1
+                    "changes_requested": 2,
+                    "commented": 1
                 },
                 "total": {
-                    "APPROVED": 8,
+                    "approved": 8,
                     "total": 8,
-                    "CHANGES_REQUESTED": 4,
-                    "COMMENTED": 2
+                    "changes_requested": 4,
+                    "commented": 2
                 },
                 "dev4": {
-                    "CHANGES_REQUESTED": 1,
+                    "changes_requested": 1,
                     "total": 1,
-                    "COMMENTED": 1,
-                    "APPROVED": 1
+                    "commented": 1,
+                    "approved": 1
                 },
                 "dev3": {
-                    "APPROVED": 2,
+                    "approved": 2,
                     "total": 2,
-                    "CHANGES_REQUESTED": 1
+                    "changes_requested": 1
                 }
             },
             "reviewsConductedSize": [
@@ -781,14 +781,14 @@
             "discussions": 8,
             "reviewsConducted": {
                 "dev2": {
-                    "COMMENTED": 1,
+                    "commented": 1,
                     "total": 1,
-                    "APPROVED": 1
+                    "approved": 1
                 },
                 "total": {
-                    "COMMENTED": 1,
+                    "commented": 1,
                     "total": 1,
-                    "APPROVED": 1
+                    "approved": 1
                 }
             },
             "reviewsConductedSize": [
@@ -848,14 +848,14 @@
             "discussions": 8,
             "reviewsConducted": {
                 "dev2": {
-                    "COMMENTED": 1,
+                    "commented": 1,
                     "total": 1,
-                    "APPROVED": 1
+                    "approved": 1
                 },
                 "total": {
-                    "COMMENTED": 1,
+                    "commented": 1,
                     "total": 1,
-                    "APPROVED": 1
+                    "approved": 1
                 }
             },
             "reviewsConductedSize": [
@@ -915,15 +915,15 @@
             "discussionsTypes": {},
             "reviewsConducted": {
                 "dev1": {
-                    "APPROVED": 3,
+                    "approved": 3,
                     "total": 3
                 },
                 "total": {
-                    "APPROVED": 4,
+                    "approved": 4,
                     "total": 4
                 },
                 "dev5": {
-                    "APPROVED": 1,
+                    "approved": 1,
                     "total": 1
                 }
             },
@@ -983,15 +983,15 @@
             "discussionsTypes": {},
             "reviewsConducted": {
                 "dev1": {
-                    "APPROVED": 3,
+                    "approved": 3,
                     "total": 3
                 },
                 "total": {
-                    "APPROVED": 4,
+                    "approved": 4,
                     "total": 4
                 },
                 "dev5": {
-                    "APPROVED": 1,
+                    "approved": 1,
                     "total": 1
                 }
             },

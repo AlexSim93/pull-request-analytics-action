@@ -30,7 +30,6 @@ export const executionOutcomes = {
   "existing-issue": "existing-issue",
   markdown: "markdown",
   collection: "collection",
-  output: "output",
 };
 
 export const periodSplitUnit = {

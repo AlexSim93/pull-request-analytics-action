@@ -58,6 +58,43 @@ describe("check calcNonWorkingHours", () => {
     const endDate = parseISO("2023-10-23T10:30:00Z");
     expect(calcNonWorkingHours(startDate, endDate, coreHours)).toBe(900);
   });
+  // review with holidays
+  it("check if interval on holiday", () => {
+    const startDate = parseISO("2023-10-23T13:30:00Z");
+    const endDate = parseISO("2023-10-23T21:30:00Z");
+    expect(
+      calcNonWorkingHours(startDate, endDate, coreHours, ["23/10/2023"])
+    ).toBe(0);
+  });
+  it("check if interval inside weekend and holidays", () => {
+    const startDate = parseISO("2023-10-21T13:30:00Z");
+    const endDate = parseISO("2023-10-24T21:30:00Z");
+    expect(
+      calcNonWorkingHours(startDate, endDate, coreHours, [
+        "23/10/2023",
+        "24/10/2023",
+      ])
+    ).toBe(0);
+  });
+  it("check if interval starts before holiday", () => {
+    const startDate = parseISO("2023-10-19T13:30:00Z");
+    const endDate = parseISO("2023-10-20T21:30:00Z");
+    expect(
+      calcNonWorkingHours(startDate, endDate, coreHours, ["20/10/2023"])
+    ).toBe(300);
+  });
+  it("check if interval ends after holidays", () => {
+    const startDate = parseISO("2023-10-23T19:30:00Z");
+    const endDate = parseISO("2023-10-24T10:30:00Z");
+    expect(
+      calcNonWorkingHours(startDate, endDate, coreHours, ["23/10/2023"])
+    ).toBe(600);
+  });
+  it("check if holiday inside interval", () => {
+    const startDate = parseISO("2023-10-23T12:30:00Z");
+    const endDate = parseISO("2023-10-25T10:30:00Z");
+    expect(calcNonWorkingHours(startDate, endDate, coreHours, ["24/10/2023"])).toBe(900);
+  });
   // 2 days
   it("check if interval with 2 days and starts after working hours", () => {
     const startDate = parseISO("2023-10-18T20:30:00Z");

@@ -43,6 +43,9 @@ inputs:
   CORE_HOURS_END:
     description: "End time of core hours(HH:mm)"
     required: false
+  HOLIDAYS:
+    description: "Holidays separated by comma(d/MM/yyyy)"
+    required: false
   PERCENTILE:
     description: "Percentile value for timeline"
     required: false
@@ -51,6 +54,15 @@ inputs:
     description: "Amount of items in lists"
     required: false
     default: "5"
+  REVIEW_TIME_INTERVALS:
+    description: "Intervals for determining review times distribution"
+    required: false
+  APPROVAL_TIME_INTERVALS:
+    description: "Intervals for determining approval times distribution"
+    required: false
+  MERGE_TIME_INTERVALS:
+    description: "Intervals for determining merge times distribution"
+    required: false
   PERIOD_SPLIT_UNIT:
     description: "Unit for time segmentation. Can take values: 'years', 'quarters', 'months', 'none'"
     required: false
@@ -63,9 +75,6 @@ inputs:
     required: false
   ISSUE_TITLE:
     description: "Title for issue"
-    required: false
-  ASSIGNEE:
-    description: "assignee for issue"
     required: false
   AGGREGATE_VALUE_METHODS:
     description: "Aggregate value methods separated by comma. Can take values: 'percentile', 'average', 'median'"
@@ -93,6 +102,10 @@ inputs:
   ISSUE_NUMBER:
     description: "Issue number"
     required: false
+  ALLOW_ANALYTICS:
+    description: "Allows sending non-sensitive inputs to mixpanel"
+    required: false
+    default: true
 
 outputs:
   JSON_COLLECTION:

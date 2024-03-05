@@ -1,8 +1,10 @@
 import { Collection } from "../../converters/types";
 import {
+  timeInDraftHeader,
   timeToApproveHeader,
   timeToMergeHeader,
   timeToReviewHeader,
+  timeToReviewRequestHeader,
   totalMergedPrsHeader,
 } from "./constants";
 import { createTable } from "./common";
@@ -21,6 +23,10 @@ export const createTimelineTable = (
     .map((user) => {
       return [
         `**${user}**`,
+        formatMinutesDuration(data[user]?.[date]?.[type]?.timeInDraft || 0),
+        formatMinutesDuration(
+          data[user]?.[date]?.[type]?.timeToReviewRequest || 0
+        ),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToReview || 0),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToApprove || 0),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToMerge || 0),
@@ -29,14 +35,16 @@ export const createTimelineTable = (
     });
 
   const pullRequestTimeLine = createTable({
-    title: `Pull requests timeline(${type}${
+    title: `Pull requests timeline(${
       type === "percentile" ? parseInt(getValueAsIs("PERCENTILE")) : ""
-    }) ${date}`,
+    }th ${type}) ${date}`,
     description:
       "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
     table: {
       headers: [
         "user",
+        timeInDraftHeader,
+        timeToReviewRequestHeader,
         timeToReviewHeader,
         timeToApproveHeader,
         timeToMergeHeader,

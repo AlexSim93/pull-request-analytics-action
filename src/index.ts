@@ -15,11 +15,13 @@ import {
   validate,
 } from "./common/utils";
 import { getRateLimit } from "./requests/getRateLimit";
+import { sendActionRun } from "./analytics";
 
 async function main() {
   setTimezone();
-  core.info("Version 2 has been released. Upgrade to v2 for new features!");
   const errors = validate();
+  sendActionRun();
+
   if (Object.entries(errors).length > 0) {
     core.setFailed(
       "Inputs are invalid. Action is failed with validation error"
@@ -51,7 +53,6 @@ async function main() {
         repo: repos[i][1],
       },
       {
-        skipReviews: false,
         skipComments: checkCommentSkip(),
       }
     );
@@ -67,13 +68,13 @@ async function main() {
       ownerRepo: acc.ownerRepo
         ? acc.ownerRepo.concat(",", element!.ownerRepo)
         : element!.ownerRepo,
-      reviews: [...acc.reviews, ...element!.reviews],
+      events: [...acc.events, ...element!.events],
       pullRequestInfo: [...acc?.pullRequestInfo, ...element!.pullRequestInfo],
       comments: [...acc?.comments, ...element!.comments],
     }),
     {
       ownerRepo: "",
-      reviews: [],
+      events: [],
       pullRequestInfo: [],
       comments: [],
     }

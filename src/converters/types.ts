@@ -5,6 +5,8 @@ type ReviewTypeStats = {
 };
 
 type TimelinePoints = {
+  timeInDraft?: number;
+  timeToReviewRequest?: number;
   timeToReview?: number;
   timeToApprove?: number;
   timeToMerge?: number;
@@ -48,12 +50,18 @@ export type Collection = {
   median?: TimelinePoints;
   percentile?: TimelinePoints;
   average?: TimelinePoints;
+  reviewTimeIntervals?: { [key: string]: number };
+  approvalTimeIntervals?: { [key: string]: number };
+  mergeTimeIntervals?: { [key: string]: number };
+  timeInDraft?: number[];
+  timeToReviewRequest?: number[];
   timeToReview?: number[];
   timeToApprove?: number[];
   timeToMerge?: number[];
   comments: number;
   totalReviewComments: number;
   reviewComments?: number;
+  reviewRequestsConducted?: number;
   reviewsConducted?: {
     [key: string]: ReviewTypeStats;
   };

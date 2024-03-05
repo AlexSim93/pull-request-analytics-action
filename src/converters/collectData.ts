@@ -7,8 +7,16 @@ import {
   preparePullRequestInfo,
   preparePullRequestStats,
   preparePullRequestTimeline,
+  prepareRequestedReviews,
 } from "./utils";
-import { invalidUserLogin, invalidDate } from "./constants";
+import {
+  invalidUserLogin,
+  invalidDate,
+  reviewRequestedTimelineEvent,
+  reviewedTimelineEvent,
+  readyForReviewTimelineEvent,
+  convertToDraftTimelineEvent,
+} from "./constants";
 import { getPullRequestSize } from "./utils/calculations";
 import { getDateFormat } from "../common/utils";
 
@@ -21,6 +29,19 @@ export const collectData = (
     if (pullRequest === undefined || pullRequest === null) {
       return;
     }
+    const reviews = data.events[index]?.filter(
+      (el) => el.event === reviewedTimelineEvent
+    );
+    const reviewRequests = data.events[index]?.filter(
+      (el) => el.event === reviewRequestedTimelineEvent
+    );
+
+    const statuses = data.events[index]?.filter((el) =>
+      [readyForReviewTimelineEvent, convertToDraftTimelineEvent].includes(
+        el.event as string
+      )
+    );
+
     const closedDate = pullRequest.closed_at
       ? parseISO(pullRequest.closed_at)
       : null;
@@ -35,6 +56,8 @@ export const collectData = (
       collection[userKey] = {};
     }
 
+    prepareRequestedReviews(reviewRequests, collection, dateKey);
+
     ["total", userKey].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {
         collection[key][innerKey] = preparePullRequestInfo(
@@ -43,16 +66,17 @@ export const collectData = (
         );
         collection[key][innerKey] = preparePullRequestTimeline(
           pullRequest,
-          data.reviews[index],
+          reviews,
+          reviewRequests?.[0],
+          statuses,
           collection[key][innerKey]
         );
       });
     });
 
     prepareReviews(
-      data,
+      reviews,
       collection,
-      index,
       dateKey,
       userKey,
       getPullRequestSize(pullRequest?.additions, pullRequest?.deletions)

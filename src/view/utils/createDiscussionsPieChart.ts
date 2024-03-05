@@ -1,4 +1,4 @@
-import { createPieChart } from ".";
+import { createPieChart } from "./common";
 import { Collection } from "../../converters/types";
 
 export const createDiscussionsPieChart = (

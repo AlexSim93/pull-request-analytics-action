@@ -14,6 +14,7 @@ export const getOrganizationsRepositories = async () => {
         sort: "pushed",
         direction: "desc",
         headers: commonHeaders,
+        per_page: 100,
       }
     );
 

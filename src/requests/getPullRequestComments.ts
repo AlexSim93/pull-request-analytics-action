@@ -12,7 +12,13 @@ export const getPullRequestComments = async (
     ? pullRequestNumbers.map(async (number) => {
         const comments = await octokit.paginate(
           octokit.rest.pulls.listReviewComments,
-          { owner, repo, pull_number: number, headers: commonHeaders }
+          {
+            owner,
+            repo,
+            pull_number: number,
+            headers: commonHeaders,
+            per_page: 100,
+          }
         );
 
         return { data: comments };

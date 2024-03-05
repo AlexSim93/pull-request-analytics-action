@@ -1,8 +1,10 @@
 import { Collection } from "../../converters/types";
 import {
+  timeInDraftHeader,
   timeToApproveHeader,
   timeToMergeHeader,
   timeToReviewHeader,
+  timeToReviewRequestHeader,
 } from "./constants";
 import { createGanttBar } from "./common";
 import { StatsType } from "./types";
@@ -26,9 +28,9 @@ export const createTimelineGanttBar = (
     return "";
   }
   return createGanttBar({
-    title: `Pull requests timeline(${type}${
+    title: `Pull requests timeline(${
       type === "percentile" ? parseInt(getValueAsIs("PERCENTILE")) : ""
-    }) ${date} / minutes`,
+    }th ${type}) ${date} / minutes`,
     sections: users
       .filter(
         (user) =>
@@ -39,6 +41,16 @@ export const createTimelineGanttBar = (
       .map((user) => ({
         name: user,
         bars: [
+          {
+            name: timeInDraftHeader,
+            start: 0,
+            end: data[user]?.[date]?.[type]?.timeInDraft || 0,
+          },
+          {
+            name: timeToReviewRequestHeader,
+            start: 0,
+            end: data[user]?.[date]?.[type]?.timeToReviewRequest || 0,
+          },
           {
             name: timeToReviewHeader,
             start: 0,
