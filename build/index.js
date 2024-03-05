@@ -1785,7 +1785,6 @@ const getRateLimit_1 = __nccwpck_require__(78028);
 const analytics_1 = __nccwpck_require__(88345);
 async function main() {
     (0, utils_1.setTimezone)();
-    core.info("Version 2 has been released. Upgrade to v2 for new features!");
     const errors = (0, utils_1.validate)();
     (0, analytics_1.sendActionRun)();
     if (Object.entries(errors).length > 0) {

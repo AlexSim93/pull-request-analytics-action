@@ -19,7 +19,6 @@ import { sendActionRun } from "./analytics";
 
 async function main() {
   setTimezone();
-  core.info("Version 2 has been released. Upgrade to v2 for new features!");
   const errors = validate();
   sendActionRun();
 
