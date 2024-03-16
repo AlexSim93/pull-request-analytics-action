@@ -2932,7 +2932,7 @@ const createTimelineGanttBar = (data, type, users, date) => {
         return "";
     }
     return (0, common_1.createGanttBar)({
-        title: `Pull requests timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}th ${type}) ${date} / minutes`,
+        title: `Pull requests timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th" : ""} ${type}) ${date} / minutes`,
         sections: users
             .filter((user) => data[user]?.[date]?.[type]?.timeToReview &&
             data[user]?.[date]?.[type]?.timeToApprove &&
@@ -3121,7 +3121,7 @@ const createTimelineTable = (data, type, users, date) => {
         ];
     });
     const pullRequestTimeLine = (0, common_1.createTable)({
-        title: `Pull requests timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}th ${type}) ${date}`,
+        title: `Pull requests timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th" : ""} ${type}) ${date}`,
         description: "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
         table: {
             headers: [

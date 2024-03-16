@@ -1,6 +1,6 @@
 # Pull request analytics action
 
-![Version](https://img.shields.io/badge/version-2.2.2-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-2.2.3-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 **pull-request-analytics-action**: A powerful tool for analyzing the effectiveness of both teams and individual developers. This action generates reports based on data from pull requests, code reviews, and comments, enabling you to identify your team's strengths as well as areas needing improvement. The statistics collected by this GitHub Action can be displayed in the form of tables and graphs or passed on for further operations as markdown or a data collection.
 
