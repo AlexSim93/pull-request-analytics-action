@@ -1510,7 +1510,7 @@ const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], reviewRequest, statuses = [], collection) => {
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
-    const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at || pullRequestInfo?.merged_at, {
+    const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
     }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
@@ -2847,8 +2847,8 @@ const createReviewTable = (data, users, date) => {
                 constants_1.prSizesHeader,
                 constants_1.reviewTypesHeader,
                 constants_1.reviewRequestConductedHeader,
-            ],
-            rows: tableRowsTotal,
+            ].filter((header, index) => tableRowsTotal.some((row) => row[index] !== "0")),
+            rows: tableRowsTotal.map((row) => row.filter((cell, index) => tableRowsTotal.some((row) => row[index] !== "0"))),
         },
     });
 };
@@ -2965,7 +2965,7 @@ const createTimelineGanttBar = (data, type, users, date) => {
                     start: 0,
                     end: data[user]?.[date]?.[type]?.timeToMerge || 0,
                 },
-            ],
+            ].filter((bar) => bar.end > 0),
         })),
         formatValue: (value) => (0, formatMinutesDuration_1.formatMinutesDuration)(value),
     });
@@ -3132,8 +3132,8 @@ const createTimelineTable = (data, type, users, date) => {
                 constants_1.timeToApproveHeader,
                 constants_1.timeToMergeHeader,
                 constants_1.totalMergedPrsHeader,
-            ],
-            rows: tableRows,
+            ].filter((header, index) => tableRows.some((row) => row[index])),
+            rows: tableRows.map((row) => row.filter((cell, index) => tableRows.some((row) => row[index]))),
         },
     });
     return pullRequestTimeLine;

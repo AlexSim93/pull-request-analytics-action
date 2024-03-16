@@ -69,8 +69,14 @@ export const createReviewTable = (
         prSizesHeader,
         reviewTypesHeader,
         reviewRequestConductedHeader,
-      ],
-      rows: tableRowsTotal,
+      ].filter((header, index) =>
+        tableRowsTotal.some((row) => row[index] !== "0")
+      ),
+      rows: tableRowsTotal.map((row) =>
+        row.filter((cell, index) =>
+          tableRowsTotal.some((row) => row[index] !== "0")
+        )
+      ),
     },
   });
 };

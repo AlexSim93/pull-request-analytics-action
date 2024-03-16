@@ -49,8 +49,10 @@ export const createTimelineTable = (
         timeToApproveHeader,
         timeToMergeHeader,
         totalMergedPrsHeader,
-      ],
-      rows: tableRows,
+      ].filter((header, index) => tableRows.some((row) => row[index])),
+      rows: tableRows.map((row) =>
+        row.filter((cell, index) => tableRows.some((row) => row[index]))
+      ),
     },
   });
 

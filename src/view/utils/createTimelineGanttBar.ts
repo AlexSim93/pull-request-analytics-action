@@ -66,7 +66,7 @@ export const createTimelineGanttBar = (
             start: 0,
             end: data[user]?.[date]?.[type]?.timeToMerge || 0,
           },
-        ],
+        ].filter((bar) => bar.end > 0),
       })),
     formatValue: (value) => formatMinutesDuration(value),
   });

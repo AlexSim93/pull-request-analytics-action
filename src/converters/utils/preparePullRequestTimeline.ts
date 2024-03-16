@@ -20,7 +20,7 @@ export const preparePullRequestTimeline = (
 
   const timeToReviewRequest = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
-    reviewRequest?.created_at || pullRequestInfo?.merged_at,
+    reviewRequest?.created_at,
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
