@@ -62,6 +62,12 @@ export const sendActionRun = () => {
       INCLUDE_LABELS: getMultipleValuesInput("INCLUDE_LABELS").length,
       EXCLUDE_LABELS: getMultipleValuesInput("EXCLUDE_LABELS").length,
       EXECUTION_OUTCOME: getMultipleValuesInput("EXECUTION_OUTCOME"),
+      HOLIDAYS: getMultipleValuesInput("HOLIDAYS").length,
+      REVIEW_TIME_INTERVALS: getMultipleValuesInput("REVIEW_TIME_INTERVALS"),
+      APPROVAL_TIME_INTERVALS: getMultipleValuesInput(
+        "APPROVAL_TIME_INTERVALS"
+      ),
+      MERGE_TIME_INTERVALS: getMultipleValuesInput("MERGE_TIME_INTERVALS"),
     });
   }
 };

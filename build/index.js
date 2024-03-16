@@ -81,6 +81,10 @@ const sendActionRun = () => {
             INCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS").length,
             EXCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS").length,
             EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
+            HOLIDAYS: (0, utils_1.getMultipleValuesInput)("HOLIDAYS").length,
+            REVIEW_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("REVIEW_TIME_INTERVALS"),
+            APPROVAL_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("APPROVAL_TIME_INTERVALS"),
+            MERGE_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("MERGE_TIME_INTERVALS"),
         });
     }
 };

@@ -1,4 +1,3 @@
-import { octokit } from "../octokit";
 import { getMultipleValuesInput } from "../common/utils";
 import { getDataWithThrottle } from "./getDataWithThrottle";
 import { getPullRequests } from "./getPullRequests";
