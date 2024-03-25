@@ -37,7 +37,7 @@ export const createTimelineTable = (
   const pullRequestTimeLine = createTable({
     title: `Pull requests timeline(${
       type === "percentile" ? parseInt(getValueAsIs("PERCENTILE")) : ""
-    }${type === "percentile" ? "th" : ""} ${type}) ${date}`,
+    }${type === "percentile" ? "th " : ""}${type}) ${date}`,
     description:
       "**Time to review** - time from PR creation to first review. \n**Time to approve** - time from PR creation to first approval without requested changes. \n**Time to merge** - time from PR creation to merge.",
     table: {

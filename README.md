@@ -1,6 +1,6 @@
 # Pull request analytics action
 
-![Version](https://img.shields.io/badge/version-2.2.3-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-2.2.4-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 **pull-request-analytics-action**: A powerful tool for analyzing the effectiveness of both teams and individual developers. This action generates reports based on data from pull requests, code reviews, and comments, enabling you to identify your team's strengths as well as areas needing improvement. The statistics collected by this GitHub Action can be displayed in the form of tables and graphs or passed on for further operations as markdown or a data collection.
 
@@ -85,7 +85,7 @@ Time to merge(26 hours 14 minutes) :  0, 1574
 ```mermaid
 pie
 title Review time total 12/2023
-"0-1 hours(2)":12
+"0-1 hours(12)":12
 "4-6 hours(7)":7
 "6-9 hours(4)":4
 "12+ hours(2)":2
