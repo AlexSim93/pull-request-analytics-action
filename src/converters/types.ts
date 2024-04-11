@@ -42,11 +42,11 @@ type Discussion = {
 };
 
 export type Collection = {
-  opened: number;
-  closed: number;
-  additions: number;
-  deletions: number;
-  merged: number;
+  opened?: number;
+  closed?: number;
+  additions?: number;
+  deletions?: number;
+  merged?: number;
   median?: TimelinePoints;
   percentile?: TimelinePoints;
   average?: TimelinePoints;
@@ -58,8 +58,8 @@ export type Collection = {
   timeToReview?: number[];
   timeToApprove?: number[];
   timeToMerge?: number[];
-  comments: number;
-  totalReviewComments: number;
+  comments?: number;
+  totalReviewComments?: number;
   reviewComments?: number;
   reviewRequestsConducted?: number;
   reviewsConducted?: {

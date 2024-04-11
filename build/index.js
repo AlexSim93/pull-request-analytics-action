@@ -1342,6 +1342,12 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
         comments[index]?.forEach((comment) => {
             const userLogin = comment.user?.login || constants_1.invalidUserLogin;
             if (pullRequestLogin !== userLogin) {
+                if (!collection[userLogin]) {
+                    collection[userLogin] = {};
+                }
+                if (!collection[userLogin][key]) {
+                    collection[userLogin][key] = {};
+                }
                 collection[userLogin][key].commentsConducted =
                     (collection[userLogin][key].commentsConducted || 0) + 1;
                 collection.total[key].commentsConducted =
