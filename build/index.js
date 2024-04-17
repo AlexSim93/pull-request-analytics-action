@@ -7,9 +7,75 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.sendActionRun = void 0;
+exports.sendActionError = exports.sendActionRun = void 0;
 var sendActionRun_1 = __nccwpck_require__(7293);
 Object.defineProperty(exports, "sendActionRun", ({ enumerable: true, get: function () { return sendActionRun_1.sendActionRun; } }));
+var sendActionError_1 = __nccwpck_require__(59827);
+Object.defineProperty(exports, "sendActionError", ({ enumerable: true, get: function () { return sendActionError_1.sendActionError; } }));
+
+
+/***/ }),
+
+/***/ 88238:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.mixpanel = void 0;
+const mixpanel_1 = __importDefault(__nccwpck_require__(32424));
+exports.mixpanel = mixpanel_1.default.init("8d55eb8bf093d728a0c42616f890bad1");
+
+
+/***/ }),
+
+/***/ 59827:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sendActionError = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const mixpanel_1 = __nccwpck_require__(88238);
+const sendActionError = (error) => {
+    if ((0, utils_1.getValueAsIs)("ALLOW_ANALYTICS") === "true") {
+        mixpanel_1.mixpanel.track("Action error", {
+            error: error?.message,
+            stack: error?.stack,
+            GITHUB_OWNERS_REPOS: (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS").length,
+            ORGANIZATIONS: (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS").length,
+            SHOW_STATS_TYPES: (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES"),
+            AMOUNT: (0, utils_1.getValueAsIs)("AMOUNT"),
+            TIMEZONE: (0, utils_1.getValueAsIs)("TIMEZONE"),
+            REPORT_DATE_START: (0, utils_1.getValueAsIs)("REPORT_DATE_START"),
+            REPORT_DATE_END: (0, utils_1.getValueAsIs)("REPORT_DATE_END"),
+            REPORT_PERIOD: (0, utils_1.getValueAsIs)("REPORT_PERIOD"),
+            CORE_HOURS_START: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+            CORE_HOURS_END: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+            PERCENTILE: (0, utils_1.getMultipleValuesInput)("PERCENTILE"),
+            TOP_LIST_AMOUNT: (0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT"),
+            PERIOD_SPLIT_UNIT: (0, utils_1.getValueAsIs)("PERIOD_SPLIT_UNIT"),
+            LABELS: (0, utils_1.getMultipleValuesInput)("LABELS").length,
+            ASSIGNEES: (0, utils_1.getMultipleValuesInput)("ASSIGNEES").length,
+            ISSUE_TITLE: !!(0, utils_1.getValueAsIs)("ISSUE_TITLE"),
+            AGGREGATE_VALUE_METHODS: (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS"),
+            HIDE_USERS: (0, utils_1.getMultipleValuesInput)("HIDE_USERS").length,
+            SHOW_USERS: (0, utils_1.getMultipleValuesInput)("SHOW_USERS").length,
+            INCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS").length,
+            EXCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS").length,
+            EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
+            HOLIDAYS: (0, utils_1.getMultipleValuesInput)("HOLIDAYS").length,
+            REVIEW_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("REVIEW_TIME_INTERVALS"),
+            APPROVAL_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("APPROVAL_TIME_INTERVALS"),
+            MERGE_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("MERGE_TIME_INTERVALS"),
+        });
+    }
+};
+exports.sendActionError = sendActionError;
 
 
 /***/ }),
@@ -24,10 +90,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.sendActionRun = void 0;
-const mixpanel_1 = __importDefault(__nccwpck_require__(32424));
 const utils_1 = __nccwpck_require__(41002);
 const crypto_1 = __importDefault(__nccwpck_require__(6113));
-const mixpanel = mixpanel_1.default.init("8d55eb8bf093d728a0c42616f890bad1");
+const mixpanel_1 = __nccwpck_require__(88238);
 const sendActionRun = () => {
     if ((0, utils_1.getValueAsIs)("ALLOW_ANALYTICS") === "true") {
         const nonSensitiveInputs = [
@@ -54,7 +119,7 @@ const sendActionRun = () => {
             "EXCLUDE_LABELS",
         ].map((el) => (0, utils_1.getValueAsIs)(el).length);
         const stringToHash = [...nonSensitiveInputs, ...convertedInputs].join("");
-        mixpanel.track("Action run with params", {
+        mixpanel_1.mixpanel.track("Action run with params", {
             distinct_id: crypto_1.default
                 .createHash("sha256")
                 .update(stringToHash)
@@ -1048,7 +1113,7 @@ const date_fns_1 = __nccwpck_require__(73314);
 const constants_1 = __nccwpck_require__(95354);
 const getApproveTime = (reviews) => {
     const statuses = Object.values(reviews?.reduce((acc, review) => {
-        const user = review.user.login || constants_1.invalidUserLogin;
+        const user = review.user?.login || constants_1.invalidUserLogin;
         const statusesEntries = Object.keys(acc);
         const isApproved = statusesEntries.some((user) => acc[user].state === "approved") &&
             !statusesEntries.some((user) => acc[user].state === "changes_requested") &&
@@ -1794,50 +1859,56 @@ const utils_1 = __nccwpck_require__(41002);
 const getRateLimit_1 = __nccwpck_require__(78028);
 const analytics_1 = __nccwpck_require__(88345);
 async function main() {
-    (0, utils_1.setTimezone)();
-    const errors = (0, utils_1.validate)();
-    (0, analytics_1.sendActionRun)();
-    if (Object.entries(errors).length > 0) {
-        core.setFailed("Inputs are invalid. Action is failed with validation error");
-        return;
-    }
-    const rateLimitAtBeginning = await (0, getRateLimit_1.getRateLimit)();
-    console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
-    const ownersRepos = (0, requests_1.getOwnersRepositories)();
-    const organizationsRepos = await (0, requests_1.getOrganizationsRepositories)();
-    const repos = Object.keys([...ownersRepos, ...organizationsRepos].reduce((acc, element) => {
-        return { ...acc, [element.join("/")]: 1 };
-    }, {})).map((el) => el.split("/"));
-    console.log("Initiating data request.");
-    const data = [];
-    for (let i = 0; i < repos.length; i++) {
-        const result = await (0, requests_1.makeComplexRequest)(parseInt((0, utils_1.getValueAsIs)("AMOUNT")), {
-            owner: repos[i][0],
-            repo: repos[i][1],
-        }, {
-            skipComments: (0, utils_1.checkCommentSkip)(),
+    try {
+        (0, utils_1.setTimezone)();
+        const errors = (0, utils_1.validate)();
+        (0, analytics_1.sendActionRun)();
+        if (Object.entries(errors).length > 0) {
+            core.setFailed("Inputs are invalid. Action is failed with validation error");
+            return;
+        }
+        const rateLimitAtBeginning = await (0, getRateLimit_1.getRateLimit)();
+        console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
+        const ownersRepos = (0, requests_1.getOwnersRepositories)();
+        const organizationsRepos = await (0, requests_1.getOrganizationsRepositories)();
+        const repos = Object.keys([...ownersRepos, ...organizationsRepos].reduce((acc, element) => {
+            return { ...acc, [element.join("/")]: 1 };
+        }, {})).map((el) => el.split("/"));
+        console.log("Initiating data request.");
+        const data = [];
+        for (let i = 0; i < repos.length; i++) {
+            const result = await (0, requests_1.makeComplexRequest)(parseInt((0, utils_1.getValueAsIs)("AMOUNT")), {
+                owner: repos[i][0],
+                repo: repos[i][1],
+            }, {
+                skipComments: (0, utils_1.checkCommentSkip)(),
+            });
+            data.push(result);
+        }
+        console.log("Data successfully retrieved. Starting report calculations.");
+        const mergedData = data.reduce((acc, element) => ({
+            ownerRepo: acc.ownerRepo
+                ? acc.ownerRepo.concat(",", element.ownerRepo)
+                : element.ownerRepo,
+            events: [...acc.events, ...element.events],
+            pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
+            comments: [...acc?.comments, ...element.comments],
+        }), {
+            ownerRepo: "",
+            events: [],
+            pullRequestInfo: [],
+            comments: [],
         });
-        data.push(result);
+        const preparedData = (0, converters_1.collectData)(mergedData);
+        console.log("Calculation complete. Generating markdown.");
+        await (0, createOutput_1.createOutput)(preparedData);
+        const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
+        console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
     }
-    console.log("Data successfully retrieved. Starting report calculations.");
-    const mergedData = data.reduce((acc, element) => ({
-        ownerRepo: acc.ownerRepo
-            ? acc.ownerRepo.concat(",", element.ownerRepo)
-            : element.ownerRepo,
-        events: [...acc.events, ...element.events],
-        pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
-        comments: [...acc?.comments, ...element.comments],
-    }), {
-        ownerRepo: "",
-        events: [],
-        pullRequestInfo: [],
-        comments: [],
-    });
-    const preparedData = (0, converters_1.collectData)(mergedData);
-    console.log("Calculation complete. Generating markdown.");
-    await (0, createOutput_1.createOutput)(preparedData);
-    const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
-    console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
+    catch (error) {
+        (0, analytics_1.sendActionError)(error);
+        throw error;
+    }
 }
 main();
 

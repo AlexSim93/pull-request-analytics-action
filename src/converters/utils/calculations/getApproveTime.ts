@@ -11,7 +11,7 @@ export const getApproveTime = (
         acc: Record<string, { state: string; submittedAt: string }>,
         review: any
       ) => {
-        const user = review.user.login || invalidUserLogin;
+        const user = review.user?.login || invalidUserLogin;
         const statusesEntries = Object.keys(acc) as string[];
         const isApproved =
           statusesEntries.some((user) => acc[user].state === "approved") &&
