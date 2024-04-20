@@ -9,6 +9,7 @@ export const getDisplayUserList = (
 
   return Object.keys(data)
     .filter((key) => key !== "total")
+    .sort((a, b) => a.localeCompare(b))
     .concat("total")
     .filter((key) => {
       return (

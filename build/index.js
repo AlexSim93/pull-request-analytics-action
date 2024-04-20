@@ -2659,6 +2659,7 @@ const getDisplayUserList = (data) => {
     const usersToShow = (0, utils_1.getMultipleValuesInput)("SHOW_USERS") || [];
     return Object.keys(data)
         .filter((key) => key !== "total")
+        .sort((a, b) => a.localeCompare(b))
         .concat("total")
         .filter((key) => {
         return (!usersToHide.includes(key) &&
