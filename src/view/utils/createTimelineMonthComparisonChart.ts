@@ -18,7 +18,9 @@ export const createTimelineMonthComparisonChart = (
           (user) =>
             Object.values(data[user]).filter(
               (value) =>
-                value.timeToReview && value.timeToApprove && value.timeToMerge
+                value[type as StatsType]?.timeToReview &&
+                value[type as StatsType]?.timeToApprove &&
+                value[type as StatsType]?.timeToMerge
             ).length > 2
         )
         .map((user) =>

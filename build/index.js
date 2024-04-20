@@ -3067,7 +3067,9 @@ const createTimelineMonthComparisonChart = (data, dates, users, references = [])
     const charts = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
         .filter((method) => ["average", "median", "percentile"].includes(method))
         .map((type) => users
-        .filter((user) => Object.values(data[user]).filter((value) => value.timeToReview && value.timeToApprove && value.timeToMerge).length > 2)
+        .filter((user) => Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
+        value[type]?.timeToApprove &&
+        value[type]?.timeToMerge).length > 2)
         .map((user) => (0, createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
         .join("\n"));
     if (charts.every((el) => !el.trim()))
