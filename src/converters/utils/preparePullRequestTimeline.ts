@@ -111,13 +111,13 @@ export const preparePullRequestTimeline = (
         link: pullRequestInfo?._links?.html?.href,
         title: pullRequestInfo?.title,
         comments: pullRequestInfo?.review_comments,
-        timeToReview: timeToReview || timeToMerge || 0,
+        timeToReview: timeToReview === null ? timeToMerge || 0 : timeToReview,
         timeToApprove:
-          (timeToApprove || timeToMerge || 0) -
-          (timeToReview || timeToMerge || 0),
+          (timeToApprove === null ? timeToMerge || 0 : timeToApprove) -
+          (timeToReview === null ? timeToMerge || 0 : timeToReview),
         timeToMerge:
-          (timeToMerge || timeToClose || 0) -
-          (timeToApprove || timeToMerge || 0),
+          (timeToMerge === null ? timeToClose || 0 : timeToMerge) -
+          (timeToApprove === null ? timeToMerge || 0 : timeToApprove),
       },
     ],
   };

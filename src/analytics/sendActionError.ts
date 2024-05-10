@@ -1,9 +1,13 @@
-import { getMultipleValuesInput, getValueAsIs } from "../common/utils";
+import { encrypt, getMultipleValuesInput, getValueAsIs } from "../common/utils";
 import { mixpanel } from "./mixpanel";
 
 export const sendActionError = (error: Error) => {
   if (getValueAsIs("ALLOW_ANALYTICS") === "true") {
     mixpanel.track("Action error", {
+      distinct_id: encrypt(
+        getMultipleValuesInput("ORGANIZATIONS")[0] ||
+          getMultipleValuesInput("GITHUB_OWNERS_REPOS")[0].split("/")[0]
+      ),
       error: error?.message,
       stack: error?.stack,
       GITHUB_OWNERS_REPOS: getMultipleValuesInput("GITHUB_OWNERS_REPOS").length,

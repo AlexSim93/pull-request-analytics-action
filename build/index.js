@@ -44,6 +44,8 @@ const mixpanel_1 = __nccwpck_require__(88238);
 const sendActionError = (error) => {
     if ((0, utils_1.getValueAsIs)("ALLOW_ANALYTICS") === "true") {
         mixpanel_1.mixpanel.track("Action error", {
+            distinct_id: (0, utils_1.encrypt)((0, utils_1.getMultipleValuesInput)("ORGANIZATIONS")[0] ||
+                (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS")[0].split("/")[0]),
             error: error?.message,
             stack: error?.stack,
             GITHUB_OWNERS_REPOS: (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS").length,
@@ -81,49 +83,19 @@ exports.sendActionError = sendActionError;
 /***/ }),
 
 /***/ 7293:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.sendActionRun = void 0;
 const utils_1 = __nccwpck_require__(41002);
-const crypto_1 = __importDefault(__nccwpck_require__(6113));
 const mixpanel_1 = __nccwpck_require__(88238);
 const sendActionRun = () => {
     if ((0, utils_1.getValueAsIs)("ALLOW_ANALYTICS") === "true") {
-        const nonSensitiveInputs = [
-            "SHOW_STATS_TYPES",
-            "AMOUNT",
-            "REPORT_DATE_START",
-            "REPORT_DATE_END",
-            "REPORT_PERIOD",
-            "CORE_HOURS_START",
-            "CORE_HOURS_END",
-            "PERCENTILE",
-            "TOP_LIST_AMOUNT",
-            "EXECUTION_OUTCOME",
-            "TIMEZONE",
-            "AGGREGATE_VALUE_METHODS",
-        ].map((el) => (0, utils_1.getValueAsIs)(el));
-        const convertedInputs = [
-            "GITHUB_OWNERS_REPOS",
-            "ORGANIZATIONS",
-            "ISSUE_TITLE",
-            "HIDE_USERS",
-            "SHOW_USERS",
-            "INCLUDE_LABELS",
-            "EXCLUDE_LABELS",
-        ].map((el) => (0, utils_1.getValueAsIs)(el).length);
-        const stringToHash = [...nonSensitiveInputs, ...convertedInputs].join("");
         mixpanel_1.mixpanel.track("Action run with params", {
-            distinct_id: crypto_1.default
-                .createHash("sha256")
-                .update(stringToHash)
-                .digest("hex"),
+            distinct_id: (0, utils_1.encrypt)((0, utils_1.getMultipleValuesInput)("ORGANIZATIONS")[0] ||
+                (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS")[0].split("/")[0]),
             GITHUB_OWNERS_REPOS: (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS").length,
             ORGANIZATIONS: (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS").length,
             SHOW_STATS_TYPES: (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES"),
@@ -220,6 +192,23 @@ const checkCommentSkip = () => {
     ].some((block) => (0, getMultipleValuesInput_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes(block));
 };
 exports.checkCommentSkip = checkCommentSkip;
+
+
+/***/ }),
+
+/***/ 30625:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.encrypt = void 0;
+const crypto_1 = __importDefault(__nccwpck_require__(6113));
+const encrypt = (str) => crypto_1.default.createHash("sha256").update(str).digest("hex");
+exports.encrypt = encrypt;
 
 
 /***/ }),
@@ -330,7 +319,7 @@ exports.getValueAsIs = getValueAsIs;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.checkCommentSkip = exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = exports.getDateFormat = void 0;
+exports.encrypt = exports.checkCommentSkip = exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = exports.getDateFormat = void 0;
 var getDateFormat_1 = __nccwpck_require__(15010);
 Object.defineProperty(exports, "getDateFormat", ({ enumerable: true, get: function () { return getDateFormat_1.getDateFormat; } }));
 var getValueAsIs_1 = __nccwpck_require__(18863);
@@ -343,6 +332,8 @@ var validate_1 = __nccwpck_require__(43373);
 Object.defineProperty(exports, "validate", ({ enumerable: true, get: function () { return validate_1.validate; } }));
 var checkCommentSkip_1 = __nccwpck_require__(61585);
 Object.defineProperty(exports, "checkCommentSkip", ({ enumerable: true, get: function () { return checkCommentSkip_1.checkCommentSkip; } }));
+var encrypt_1 = __nccwpck_require__(30625);
+Object.defineProperty(exports, "encrypt", ({ enumerable: true, get: function () { return encrypt_1.encrypt; } }));
 
 
 /***/ }),
@@ -1630,11 +1621,11 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
                 link: pullRequestInfo?._links?.html?.href,
                 title: pullRequestInfo?.title,
                 comments: pullRequestInfo?.review_comments,
-                timeToReview: timeToReview || timeToMerge || 0,
-                timeToApprove: (timeToApprove || timeToMerge || 0) -
-                    (timeToReview || timeToMerge || 0),
-                timeToMerge: (timeToMerge || timeToClose || 0) -
-                    (timeToApprove || timeToMerge || 0),
+                timeToReview: timeToReview === null ? timeToMerge || 0 : timeToReview,
+                timeToApprove: (timeToApprove === null ? timeToMerge || 0 : timeToApprove) -
+                    (timeToReview === null ? timeToMerge || 0 : timeToReview),
+                timeToMerge: (timeToMerge === null ? timeToClose || 0 : timeToMerge) -
+                    (timeToApprove === null ? timeToMerge || 0 : timeToApprove),
             },
         ],
     };
