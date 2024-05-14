@@ -89,19 +89,19 @@ export const preparePullRequestTimeline = (
 
   return {
     ...collection,
-    timeToReview: timeToReview
+    timeToReview: typeof timeToReview === 'number'
       ? [...(collection?.timeToReview || []), timeToReview]
       : collection.timeToReview,
-    timeToApprove: timeToApprove
+    timeToApprove: typeof timeToApprove === 'number'
       ? [...(collection?.timeToApprove || []), timeToApprove]
       : collection.timeToApprove,
-    timeToMerge: timeToMerge
+    timeToMerge: typeof timeToMerge === 'number'
       ? [...(collection?.timeToMerge || []), timeToMerge]
       : collection.timeToMerge,
-    timeToReviewRequest: timeToReviewRequest
+    timeToReviewRequest: typeof timeToReviewRequest === 'number'
       ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
       : collection.timeToReviewRequest,
-    timeInDraft: timeInDraft
+    timeInDraft: typeof timeInDraft === 'number'
       ? [...(collection?.timeInDraft || []), timeInDraft]
       : collection.timeInDraft,
     pullRequestsInfo: [
