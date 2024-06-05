@@ -18,7 +18,7 @@ export const createPullRequestQualityTable = (
     .filter(
       (user) =>
         data[user]?.[date]?.merged ||
-        data[user]?.[date]?.discussions ||
+        data[user]?.[date]?.discussions?.received?.total ||
         data[user]?.[date]?.reviewComments ||
         data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"]
     )
@@ -45,12 +45,7 @@ export const createPullRequestQualityTable = (
     data.total?.[date]?.pullRequestsInfo
       ?.slice()
       ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
-      .slice(
-        0,
-        parseInt(
-          getValueAsIs("TOP_LIST_AMOUNT")
-        )
-      )
+      .slice(0, parseInt(getValueAsIs("TOP_LIST_AMOUNT")))
       .map((item) => ({
         text: `${item.title}(${item.comments || 0})`,
         link: item.link || "",

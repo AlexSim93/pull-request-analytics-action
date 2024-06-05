@@ -2810,7 +2810,7 @@ const utils_1 = __nccwpck_require__(41002);
 const createPullRequestQualityTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
-        data[user]?.[date]?.discussions ||
+        data[user]?.[date]?.discussions?.received?.total ||
         data[user]?.[date]?.reviewComments ||
         data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"])
         .map((user) => {
@@ -2888,7 +2888,10 @@ const createReviewTable = (data, users, date) => {
     const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
-        data[user]?.[date]?.reviewsConducted?.total?.total)
+        data[user]?.[date]?.reviewsConducted?.total?.total ||
+        data[user]?.[date]?.reviewRequestsConducted ||
+        data[user]?.[date]?.commentsConducted ||
+        data[user]?.[date]?.discussions?.conducted?.total)
         .map((user) => {
         return [
             `**${user}**`,

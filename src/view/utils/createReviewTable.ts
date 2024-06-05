@@ -19,7 +19,10 @@ export const createReviewTable = (
     .filter(
       (user) =>
         data[user]?.[date]?.merged ||
-        data[user]?.[date]?.reviewsConducted?.total?.total
+        data[user]?.[date]?.reviewsConducted?.total?.total ||
+        data[user]?.[date]?.reviewRequestsConducted ||
+        data[user]?.[date]?.commentsConducted ||
+        data[user]?.[date]?.discussions?.conducted?.total
     )
     .map((user) => {
       return [
