@@ -58,6 +58,11 @@ export type Collection = {
   timeToReview?: number[];
   timeToApprove?: number[];
   timeToMerge?: number[];
+  timeFromOpenToResponse?: number[];
+  timeFromRequestToResponse?: number[];
+  timeFromRepeatedRequestToResponse?: number[];
+  timeReviewerInDraft?: number[];
+  UnansweredRequests?: number;
   comments?: number;
   totalReviewComments?: number;
   reviewComments?: number;
