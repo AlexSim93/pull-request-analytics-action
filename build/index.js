@@ -408,6 +408,7 @@ const validate = () => {
                 "workload",
                 "pr-quality",
                 "code-review-engagement",
+                "response-time",
             ],
             required: true,
         },
@@ -416,12 +417,7 @@ const validate = () => {
             required: false,
         },
         EXECUTION_OUTCOME: {
-            validValues: [
-                "new-issue",
-                "collection",
-                "markdown",
-                "existing-issue",
-            ],
+            validValues: ["new-issue", "collection", "markdown", "existing-issue"],
             required: true,
         },
     });
@@ -783,7 +779,6 @@ const collectData = (data) => {
         if (!collection[userKey]) {
             collection[userKey] = {};
         }
-        (0, utils_1.prepareRequestedReviews)(reviewRequests, collection, dateKey);
         ["total", userKey].forEach((key) => {
             ["total", dateKey].forEach((innerKey) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestInfo)(pullRequest, collection[key][innerKey]);
@@ -791,6 +786,7 @@ const collectData = (data) => {
             });
         });
         (0, utils_1.prepareReviews)(reviews, collection, dateKey, userKey, (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions));
+        (0, utils_1.prepareResponseTime)(data.events[index], pullRequest, collection, dateKey);
         (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, userKey);
     });
     Object.entries(collection).map(([key, value]) => {
@@ -811,13 +807,14 @@ exports.collectData = collectData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.reviewedTimelineEvent = exports.convertToDraftTimelineEvent = exports.readyForReviewTimelineEvent = exports.reviewRequestedTimelineEvent = exports.invalidDate = exports.invalidUserLogin = void 0;
+exports.reviewRequestRemoved = exports.reviewedTimelineEvent = exports.convertToDraftTimelineEvent = exports.readyForReviewTimelineEvent = exports.reviewRequestedTimelineEvent = exports.invalidDate = exports.invalidUserLogin = void 0;
 exports.invalidUserLogin = "Invalid-User-PRAA";
 exports.invalidDate = "invalidDate";
 exports.reviewRequestedTimelineEvent = "review_requested";
 exports.readyForReviewTimelineEvent = "ready_for_review";
 exports.convertToDraftTimelineEvent = "convert_to_draft";
 exports.reviewedTimelineEvent = "reviewed";
+exports.reviewRequestRemoved = "review_request_removed";
 
 
 /***/ }),
@@ -1162,13 +1159,57 @@ exports.getPullRequestSize = getPullRequestSize;
 
 /***/ }),
 
+/***/ 50779:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getResponses = void 0;
+const constants_1 = __nccwpck_require__(95354);
+const getResponses = (events = []) => {
+    return events?.reduce((acc, event) => {
+        if (event.event === constants_1.reviewRequestedTimelineEvent) {
+            const user = event.requested_reviewer?.login || constants_1.invalidUserLogin;
+            return {
+                ...acc,
+                [user]: [...(acc?.[user] || []), [event?.created_at]],
+            };
+        }
+        if (event.event === constants_1.reviewedTimelineEvent) {
+            const user = event.user?.login || constants_1.invalidUserLogin;
+            return {
+                ...acc,
+                [user]: acc[user]?.map((el, index, arr) => index === arr.length - 1 && el.length < 2
+                    ? [el[0], event.submitted_at]
+                    : el) || [[null, event.submitted_at]],
+            };
+        }
+        if (event.event === constants_1.reviewRequestRemoved) {
+            const user = event.requested_reviewer?.login || constants_1.invalidUserLogin;
+            return {
+                ...acc,
+                [user]: acc[user].map((el) => [
+                    el[0],
+                    null,
+                ]),
+            };
+        }
+        return acc;
+    }, {});
+};
+exports.getResponses = getResponses;
+
+
+/***/ }),
+
 /***/ 16576:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = exports.calcIntervals = exports.prepareIntervals = void 0;
+exports.getResponses = exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = exports.calcIntervals = exports.prepareIntervals = void 0;
 var prepareIntervals_1 = __nccwpck_require__(22723);
 Object.defineProperty(exports, "prepareIntervals", ({ enumerable: true, get: function () { return prepareIntervals_1.prepareIntervals; } }));
 var calcIntervals_1 = __nccwpck_require__(2414);
@@ -1191,6 +1232,8 @@ var getPullRequestSize_1 = __nccwpck_require__(73882);
 Object.defineProperty(exports, "getPullRequestSize", ({ enumerable: true, get: function () { return getPullRequestSize_1.getPullRequestSize; } }));
 var calcDraftTime_1 = __nccwpck_require__(63506);
 Object.defineProperty(exports, "calcDraftTime", ({ enumerable: true, get: function () { return calcDraftTime_1.calcDraftTime; } }));
+var getResponses_1 = __nccwpck_require__(50779);
+Object.defineProperty(exports, "getResponses", ({ enumerable: true, get: function () { return getResponses_1.getResponses; } }));
 
 
 /***/ }),
@@ -1267,9 +1310,7 @@ exports.getDiscussionType = getDiscussionType;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = exports.prepareRequestedReviews = void 0;
-var prepareRequestedReviews_1 = __nccwpck_require__(62381);
-Object.defineProperty(exports, "prepareRequestedReviews", ({ enumerable: true, get: function () { return prepareRequestedReviews_1.prepareRequestedReviews; } }));
+exports.prepareResponseTime = exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = void 0;
 var preparePullRequestTimeline_1 = __nccwpck_require__(63787);
 Object.defineProperty(exports, "preparePullRequestTimeline", ({ enumerable: true, get: function () { return preparePullRequestTimeline_1.preparePullRequestTimeline; } }));
 var preparePullRequestStats_1 = __nccwpck_require__(46710);
@@ -1280,6 +1321,8 @@ var prepareDiscussions_1 = __nccwpck_require__(88196);
 Object.defineProperty(exports, "prepareDiscussions", ({ enumerable: true, get: function () { return prepareDiscussions_1.prepareDiscussions; } }));
 var prepareReviews_1 = __nccwpck_require__(60934);
 Object.defineProperty(exports, "prepareReviews", ({ enumerable: true, get: function () { return prepareReviews_1.prepareReviews; } }));
+var prepareResponseTime_1 = __nccwpck_require__(85761);
+Object.defineProperty(exports, "prepareResponseTime", ({ enumerable: true, get: function () { return prepareResponseTime_1.prepareResponseTime; } }));
 
 
 /***/ }),
@@ -1537,6 +1580,9 @@ const preparePullRequestStats = (collection) => {
             timeToMerge: (0, calculations_1.calcMedianValue)(collection.timeToMerge),
             timeToReviewRequest: (0, calculations_1.calcMedianValue)(collection.timeToReviewRequest),
             timeInDraft: (0, calculations_1.calcMedianValue)(collection.timeInDraft),
+            timeFromInitialRequestToResponse: (0, calculations_1.calcMedianValue)(collection.timeFromInitialRequestToResponse),
+            timeFromOpenToResponse: (0, calculations_1.calcMedianValue)(collection.timeFromOpenToResponse),
+            timeFromRepeatedRequestToResponse: (0, calculations_1.calcMedianValue)(collection.timeFromRepeatedRequestToResponse),
         },
         percentile: {
             timeToReview: (0, calculations_1.calcPercentileValue)(collection.timeToReview),
@@ -1544,6 +1590,9 @@ const preparePullRequestStats = (collection) => {
             timeToMerge: (0, calculations_1.calcPercentileValue)(collection.timeToMerge),
             timeToReviewRequest: (0, calculations_1.calcPercentileValue)(collection.timeToReviewRequest),
             timeInDraft: (0, calculations_1.calcPercentileValue)(collection.timeInDraft),
+            timeFromInitialRequestToResponse: (0, calculations_1.calcPercentileValue)(collection.timeFromInitialRequestToResponse),
+            timeFromOpenToResponse: (0, calculations_1.calcPercentileValue)(collection.timeFromOpenToResponse),
+            timeFromRepeatedRequestToResponse: (0, calculations_1.calcPercentileValue)(collection.timeFromRepeatedRequestToResponse),
         },
         average: {
             timeToReview: (0, calculations_1.calcAverageValue)(collection.timeToReview),
@@ -1551,6 +1600,9 @@ const preparePullRequestStats = (collection) => {
             timeToMerge: (0, calculations_1.calcAverageValue)(collection.timeToMerge),
             timeToReviewRequest: (0, calculations_1.calcAverageValue)(collection.timeToReviewRequest),
             timeInDraft: (0, calculations_1.calcAverageValue)(collection.timeInDraft),
+            timeFromInitialRequestToResponse: (0, calculations_1.calcAverageValue)(collection.timeFromInitialRequestToResponse),
+            timeFromOpenToResponse: (0, calculations_1.calcAverageValue)(collection.timeFromOpenToResponse),
+            timeFromRepeatedRequestToResponse: (0, calculations_1.calcAverageValue)(collection.timeFromRepeatedRequestToResponse),
         },
     };
 };
@@ -1635,34 +1687,97 @@ exports.preparePullRequestTimeline = preparePullRequestTimeline;
 
 /***/ }),
 
-/***/ 62381:
+/***/ 85761:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prepareRequestedReviews = void 0;
-const constants_1 = __nccwpck_require__(95354);
-const prepareRequestedReviews = (requests = [], collection, dateKey) => {
-    const requestedReviewers = requests.reduce((acc, request) => {
-        const user = request.requested_reviewer?.login || constants_1.invalidUserLogin;
-        return { ...acc, [user]: 1 };
-    }, {});
-    requestedReviewers["total"] = Object.keys(requestedReviewers).length;
-    [dateKey, "total"].forEach((date) => {
-        Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
+exports.prepareResponseTime = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const calculations_1 = __nccwpck_require__(16576);
+const prepareResponseTime = (events = [], pullRequest, collection, dateKey) => {
+    const responses = (0, calculations_1.getResponses)(events);
+    Object.entries(responses).forEach(([user, response]) => {
+        ["total", dateKey].forEach((key) => {
             if (!collection[user]) {
                 collection[user] = {};
             }
-            collection[user][date] = {
-                ...collection[user][date],
-                reviewRequestsConducted: (collection[user][date]?.reviewRequestsConducted || 0) +
-                    value,
+            if (!collection[user][key]) {
+                collection[user][key] = {};
+            }
+            const reviewRequestsAmount = response.filter((el) => el[0] || el[1] === null).length;
+            const unrespondedReviewRequestsAmount = response.filter((el) => el[0] && !el[1]).length;
+            collection[user][key].reviewRequestsConducted =
+                reviewRequestsAmount +
+                    (collection[user][key].reviewRequestsConducted || 0);
+            collection[user][key].unrespondedRequests =
+                unrespondedReviewRequestsAmount +
+                    (collection[user][key].unrespondedRequests || 0);
+            collection.total[key].reviewRequestsConducted =
+                reviewRequestsAmount +
+                    (collection.total[key].reviewRequestsConducted || 0);
+            collection.total[key].unrespondedRequests =
+                unrespondedReviewRequestsAmount +
+                    (collection.total[key].unrespondedRequests || 0);
+            const timeFromInitialRequestToResponse = (0, calculations_1.calcDifferenceInMinutes)(response[0]?.[0], response[0]?.[1], {
+                endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+                startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+            }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
+            const timeFromOpenToResponse = (0, calculations_1.calcDifferenceInMinutes)(pullRequest?.created_at, response[0]?.[1], {
+                endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+                startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+            }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
+            const timeFromRepeatedRequestToResponse = response
+                .filter((el, index) => index > 0)
+                .map((element) => (0, calculations_1.calcDifferenceInMinutes)(element?.[0], element?.[1], {
+                endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+                startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+            }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")));
+            collection[user][key] = {
+                ...collection[user][key],
+                timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
+                    ? [
+                        ...(collection[user][key].timeFromInitialRequestToResponse ||
+                            []),
+                        timeFromInitialRequestToResponse,
+                    ]
+                    : collection[user][key].timeFromInitialRequestToResponse,
+                timeFromOpenToResponse: typeof timeFromOpenToResponse === "number"
+                    ? [
+                        ...(collection[user][key].timeFromOpenToResponse || []),
+                        timeFromOpenToResponse,
+                    ]
+                    : collection[user][key].timeFromOpenToResponse,
+                timeFromRepeatedRequestToResponse: [
+                    ...(collection[user][key].timeFromRepeatedRequestToResponse || []),
+                    ...timeFromRepeatedRequestToResponse.filter((el) => typeof el === "number"),
+                ],
+            };
+            collection.total[key] = {
+                ...collection.total[key],
+                timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
+                    ? [
+                        ...(collection.total[key].timeFromInitialRequestToResponse ||
+                            []),
+                        timeFromInitialRequestToResponse,
+                    ]
+                    : collection.total[key].timeFromInitialRequestToResponse,
+                timeFromOpenToResponse: typeof timeFromOpenToResponse === "number"
+                    ? [
+                        ...(collection.total[key].timeFromOpenToResponse || []),
+                        timeFromOpenToResponse,
+                    ]
+                    : collection.total[key].timeFromOpenToResponse,
+                timeFromRepeatedRequestToResponse: [
+                    ...(collection.total[key].timeFromRepeatedRequestToResponse || []),
+                    ...timeFromRepeatedRequestToResponse.filter((el) => typeof el === "number"),
+                ],
             };
         });
     });
 };
-exports.prepareRequestedReviews = prepareRequestedReviews;
+exports.prepareResponseTime = prepareResponseTime;
 
 
 /***/ }),
@@ -2497,6 +2612,7 @@ const createMarkdown = (data, users, dates, title = "Pull Request report", refer
             workload: (0, utils_1.createTotalTable)(data, users, date),
             "code-review-engagement": (0, utils_1.createReviewTable)(data, users, date),
             "pr-quality": (0, utils_1.createPullRequestQualityTable)(data, users, date),
+            "response-time": (0, utils_1.createResponseTable)(data, users, date),
         };
         return `
     ${contentTypes
@@ -2689,7 +2805,7 @@ Object.defineProperty(exports, "createList", ({ enumerable: true, get: function 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
+exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.unrespondedReviewRequestConductedHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
 exports.timeToReviewRequestHeader = "Time to review request";
 exports.timeInDraftHeader = "Time in draft";
 exports.timeToReviewHeader = "Time to review";
@@ -2701,6 +2817,7 @@ exports.additionsDeletionsHeader = "Additions/Deletions";
 exports.reviewCommentsHeader = "Total comments";
 exports.reviewConductedHeader = "Reviews conducted";
 exports.reviewRequestConductedHeader = "Review requests conducted";
+exports.unrespondedReviewRequestConductedHeader = "Unresponded review requests conducted";
 exports.discussionsHeader = "Agreed / Disagreed / Total discussions received";
 exports.discussionsConductedHeader = "Agreed / Disagreed / Total discussions conducted";
 exports.commentsConductedHeader = "Comments conducted";
@@ -2708,6 +2825,9 @@ exports.commentsReceivedHeader = "Comments received";
 exports.reviewTypesHeader = "Changes requested / Commented / Approved";
 exports.requestChangesReceived = "Changes requested received";
 exports.prSizesHeader = "PR size: xs/s/m/l/xl";
+exports.timeFromRequestToResponseHeader = "Time from initial request to response";
+exports.timeFromOpenToResponseHeader = "Time from opening to response";
+exports.timeFromRepeatedRequestToResponseHeader = "Time from re-request to response";
 
 
 /***/ }),
@@ -2875,6 +2995,69 @@ exports.createReferences = createReferences;
 
 /***/ }),
 
+/***/ 70351:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createResponseTable = void 0;
+const constants_1 = __nccwpck_require__(11474);
+const common_1 = __nccwpck_require__(64682);
+const formatMinutesDuration_1 = __nccwpck_require__(92411);
+const utils_1 = __nccwpck_require__(41002);
+const createResponseTable = (data, users, date) => {
+    return (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+        .filter((method) => ["average", "median", "percentile"].includes(method))
+        .map((type) => {
+        const tableRows = users
+            .filter((user) => data[user]?.[date]?.[type]
+            ?.timeFromInitialRequestToResponse ||
+            data[user]?.[date]?.reviewsConducted?.total?.total ||
+            data[user]?.[date]?.[type]?.timeFromOpenToResponse ||
+            data[user]?.[date]?.[type]
+                ?.timeFromRepeatedRequestToResponse ||
+            data[user]?.[date]?.reviewRequestsConducted ||
+            data[user]?.[date]?.unrespondedRequests)
+            .map((user) => {
+            return [
+                `**${user}**`,
+                data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
+                data[user]?.[date]?.unrespondedRequests?.toString() || "0",
+                data[user]?.[date]?.reviewsConducted?.total?.total.toString() ||
+                    "0",
+                (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeFromOpenToResponse ||
+                    0),
+                (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]
+                    ?.timeFromInitialRequestToResponse || 0),
+                (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]
+                    ?.timeFromRepeatedRequestToResponse || 0),
+            ];
+        });
+        return (0, common_1.createTable)({
+            title: `Review Request Response Time(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${date}`,
+            description: "**Time from re-request to response** - time from a review re-request to the response. Multiple re-requests and responses can occur in a single pull request",
+            table: {
+                headers: [
+                    "user",
+                    constants_1.reviewRequestConductedHeader,
+                    constants_1.unrespondedReviewRequestConductedHeader,
+                    constants_1.reviewConductedHeader,
+                    constants_1.timeFromOpenToResponseHeader,
+                    constants_1.timeFromRequestToResponseHeader,
+                    constants_1.timeFromRepeatedRequestToResponseHeader,
+                ].filter((header, index) => tableRows.some((row) => row[index])),
+                rows: tableRows.map((row) => row.filter((cell, index) => tableRows.some((row) => row[index]))),
+            },
+        });
+    })
+        .join("\n");
+};
+exports.createResponseTable = createResponseTable;
+
+
+/***/ }),
+
 /***/ 79243:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -2889,7 +3072,6 @@ const createReviewTable = (data, users, date) => {
     const tableRowsTotal = users
         .filter((user) => data[user]?.[date]?.merged ||
         data[user]?.[date]?.reviewsConducted?.total?.total ||
-        data[user]?.[date]?.reviewRequestsConducted ||
         data[user]?.[date]?.commentsConducted ||
         data[user]?.[date]?.discussions?.conducted?.total)
         .map((user) => {
@@ -2904,7 +3086,6 @@ const createReviewTable = (data, users, date) => {
                 .join("/")}`,
             `${data[user]?.[date]?.reviewsConducted?.total?.changes_requested?.toString() || 0} / ${data[user]?.[date]?.reviewsConducted?.total?.commented?.toString() ||
                 0} / ${data[user]?.[date]?.reviewsConducted?.total?.approved?.toString() || 0}`,
-            data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
         ];
     });
     return (0, common_1.createTable)({
@@ -2918,7 +3099,6 @@ const createReviewTable = (data, users, date) => {
                 constants_1.commentsConductedHeader,
                 constants_1.prSizesHeader,
                 constants_1.reviewTypesHeader,
-                constants_1.reviewRequestConductedHeader,
             ].filter((header, index) => tableRowsTotal.some((row) => row[index] !== "0")),
             rows: tableRowsTotal.map((row) => row.filter((cell, index) => tableRowsTotal.some((row) => row[index] !== "0"))),
         },
@@ -3246,7 +3426,7 @@ const createTotalTable = (data, users, date) => {
         ];
     });
     return (0, common_1.createTable)({
-        title: `Workload stats ${date}`,
+        title: `Contribution stats ${date}`,
         description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",
         table: {
             headers: [
@@ -3291,7 +3471,7 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createReferences = exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
+exports.createResponseTable = exports.createReferences = exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
 var createTimelineMonthComparisonChart_1 = __nccwpck_require__(82264);
 Object.defineProperty(exports, "createTimelineMonthComparisonChart", ({ enumerable: true, get: function () { return createTimelineMonthComparisonChart_1.createTimelineMonthComparisonChart; } }));
 var createDiscussionsPieChart_1 = __nccwpck_require__(99622);
@@ -3324,6 +3504,8 @@ var createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
 Object.defineProperty(exports, "createTimelineMonthsGanttBar", ({ enumerable: true, get: function () { return createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar; } }));
 var createReferences_1 = __nccwpck_require__(96145);
 Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: function () { return createReferences_1.createReferences; } }));
+var createResponseTable_1 = __nccwpck_require__(70351);
+Object.defineProperty(exports, "createResponseTable", ({ enumerable: true, get: function () { return createResponseTable_1.createResponseTable; } }));
 
 
 /***/ }),

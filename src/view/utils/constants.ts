@@ -9,6 +9,8 @@ export const additionsDeletionsHeader = "Additions/Deletions";
 export const reviewCommentsHeader = "Total comments";
 export const reviewConductedHeader = "Reviews conducted";
 export const reviewRequestConductedHeader = "Review requests conducted";
+export const unrespondedReviewRequestConductedHeader =
+  "Unresponded review requests conducted";
 export const discussionsHeader =
   "Agreed / Disagreed / Total discussions received";
 export const discussionsConductedHeader =
@@ -18,3 +20,8 @@ export const commentsReceivedHeader = "Comments received";
 export const reviewTypesHeader = "Changes requested / Commented / Approved";
 export const requestChangesReceived = "Changes requested received";
 export const prSizesHeader = "PR size: xs/s/m/l/xl";
+export const timeFromRequestToResponseHeader =
+  "Time from initial request to response";
+export const timeFromOpenToResponseHeader = "Time from opening to response";
+export const timeFromRepeatedRequestToResponseHeader =
+  "Time from re-request to response";

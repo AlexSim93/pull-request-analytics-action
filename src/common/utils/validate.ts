@@ -27,6 +27,7 @@ export const validate = () => {
           "workload",
           "pr-quality",
           "code-review-engagement",
+          "response-time",
         ],
         required: true,
       },
@@ -35,12 +36,7 @@ export const validate = () => {
         required: false,
       },
       EXECUTION_OUTCOME: {
-        validValues: [
-          "new-issue",
-          "collection",
-          "markdown",
-          "existing-issue",
-        ],
+        validValues: ["new-issue", "collection", "markdown", "existing-issue"],
         required: true,
       },
     });

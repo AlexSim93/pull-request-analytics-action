@@ -13,4 +13,5 @@ export { getDisplayUserList } from "./common";
 export { createTimelineContent } from "./createTimelineContent";
 export { createTimelineMonthsGanttBar } from "./createTimelineMonthsGanttBar";
 export { createReferences } from "./createReferences";
+export { createResponseTable } from "./createResponseTable";
 export { StatsType } from "./types";

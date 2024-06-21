@@ -7,7 +7,7 @@ import {
   preparePullRequestInfo,
   preparePullRequestStats,
   preparePullRequestTimeline,
-  prepareRequestedReviews,
+  prepareResponseTime,
 } from "./utils";
 import {
   invalidUserLogin,
@@ -56,8 +56,6 @@ export const collectData = (
       collection[userKey] = {};
     }
 
-    prepareRequestedReviews(reviewRequests, collection, dateKey);
-
     ["total", userKey].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {
         collection[key][innerKey] = preparePullRequestInfo(
@@ -81,6 +79,12 @@ export const collectData = (
       userKey,
       getPullRequestSize(pullRequest?.additions, pullRequest?.deletions)
     );
+    prepareResponseTime(
+      data.events[index],
+      pullRequest,
+      collection,
+      dateKey
+    );
     prepareDiscussions(data.comments, collection, index, dateKey, userKey);
   });
 
@@ -89,5 +93,6 @@ export const collectData = (
       collection[key][innerKey] = preparePullRequestStats(innerValue);
     });
   });
+
   return collection;
 };
