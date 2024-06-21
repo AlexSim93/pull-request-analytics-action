@@ -7,7 +7,7 @@
     "start": "node ./build/index.js",
     "build": "tsc && ncc build ./dist/index.js -o build",
     "tsc": "tsc",
-    "lint": "eslint ./src",
+    "lint": "eslint ./src/**/*.ts",
     "test": "TZ=utc jest",
     "test:watch": "TZ=utc jest --watch",
     "prepare": "husky install"
