@@ -190,7 +190,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                GITHUB_REPO_FOR_ISSUE: "repo"
                GITHUB_OWNER_FOR_ISSUE: "owner"
-               GITHUB_OWNERS_REPOS: "owner-1/repo-1"
+               GITHUB_OWNERS_REPOS: "owner/repo"
                CORE_HOURS_START: "9:00"
                CORE_HOURS_END: "19:00"
                TIMEZONE: "Europe/Berlin"
