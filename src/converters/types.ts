@@ -10,6 +10,9 @@ type TimelinePoints = {
   timeToReview?: number;
   timeToApprove?: number;
   timeToMerge?: number;
+  timeFromInitialRequestToResponse?: number;
+  timeFromOpenToResponse?: number;
+  timeFromRepeatedRequestToResponse?: number;
 };
 
 type DiscussionResult = {
@@ -58,6 +61,11 @@ export type Collection = {
   timeToReview?: number[];
   timeToApprove?: number[];
   timeToMerge?: number[];
+  timeFromOpenToResponse?: number[];
+  timeFromInitialRequestToResponse?: number[];
+  timeFromRepeatedRequestToResponse?: number[];
+  timeReviewerInDraft?: number[];
+  unrespondedRequests?: number;
   comments?: number;
   totalReviewComments?: number;
   reviewComments?: number;

@@ -1,13 +1,13 @@
 {
   "name": "pull-request-analytics-action",
-  "version": "2.2.10",
+  "version": "3.0.0",
   "description": "Generates detailed PR analytics reports within GitHub, focusing on review efficiency and team performance.",
   "main": "build/index.js",
   "scripts": {
     "start": "node ./build/index.js",
     "build": "tsc && ncc build ./dist/index.js -o build",
     "tsc": "tsc",
-    "lint": "eslint ./src",
+    "lint": "eslint ./src/**/*.ts",
     "test": "TZ=utc jest",
     "test:watch": "TZ=utc jest --watch",
     "prepare": "husky install"

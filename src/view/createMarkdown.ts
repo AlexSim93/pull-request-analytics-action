@@ -3,6 +3,7 @@ import {
   createConfigParamsCode,
   createPullRequestQualityTable,
   createReferences,
+  createResponseTable,
   createReviewTable,
   createTimelineContent,
   createTotalTable,
@@ -26,6 +27,7 @@ export const createMarkdown = (
       workload: createTotalTable(data, users, date),
       "code-review-engagement": createReviewTable(data, users, date),
       "pr-quality": createPullRequestQualityTable(data, users, date),
+      "response-time": createResponseTable(data, users, date),
     };
 
     return `

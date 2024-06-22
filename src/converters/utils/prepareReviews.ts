@@ -1,4 +1,3 @@
-import { makeComplexRequest } from "../../requests";
 import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import { PullRequestSize } from "./calculations/getPullRequestSize";

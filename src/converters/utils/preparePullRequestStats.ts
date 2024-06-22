@@ -40,6 +40,15 @@ export const preparePullRequestStats = (collection: Collection) => {
       timeToMerge: calcMedianValue(collection.timeToMerge),
       timeToReviewRequest: calcMedianValue(collection.timeToReviewRequest),
       timeInDraft: calcMedianValue(collection.timeInDraft),
+      timeFromInitialRequestToResponse: calcMedianValue(
+        collection.timeFromInitialRequestToResponse
+      ),
+      timeFromOpenToResponse: calcMedianValue(
+        collection.timeFromOpenToResponse
+      ),
+      timeFromRepeatedRequestToResponse: calcMedianValue(
+        collection.timeFromRepeatedRequestToResponse
+      ),
     },
     percentile: {
       timeToReview: calcPercentileValue(collection.timeToReview),
@@ -47,6 +56,15 @@ export const preparePullRequestStats = (collection: Collection) => {
       timeToMerge: calcPercentileValue(collection.timeToMerge),
       timeToReviewRequest: calcPercentileValue(collection.timeToReviewRequest),
       timeInDraft: calcPercentileValue(collection.timeInDraft),
+      timeFromInitialRequestToResponse: calcPercentileValue(
+        collection.timeFromInitialRequestToResponse
+      ),
+      timeFromOpenToResponse: calcPercentileValue(
+        collection.timeFromOpenToResponse
+      ),
+      timeFromRepeatedRequestToResponse: calcPercentileValue(
+        collection.timeFromRepeatedRequestToResponse
+      ),
     },
     average: {
       timeToReview: calcAverageValue(collection.timeToReview),
@@ -54,6 +72,15 @@ export const preparePullRequestStats = (collection: Collection) => {
       timeToMerge: calcAverageValue(collection.timeToMerge),
       timeToReviewRequest: calcAverageValue(collection.timeToReviewRequest),
       timeInDraft: calcAverageValue(collection.timeInDraft),
+      timeFromInitialRequestToResponse: calcAverageValue(
+        collection.timeFromInitialRequestToResponse
+      ),
+      timeFromOpenToResponse: calcAverageValue(
+        collection.timeFromOpenToResponse
+      ),
+      timeFromRepeatedRequestToResponse: calcAverageValue(
+        collection.timeFromRepeatedRequestToResponse
+      ),
     },
   };
 };

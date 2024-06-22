@@ -21,9 +21,9 @@ inputs:
     description: "Github organizations separated by comma"
     required: false
   SHOW_STATS_TYPES:
-    description: "Stats types that should be displayed in report. Values must be separated by comma. Can take values: 'timeline', 'workload', 'pr-quality', 'code-review-engagement'"
+    description: "Stats types that should be displayed in report. Values must be separated by comma. Can take values: 'timeline', 'workload', 'pr-quality', 'code-review-engagement', 'response-time'"
     required: false
-    default: "timeline, workload, pr-quality, code-review-engagement"
+    default: "timeline, workload, pr-quality, code-review-engagement, response-time"
   AMOUNT:
     description: "Amount of PRs"
     required: false

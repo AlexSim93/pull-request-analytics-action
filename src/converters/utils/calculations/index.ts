@@ -1,5 +1,5 @@
-export { prepareIntervals } from './prepareIntervals';
-export { calcIntervals } from './calcIntervals';
+export { prepareIntervals } from "./prepareIntervals";
+export { calcIntervals } from "./calcIntervals";
 export { calcPercentileValue } from "./calcPercentileValue";
 export { getApproveTime } from "./getApproveTime";
 export { calcWeekendMinutes } from "./calcWeekendMinutes";
@@ -9,3 +9,4 @@ export { calcDifferenceInMinutes } from "./calcDifferenceInMinutes";
 export { calcAverageValue } from "./calcAverageValue";
 export { getPullRequestSize } from "./getPullRequestSize";
 export { calcDraftTime } from "./calcDraftTime";
+export { getResponses } from "./getResponses";

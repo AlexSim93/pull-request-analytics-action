@@ -7,6 +7,7 @@ import {
   preparePullRequestInfo,
   preparePullRequestStats,
   preparePullRequestTimeline,
+  prepareResponseTime,
   prepareRequestedReviews,
 } from "./utils";
 import {
@@ -55,7 +56,6 @@ export const collectData = (
     if (!collection[userKey]) {
       collection[userKey] = {};
     }
-
     prepareRequestedReviews(reviewRequests, collection, dateKey);
 
     ["total", userKey].forEach((key) => {
@@ -81,6 +81,12 @@ export const collectData = (
       userKey,
       getPullRequestSize(pullRequest?.additions, pullRequest?.deletions)
     );
+    prepareResponseTime(
+      data.events[index],
+      pullRequest,
+      collection,
+      dateKey
+    );
     prepareDiscussions(data.comments, collection, index, dateKey, userKey);
   });
 
@@ -89,5 +95,6 @@ export const collectData = (
       collection[key][innerKey] = preparePullRequestStats(innerValue);
     });
   });
+
   return collection;
 };

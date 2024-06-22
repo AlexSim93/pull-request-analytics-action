@@ -18,3 +18,8 @@ export const commentsReceivedHeader = "Comments received";
 export const reviewTypesHeader = "Changes requested / Commented / Approved";
 export const requestChangesReceived = "Changes requested received";
 export const prSizesHeader = "PR size: xs/s/m/l/xl";
+export const timeFromRequestToResponseHeader =
+  "Time from initial request to response";
+export const timeFromOpenToResponseHeader = "Time from opening to response";
+export const timeFromRepeatedRequestToResponseHeader =
+  "Time from re-request to response";
