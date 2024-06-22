@@ -8,6 +8,7 @@ import {
   preparePullRequestStats,
   preparePullRequestTimeline,
   prepareResponseTime,
+  prepareRequestedReviews,
 } from "./utils";
 import {
   invalidUserLogin,
@@ -55,6 +56,7 @@ export const collectData = (
     if (!collection[userKey]) {
       collection[userKey] = {};
     }
+    prepareRequestedReviews(reviewRequests, collection, dateKey);
 
     ["total", userKey].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {

@@ -125,25 +125,25 @@ title Discussions types total 12/2023
 
 - **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
 
-|   user    | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved | Review requests conducted |
-| :-------: | :--------------: | :----------------------------------------------: | :----------------: | :------------------: | :--------------------------------------: | :-----------------------: |
-| **dev1**  |        22        |                    0 / 0 / 0                     |         0          |      5/2/0/1/0       |                0 / 0 / 8                 |            12             |
-| **dev2**  |        13        |                    3 / 2 / 22                    |         33         |      10/3/4/0/3      |                5 / 8 / 20                |            24             |
-| **dev3**  |        2         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |            23             |
-| **dev4**  |        8         |                    0 / 0 / 0                     |         0          |      6/2/1/0/0       |                0 / 0 / 9                 |            10             |
-| **dev5**  |        2         |                    0 / 0 / 1                     |         1          |      2/0/0/0/0       |                0 / 1 / 2                 |             5             |
-| **total** |        47        |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |            47             |
+|   user    | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
+| :-------: | :--------------: | :----------------------------------------------: | :----------------: | :------------------: | :--------------------------------------: |
+| **dev1**  |        22        |                    0 / 0 / 0                     |         0          |      5/2/0/1/0       |                0 / 0 / 8                 |
+| **dev2**  |        13        |                    3 / 2 / 22                    |         33         |      10/3/4/0/3      |                5 / 8 / 20                |
+| **dev3**  |        2         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |
+| **dev4**  |        8         |                    0 / 0 / 0                     |         0          |      6/2/1/0/0       |                0 / 0 / 9                 |
+| **dev5**  |        2         |                    0 / 0 / 1                     |         1          |      2/0/0/0/0       |                0 / 1 / 2                 |
+| **total** |        47        |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |
 
-- **Response Time for Review Requests**: The table shows how quickly developers and the team respond to code review requests, as well as the ratio of requests to responses and unreviewed requests. This table provides insight into the developers' engagement in the review process.
+- **Response Time for Review Requests**: The table shows how quickly developers and the team respond to code review requests, as well as the ratio of requests to responses. This table provides insight into the developers' engagement in the review process.
 
-|   user    | Review requests conducted | Unresponded review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
-| :-------: | :-----------------------: | :-----------------------------------: | :---------------: | :---------------------------: | :-----------------------------------: | :------------------------------: |
-| **dev1**  |            259            |                  146                  |        88         |      10 hours 13 minutes      |          6 hours 37 minutes           |        2 hours 2 minutes         |
-| **dev2**  |            271            |                  217                  |        56         |      10 hours 48 minutes      |          9 hours 42 minutes           |                                  |
-| **dev3**  |            218            |                  155                  |        66         |      6 hours 59 minutes       |          6 hours 55 minutes           |        3 hours 2 minutes         |
-| **dev4**  |            232            |                  162                  |        68         |      3 hours 20 minutes       |          2 hours 54 minutes           |            50 minutes            |
-| **dev5**  |            236            |                  202                  |        35         |      7 hours 28 minutes       |           7 hours 7 minutes           |                                  |
-| **total** |           1219            |                  885                  |        282        |      7 hours 15 minutes       |          6 hours 41 minutes           |        1 hour 57 minutes         |
+|   user    | Review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
+| :-------: | :-----------------------: | :---------------: | :---------------------------: | :-----------------------------------: | :------------------------------: |
+| **dev1**  |            259            |        88         |      10 hours 13 minutes      |          6 hours 37 minutes           |        2 hours 2 minutes         |
+| **dev2**  |            271            |        56         |      10 hours 48 minutes      |          9 hours 42 minutes           |                                  |
+| **dev3**  |            218            |        66         |      6 hours 59 minutes       |          6 hours 55 minutes           |        3 hours 2 minutes         |
+| **dev4**  |            232            |        68         |      3 hours 20 minutes       |          2 hours 54 minutes           |            50 minutes            |
+| **dev5**  |            236            |        35         |      7 hours 28 minutes       |           7 hours 7 minutes           |                                  |
+| **total** |           1219            |        282        |      7 hours 15 minutes       |          6 hours 41 minutes           |        1 hour 57 minutes         |
 
 - **Highlighted PRs List by Key Metrics**: One of the standout features of **pull-request-analytics-action** is the ability to generate a list of the most notable pull requests based on four key metrics: time from opening to review, time from review to approval, time from approval to merge, and the number of comments. This feature provides a list of links directly to these exceptional PRs, allowing for quick access and detailed analysis.
 

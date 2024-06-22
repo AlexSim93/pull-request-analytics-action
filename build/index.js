@@ -779,6 +779,7 @@ const collectData = (data) => {
         if (!collection[userKey]) {
             collection[userKey] = {};
         }
+        (0, utils_1.prepareRequestedReviews)(reviewRequests, collection, dateKey);
         ["total", userKey].forEach((key) => {
             ["total", dateKey].forEach((innerKey) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestInfo)(pullRequest, collection[key][innerKey]);
@@ -1310,7 +1311,7 @@ exports.getDiscussionType = getDiscussionType;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.prepareResponseTime = exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = void 0;
+exports.prepareRequestedReviews = exports.prepareResponseTime = exports.prepareReviews = exports.prepareDiscussions = exports.preparePullRequestInfo = exports.preparePullRequestStats = exports.preparePullRequestTimeline = void 0;
 var preparePullRequestTimeline_1 = __nccwpck_require__(63787);
 Object.defineProperty(exports, "preparePullRequestTimeline", ({ enumerable: true, get: function () { return preparePullRequestTimeline_1.preparePullRequestTimeline; } }));
 var preparePullRequestStats_1 = __nccwpck_require__(46710);
@@ -1323,6 +1324,8 @@ var prepareReviews_1 = __nccwpck_require__(60934);
 Object.defineProperty(exports, "prepareReviews", ({ enumerable: true, get: function () { return prepareReviews_1.prepareReviews; } }));
 var prepareResponseTime_1 = __nccwpck_require__(85761);
 Object.defineProperty(exports, "prepareResponseTime", ({ enumerable: true, get: function () { return prepareResponseTime_1.prepareResponseTime; } }));
+var prepareRequestedReviews_1 = __nccwpck_require__(62381);
+Object.defineProperty(exports, "prepareRequestedReviews", ({ enumerable: true, get: function () { return prepareRequestedReviews_1.prepareRequestedReviews; } }));
 
 
 /***/ }),
@@ -1687,6 +1690,38 @@ exports.preparePullRequestTimeline = preparePullRequestTimeline;
 
 /***/ }),
 
+/***/ 62381:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prepareRequestedReviews = void 0;
+const constants_1 = __nccwpck_require__(95354);
+const prepareRequestedReviews = (requests = [], collection, dateKey) => {
+    const requestedReviewers = requests.reduce((acc, request) => {
+        const user = request.requested_reviewer?.login || constants_1.invalidUserLogin;
+        return { ...acc, [user]: 1 };
+    }, {});
+    requestedReviewers["total"] = Object.keys(requestedReviewers).length;
+    [dateKey, "total"].forEach((date) => {
+        Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
+            if (!collection[user]) {
+                collection[user] = {};
+            }
+            collection[user][date] = {
+                ...collection[user][date],
+                reviewRequestsConducted: (collection[user][date]?.reviewRequestsConducted || 0) +
+                    value,
+            };
+        });
+    });
+};
+exports.prepareRequestedReviews = prepareRequestedReviews;
+
+
+/***/ }),
+
 /***/ 85761:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1698,37 +1733,17 @@ const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const prepareResponseTime = (events = [], pullRequest, collection, dateKey) => {
     const responses = (0, calculations_1.getResponses)(events);
-    Object.entries(responses).forEach(([user, response]) => {
+    Object.entries(responses).forEach(([user, responses]) => {
         ["total", dateKey].forEach((key) => {
-            if (!collection[user]) {
-                collection[user] = {};
-            }
-            if (!collection[user][key]) {
-                collection[user][key] = {};
-            }
-            const reviewRequestsAmount = response.filter((el) => el[0] || el[1] === null).length;
-            const unrespondedReviewRequestsAmount = response.filter((el) => el[0] && !el[1]).length;
-            collection[user][key].reviewRequestsConducted =
-                reviewRequestsAmount +
-                    (collection[user][key].reviewRequestsConducted || 0);
-            collection[user][key].unrespondedRequests =
-                unrespondedReviewRequestsAmount +
-                    (collection[user][key].unrespondedRequests || 0);
-            collection.total[key].reviewRequestsConducted =
-                reviewRequestsAmount +
-                    (collection.total[key].reviewRequestsConducted || 0);
-            collection.total[key].unrespondedRequests =
-                unrespondedReviewRequestsAmount +
-                    (collection.total[key].unrespondedRequests || 0);
-            const timeFromInitialRequestToResponse = (0, calculations_1.calcDifferenceInMinutes)(response[0]?.[0], response[0]?.[1], {
+            const timeFromInitialRequestToResponse = (0, calculations_1.calcDifferenceInMinutes)(responses[0]?.[0], responses[0]?.[1], {
                 endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
-            const timeFromOpenToResponse = (0, calculations_1.calcDifferenceInMinutes)(pullRequest?.created_at, response[0]?.[1], {
+            const timeFromOpenToResponse = (0, calculations_1.calcDifferenceInMinutes)(pullRequest?.created_at, responses[0]?.[1], {
                 endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
-            const timeFromRepeatedRequestToResponse = response
+            const timeFromRepeatedRequestToResponse = responses
                 .filter((el, index) => index > 0)
                 .map((element) => (0, calculations_1.calcDifferenceInMinutes)(element?.[0], element?.[1], {
                 endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
@@ -2805,7 +2820,7 @@ Object.defineProperty(exports, "createList", ({ enumerable: true, get: function 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.unrespondedReviewRequestConductedHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
+exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
 exports.timeToReviewRequestHeader = "Time to review request";
 exports.timeInDraftHeader = "Time in draft";
 exports.timeToReviewHeader = "Time to review";
@@ -2817,7 +2832,6 @@ exports.additionsDeletionsHeader = "Additions/Deletions";
 exports.reviewCommentsHeader = "Total comments";
 exports.reviewConductedHeader = "Reviews conducted";
 exports.reviewRequestConductedHeader = "Review requests conducted";
-exports.unrespondedReviewRequestConductedHeader = "Unresponded review requests conducted";
 exports.discussionsHeader = "Agreed / Disagreed / Total discussions received";
 exports.discussionsConductedHeader = "Agreed / Disagreed / Total discussions conducted";
 exports.commentsConductedHeader = "Comments conducted";
@@ -3017,13 +3031,11 @@ const createResponseTable = (data, users, date) => {
             data[user]?.[date]?.[type]?.timeFromOpenToResponse ||
             data[user]?.[date]?.[type]
                 ?.timeFromRepeatedRequestToResponse ||
-            data[user]?.[date]?.reviewRequestsConducted ||
-            data[user]?.[date]?.unrespondedRequests)
+            data[user]?.[date]?.reviewRequestsConducted)
             .map((user) => {
             return [
                 `**${user}**`,
                 data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
-                data[user]?.[date]?.unrespondedRequests?.toString() || "0",
                 data[user]?.[date]?.reviewsConducted?.total?.total.toString() ||
                     "0",
                 (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeFromOpenToResponse ||
@@ -3041,7 +3053,6 @@ const createResponseTable = (data, users, date) => {
                 headers: [
                     "user",
                     constants_1.reviewRequestConductedHeader,
-                    constants_1.unrespondedReviewRequestConductedHeader,
                     constants_1.reviewConductedHeader,
                     constants_1.timeFromOpenToResponseHeader,
                     constants_1.timeFromRequestToResponseHeader,

@@ -9,8 +9,6 @@ export const additionsDeletionsHeader = "Additions/Deletions";
 export const reviewCommentsHeader = "Total comments";
 export const reviewConductedHeader = "Reviews conducted";
 export const reviewRequestConductedHeader = "Review requests conducted";
-export const unrespondedReviewRequestConductedHeader =
-  "Unresponded review requests conducted";
 export const discussionsHeader =
   "Agreed / Disagreed / Total discussions received";
 export const discussionsConductedHeader =

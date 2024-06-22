@@ -14,41 +14,12 @@ export const prepareResponseTime = (
   const responses = getResponses(events);
 
   Object.entries(responses as Record<string, any[][]>).forEach(
-    ([user, response]) => {
+    ([user, responses]) => {
       ["total", dateKey].forEach((key) => {
-        if (!collection[user]) {
-          collection[user] = {};
-        }
-        if (!collection[user][key]) {
-          collection[user][key] = {};
-        }
-        const reviewRequestsAmount = response.filter(
-          (el) => el[0] || el[1] === null
-        ).length;
-
-        const unrespondedReviewRequestsAmount = response.filter(
-          (el) => el[0] && !el[1]
-        ).length;
-        
-        collection[user][key].reviewRequestsConducted =
-          reviewRequestsAmount +
-          (collection[user][key].reviewRequestsConducted || 0);
-
-        collection[user][key].unrespondedRequests =
-          unrespondedReviewRequestsAmount +
-          (collection[user][key].unrespondedRequests || 0);
-
-        collection.total[key].reviewRequestsConducted =
-          reviewRequestsAmount +
-          (collection.total[key].reviewRequestsConducted || 0);
-
-        collection.total[key].unrespondedRequests =
-          unrespondedReviewRequestsAmount +
-          (collection.total[key].unrespondedRequests || 0);
 
         const timeFromInitialRequestToResponse = calcDifferenceInMinutes(
-          response[0]?.[0],
-          response[0]?.[1],
+          responses[0]?.[0],
+          responses[0]?.[1],
           {
             endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
             startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
@@ -58,7 +29,7 @@ export const prepareResponseTime = (
 
         const timeFromOpenToResponse = calcDifferenceInMinutes(
           pullRequest?.created_at,
-          response[0]?.[1],
+          responses[0]?.[1],
           {
             endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
             startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
@@ -66,7 +37,7 @@ export const prepareResponseTime = (
           getMultipleValuesInput("HOLIDAYS")
         );
 
-        const timeFromRepeatedRequestToResponse = response
+        const timeFromRepeatedRequestToResponse = responses
           .filter((el, index) => index > 0)
           .map((element) =>
             calcDifferenceInMinutes(

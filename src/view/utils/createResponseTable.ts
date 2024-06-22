@@ -2,7 +2,6 @@ import { Collection } from "../../converters/types";
 import {
   reviewConductedHeader,
   reviewRequestConductedHeader,
-  unrespondedReviewRequestConductedHeader,
   timeFromOpenToResponseHeader,
   timeFromRepeatedRequestToResponseHeader,
   timeFromRequestToResponseHeader,
@@ -29,14 +28,12 @@ export const createResponseTable = (
             data[user]?.[date]?.[type as StatsType]?.timeFromOpenToResponse ||
             data[user]?.[date]?.[type as StatsType]
               ?.timeFromRepeatedRequestToResponse ||
-            data[user]?.[date]?.reviewRequestsConducted ||
-            data[user]?.[date]?.unrespondedRequests
+            data[user]?.[date]?.reviewRequestsConducted
         )
         .map((user) => {
           return [
             `**${user}**`,
             data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
-            data[user]?.[date]?.unrespondedRequests?.toString() || "0",
             data[user]?.[date]?.reviewsConducted?.total?.total.toString() ||
               "0",
             formatMinutesDuration(
@@ -63,7 +60,6 @@ export const createResponseTable = (
           headers: [
             "user",
             reviewRequestConductedHeader,
-            unrespondedReviewRequestConductedHeader,
             reviewConductedHeader,
             timeFromOpenToResponseHeader,
             timeFromRequestToResponseHeader,
