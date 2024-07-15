@@ -22,7 +22,8 @@ import { getPullRequestSize } from "./utils/calculations";
 import { getDateFormat } from "../common/utils";
 
 export const collectData = (
-  data: Awaited<ReturnType<typeof makeComplexRequest>>
+  data: Awaited<ReturnType<typeof makeComplexRequest>>,
+  teams: Record<string, string[]>
 ) => {
   const collection: Record<string, Record<string, Collection>> = { total: {} };
 
@@ -56,9 +57,9 @@ export const collectData = (
     if (!collection[userKey]) {
       collection[userKey] = {};
     }
-    prepareRequestedReviews(reviewRequests, collection, dateKey);
+    prepareRequestedReviews(reviewRequests, collection, dateKey, teams);
 
-    ["total", userKey].forEach((key) => {
+    ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {
         collection[key][innerKey] = preparePullRequestInfo(
           pullRequest,
@@ -81,12 +82,7 @@ export const collectData = (
       userKey,
       getPullRequestSize(pullRequest?.additions, pullRequest?.deletions)
     );
-    prepareResponseTime(
-      data.events[index],
-      pullRequest,
-      collection,
-      dateKey
-    );
+    prepareResponseTime(data.events[index], pullRequest, collection, dateKey);
     prepareDiscussions(data.comments, collection, index, dateKey, userKey);
   });
 

@@ -6,10 +6,12 @@ import {
   getOrganizationsRepositories,
   getOwnersRepositories,
   makeComplexRequest,
+  getTeams,
 } from "./requests";
 import { collectData } from "./converters";
 import {
   checkCommentSkip,
+  getOrgs,
   getValueAsIs,
   setTimezone,
   validate,
@@ -59,6 +61,9 @@ async function main() {
       );
       data.push(result);
     }
+    const orgs = getOrgs();
+
+    const teams = await getTeams(orgs);
 
     console.log("Data successfully retrieved. Starting report calculations.");
 
@@ -80,7 +85,7 @@ async function main() {
         comments: [],
       }
     );
-    const preparedData = collectData(mergedData);
+    const preparedData = collectData(mergedData, teams);
     console.log("Calculation complete. Generating markdown.");
     await createOutput(preparedData);
 
