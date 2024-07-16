@@ -9,14 +9,14 @@ export const prepareResponseTime = (
     ReturnType<typeof makeComplexRequest>
   >["pullRequestInfo"][number],
   collection: Record<string, Record<string, Collection>>,
-  dateKey: string
+  dateKey: string,
+  teams: Record<string, string[]>
 ) => {
   const responses = getResponses(events);
 
   Object.entries(responses as Record<string, any[][]>).forEach(
     ([user, responses]) => {
       ["total", dateKey].forEach((key) => {
-
         const timeFromInitialRequestToResponse = calcDifferenceInMinutes(
           responses[0]?.[0],
           responses[0]?.[1],
@@ -51,54 +51,33 @@ export const prepareResponseTime = (
             )
           );
 
-        collection[user][key] = {
-          ...collection[user][key],
-          timeFromInitialRequestToResponse:
-            typeof timeFromInitialRequestToResponse === "number"
-              ? [
-                  ...(collection[user][key].timeFromInitialRequestToResponse ||
-                    []),
-                  timeFromInitialRequestToResponse,
-                ]
-              : collection[user][key].timeFromInitialRequestToResponse,
-          timeFromOpenToResponse:
-            typeof timeFromOpenToResponse === "number"
-              ? [
-                  ...(collection[user][key].timeFromOpenToResponse || []),
-                  timeFromOpenToResponse,
-                ]
-              : collection[user][key].timeFromOpenToResponse,
-          timeFromRepeatedRequestToResponse: [
-            ...(collection[user][key].timeFromRepeatedRequestToResponse || []),
-            ...(timeFromRepeatedRequestToResponse.filter(
-              (el) => typeof el === "number"
-            ) as number[]),
-          ],
-        };
-        collection.total[key] = {
-          ...collection.total[key],
-          timeFromInitialRequestToResponse:
-            typeof timeFromInitialRequestToResponse === "number"
-              ? [
-                  ...(collection.total[key].timeFromInitialRequestToResponse ||
-                    []),
-                  timeFromInitialRequestToResponse,
-                ]
-              : collection.total[key].timeFromInitialRequestToResponse,
-          timeFromOpenToResponse:
-            typeof timeFromOpenToResponse === "number"
-              ? [
-                  ...(collection.total[key].timeFromOpenToResponse || []),
-                  timeFromOpenToResponse,
-                ]
-              : collection.total[key].timeFromOpenToResponse,
-          timeFromRepeatedRequestToResponse: [
-            ...(collection.total[key].timeFromRepeatedRequestToResponse || []),
-            ...(timeFromRepeatedRequestToResponse.filter(
-              (el) => typeof el === "number"
-            ) as number[]),
-          ],
-        };
+        ["total", user, ...(teams[user] || [])].forEach((userKey) => {
+          collection[userKey][key] = {
+            ...collection[userKey][key],
+            timeFromInitialRequestToResponse:
+              typeof timeFromInitialRequestToResponse === "number"
+                ? [
+                    ...(collection[userKey][key]
+                      .timeFromInitialRequestToResponse || []),
+                    timeFromInitialRequestToResponse,
+                  ]
+                : collection[userKey][key].timeFromInitialRequestToResponse,
+            timeFromOpenToResponse:
+              typeof timeFromOpenToResponse === "number"
+                ? [
+                    ...(collection[userKey][key].timeFromOpenToResponse || []),
+                    timeFromOpenToResponse,
+                  ]
+                : collection[user][key].timeFromOpenToResponse,
+            timeFromRepeatedRequestToResponse: [
+              ...(collection[userKey][key].timeFromRepeatedRequestToResponse ||
+                []),
+              ...(timeFromRepeatedRequestToResponse.filter(
+                (el) => typeof el === "number"
+              ) as number[]),
+            ],
+          };
+        });
       });
     }
   );

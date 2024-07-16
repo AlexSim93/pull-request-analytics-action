@@ -6,10 +6,12 @@ import {
   getOrganizationsRepositories,
   getOwnersRepositories,
   makeComplexRequest,
+  getTeams,
 } from "./requests";
 import { collectData } from "./converters";
 import {
   checkCommentSkip,
+  getOrgs,
   getValueAsIs,
   setTimezone,
   validate,
@@ -46,6 +48,10 @@ async function main() {
 
     console.log("Initiating data request.");
     const data = [];
+    const orgs = getOrgs();
+
+    const teams = await getTeams(orgs);
+
     for (let i = 0; i < repos.length; i++) {
       const result = await makeComplexRequest(
         parseInt(getValueAsIs("AMOUNT")),
@@ -80,7 +86,7 @@ async function main() {
         comments: [],
       }
     );
-    const preparedData = collectData(mergedData);
+    const preparedData = collectData(mergedData, teams);
     console.log("Calculation complete. Generating markdown.");
     await createOutput(preparedData);
 

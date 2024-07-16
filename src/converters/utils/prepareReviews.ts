@@ -8,13 +8,20 @@ export const prepareReviews = (
   collection: Record<string, Record<string, Collection>>,
   dateKey: string,
   pullRequestLogin: string,
-  pullRequestSize: PullRequestSize
+  pullRequestSize: PullRequestSize,
+  teams: Record<string, string[]>
 ) => {
+  let teamNames: string[] = [];
   const users = Object.keys(
     reviews?.reduce((acc, review) => {
       const userLogin = review.user?.login || invalidUserLogin;
       if (userLogin !== pullRequestLogin) {
-        return { ...acc, [userLogin]: 1 };
+        const teamsNames = (teams[userLogin] || []).reduce(
+          (acc, team) => ({ ...acc, [team]: 1 }),
+          {}
+        );
+        teamNames = Object.keys(teamsNames);
+        return { ...acc, [userLogin]: 1, ...teamsNames };
       }
       return acc;
     }, {}) || {}
@@ -25,7 +32,7 @@ export const prepareReviews = (
       collection[user] = {};
     }
     const userReviews =
-      Array.isArray(reviews) && user !== "total"
+      Array.isArray(reviews) && user !== "total" && !teamNames.includes(user)
         ? reviews?.filter((review) => {
             const userLogin = review.user?.login || invalidUserLogin;
             return userLogin === user;
@@ -36,7 +43,8 @@ export const prepareReviews = (
         pullRequestLogin,
         userReviews,
         collection[user][key],
-        pullRequestSize
+        pullRequestSize,
+        teams
       );
     });
   });

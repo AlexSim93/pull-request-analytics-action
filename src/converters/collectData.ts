@@ -22,7 +22,8 @@ import { getPullRequestSize } from "./utils/calculations";
 import { getDateFormat } from "../common/utils";
 
 export const collectData = (
-  data: Awaited<ReturnType<typeof makeComplexRequest>>
+  data: Awaited<ReturnType<typeof makeComplexRequest>>,
+  teams: Record<string, string[]>
 ) => {
   const collection: Record<string, Record<string, Collection>> = { total: {} };
 
@@ -53,12 +54,14 @@ export const collectData = (
         : invalidDate;
 
     const userKey = pullRequest.user?.login || invalidUserLogin;
-    if (!collection[userKey]) {
-      collection[userKey] = {};
-    }
-    prepareRequestedReviews(reviewRequests, collection, dateKey);
+    [userKey, ...(teams[userKey] || [])].forEach((key) => {
+      if (!collection[key]) {
+        collection[key] = {};
+      }
+    });
+    prepareRequestedReviews(reviewRequests, collection, dateKey, teams);
 
-    ["total", userKey].forEach((key) => {
+    ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {
         collection[key][innerKey] = preparePullRequestInfo(
           pullRequest,
@@ -79,15 +82,24 @@ export const collectData = (
       collection,
       dateKey,
       userKey,
-      getPullRequestSize(pullRequest?.additions, pullRequest?.deletions)
+      getPullRequestSize(pullRequest?.additions, pullRequest?.deletions),
+      teams
     );
     prepareResponseTime(
       data.events[index],
       pullRequest,
       collection,
-      dateKey
+      dateKey,
+      teams
     );
-    prepareDiscussions(data.comments, collection, index, dateKey, userKey);
+    prepareDiscussions(
+      data.comments,
+      collection,
+      index,
+      dateKey,
+      userKey,
+      teams
+    );
   });
 
   Object.entries(collection).map(([key, value]) => {
