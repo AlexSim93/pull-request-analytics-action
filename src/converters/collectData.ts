@@ -54,9 +54,11 @@ export const collectData = (
         : invalidDate;
 
     const userKey = pullRequest.user?.login || invalidUserLogin;
-    if (!collection[userKey]) {
-      collection[userKey] = {};
-    }
+    [userKey, ...(teams[userKey] || [])].forEach((key) => {
+      if (!collection[key]) {
+        collection[key] = {};
+      }
+    });
     prepareRequestedReviews(reviewRequests, collection, dateKey, teams);
 
     ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
@@ -83,8 +85,21 @@ export const collectData = (
       getPullRequestSize(pullRequest?.additions, pullRequest?.deletions),
       teams
     );
-    prepareResponseTime(data.events[index], pullRequest, collection, dateKey, teams);
-    prepareDiscussions(data.comments, collection, index, dateKey, userKey, teams);
+    prepareResponseTime(
+      data.events[index],
+      pullRequest,
+      collection,
+      dateKey,
+      teams
+    );
+    prepareDiscussions(
+      data.comments,
+      collection,
+      index,
+      dateKey,
+      userKey,
+      teams
+    );
   });
 
   Object.entries(collection).map(([key, value]) => {

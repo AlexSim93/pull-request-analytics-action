@@ -796,9 +796,11 @@ const collectData = (data, teams) => {
             ? (0, date_fns_1.format)(closedDate, (0, utils_2.getDateFormat)())
             : constants_1.invalidDate;
         const userKey = pullRequest.user?.login || constants_1.invalidUserLogin;
-        if (!collection[userKey]) {
-            collection[userKey] = {};
-        }
+        [userKey, ...(teams[userKey] || [])].forEach((key) => {
+            if (!collection[key]) {
+                collection[key] = {};
+            }
+        });
         (0, utils_1.prepareRequestedReviews)(reviewRequests, collection, dateKey, teams);
         ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
             ["total", dateKey].forEach((innerKey) => {
@@ -1719,9 +1721,11 @@ const prepareRequestedReviews = (requests = [], collection, dateKey, teams) => {
     });
     [dateKey, "total"].forEach((date) => {
         Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
-            if (!collection[user]) {
-                collection[user] = {};
-            }
+            [user, ...(teams[user] || [])].forEach((userKey) => {
+                if (!collection[userKey]) {
+                    collection[userKey] = {};
+                }
+            });
             collection[user][date] = {
                 ...collection[user][date],
                 reviewRequestsConducted: (collection[user][date]?.reviewRequestsConducted || 0) +

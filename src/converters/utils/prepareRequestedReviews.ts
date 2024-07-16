@@ -22,9 +22,11 @@ export const prepareRequestedReviews = (
 
   [dateKey, "total"].forEach((date) => {
     Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
-      if (!collection[user]) {
-        collection[user] = {};
-      }
+      [user, ...(teams[user] || [])].forEach((userKey) => {
+        if (!collection[userKey]) {
+          collection[userKey] = {};
+        }
+      });
 
       collection[user][date] = {
         ...collection[user][date],
