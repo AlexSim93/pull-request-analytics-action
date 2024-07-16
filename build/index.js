@@ -806,9 +806,9 @@ const collectData = (data, teams) => {
                 collection[key][innerKey] = (0, utils_1.preparePullRequestTimeline)(pullRequest, reviews, reviewRequests?.[0], statuses, collection[key][innerKey]);
             });
         });
-        (0, utils_1.prepareReviews)(reviews, collection, dateKey, userKey, (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions));
-        (0, utils_1.prepareResponseTime)(data.events[index], pullRequest, collection, dateKey);
-        (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, userKey);
+        (0, utils_1.prepareReviews)(reviews, collection, dateKey, userKey, (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions), teams);
+        (0, utils_1.prepareResponseTime)(data.events[index], pullRequest, collection, dateKey, teams);
+        (0, utils_1.prepareDiscussions)(data.comments, collection, index, dateKey, userKey, teams);
     });
     Object.entries(collection).map(([key, value]) => {
         Object.entries(value).forEach(([innerKey, innerValue]) => {
@@ -1357,14 +1357,14 @@ Object.defineProperty(exports, "prepareRequestedReviews", ({ enumerable: true, g
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareConductedReviews = void 0;
-const prepareConductedReviews = (pullRequestLogin, pullRequestReviews = [], collection, pullRequestSize) => {
+const prepareConductedReviews = (pullRequestLogin, pullRequestReviews = [], collection, pullRequestSize, teams) => {
     const reviewsConducted = {
         ...(collection?.reviewsConducted || {}),
     };
     const statuses = Object.keys(pullRequestReviews?.reduce((acc, review) => {
         return { ...acc, [review.state]: 1, total: 1 };
     }, {}) || {});
-    [pullRequestLogin, "total"].forEach((key) => {
+    [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((key) => {
         const statusesReviewsStats = statuses.reduce((acc, status) => {
             return {
                 ...acc,
@@ -1399,7 +1399,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareDiscussions = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const getDiscussionType_1 = __nccwpck_require__(49575);
-const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin) => {
+const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin, teams) => {
     const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== comment.user?.login);
     const discussions = comments[index]?.filter((comment) => {
         const userLogin = comment.user?.login || constants_1.invalidUserLogin;
@@ -1408,38 +1408,44 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
     ["total", dateKey].forEach((key) => {
         discussions?.forEach((discussion) => {
             const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
-            if (collection[userLogin][key].discussionsTypes === undefined) {
-                collection[userLogin][key].discussionsTypes = {};
-            }
-            if (collection[pullRequestLogin][key].discussionsTypes === undefined) {
-                collection[pullRequestLogin][key].discussionsTypes = {};
-            }
-            if (collection.total[key].discussionsTypes === undefined) {
-                collection.total[key].discussionsTypes = {};
-            }
+            [
+                userLogin,
+                pullRequestLogin,
+                "total",
+                ...(teams[userLogin] || []),
+                ...(teams[pullRequestLogin] || []),
+            ].forEach((checkingKey) => {
+                if (collection[checkingKey][key].discussionsTypes === undefined) {
+                    collection[checkingKey][key].discussionsTypes = {};
+                }
+            });
             (0, getDiscussionType_1.getDiscussionType)(discussion.body).forEach((type) => {
-                collection[userLogin][key].discussionsTypes[type] = {
-                    ...(collection[userLogin][key].discussionsTypes[type] || {}),
-                    conducted: {
-                        total: (collection[userLogin][key].discussionsTypes[type]?.conducted
-                            ?.total || 0) + 1,
-                        agreed: (collection[userLogin][key].discussionsTypes[type]?.conducted
-                            ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-                        disagreed: (collection[userLogin][key].discussionsTypes[type]?.conducted
-                            ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-                    },
-                };
-                collection[pullRequestLogin][key].discussionsTypes[type] = {
-                    ...(collection[pullRequestLogin][key].discussionsTypes[type] || {}),
-                    received: {
-                        total: (collection[pullRequestLogin][key].discussionsTypes[type]
-                            ?.received?.total || 0) + 1,
-                        agreed: (collection[userLogin][key].discussionsTypes[type]?.received
-                            ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-                        disagreed: (collection[userLogin][key].discussionsTypes[type]?.received
-                            ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-                    },
-                };
+                [userLogin, ...(teams[userLogin] || [])].forEach((userKey) => {
+                    collection[userKey][key].discussionsTypes[type] = {
+                        ...(collection[userKey][key].discussionsTypes[type] || {}),
+                        conducted: {
+                            total: (collection[userKey][key].discussionsTypes[type]?.conducted
+                                ?.total || 0) + 1,
+                            agreed: (collection[userKey][key].discussionsTypes[type]?.conducted
+                                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                            disagreed: (collection[userKey][key].discussionsTypes[type]?.conducted
+                                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
+                        },
+                    };
+                });
+                [pullRequestLogin, ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
+                    collection[userKey][key].discussionsTypes[type] = {
+                        ...(collection[userKey][key].discussionsTypes[type] || {}),
+                        received: {
+                            total: (collection[userKey][key].discussionsTypes[type]?.received
+                                ?.total || 0) + 1,
+                            agreed: (collection[userKey][key].discussionsTypes[type]?.received
+                                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                            disagreed: (collection[userKey][key].discussionsTypes[type]?.received
+                                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
+                        },
+                    };
+                });
                 collection.total[key].discussionsTypes[type] = {
                     ...(collection.total[key].discussionsTypes[type] || {}),
                     conducted: {
@@ -1470,68 +1476,50 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                 if (!collection[userLogin][key]) {
                     collection[userLogin][key] = {};
                 }
-                collection[userLogin][key].commentsConducted =
-                    (collection[userLogin][key].commentsConducted || 0) + 1;
-                collection.total[key].commentsConducted =
-                    (collection.total[key].commentsConducted || 0) + 1;
+                [userLogin, "total", ...(teams[userLogin] || [])].forEach((userKey) => {
+                    collection[userKey][key].commentsConducted =
+                        (collection[userKey][key].commentsConducted || 0) + 1;
+                });
             }
         });
         if (pullRequestLogin) {
-            collection[pullRequestLogin][key]["reviewComments"] =
-                (reviewComments?.length || 0) +
-                    (collection[pullRequestLogin][key].reviewComments || 0);
-            collection.total[key]["reviewComments"] =
-                (reviewComments?.length || 0) +
-                    (collection.total[key].reviewComments || 0);
+            [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
+                collection[userKey][key]["reviewComments"] =
+                    (reviewComments?.length || 0) +
+                        (collection[userKey][key].reviewComments || 0);
+            });
         }
         discussions?.forEach((discussion) => {
             const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
-            collection[userLogin][key].discussions = {
-                ...collection[userLogin][key].discussions,
-                conducted: {
-                    total: (collection[userLogin][key].discussions?.conducted?.total || 0) + 1,
-                    agreed: (collection[userLogin][key].discussions?.conducted?.agreed || 0) +
-                        (discussion.reactions?.["+1"] ? 1 : 0),
-                    disagreed: (collection[userLogin][key].discussions?.conducted?.disagreed ||
-                        0) + (discussion.reactions?.["-1"] ? 1 : 0),
-                },
-            };
-            collection.total[key].discussions = {
-                ...collection.total[key].discussions,
-                conducted: {
-                    total: (collection.total[key].discussions?.conducted?.total || 0) + 1,
-                    agreed: (collection.total[key].discussions?.conducted?.agreed || 0) +
-                        (discussion.reactions?.["+1"] ? 1 : 0),
-                    disagreed: (collection.total[key].discussions?.conducted?.disagreed || 0) +
-                        (discussion.reactions?.["-1"] ? 1 : 0),
-                },
-            };
+            [userLogin, "total", ...(teams[userLogin] || [])].forEach((userKey) => {
+                collection[userKey][key].discussions = {
+                    ...collection[userKey][key].discussions,
+                    conducted: {
+                        total: (collection[userKey][key].discussions?.conducted?.total || 0) + 1,
+                        agreed: (collection[userKey][key].discussions?.conducted?.agreed || 0) +
+                            (discussion.reactions?.["+1"] ? 1 : 0),
+                        disagreed: (collection[userKey][key].discussions?.conducted?.disagreed ||
+                            0) + (discussion.reactions?.["-1"] ? 1 : 0),
+                    },
+                };
+            });
         });
         if (pullRequestLogin) {
             const agreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["+1"]);
             const disagreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["-1"]);
-            collection[pullRequestLogin][key].discussions = {
-                ...collection[pullRequestLogin][key].discussions,
-                received: {
-                    total: (collection[pullRequestLogin][key].discussions?.received?.total ||
-                        0) + (discussions?.length || 0),
-                    agreed: (collection[pullRequestLogin][key].discussions?.received?.agreed ||
-                        0) + (agreedDiscussions?.length || 0),
-                    disagreed: (collection[pullRequestLogin][key].discussions?.received
-                        ?.disagreed || 0) + (disagreedDiscussions?.length || 0),
-                },
-            };
-            collection.total[key].discussions = {
-                ...collection.total[key].discussions,
-                received: {
-                    total: (collection.total[key].discussions?.received?.total || 0) +
-                        (discussions?.length || 0),
-                    agreed: (collection.total[key].discussions?.received?.agreed || 0) +
-                        (agreedDiscussions?.length || 0),
-                    disagreed: (collection.total[key].discussions?.received?.disagreed || 0) +
-                        (disagreedDiscussions?.length || 0),
-                },
-            };
+            [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
+                collection[userKey][key].discussions = {
+                    ...collection[userKey][key].discussions,
+                    received: {
+                        total: (collection[userKey][key].discussions?.received?.total || 0) +
+                            (discussions?.length || 0),
+                        agreed: (collection[userKey][key].discussions?.received?.agreed || 0) +
+                            (agreedDiscussions?.length || 0),
+                        disagreed: (collection[userKey][key].discussions?.received?.disagreed ||
+                            0) + (disagreedDiscussions?.length || 0),
+                    },
+                };
+            });
         }
     });
 };
@@ -1756,7 +1744,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareResponseTime = void 0;
 const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
-const prepareResponseTime = (events = [], pullRequest, collection, dateKey) => {
+const prepareResponseTime = (events = [], pullRequest, collection, dateKey, teams) => {
     const responses = (0, calculations_1.getResponses)(events);
     Object.entries(responses).forEach(([user, responses]) => {
         ["total", dateKey].forEach((key) => {
@@ -1774,46 +1762,29 @@ const prepareResponseTime = (events = [], pullRequest, collection, dateKey) => {
                 endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")));
-            collection[user][key] = {
-                ...collection[user][key],
-                timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
-                    ? [
-                        ...(collection[user][key].timeFromInitialRequestToResponse ||
+            ["total", user, ...(teams[user] || [])].forEach((userKey) => {
+                collection[userKey][key] = {
+                    ...collection[userKey][key],
+                    timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
+                        ? [
+                            ...(collection[userKey][key]
+                                .timeFromInitialRequestToResponse || []),
+                            timeFromInitialRequestToResponse,
+                        ]
+                        : collection[userKey][key].timeFromInitialRequestToResponse,
+                    timeFromOpenToResponse: typeof timeFromOpenToResponse === "number"
+                        ? [
+                            ...(collection[userKey][key].timeFromOpenToResponse || []),
+                            timeFromOpenToResponse,
+                        ]
+                        : collection[user][key].timeFromOpenToResponse,
+                    timeFromRepeatedRequestToResponse: [
+                        ...(collection[userKey][key].timeFromRepeatedRequestToResponse ||
                             []),
-                        timeFromInitialRequestToResponse,
-                    ]
-                    : collection[user][key].timeFromInitialRequestToResponse,
-                timeFromOpenToResponse: typeof timeFromOpenToResponse === "number"
-                    ? [
-                        ...(collection[user][key].timeFromOpenToResponse || []),
-                        timeFromOpenToResponse,
-                    ]
-                    : collection[user][key].timeFromOpenToResponse,
-                timeFromRepeatedRequestToResponse: [
-                    ...(collection[user][key].timeFromRepeatedRequestToResponse || []),
-                    ...timeFromRepeatedRequestToResponse.filter((el) => typeof el === "number"),
-                ],
-            };
-            collection.total[key] = {
-                ...collection.total[key],
-                timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
-                    ? [
-                        ...(collection.total[key].timeFromInitialRequestToResponse ||
-                            []),
-                        timeFromInitialRequestToResponse,
-                    ]
-                    : collection.total[key].timeFromInitialRequestToResponse,
-                timeFromOpenToResponse: typeof timeFromOpenToResponse === "number"
-                    ? [
-                        ...(collection.total[key].timeFromOpenToResponse || []),
-                        timeFromOpenToResponse,
-                    ]
-                    : collection.total[key].timeFromOpenToResponse,
-                timeFromRepeatedRequestToResponse: [
-                    ...(collection.total[key].timeFromRepeatedRequestToResponse || []),
-                    ...timeFromRepeatedRequestToResponse.filter((el) => typeof el === "number"),
-                ],
-            };
+                        ...timeFromRepeatedRequestToResponse.filter((el) => typeof el === "number"),
+                    ],
+                };
+            });
         });
     });
 };
@@ -1831,11 +1802,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareReviews = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const prepareConductedReviews_1 = __nccwpck_require__(15278);
-const prepareReviews = (reviews = [], collection, dateKey, pullRequestLogin, pullRequestSize) => {
+const prepareReviews = (reviews = [], collection, dateKey, pullRequestLogin, pullRequestSize, teams) => {
+    let teamNames = [];
     const users = Object.keys(reviews?.reduce((acc, review) => {
         const userLogin = review.user?.login || constants_1.invalidUserLogin;
         if (userLogin !== pullRequestLogin) {
-            return { ...acc, [userLogin]: 1 };
+            const teamsNames = (teams[userLogin] || []).reduce((acc, team) => ({ ...acc, [team]: 1 }), {});
+            teamNames = Object.keys(teamsNames);
+            return { ...acc, [userLogin]: 1, ...teamsNames };
         }
         return acc;
     }, {}) || {}).concat("total");
@@ -1843,14 +1817,14 @@ const prepareReviews = (reviews = [], collection, dateKey, pullRequestLogin, pul
         if (!collection[user]) {
             collection[user] = {};
         }
-        const userReviews = Array.isArray(reviews) && user !== "total"
+        const userReviews = Array.isArray(reviews) && user !== "total" && !teamNames.includes(user)
             ? reviews?.filter((review) => {
                 const userLogin = review.user?.login || constants_1.invalidUserLogin;
                 return userLogin === user;
             })
             : reviews;
         [dateKey, "total"].forEach((key) => {
-            collection[user][key] = (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, collection[user][key], pullRequestSize);
+            collection[user][key] = (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, collection[user][key], pullRequestSize, teams);
         });
     });
 };

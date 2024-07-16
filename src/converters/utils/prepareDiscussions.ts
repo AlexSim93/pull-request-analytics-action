@@ -8,7 +8,8 @@ export const prepareDiscussions = (
   collection: Record<string, Record<string, Collection>>,
   index: number,
   dateKey: string,
-  pullRequestLogin: string
+  pullRequestLogin: string,
+  teams: Record<string, string[]>
 ) => {
   const reviewComments = comments[index]?.filter(
     (comment) => pullRequestLogin !== comment.user?.login
@@ -22,44 +23,54 @@ export const prepareDiscussions = (
   ["total", dateKey].forEach((key) => {
     discussions?.forEach((discussion) => {
       const userLogin = discussion.user?.login || invalidUserLogin;
-      if (collection[userLogin][key].discussionsTypes === undefined) {
-        collection[userLogin][key].discussionsTypes = {};
-      }
-      if (collection[pullRequestLogin][key].discussionsTypes === undefined) {
-        collection[pullRequestLogin][key].discussionsTypes = {};
-      }
-      if (collection.total[key].discussionsTypes === undefined) {
-        collection.total[key].discussionsTypes = {};
-      }
+      [
+        userLogin,
+        pullRequestLogin,
+        "total",
+        ...(teams[userLogin] || []),
+        ...(teams[pullRequestLogin] || []),
+      ].forEach((checkingKey) => {
+        if (collection[checkingKey][key].discussionsTypes === undefined) {
+          collection[checkingKey][key].discussionsTypes = {};
+        }
+      });
       getDiscussionType(discussion.body).forEach((type) => {
-        collection[userLogin][key].discussionsTypes![type] = {
-          ...(collection[userLogin][key].discussionsTypes![type] || {}),
-          conducted: {
-            total:
-              (collection[userLogin][key].discussionsTypes![type]?.conducted
-                ?.total || 0) + 1,
-            agreed:
-              (collection[userLogin][key].discussionsTypes![type]?.conducted
-                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-            disagreed:
-              (collection[userLogin][key].discussionsTypes![type]?.conducted
-                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-          },
-        };
-        collection[pullRequestLogin][key].discussionsTypes![type] = {
-          ...(collection[pullRequestLogin][key].discussionsTypes![type] || {}),
-          received: {
-            total:
-              (collection[pullRequestLogin][key].discussionsTypes![type]
-                ?.received?.total || 0) + 1,
-            agreed:
-              (collection[userLogin][key].discussionsTypes![type]?.received
-                ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-            disagreed:
-              (collection[userLogin][key].discussionsTypes![type]?.received
-                ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-          },
-        };
+        [userLogin, ...(teams[userLogin] || [])].forEach((userKey) => {
+          collection[userKey][key].discussionsTypes![type] = {
+            ...(collection[userKey][key].discussionsTypes![type] || {}),
+            conducted: {
+              total:
+                (collection[userKey][key].discussionsTypes![type]?.conducted
+                  ?.total || 0) + 1,
+              agreed:
+                (collection[userKey][key].discussionsTypes![type]?.conducted
+                  ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+              disagreed:
+                (collection[userKey][key].discussionsTypes![type]?.conducted
+                  ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
+            },
+          };
+        });
+
+        [pullRequestLogin, ...(teams[pullRequestLogin] || [])].forEach(
+          (userKey) => {
+            collection[userKey][key].discussionsTypes![type] = {
+              ...(collection[userKey][key].discussionsTypes![type] || {}),
+              received: {
+                total:
+                  (collection[userKey][key].discussionsTypes![type]?.received
+                    ?.total || 0) + 1,
+                agreed:
+                  (collection[userKey][key].discussionsTypes![type]?.received
+                    ?.agreed || 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                disagreed:
+                  (collection[userKey][key].discussionsTypes![type]?.received
+                    ?.disagreed || 0) + (discussion.reactions?.["-1"] ? 1 : 0),
+              },
+            };
+          }
+        );
+
         collection.total[key].discussionsTypes![type] = {
           ...(collection.total[key].discussionsTypes![type] || {}),
           conducted: {
@@ -97,49 +108,40 @@ export const prepareDiscussions = (
         if (!collection[userLogin][key]) {
           collection[userLogin][key] = {};
         }
-        collection[userLogin][key].commentsConducted =
-          (collection[userLogin][key].commentsConducted || 0) + 1;
-        collection.total[key].commentsConducted =
-          (collection.total[key].commentsConducted || 0) + 1;
+        [userLogin, "total", ...(teams[userLogin] || [])].forEach((userKey) => {
+          collection[userKey][key].commentsConducted =
+            (collection[userKey][key].commentsConducted || 0) + 1;
+        });
       }
     });
 
     if (pullRequestLogin) {
-      collection[pullRequestLogin][key]["reviewComments"] =
-        (reviewComments?.length || 0) +
-        (collection[pullRequestLogin][key].reviewComments || 0);
-      collection.total[key]["reviewComments"] =
-        (reviewComments?.length || 0) +
-        (collection.total[key].reviewComments || 0);
+      [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach(
+        (userKey) => {
+          collection[userKey][key]["reviewComments"] =
+            (reviewComments?.length || 0) +
+            (collection[userKey][key].reviewComments || 0);
+        }
+      );
     }
 
     discussions?.forEach((discussion) => {
       const userLogin = discussion.user?.login || invalidUserLogin;
-      collection[userLogin][key].discussions = {
-        ...collection[userLogin][key].discussions,
-        conducted: {
-          total:
-            (collection[userLogin][key].discussions?.conducted?.total || 0) + 1,
-          agreed:
-            (collection[userLogin][key].discussions?.conducted?.agreed || 0) +
-            (discussion.reactions?.["+1"] ? 1 : 0),
-          disagreed:
-            (collection[userLogin][key].discussions?.conducted?.disagreed ||
-              0) + (discussion.reactions?.["-1"] ? 1 : 0),
-        },
-      };
-      collection.total[key].discussions = {
-        ...collection.total[key].discussions,
-        conducted: {
-          total: (collection.total[key].discussions?.conducted?.total || 0) + 1,
-          agreed:
-            (collection.total[key].discussions?.conducted?.agreed || 0) +
-            (discussion.reactions?.["+1"] ? 1 : 0),
-          disagreed:
-            (collection.total[key].discussions?.conducted?.disagreed || 0) +
-            (discussion.reactions?.["-1"] ? 1 : 0),
-        },
-      };
+      [userLogin, "total", ...(teams[userLogin] || [])].forEach((userKey) => {
+        collection[userKey][key].discussions = {
+          ...collection[userKey][key].discussions,
+          conducted: {
+            total:
+              (collection[userKey][key].discussions?.conducted?.total || 0) + 1,
+            agreed:
+              (collection[userKey][key].discussions?.conducted?.agreed || 0) +
+              (discussion.reactions?.["+1"] ? 1 : 0),
+            disagreed:
+              (collection[userKey][key].discussions?.conducted?.disagreed ||
+                0) + (discussion.reactions?.["-1"] ? 1 : 0),
+          },
+        };
+      });
     });
 
     if (pullRequestLogin) {
@@ -150,34 +152,24 @@ export const prepareDiscussions = (
         (discussion) => discussion.reactions?.["-1"]
       );
 
-      collection[pullRequestLogin][key].discussions = {
-        ...collection[pullRequestLogin][key].discussions,
-        received: {
-          total:
-            (collection[pullRequestLogin][key].discussions?.received?.total ||
-              0) + (discussions?.length || 0),
-          agreed:
-            (collection[pullRequestLogin][key].discussions?.received?.agreed ||
-              0) + (agreedDiscussions?.length || 0),
-          disagreed:
-            (collection[pullRequestLogin][key].discussions?.received
-              ?.disagreed || 0) + (disagreedDiscussions?.length || 0),
-        },
-      };
-      collection.total[key].discussions = {
-        ...collection.total[key].discussions,
-        received: {
-          total:
-            (collection.total[key].discussions?.received?.total || 0) +
-            (discussions?.length || 0),
-          agreed:
-            (collection.total[key].discussions?.received?.agreed || 0) +
-            (agreedDiscussions?.length || 0),
-          disagreed:
-            (collection.total[key].discussions?.received?.disagreed || 0) +
-            (disagreedDiscussions?.length || 0),
-        },
-      };
+      [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach(
+        (userKey) => {
+          collection[userKey][key].discussions = {
+            ...collection[userKey][key].discussions,
+            received: {
+              total:
+                (collection[userKey][key].discussions?.received?.total || 0) +
+                (discussions?.length || 0),
+              agreed:
+                (collection[userKey][key].discussions?.received?.agreed || 0) +
+                (agreedDiscussions?.length || 0),
+              disagreed:
+                (collection[userKey][key].discussions?.received?.disagreed ||
+                  0) + (disagreedDiscussions?.length || 0),
+            },
+          };
+        }
+      );
     }
   });
 };

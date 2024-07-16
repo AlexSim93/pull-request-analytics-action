@@ -5,7 +5,8 @@ export const prepareConductedReviews = (
   pullRequestLogin: string,
   pullRequestReviews: any[] = [],
   collection: Collection,
-  pullRequestSize: PullRequestSize
+  pullRequestSize: PullRequestSize,
+  teams: Record<string, string[]>
 ) => {
   const reviewsConducted: Collection["reviewsConducted"] = {
     ...(collection?.reviewsConducted || {}),
@@ -16,18 +17,20 @@ export const prepareConductedReviews = (
     }, {}) || {}
   );
 
-  [pullRequestLogin, "total"].forEach((key) => {
-    const statusesReviewsStats = statuses.reduce((acc, status) => {
-      return {
-        ...acc,
-        [status]: (reviewsConducted[key]?.[status] || 0) + 1,
+  [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach(
+    (key) => {
+      const statusesReviewsStats = statuses.reduce((acc, status) => {
+        return {
+          ...acc,
+          [status]: (reviewsConducted[key]?.[status] || 0) + 1,
+        };
+      }, {});
+      reviewsConducted[key] = {
+        ...reviewsConducted[key],
+        ...statusesReviewsStats,
       };
-    }, {});
-    reviewsConducted[key] = {
-      ...reviewsConducted[key],
-      ...statusesReviewsStats,
-    };
-  });
+    }
+  );
 
   return {
     ...collection,

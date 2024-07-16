@@ -80,10 +80,11 @@ export const collectData = (
       collection,
       dateKey,
       userKey,
-      getPullRequestSize(pullRequest?.additions, pullRequest?.deletions)
+      getPullRequestSize(pullRequest?.additions, pullRequest?.deletions),
+      teams
     );
-    prepareResponseTime(data.events[index], pullRequest, collection, dateKey);
-    prepareDiscussions(data.comments, collection, index, dateKey, userKey);
+    prepareResponseTime(data.events[index], pullRequest, collection, dateKey, teams);
+    prepareDiscussions(data.comments, collection, index, dateKey, userKey, teams);
   });
 
   Object.entries(collection).map(([key, value]) => {
