@@ -13,31 +13,32 @@ export const getTeams = async (orgs: string[]) => {
   );
 
   const checkedTeams = teams
-    .map((team) => {
-      if (team.status === "rejected") {
-        console.error(`Error while fetching teams: ${team.reason}`);
-        return null;
-      }
-      return team.value;
-    })
-    .reduce(
-      (acc: { slug: string; org: string; name: string }[], element, index) =>
-        element
-          ? [
-              ...(acc ? acc : []),
-              ...element.map((el) => ({
-                slug: el.slug,
-                org: orgs[index],
-                name: el.name,
-              })),
-            ]
-          : acc,
-      []
-    );
-
+  .map((team) => {
+    if (team.status === "rejected") {
+      console.error(`Error while fetching teams: ${team.reason}`);
+      return null;
+    }
+    return team.value;
+  })
+  .reduce(
+    (acc: { slug: string; org: string; name: string }[], element, index) =>
+      element
+    ? [
+      ...(acc ? acc : []),
+      ...element.map((el) => ({
+        slug: el.slug,
+        org: orgs[index],
+        name: el.name,
+      })),
+    ]
+    : acc,
+    []
+  );
+  
   if (!checkedTeams) {
     return {};
   }
+
   const members = await Promise.allSettled(
     checkedTeams.map(async (team) => {
       if (!team) return null;
@@ -59,7 +60,7 @@ export const getTeams = async (orgs: string[]) => {
     .filter((el) => el)
     .reduce<Record<string, string[]>>((acc, element) => {
       element?.members.forEach((member) => {
-        acc[member] = [...(acc.member || []), element.team];
+        acc[member] = [...(acc[member] || []), element.team];
       });
       return acc;
     }, {});

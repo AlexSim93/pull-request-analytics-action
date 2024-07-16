@@ -48,6 +48,10 @@ async function main() {
 
     console.log("Initiating data request.");
     const data = [];
+    const orgs = getOrgs();
+
+    const teams = await getTeams(orgs);
+
     for (let i = 0; i < repos.length; i++) {
       const result = await makeComplexRequest(
         parseInt(getValueAsIs("AMOUNT")),
@@ -61,9 +65,6 @@ async function main() {
       );
       data.push(result);
     }
-    const orgs = getOrgs();
-
-    const teams = await getTeams(orgs);
 
     console.log("Data successfully retrieved. Starting report calculations.");
 

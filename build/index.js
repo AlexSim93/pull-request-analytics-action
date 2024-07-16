@@ -2000,6 +2000,8 @@ async function main() {
         }, {})).map((el) => el.split("/"));
         console.log("Initiating data request.");
         const data = [];
+        const orgs = (0, utils_1.getOrgs)();
+        const teams = await (0, requests_1.getTeams)(orgs);
         for (let i = 0; i < repos.length; i++) {
             const result = await (0, requests_1.makeComplexRequest)(parseInt((0, utils_1.getValueAsIs)("AMOUNT")), {
                 owner: repos[i][0],
@@ -2009,8 +2011,6 @@ async function main() {
             });
             data.push(result);
         }
-        const orgs = (0, utils_1.getOrgs)();
-        const teams = await (0, requests_1.getTeams)(orgs);
         console.log("Data successfully retrieved. Starting report calculations.");
         const mergedData = data.reduce((acc, element) => ({
             ownerRepo: acc.ownerRepo
@@ -2529,7 +2529,7 @@ const getTeams = async (orgs) => {
         .filter((el) => el)
         .reduce((acc, element) => {
         element?.members.forEach((member) => {
-            acc[member] = [...(acc.member || []), element.team];
+            acc[member] = [...(acc[member] || []), element.team];
         });
         return acc;
     }, {});
