@@ -1,6 +1,6 @@
 name: "Pull Request Analytics"
 author: "Aleksei Simatov"
-description: "Generates detailed PR analytics reports within GitHub, focusing on review efficiency and team performance."
+description: "Provides informative reports on team and developer metrics, based on data from pull requests and code reviews"
 branding:
   icon: "trending-up"
   color: "orange"

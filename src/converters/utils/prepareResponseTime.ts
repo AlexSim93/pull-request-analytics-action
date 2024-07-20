@@ -1,3 +1,6 @@
+import set from "lodash/set";
+import get from "lodash/get";
+
 import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
@@ -52,31 +55,45 @@ export const prepareResponseTime = (
           );
 
         ["total", user, ...(teams[user] || [])].forEach((userKey) => {
-          collection[userKey][key] = {
-            ...collection[userKey][key],
+          set(collection, [userKey, key], {
+            ...get(collection, [userKey, key], {}),
             timeFromInitialRequestToResponse:
               typeof timeFromInitialRequestToResponse === "number"
                 ? [
-                    ...(collection[userKey][key]
-                      .timeFromInitialRequestToResponse || []),
+                    ...get(
+                      collection,
+                      [userKey, key, "timeFromInitialRequestToResponse"],
+                      []
+                    ),
                     timeFromInitialRequestToResponse,
                   ]
-                : collection[userKey][key].timeFromInitialRequestToResponse,
+                : get(
+                    collection,
+                    [userKey, key, "timeFromInitialRequestToResponse"],
+                    []
+                  ),
             timeFromOpenToResponse:
               typeof timeFromOpenToResponse === "number"
                 ? [
-                    ...(collection[userKey][key].timeFromOpenToResponse || []),
+                    ...get(
+                      collection,
+                      [userKey, key, "timeFromOpenToResponse"],
+                      []
+                    ),
                     timeFromOpenToResponse,
                   ]
-                : collection[user][key].timeFromOpenToResponse,
+                : get(collection, [userKey, key, "timeFromOpenToResponse"], []),
             timeFromRepeatedRequestToResponse: [
-              ...(collection[userKey][key].timeFromRepeatedRequestToResponse ||
-                []),
+              ...get(
+                collection,
+                [userKey, key, "timeFromRepeatedRequestToResponse"],
+                []
+              ),
               ...(timeFromRepeatedRequestToResponse.filter(
                 (el) => typeof el === "number"
               ) as number[]),
             ],
-          };
+          });
         });
       });
     }

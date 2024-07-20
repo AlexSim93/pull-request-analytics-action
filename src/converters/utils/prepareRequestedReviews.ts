@@ -1,3 +1,6 @@
+import set from "lodash/set";
+import get from "lodash/get";
+
 import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 
@@ -8,7 +11,9 @@ export const prepareRequestedReviews = (
   teams: Record<string, string[]>
 ) => {
   const requestedReviewers = requests.reduce((acc, request) => {
-    const user = request.requested_reviewer?.login || invalidUserLogin;
+    const user = request.requested_reviewer
+      ? request.requested_reviewer?.login || invalidUserLogin
+      : request.requested_team?.name || "Invalid Team";
     return { ...acc, [user]: 1 };
   }, {});
 
@@ -22,18 +27,12 @@ export const prepareRequestedReviews = (
 
   [dateKey, "total"].forEach((date) => {
     Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
-      [user, ...(teams[user] || [])].forEach((userKey) => {
-        if (!collection[userKey]) {
-          collection[userKey] = {};
-        }
-      });
-
-      collection[user][date] = {
-        ...collection[user][date],
-        reviewRequestsConducted:
-          (collection[user][date]?.reviewRequestsConducted || 0) +
-          (value as number),
-      };
+      set(
+        collection,
+        [user, date, "reviewRequestsConducted"],
+        get(collection, [user, date, "reviewRequestsConducted"], 0) +
+          (value as number)
+      );
     });
   });
 };

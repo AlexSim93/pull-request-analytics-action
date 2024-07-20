@@ -1,3 +1,6 @@
+import set from "lodash/set";
+import get from "lodash/get";
+
 import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import { PullRequestSize } from "./calculations/getPullRequestSize";
@@ -28,9 +31,6 @@ export const prepareReviews = (
   ).concat("total");
 
   users.forEach((user) => {
-    if (!collection[user]) {
-      collection[user] = {};
-    }
     const userReviews =
       Array.isArray(reviews) && user !== "total" && !teamNames.includes(user)
         ? reviews?.filter((review) => {
@@ -39,12 +39,16 @@ export const prepareReviews = (
           })
         : reviews;
     [dateKey, "total"].forEach((key) => {
-      collection[user][key] = prepareConductedReviews(
-        pullRequestLogin,
-        userReviews,
-        collection[user][key],
-        pullRequestSize,
-        teams
+      set(
+        collection,
+        [user, key],
+        prepareConductedReviews(
+          pullRequestLogin,
+          userReviews,
+          get(collection, [user, key], {}),
+          pullRequestSize,
+          teams
+        )
       );
     });
   });
