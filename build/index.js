@@ -3134,7 +3134,7 @@ const createResponseTable = (data, users, date) => {
             return [
                 `**${user}**`,
                 data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
-                data[user]?.[date]?.reviewsConducted?.total?.total.toString() ||
+                data[user]?.[date]?.reviewsConducted?.total?.total?.toString() ||
                     "0",
                 (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeFromOpenToResponse ||
                     0),

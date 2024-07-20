@@ -34,7 +34,7 @@ export const createResponseTable = (
           return [
             `**${user}**`,
             data[user]?.[date]?.reviewRequestsConducted?.toString() || "0",
-            data[user]?.[date]?.reviewsConducted?.total?.total.toString() ||
+            data[user]?.[date]?.reviewsConducted?.total?.total?.toString() ||
               "0",
             formatMinutesDuration(
               data[user]?.[date]?.[type as StatsType]?.timeFromOpenToResponse ||
