@@ -1,4 +1,7 @@
 import { format, parseISO } from "date-fns";
+import set from "lodash/set";
+import get from "lodash/get";
+
 import { makeComplexRequest } from "../requests";
 import { Collection } from "./types";
 import {
@@ -54,25 +57,29 @@ export const collectData = (
         : invalidDate;
 
     const userKey = pullRequest.user?.login || invalidUserLogin;
-    [userKey, ...(teams[userKey] || [])].forEach((key) => {
-      if (!collection[key]) {
-        collection[key] = {};
-      }
-    });
     prepareRequestedReviews(reviewRequests, collection, dateKey, teams);
 
     ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {
-        collection[key][innerKey] = preparePullRequestInfo(
-          pullRequest,
-          collection[key][innerKey]
+        set(
+          collection,
+          [key, innerKey],
+          preparePullRequestInfo(
+            pullRequest,
+            get(collection, [key, innerKey], {})
+          )
         );
-        collection[key][innerKey] = preparePullRequestTimeline(
-          pullRequest,
-          reviews,
-          reviewRequests?.[0],
-          statuses,
-          collection[key][innerKey]
+
+        set(
+          collection,
+          [key, innerKey],
+          preparePullRequestTimeline(
+            pullRequest,
+            reviews,
+            reviewRequests?.[0],
+            statuses,
+            get(collection, [key, innerKey], {})
+          )
         );
       });
     });
@@ -104,7 +111,7 @@ export const collectData = (
 
   Object.entries(collection).map(([key, value]) => {
     Object.entries(value).forEach(([innerKey, innerValue]) => {
-      collection[key][innerKey] = preparePullRequestStats(innerValue);
+      set(collection, [key, innerKey], preparePullRequestStats(innerValue));
     });
   });
 
