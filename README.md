@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-3.1.1-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
-**pull-request-analytics-action**: A powerful tool for analyzing the effectiveness of both teams and individual developers. This action generates reports based on data from pull requests, code reviews, and comments, enabling you to identify your team's strengths as well as areas needing improvement. The statistics collected by this GitHub Action can be displayed in the form of tables and graphs or passed on for further operations as markdown or a data collection.
+This GitHub Action measures metrics for developers and/or teams. Reports are generated in issues based on user actions such as opening/closing pull requests, requesting/conducting reviews, opening discussions, and more. The action is designed to provide better insights into team strengths and identify bottlenecks.
 
 ## Table of Contents
 
@@ -356,7 +356,7 @@ Data transmission to Mixpanel can be disabled by setting the `ALLOW_ANALYTICS` i
 
 ## Recommendations and Tips
 
-- Use a Personal Access Token (classic) to generate reports for multiple repositories or to support teams.
+- Use a **Personal Access Token (classic)** to generate reports for multiple repositories or to support teams.
 - Utilize the `schedule` event for optimal report updates. You can refresh the report every few hours or days to avoid exceeding rate limits and to keep the report up to date.
 - To hide individual metrics, specify users in the `HIDE_USERS` parameter or leave `total` and GitHub team names in the `SHOW_USERS` parameter.
 - To avoid a long list of title changes when updating an existing issue, it is recommended to set the title yourself using the `ISSUE_TITLE` parameter.
