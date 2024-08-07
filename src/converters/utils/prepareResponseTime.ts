@@ -15,6 +15,7 @@ export const prepareResponseTime = (
   dateKey: string,
   teams: Record<string, string[]>
 ) => {
+  if (!events) return;
   const responses = getResponses(events);
 
   Object.entries(responses as Record<string, any[][]>).forEach(

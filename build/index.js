@@ -1778,6 +1778,8 @@ const get_1 = __importDefault(__nccwpck_require__(56908));
 const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const prepareResponseTime = (events = [], pullRequest, collection, dateKey, teams) => {
+    if (!events)
+        return;
     const responses = (0, calculations_1.getResponses)(events);
     Object.entries(responses).forEach(([user, responses]) => {
         ["total", dateKey].forEach((key) => {
@@ -2297,15 +2299,15 @@ const getDataWithThrottle = async (pullRequestNumbers, repository, options) => {
         const pullRequestDatas = await (0, getPullRequestData_1.getPullRequestDatas)(pullRequestNumbersChunks, repository);
         console.log(`Batch request #${counter + 1} out of ${Math.ceil(pullRequestNumbers.length / constants_1.concurrentLimit)}(${repository.owner}/${repository.repo})`);
         const prs = await Promise.allSettled(pullRequestDatas);
-        await (0, delay_1.delay)(4000);
+        await (0, delay_1.delay)(5000);
         const pullRequestEvents = await (0, getIssueTimelineEvents_1.getIssueTimelineEvents)(pullRequestNumbersChunks, repository);
         const events = await Promise.allSettled(pullRequestEvents);
-        await (0, delay_1.delay)(4000);
+        await (0, delay_1.delay)(5000);
         const pullRequestComments = await (0, getPullRequestComments_1.getPullRequestComments)(pullRequestNumbersChunks, repository, {
             skip: skipComments,
         });
         const comments = await Promise.allSettled(pullRequestComments);
-        await (0, delay_1.delay)((0, utils_1.checkCommentSkip)() ? 0 : 4000);
+        await (0, delay_1.delay)((0, utils_1.checkCommentSkip)() ? 0 : 5000);
         counter++;
         PRs.push(...prs);
         PRComments.push(...comments);
