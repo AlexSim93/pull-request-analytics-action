@@ -2224,7 +2224,7 @@ const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
 const createIssue = async (markdown, issueNumber) => {
     const issueTitle = (0, utils_1.getValueAsIs)("ISSUE_TITLE") ||
-        `Pull requests report(${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
+        `Pull requests report (${(0, date_fns_1.format)(new Date(), "d/MM/yyyy HH:mm")})`;
     const labels = (0, utils_1.getMultipleValuesInput)("LABELS").filter((label) => label && typeof label === "string") || [];
     const assignees = (0, utils_1.getMultipleValuesInput)("ASSIGNEES").filter((assignee) => assignee && typeof assignee === "string") || [];
     let result;

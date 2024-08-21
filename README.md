@@ -1,7 +1,5 @@
 # Pull request analytics action
 
-![Version](https://img.shields.io/badge/version-3.1.2-blue) ![License](https://img.shields.io/badge/license-MIT-green)
-
 This GitHub Action measures metrics for developers and/or teams. Reports are generated in issues based on user actions such as opening/closing pull requests, requesting/conducting reviews, opening discussions, and more. The action is designed to provide better insights into team strengths and identify bottlenecks.
 
 ## Table of Contents
