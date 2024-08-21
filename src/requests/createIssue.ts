@@ -9,7 +9,7 @@ export const createIssue = async (
 ) => {
   const issueTitle =
     getValueAsIs("ISSUE_TITLE") ||
-    `Pull requests report(${format(new Date(), "d/MM/yyyy HH:mm")})`;
+    `Pull requests report (${format(new Date(), "d/MM/yyyy HH:mm")})`;
   const labels =
     getMultipleValuesInput("LABELS").filter(
       (label) => label && typeof label === "string"
