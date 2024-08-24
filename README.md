@@ -6,7 +6,6 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 
 - [Key Features](#key-features)
 - [Getting started](#getting-started)
-- [Report examples](#report-examples)
 - [Using GitHub Enterprise Server](#using-github-enterprise-server)
 - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
 - [Pull Request Sizes](#pull-request-sizes)
@@ -188,20 +187,6 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
 
 This setup allows you to fully leverage **pull-request-analytics-action** for comprehensive PR analysis, tailored to your project’s needs.
 
-## Report Examples
-
-Explore how **pull-request-analytics-action** works with these report examples in the project:
-
-1. **Issue Creation with Comments**: Demonstrates the generation of a new issue with detailed comments for each report. [View Issue Example](https://github.com/AlexSim93/pull-request-analytics-action/issues/16#).
-
-2. **Multi-Month Report**: Analysis over several months. [View Markdown Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/periodReport.md).
-
-3. **Last N PRs Report**: Insights into the most recent pull requests. [View Markdown Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/nPRsReport.md).
-
-4. **JSON Data Report**: Example of JSON data collected by the action, showcasing detailed analytics. [View JSON Example](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/examples/collectionExample.json).
-
-Click the links for detailed report formats and insights.
-
 ## Using GitHub Enterprise Server
 
 **pull-request-analytics-action** supports integration with GitHub Enterprise Server. To use this feature, you need to set the `GITHUB_API_URL` environment variable:
@@ -299,7 +284,7 @@ Below is a table describing the possible outputs of **pull-request-analytics-act
 | `JSON_COLLECTION` | A string output containing a JSON object with all the data collected by the action. To receive this output, add `collection` to `EXECUTION_OUTCOME`. |
 | `MARKDOWN`        | An output containing the report as a markdown string. To receive this output, add `markdown` to `EXECUTION_OUTCOME`.                                 |
 
-### Privacy and Data Handling
+## Privacy and Data Handling
 
 **pull-request-analytics-action** is stateless; it does not send or store any of the collected data. However, to better understand user needs, fix bugs, and efficiently develop the project, some non-sensitive input parameters are sent to Mixpanel. These data are anonymous and do not provide any information that could identify the project or its data. If you wish to disable any data transmission, set `ALLOW_ANALYTICS` to `false`.
 
