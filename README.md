@@ -6,7 +6,6 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 
 - [Key Features](#key-features)
 - [Getting started](#getting-started)
-- [Configuration Examples](#configuration-examples)
 - [Report examples](#report-examples)
 - [Using GitHub Enterprise Server](#using-github-enterprise-server)
 - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
@@ -14,9 +13,9 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 - [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
 - [Configuration Parameters Overview](#configuration-parameters-overview)
 - [Outputs](#outputs)
+- [Recommendations and Tips](#recommendations-and-tips)
 - [Privacy and Data Handling](#privacy-and-data-handling)
 - [Usage Limitations](#usage-limitations)
-- [Recommendations and Tips](#recommendations-and-tips)
 - [How You Can Help](#how-you-can-help)
 
 ## Key Features:
@@ -28,8 +27,6 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 | **dev1**  |  34 minutes   |       17 minutes       | 3 hours 34 minutes  | 7 hours 32 minutes  | 14 hours 9 minutes  |        22        |
 | **dev2**  |  21 minutes   |       20 minutes       |       4 hours       |       4 hours       |  23 hours 1 minute  |        13        |
 | **dev3**  |  15 minutes   |       18 minutes       | 15 hours 16 minutes | 24 hours 7 minutes  | 53 hours 43 minutes |        2         |
-| **dev4**  |  23 minutes   |       22 minutes       | 2 hours 41 minutes  | 9 hours 15 minutes  | 47 hours 41 minutes |        8         |
-| **dev5**  |  13 minutes   |       12 minutes       | 5 hours 59 minutes  | 18 hours 55 minutes | 40 hours 7 minutes  |        2         |
 | **total** |  27 minutes   |       18 minutes       | 4 hours 21 minutes  | 7 hours 36 minutes  | 26 hours 14 minutes |        47        |
 
 ```mermaid
@@ -58,20 +55,6 @@ Time to review(15 hours 16 minutes) :  0, 916
 Time to approve(24 hours 7 minutes) :  0, 1447
 Time to merge(53 hours 43 minutes) :  0, 3223
 
-section dev4
-Time in draft(27 minutes) :  0, 13
-Time to review request(12 minutes) :  0, 12
-Time to review(2 hours 41 minutes) :  0, 161
-Time to approve(9 hours 15 minutes) :  0, 555
-Time to merge(47 hours 41 minutes) :  0, 2861
-
-section dev5
-Time in draft(27 minutes) :  0, 27
-Time to review request(12 minutes) :  0, 18
-Time to review(5 hours 59 minutes) :  0, 359
-Time to approve(18 hours 55 minutes) :  0, 1135
-Time to merge(40 hours 7 minutes) :  0, 2407
-
 section total
 Time in draft(27 minutes) :  0, 27
 Time to review request(12 minutes) :  0, 18
@@ -97,8 +80,6 @@ title Review time total 12/2023
 | **dev1**  |        24        |        22        |     +1448/-3110     |      14/5/4/0/1      |       41       |         8         |
 | **dev2**  |        14        |        13        |     +813/-2062      |      7/4/1/2/0       |       6        |        20         |
 | **dev3**  |        2         |        2         |       +15/-3        |      2/0/0/0/0       |       1        |        10         |
-| **dev4**  |        8         |        8         |     +5416/-4600     |      6/0/1/0/1       |       7        |         9         |
-| **dev5**  |        2         |        2         |      +838/-362      |      1/0/0/0/1       |       16       |         2         |
 | **total** |        50        |        47        |    +8530/-10137     |      30/9/6/2/3      |       71       |        46         |
 
 - **Quality Report on devInitiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
@@ -108,8 +89,6 @@ title Review time total 12/2023
 | **dev1**  |        22        |             3              |                   0 / 0 / 10                    |        20         |
 | **dev2**  |        13        |             1              |                    0 / 0 / 2                    |         3         |
 | **dev3**  |        2         |             0              |                    0 / 0 / 1                    |         1         |
-| **dev4**  |        8         |             1              |                    0 / 0 / 4                    |         4         |
-| **dev5**  |        2         |             1              |                    3 / 2 / 8                    |         9         |
 | **total** |        47        |             6              |                   3 / 2 / 25                    |        37         |
 
 ```mermaid
@@ -129,8 +108,6 @@ title Discussions types total 12/2023
 | **dev1**  |        22        |                    0 / 0 / 0                     |         0          |      5/2/0/1/0       |                0 / 0 / 8                 |
 | **dev2**  |        13        |                    3 / 2 / 22                    |         33         |      10/3/4/0/3      |                5 / 8 / 20                |
 | **dev3**  |        2         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |
-| **dev4**  |        8         |                    0 / 0 / 0                     |         0          |      6/2/1/0/0       |                0 / 0 / 9                 |
-| **dev5**  |        2         |                    0 / 0 / 1                     |         1          |      2/0/0/0/0       |                0 / 1 / 2                 |
 | **total** |        47        |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |
 
 - **Response Time for Review Requests**: The table shows how quickly developers and the team respond to code review requests, as well as the ratio of requests to responses. This table provides insight into the developers' engagement in the review process.
@@ -140,17 +117,9 @@ title Discussions types total 12/2023
 | **dev1**  |            259            |        88         |      10 hours 13 minutes      |          6 hours 37 minutes           |        2 hours 2 minutes         |
 | **dev2**  |            271            |        56         |      10 hours 48 minutes      |          9 hours 42 minutes           |                                  |
 | **dev3**  |            218            |        66         |      6 hours 59 minutes       |          6 hours 55 minutes           |        3 hours 2 minutes         |
-| **dev4**  |            232            |        68         |      3 hours 20 minutes       |          2 hours 54 minutes           |            50 minutes            |
-| **dev5**  |            236            |        35         |      7 hours 28 minutes       |           7 hours 7 minutes           |                                  |
 | **total** |           1219            |        282        |      7 hours 15 minutes       |          6 hours 41 minutes           |        1 hour 57 minutes         |
 
 - **Highlighted PRs List by Key Metrics**: One of the standout features of **pull-request-analytics-action** is the ability to generate a list of the most notable pull requests based on four key metrics: time from opening to review, time from review to approval, time from approval to merge, and the number of comments. This feature provides a list of links directly to these exceptional PRs, allowing for quick access and detailed analysis.
-
-- **Highly Customizable for Specific Project Needs**: This action is designed with flexibility in mind, allowing for extensive customization of display parameters, statistics collection, and report generation. Users can tailor the tool to precisely fit the requirements of their specific projects, ensuring that the reports and analytics are as relevant and useful as possible.
-
-- **GitHub-Integrated, Secure, and Open Source**: As a GitHub Action, **pull-request-analytics-action** operates entirely within the GitHub environment. It neither shares nor stores any data on external services, ensuring complete data security and privacy. Additionally, it is an open-source tool, providing full transparency in its operation, and is available to use at no cost, making it accessible for all GitHub users.
-
-This GitHub Action, **pull-request-analytics-action**, is an essential tool for any team seeking to optimize their software development process, ensuring more efficient and effective project management.
 
 ## Getting started
 
@@ -218,16 +187,6 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
    - If configured, check for a new issue in the specified repository containing the report.
 
 This setup allows you to fully leverage **pull-request-analytics-action** for comprehensive PR analysis, tailored to your project’s needs.
-
-## Configuration Examples
-
-1. **Manual Execution for All Organization Repositories**: Includes options to set start and end dates for the statistics period and to customize the report title. [View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/manualTriggerForAllReposOfOrg.yml)
-
-2. **Up-to-Date Statistics for Latest 200 Closed PRs**: Automatically updates the report with every PR closure, maintaining current statistics for the last 200 updated closed PRs.[View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/updateReportOnPRClose.yml)
-
-3. **Yearly Statistics Update Every Monday**: Configured to update yearly statistics every Monday, with assignees set and excluding individual developer statistics. [View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/yearReportWithoutDevelopers.yml)
-
-4. **Quarterly Report Update on the 1st of Each Month**: Updates the report for the last three months on the first day of each month, displaying only the average values for timelines and specifying assignees. [View config](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/lastMonthsReport.yml)
 
 ## Report Examples
 
@@ -340,25 +299,13 @@ Below is a table describing the possible outputs of **pull-request-analytics-act
 | `JSON_COLLECTION` | A string output containing a JSON object with all the data collected by the action. To receive this output, add `collection` to `EXECUTION_OUTCOME`. |
 | `MARKDOWN`        | An output containing the report as a markdown string. To receive this output, add `markdown` to `EXECUTION_OUTCOME`.                                 |
 
-## Privacy and Data Handling
+### Privacy and Data Handling
 
-**pull-request-analytics-action** is designed with privacy and data security as paramount concerns. The action operates statelessly, meaning it neither stores nor transmits any data obtained during its execution. All operations are conducted entirely within the GitHub environment to ensure the utmost privacy and security of user data.
-
-In version `v2`, to better understand user needs and to allocate resources more efficiently for the action's development, some non-sensitive input data are transmitted to Mixpanel. This is strictly limited to inputs that do not compromise the security or privacy of your projects. The complete list of inputs sent can be reviewed in [this file](https://github.com/AlexSim93/pull-request-analytics-action/tree/v2/src/analytics/sendActionRun.ts).
-
-Data transmission to Mixpanel can be disabled by setting the `ALLOW_ANALYTICS` input to `false`. However, we strongly encourage you not to disable this feature. The data sent poses no threat to your project's security or privacy but can significantly aid in the development and improvement of **pull-request-analytics-action**.
+**pull-request-analytics-action** is stateless; it does not send or store any of the collected data. However, to better understand user needs, fix bugs, and efficiently develop the project, some non-sensitive input parameters are sent to Mixpanel. These data are anonymous and do not provide any information that could identify the project or its data. If you wish to disable any data transmission, set `ALLOW_ANALYTICS` to `false`.
 
 ## Usage Limitations
 
 **pull-request-analytics-action** operates within GitHub's API rate limits and message size constraints, which are generally sufficient for detailed, long-term reporting. However, in rare cases of extremely large datasets, some adjustments might be necessary. For more information, refer to GitHub's documentation on [rate limiting](https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api). The length of the report generated by **pull-request-analytics-action** is limited to 65,536 characters due to GitHub Issue size constraints.
-
-## Recommendations and Tips
-
-- Use a **Personal Access Token (classic)** to generate reports for multiple repositories or to support teams.
-- Utilize the `schedule` event for optimal report updates. You can refresh the report every few hours or days to avoid exceeding rate limits and to keep the report up to date.
-- To hide individual metrics, specify users in the `HIDE_USERS` parameter or leave `total` and GitHub team names in the `SHOW_USERS` parameter.
-- To avoid a long list of title changes when updating an existing issue, it is recommended to set the title yourself using the `ISSUE_TITLE` parameter.
-- You can filter pull requests using labels with the `EXCLUDE_LABELS` and `INCLUDE_LABELS` parameters.
 
 ## How You Can Help
 
@@ -369,7 +316,5 @@ Contributions to **pull-request-analytics-action** are always welcome, no matter
 - **Contribute to the Code**: Follow our contribution guidelines to make code contributions. Every pull request helps!
 - **Report Bugs**: Encountered an issue? Please let us know by opening an issue on GitHub. This is crucial for continuous improvement.
 - **Share Ideas**: Have ideas on how to improve **pull-request-analytics-action**? Open an issue and tell us about your suggestions.
-- **Participate in Surveys**: Occasionally, we conduct surveys to gather feedback. Your participation would be invaluable in shaping the future of **pull-request-analytics-action**.
-- **Get Featured**: If your company or project uses **pull-request-analytics-action**, let us know! We'd be proud to mention your name in our list of users. It's a great way for you to showcase your commitment to quality in software development, and it helps us demonstrate the real-world effectiveness of our tool.
 
-Your support and contributions greatly enhance this project. Together, we can make it the best tool for analyzing pull requests!
+I appreciate any contributions to the project. Your help makes this action better!
