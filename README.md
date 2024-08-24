@@ -8,7 +8,6 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 - [Getting started](#getting-started)
 - [Using GitHub Enterprise Server](#using-github-enterprise-server)
 - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
-- [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
 - [Configuration Parameters Overview](#configuration-parameters-overview)
 - [Outputs](#outputs)
 - [Recommendations and Tips](#recommendations-and-tips)
