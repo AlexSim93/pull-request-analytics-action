@@ -8,7 +8,6 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 - [Getting started](#getting-started)
 - [Using GitHub Enterprise Server](#using-github-enterprise-server)
 - [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
-- [Pull Request Sizes](#pull-request-sizes)
 - [Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic](#detailed-report-on-discussion-types)
 - [Configuration Parameters Overview](#configuration-parameters-overview)
 - [Outputs](#outputs)
@@ -215,25 +214,6 @@ In addition, reactions of :+1: and :-1: on the initial message of a discussion w
 - **pull-request-analytics-action** will recognize these labels and include them in the report, providing a categorized overview of discussions.
 
 This feature enhances the analytical capabilities of **pull-request-analytics-action**, offering a deeper insight into the nature and distribution of discussions in your pull requests.
-
-## Pull Request Sizes
-
-**Calculating PR Size**: The size of a pull request is determined using the formula: `additions + deletions * 0.5`. This calculation considers both the lines of code added and a weighted count of deletions to assess the overall size.
-
-Based on this calculation, pull requests are categorized into the following size brackets:
-
-- `0-50`: `xs`
-- `51-200`: `s`
-- `201-400`: `m`
-- `401-700`: `l`
-- `701+`: `xl`
-
-## Report Data Grouping, AMOUNT Parameter, and Time Calculation Logic
-
-- **Data Grouping**: The report data is organized based on the closure date of each pull request.
-- **Using AMOUNT Parameter**: When `AMOUNT` is specified without `REPORT_DATE_START`, the report includes the specified number of most recently modified pull requests. However, the report count may be less than the `AMOUNT` specified, as it only includes merged pull requests.
-
-- **Excluding Weekends and Non-Working Hours**: The calculations for the report exclude weekends. Furthermore, when `CORE_HOURS_START` and `CORE_HOURS_END` are set, time outside of these core working hours is not considered in the time-related metrics.
 
 ## Configuration Parameters Overview
 
