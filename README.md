@@ -28,7 +28,9 @@ Overall, this action enables faster and more accurate assessments, leading to be
 
 ## Metrics
 
-#### Lead Time
+All metrics are presented in the form of tables, charts, and lists. Below, you can see an example of such data.
+
+### Lead Time
 Displays the time from PR creation to each displayed status. Helps identify bottlenecks in the code review process. Use the `timeline` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Time in draft | Time to review request |   Time to review    |   Time to approve   |    Time to merge    | Total merged PRs |
@@ -82,7 +84,7 @@ title Review time total 12/2023
 "12+ hours(2)":2
 ```
 
-#### Contribution
+### Contribution
 Shows the total volume of code merged, reviews conducted, and comments in PRs. Helps to understand the context in which other metrics apply. Use the `workload` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments | Reviews conducted |
@@ -92,7 +94,7 @@ Shows the total volume of code merged, reviews conducted, and comments in PRs. H
 | **dev3**  |        2         |        2         |       +15/-3        |      2/0/0/0/0       |       1        |        10         |
 | **total** |        50        |        47        |    +8530/-10137     |      30/9/6/2/3      |       71       |        46         |
 
-#### PR Discussability (Author’s Perspective)
+### Discussion Intensity (Author’s Perspective)
 Measures how discussion-heavy PRs are from the author's perspective, based on open discussions, review statuses, and the number of comments. Additionally, you can track discussion topics and user agreement by adding discussion topics in `[[]]` and using thumbs up/down ( :+1: / :-1: ) reactions on the opening comment. Use the `pr-quality` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Total merged PRs | Changes requested received | Agreed / Disagreed / Total discussions received | Comments received |
@@ -112,7 +114,7 @@ title Discussions types total 12/2023
 "Formatting(9)":9
 ```
 
-#### PR Discussability (Reviewer’s Perspective)
+### Discussion Intensity (Reviewer’s Perspective)
 Measures how discussion-heavy PRs are from the reviewer's perspective, based on discussions, comments, and PR statuses. Helps understand reviewer engagement and decision-making. Use the `code-review-engagement` value in the `SHOW_STATS_TYPES` parameter and add thumbs up/down ( :+1: / :-1: ) reactions on opening comments.
 
 |   user    | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
@@ -122,7 +124,7 @@ Measures how discussion-heavy PRs are from the reviewer's perspective, based on 
 | **dev3**  |        2         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |
 | **total** |        47        |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |
 
-#### Reviewer Response Time
+### Reviewer Response Time
 Shows how quickly reviewers respond to review requests. Helps better understand lead time metrics and reviewer engagement. Use the `response-time` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
@@ -132,7 +134,7 @@ Shows how quickly reviewers respond to review requests. Helps better understand 
 | **dev3**  |            218            |        66         |      6 hours 59 minutes       |          6 hours 55 minutes           |        3 hours 2 minutes         |
 | **total** |           1219            |        282        |      7 hours 15 minutes       |          6 hours 41 minutes           |        1 hour 57 minutes         |
 
-#### List of Notable PRs
+### List of Notable PRs
 Identifies standout pull requests, helping quickly locate the most pending PRs at various stages and the most commented ones. This facilitates analysis by focusing on the most significant cases.
 
 1. [Feature: PR Title(example)(31)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
