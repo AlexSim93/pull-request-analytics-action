@@ -4,10 +4,10 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 
 ## Table of Contents
 
-- [Key Features](#key-features)
+- [Motivation](#motivation)
+- [Metrics](#metrics)
 - [Getting started](#getting-started)
 - [Using GitHub Enterprise Server](#using-github-enterprise-server)
-- [Detailed Report on Discussion Types](#detailed-report-on-discussion-types)
 - [Configuration Parameters Overview](#configuration-parameters-overview)
 - [Outputs](#outputs)
 - [Recommendations and Tips](#recommendations-and-tips)
@@ -15,9 +15,21 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 - [Usage Limitations](#usage-limitations)
 - [How You Can Help](#how-you-can-help)
 
-## Key Features:
+## Motivation
 
-- **Customizable Tables and Graphs for Review Timelines**: Generates user-friendly tables and graphs that mark critical milestones from PR opening to review, approval, and merge. Users can select the calculation method best suited for them, choosing from median, mean (average), or a selected percentile. This feature helps to identify bottlenecks in the code review process.
+**pull-request-analytics-action** addresses several key challenges:
+
+1. **Identifying Bottlenecks in Code Review Processes**: Easily generate summaries showing where delays occur in the review stages.
+2. **Tracking Trends in Code Review Processes**: Analyze how review dynamics change over time to identify positive or negative trends.
+3. **Detecting Significant Deviations**: Identify metrics that vary significantly among teams and developers, revealing potential areas of concern.
+4. **Simplifying Analysis of Notable PRs**: Provides a list of standout pull requests, helping you focus on the most critical cases.
+
+Overall, this action enables faster and more accurate assessments, leading to better decision-making.
+
+## Metrics
+
+#### Lead Time
+Displays the time from PR creation to each displayed status. Helps identify bottlenecks in the code review process. Use the `timeline` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Time in draft | Time to review request |   Time to review    |   Time to approve   |    Time to merge    | Total merged PRs |
 | :-------: | :-----------: | :--------------------: | :-----------------: | :-----------------: | :-----------------: | :--------------: |
@@ -70,7 +82,8 @@ title Review time total 12/2023
 "12+ hours(2)":2
 ```
 
-- **Comprehensive Report on Merged PRs, Code Changes, and Reviews**: This feature compiles a report detailing the number of merged PRs, lines of code modified, and reviews conducted. It provides an approximate measure of the workload, both for individual developers and the team as a whole, offering a clear view of productivity and contribution.
+#### Contribution
+Shows the total volume of code merged, reviews conducted, and comments in PRs. Helps to understand the context in which other metrics apply. Use the `workload` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments | Reviews conducted |
 | :-------: | :--------------: | :--------------: | :-----------------: | :------------------: | :------------: | :---------------: |
@@ -79,7 +92,8 @@ title Review time total 12/2023
 | **dev3**  |        2         |        2         |       +15/-3        |      2/0/0/0/0       |       1        |        10         |
 | **total** |        50        |        47        |    +8530/-10137     |      30/9/6/2/3      |       71       |        46         |
 
-- **Quality Report on devInitiated PRs**: This feature generates a report analyzing the quality of PRs opened by developers. It collates data on the number of comments received, discussions held, and reasons for these discussions, along with the quantity of requested changes in open PRs, all presented in both tabular and graphical formats. This functionality aids in identifying the most problematic areas detected during code reviews and quantifying their extent.
+#### PR Discussability (Author’s Perspective)
+Measures how discussion-heavy PRs are from the author's perspective, based on open discussions, review statuses, and the number of comments. Additionally, you can track discussion topics and user agreement by adding discussion topics in `[[]]` and using thumbs up/down ( :+1: / :-1: ) reactions on the opening comment. Use the `pr-quality` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Total merged PRs | Changes requested received | Agreed / Disagreed / Total discussions received | Comments received |
 | :-------: | :--------------: | :------------------------: | :---------------------------------------------: | :---------------: |
@@ -98,7 +112,8 @@ title Discussions types total 12/2023
 "Formatting(9)":9
 ```
 
-- **Developer Engagement in Code Review Process**: This feature assesses the level of developer participation in code reviews. It provides a table showing the discussions initiated, comments made, along with a breakdown of the number of code reviews conducted and the decisions made. This enables you to gauge the involvement of developers in the review process effectively.
+#### PR Discussability (Reviewer’s Perspective)
+Measures how discussion-heavy PRs are from the reviewer's perspective, based on discussions, comments, and PR statuses. Helps understand reviewer engagement and decision-making. Use the `code-review-engagement` value in the `SHOW_STATS_TYPES` parameter and add thumbs up/down ( :+1: / :-1: ) reactions on opening comments.
 
 |   user    | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
 | :-------: | :--------------: | :----------------------------------------------: | :----------------: | :------------------: | :--------------------------------------: |
@@ -107,7 +122,8 @@ title Discussions types total 12/2023
 | **dev3**  |        2         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |
 | **total** |        47        |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |
 
-- **Response Time for Review Requests**: The table shows how quickly developers and the team respond to code review requests, as well as the ratio of requests to responses. This table provides insight into the developers' engagement in the review process.
+#### Reviewer Response Time
+Shows how quickly reviewers respond to review requests. Helps better understand lead time metrics and reviewer engagement. Use the `response-time` value in the `SHOW_STATS_TYPES` parameter.
 
 |   user    | Review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
 | :-------: | :-----------------------: | :---------------: | :---------------------------: | :-----------------------------------: | :------------------------------: |
@@ -116,7 +132,12 @@ title Discussions types total 12/2023
 | **dev3**  |            218            |        66         |      6 hours 59 minutes       |          6 hours 55 minutes           |        3 hours 2 minutes         |
 | **total** |           1219            |        282        |      7 hours 15 minutes       |          6 hours 41 minutes           |        1 hour 57 minutes         |
 
-- **Highlighted PRs List by Key Metrics**: One of the standout features of **pull-request-analytics-action** is the ability to generate a list of the most notable pull requests based on four key metrics: time from opening to review, time from review to approval, time from approval to merge, and the number of comments. This feature provides a list of links directly to these exceptional PRs, allowing for quick access and detailed analysis.
+#### List of Notable PRs
+Identifies standout pull requests, helping quickly locate the most pending PRs at various stages and the most commented ones. This facilitates analysis by focusing on the most significant cases.
+
+1. [Feature: PR Title(example)(31)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
+2. [Feature: PR Title(example)(27)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
+3. [Feature: PR Title(example)(25)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
 
 ## Getting started
 
@@ -200,19 +221,6 @@ env:
 ```
 
 This configuration allows **pull-request-analytics-action** to interface with your GitHub Enterprise instance, enabling you to leverage the full capabilities of the action within your enterprise environment.
-
-## Detailed Report on Discussion Types
-
-To obtain a detailed report on the types of open discussions, it is necessary to include a specific label in the first message of each discussion, enclosed in double square brackets (`[[ ]]`). For example, use `[[Performance issue]]` to categorize a discussion as related to performance issues. The action will then provide a breakdown of discussions based on these labels, allowing for a more targeted and categorized analysis of discussion topics.
-
-In addition, reactions of :+1: and :-1: on the initial message of a discussion will be collected and displayed in the columns for "discussions received" and "discussions conducted." These reactions help to more accurately gauge the usefulness and reception of the discussions initiated.
-
-**Example Usage**:
-
-- In the first comment of a pull request discussion, include a label like `[[Bug]]`, `[[Feature Request]]`, or any custom label of your choice.
-- **pull-request-analytics-action** will recognize these labels and include them in the report, providing a categorized overview of discussions.
-
-This feature enhances the analytical capabilities of **pull-request-analytics-action**, offering a deeper insight into the nature and distribution of discussions in your pull requests.
 
 ## Configuration Parameters Overview
 
