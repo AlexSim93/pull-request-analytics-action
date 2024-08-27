@@ -135,7 +135,7 @@ Shows how quickly reviewers respond to review requests. Helps better understand 
 | **total** |           1219            |        282        |      7 hours 15 minutes       |          6 hours 41 minutes           |        1 hour 57 minutes         |
 
 ### List of Notable PRs
-Identifies standout pull requests, helping quickly locate the most pending PRs at various stages and the most commented ones. This facilitates analysis by focusing on the most significant cases.
+Identifies standout pull requests, helping quickly locate the most pending PRs at various stages and the most commented ones. This facilitates analysis by focusing on the most significant cases. Here is an example of the most commented PRs.
 
 1. [Feature: PR Title(example)(31)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
 2. [Feature: PR Title(example)(27)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
@@ -145,16 +145,9 @@ Identifies standout pull requests, helping quickly locate the most pending PRs a
 
 To integrate **pull-request-analytics-action** into your GitHub repository, use the following steps. The provided code is a template and can be adjusted to fit your specific requirements:
 
-1. **Create a Workflow File**:
-
-   - Navigate to the `.github/workflows` directory in your repository.
-   - Create a YAML file, for example, `pull-request-analytics.yml`.
-
-2. **Choose the Trigger Event**: Decide on which GitHub event you want to trigger the report generation. You can refer to the [GitHub Events Documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) for a detailed understanding of different events. I recommend using one of the `pull_request`, `workflow_dispatch`, or `schedule` events, depending on your specific needs. For this setup, we will configure the `workflow_dispatch` event.
-
-3. **Insert and Customize the Workflow Code**:
-
-   - Open your new YAML file and paste the following example workflow. This is a starting template and you can modify it as needed:
+1. Navigate to the `.github/workflows` directory in your repository.
+2. Create a YAML file, for example, `pull-request-analytics.yml`.
+3. Open your new YAML file and paste the following example workflow. This is a starting template and you can modify it as needed:
 
      ```yaml
      name: "PR Analytics"
@@ -175,7 +168,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
            - name: "Run script for analytics"
              uses: AlexSim93/pull-request-analytics-action@v3
              with:
-               GITHUB_TOKEN: ${{ secrets.GENERATED_TOKEN }} # Generate a classic token, add it to Actions secrets, and use it in this field
+               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # In the case of a personal access token, it needs to be added to the repository's secrets and used in this field.
                GITHUB_REPO_FOR_ISSUE: "repo" # Make sure to specify the name of the repository where the issue will be created
                GITHUB_OWNER_FOR_ISSUE: "owner" # Make sure to specify the owner of the repository where the issue will be created
                GITHUB_OWNERS_REPOS: "owner/repo" # Be sure to list the owner and repository name in the format owner/repo
@@ -185,28 +178,13 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
                REPORT_DATE_START: ${{ inputs.report_date_start }}
                REPORT_DATE_END: ${{ inputs.report_date_end }}
      ```
-
-   - In the `workflow_dispatch` section of the yml file, I have specified various inputs that can be adjusted each time the action is triggered. By utilizing the `required` and `default` fields, I've designated whether each input is mandatory and set predetermined values for ease of use. In the `with` section, I've included parameters that remain constant for each action run. For a detailed understanding of which parameters the action accepts and their functions, please refer to the [Parameters Overview section](#configuration-parameters-overview).
-   - **GitHub Token:** The `GITHUB_TOKEN` is a special token used by the GitHub Actions runner to interact with your repositories. You can generate this token as per the [GitHub Documentation on Authentication](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28). When setting up the token, ensure you configure the necessary permissions. For **pull-request-analytics-action** to function correctly, **personal access token(classic)** requires **repo** and **read:org** scopes. Insert the token in your workflow file under the secrets context.
-   - Adjust parameters to match your project's needs.
-
-4. **Commit and Push the Workflow File**:
-
-   - Save your changes and commit the file to your repository.
-   - Push it to enable the GitHub Action workflow.
-
-5. **Run the Workflow**:
-
-   - In your repository, go to the 'Actions' tab.
-   - Select **PR analytics** and start it via "Run workflow".
-   - Fill in any necessary parameters and execute the action.
-
-6. **Review the Generated Report**:
-
-   - Once the action completes, your detailed PR report will be available.
-   - If configured, check for a new issue in the specified repository containing the report.
-
-This setup allows you to fully leverage **pull-request-analytics-action** for comprehensive PR analysis, tailored to your project’s needs.
+4. Decide on which GitHub event you want to trigger the report generation. You can refer to the [GitHub Events Documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) for a detailed understanding of different events. In this example, the `workflow_dispatch` event is selected to allow the action to be manually triggered multiple times with different parameters. `report_date_start` and `report_date_end` can be set before running the action without modifying the code.
+5. Depending on your needs, you can use either the `GITHUB_TOKEN` or a generated **Personal Access Token (classic)**. In this example, we are using the `GITHUB_TOKEN`, but keep in mind that it won't allow you to collect data from multiple repositories or organizations, nor will it provide data segmented by GitHub teams. If these features are critical for you, create a token with the **repo** and **read:org** scopes selected. You can read more about tokens in the [GitHub Documentation](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28).
+6. Configure the parameters to suit your needs according to the [Parameters Overview section](#configuration-parameters-overview).
+7. Merge the code into the main branch of the repository.
+8. Open the **Actions** tab and select the created action from the left sidebar. In our case, it's `PR Analytics`.
+9. In your repository, go to the **Actions** tab. Select **PR analytics** and start it via "Run workflow". Fill in any necessary parameters and execute the action. Depending on the number of PRs, it may take from 1 to several minutes to complete.
+10. Open the **Issues** tab, where you'll find the generated report.
 
 ## Using GitHub Enterprise Server
 
