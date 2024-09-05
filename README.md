@@ -89,12 +89,12 @@ title Review time total 12/2023
 
 Shows the total volume of code merged, reviews conducted, and comments in PRs. Helps to understand the context in which other metrics apply. Use the `workload` value in the `SHOW_STATS_TYPES` parameter.
 
-|   user    | Total opened PRs | Total reverted PRs | Total merged PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments |
-| :-------: | :--------------: | :----------------: | :--------------: | :-----------------: | :------------------: | :------------: |
-| **dev1**  |        24        |         22         |        22        |     +1448/-3110     |      14/5/4/0/1      |       41       |
-| **dev2**  |        14        |         22         |        13        |     +813/-2062      |      7/4/1/2/0       |       6        |
-| **dev3**  |        2         |         22         |        2         |       +15/-3        |      2/0/0/0/0       |       1        |
-| **total** |        50        |         22         |        47        |    +8530/-10137     |      30/9/6/2/3      |       71       |
+|   user    | Total opened PRs | Total merged PRs | Total reverted PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments |
+| :-------: | :--------------: | :--------------: | :----------------: | :-----------------: | :------------------: | :------------: |
+| **dev1**  |        24        |        22        |         1          |     +1448/-3110     |      14/5/4/0/1      |       41       |
+| **dev2**  |        14        |        13        |         0          |     +813/-2062      |      7/4/1/2/0       |       6        |
+| **dev3**  |        2         |        2         |         0          |       +15/-3        |      2/0/0/0/0       |       1        |
+| **total** |        50        |        47        |         1          |    +8530/-10137     |      30/9/6/2/3      |       71       |
 
 ### Discussion Intensity (Author’s Perspective)
 
