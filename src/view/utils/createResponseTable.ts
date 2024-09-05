@@ -51,7 +51,7 @@ export const createResponseTable = (
           ];
         });
       return createTable({
-        title: `Review Request Response Time(${
+        title: `Review Response Time(${
           type === "percentile" ? parseInt(getValueAsIs("PERCENTILE")) : ""
         }${type === "percentile" ? "th " : ""}${type}) ${date}`,
         description:

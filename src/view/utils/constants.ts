@@ -5,6 +5,7 @@ export const timeToApproveHeader = "Time to approve";
 export const timeToMergeHeader = "Time to merge";
 export const totalMergedPrsHeader = "Total merged PRs";
 export const totalOpenedPrsHeader = "Total opened PRs";
+export const totalRevertedPrsHeader = "Total reverted PRs";
 export const additionsDeletionsHeader = "Additions/Deletions";
 export const reviewCommentsHeader = "Total comments";
 export const reviewConductedHeader = "Reviews conducted";

@@ -1308,6 +1308,21 @@ exports.prepareIntervals = prepareIntervals;
 
 /***/ }),
 
+/***/ 37644:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkRevert = void 0;
+const checkRevert = (branch) => {
+    return /^revert-\d+/.test(branch);
+};
+exports.checkRevert = checkRevert;
+
+
+/***/ }),
+
 /***/ 49575:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -1563,6 +1578,7 @@ exports.prepareDiscussions = prepareDiscussions;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestInfo = void 0;
 const calculations_1 = __nccwpck_require__(16576);
+const checkRevert_1 = __nccwpck_require__(37644);
 const preparePullRequestInfo = (pullRequest, collection) => {
     const previousComments = typeof collection?.comments === "number" ? collection?.comments : 0;
     const comments = previousComments + (pullRequest?.comments || 0);
@@ -1581,6 +1597,10 @@ const preparePullRequestInfo = (pullRequest, collection) => {
             : collection?.merged || 0,
         comments,
         totalReviewComments,
+        reverted: typeof pullRequest?.head.ref === "string" &&
+            (0, checkRevert_1.checkRevert)(pullRequest?.head.ref)
+            ? (collection?.reverted || 0) + 1
+            : collection?.reverted || 0,
         additions: (collection?.additions || 0) + (pullRequest?.additions || 0),
         deletions: (collection?.deletions || 0) + (pullRequest?.deletions || 0),
         prSizes: [
@@ -2920,7 +2940,7 @@ Object.defineProperty(exports, "createList", ({ enumerable: true, get: function 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
+exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalRevertedPrsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
 exports.timeToReviewRequestHeader = "Time to review request";
 exports.timeInDraftHeader = "Time in draft";
 exports.timeToReviewHeader = "Time to review";
@@ -2928,6 +2948,7 @@ exports.timeToApproveHeader = "Time to approve";
 exports.timeToMergeHeader = "Time to merge";
 exports.totalMergedPrsHeader = "Total merged PRs";
 exports.totalOpenedPrsHeader = "Total opened PRs";
+exports.totalRevertedPrsHeader = "Total reverted PRs";
 exports.additionsDeletionsHeader = "Additions/Deletions";
 exports.reviewCommentsHeader = "Total comments";
 exports.reviewConductedHeader = "Reviews conducted";
@@ -3147,7 +3168,7 @@ const createResponseTable = (data, users, date) => {
             ];
         });
         return (0, common_1.createTable)({
-            title: `Review Request Response Time(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${date}`,
+            title: `Review Response Time(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${date}`,
             description: "**Time from re-request to response** - time from a review re-request to the response. Multiple re-requests and responses can occur in a single pull request",
             table: {
                 headers: [
@@ -3527,27 +3548,27 @@ const createTotalTable = (data, users, date) => {
             `**${user}**`,
             data[user]?.[date]?.opened?.toString() || "0",
             data[user]?.[date]?.merged?.toString() || "0",
+            data[user]?.[date]?.reverted?.toString() || "0",
             `+${data[user]?.[date].additions || 0}/-${data[user]?.[date].deletions || 0}`,
             `${sizes
                 .map((size) => data[user]?.[date]?.prSizes?.filter((prSize) => prSize === size)
                 .length || 0)
                 .join("/")}`,
             data[user]?.[date]?.totalReviewComments?.toString() || "0",
-            data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
         ];
     });
     return (0, common_1.createTable)({
         title: `Contribution stats ${date}`,
-        description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl",
+        description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-\d+/`. This pattern is used for reverts made via GitHub.",
         table: {
             headers: [
                 "user",
                 constants_1.totalOpenedPrsHeader,
                 constants_1.totalMergedPrsHeader,
+                constants_1.totalRevertedPrsHeader,
                 constants_1.additionsDeletionsHeader,
                 constants_1.prSizesHeader,
                 constants_1.reviewCommentsHeader,
-                constants_1.reviewConductedHeader,
             ],
             rows: tableRowsTotal,
         },

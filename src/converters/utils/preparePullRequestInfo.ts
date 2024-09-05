@@ -1,6 +1,7 @@
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 import { getPullRequestSize } from "./calculations";
+import { checkRevert } from "./checkRevert";
 
 export const preparePullRequestInfo = (
   pullRequest: Awaited<
@@ -30,6 +31,11 @@ export const preparePullRequestInfo = (
       : collection?.merged || 0,
     comments,
     totalReviewComments,
+    reverted:
+      typeof pullRequest?.head.ref === "string" &&
+      checkRevert(pullRequest?.head.ref)
+        ? (collection?.reverted || 0) + 1
+        : collection?.reverted || 0,
     additions: (collection?.additions || 0) + (pullRequest?.additions || 0),
     deletions: (collection?.deletions || 0) + (pullRequest?.deletions || 0),
     prSizes: [

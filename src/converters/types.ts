@@ -73,6 +73,7 @@ export type Collection = {
   reviewsConducted?: {
     [key: string]: ReviewTypeStats;
   };
+  reverted?: number;
   commentsConducted?: number;
   discussions?: Discussion;
   discussionsTypes?: DiscussionType;
