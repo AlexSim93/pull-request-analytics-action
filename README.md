@@ -28,7 +28,7 @@ Overall, this action enables faster and more accurate assessments, leading to be
 
 ## Metrics
 
-All metrics are presented in the form of tables, charts, and lists. Below, you can see an example of such data.
+All metrics are presented in the form of tables, charts, and lists ([Report example](https://github.com/AlexSim93/pull-request-analytics-action/issues/16)). Below, you can see an example of such data.
 
 ### Lead Time
 
@@ -143,9 +143,9 @@ Shows how quickly reviewers respond to review requests. Helps better understand 
 
 Identifies standout pull requests, helping quickly locate the most pending PRs at various stages and the most commented ones. This facilitates analysis by focusing on the most significant cases. Here is an example of the most commented PRs.
 
-1. [Feature: PR Title(example)(31)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
-2. [Feature: PR Title(example)(27)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
-3. [Feature: PR Title(example)(25)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
+1. [Feature: PR Title 1(example)(31)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
+2. [Feature: PR Title 2(example)(27)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
+3. [Feature: PR Title 3(example)(25)](https://github.com/AlexSim93/pull-request-analytics-action/pull/15)
 
 ## Getting started
 
@@ -162,10 +162,8 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
        inputs:
          report_date_start:
            description: "Report date start(d/MM/yyyy)"
-           required: false
          report_date_end:
            description: "Report date end(d/MM/yyyy)"
-           required: false
    jobs:
      create-report:
        name: "Create report"
@@ -186,7 +184,7 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
    ```
 
 4. Decide on which GitHub event you want to trigger the report generation. You can refer to the [GitHub Events Documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) for a detailed understanding of different events. In this example, the `workflow_dispatch` event is selected to allow the action to be manually triggered multiple times with different parameters. `report_date_start` and `report_date_end` can be set before running the action without modifying the code.
-5. Depending on your needs, you can use either the `GITHUB_TOKEN` or a generated **Personal Access Token (classic)**. In this example, we are using the `GITHUB_TOKEN`, but keep in mind that it won't allow you to collect data from multiple repositories or organizations, nor will it provide data segmented by GitHub teams. If these features are critical for you, create a token with the **repo** and **read:org** scopes selected. You can read more about tokens in the [GitHub Documentation](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28).
+5. Depending on your needs, you can use either the `GITHUB_TOKEN` or a generated **Personal Access Token (classic)**. In this example, we are using the `GITHUB_TOKEN`, but keep in mind that it won't allow you to collect data from multiple repositories or organizations, nor will it provide data segmented by GitHub teams. If these features are critical for you, create a token with the **repo** and **read:org** scopes selected on [tokens page](https://github.com/settings/tokens). You can read more about tokens in the [GitHub Documentation](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28).
 6. Configure the parameters to suit your needs according to the [Parameters Overview section](#configuration-parameters-overview).
 7. Merge the code into the main branch of the repository.
 8. Open the **Actions** tab and select the created action from the left sidebar. In our case, it's `PR Analytics`.
@@ -261,7 +259,7 @@ Below is a table describing the possible outputs of **pull-request-analytics-act
 ## Recommendations and Tips
 
 - Use a **Personal Access Token (classic)** to generate reports for multiple repositories or to support teams.
-- Utilize the `schedule` event for optimal report updates. You can refresh the report every few hours or days to avoid exceeding rate limits and to keep the report up to date.
+- Utilize the `schedule` event for optimal report updates. You can refresh the report every few hours or days to avoid exceeding rate limits and to keep the report up to date. You can find an example configuration [here](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/yearReportWithoutDevelopers.yml).
 - To hide individual metrics, specify users in the `HIDE_USERS` parameter or leave `total` and GitHub team names in the `SHOW_USERS` parameter.
 - To avoid a long list of title changes when updating an existing issue, it is recommended to set the title yourself using the `ISSUE_TITLE` parameter.
 - You can filter pull requests using labels with the `EXCLUDE_LABELS` and `INCLUDE_LABELS` parameters.
