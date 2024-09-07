@@ -22,4 +22,4 @@ jobs:
           TOP_LIST_AMOUNT: 5
           SHOW_USERS: total
           EXECUTION_OUTCOME: existing-issue
-          ISSUE_NUMBER: 1
+          ISSUE_NUMBER: 1 # Set issue number or change EXECUTION_OUTCOME to new-issue
