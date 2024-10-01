@@ -273,6 +273,7 @@ If you encounter a `Not Found` error:
 - Verify that you have correctly specified the owner and repository.
 - Ensure that you have access to the specified repository.
 - If you're using `GITHUB_TOKEN`, remember that it only provides access to the repository where the action is running.
+
 You can read more about this in the [GitHub documentation](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api?apiVersion=2022-11-28#404-not-found-for-an-existing-resource).
 
 ## Privacy and Data Handling
