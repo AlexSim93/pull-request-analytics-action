@@ -11,6 +11,7 @@ This GitHub Action measures metrics for developers and/or teams. Reports are gen
 - [Configuration Parameters Overview](#configuration-parameters-overview)
 - [Outputs](#outputs)
 - [Recommendations and Tips](#recommendations-and-tips)
+- [Troubleshooting](#troubleshooting)
 - [Privacy and Data Handling](#privacy-and-data-handling)
 - [Usage Limitations](#usage-limitations)
 - [How You Can Help](#how-you-can-help)
@@ -182,14 +183,14 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
              REPORT_DATE_START: ${{ inputs.report_date_start }}
              REPORT_DATE_END: ${{ inputs.report_date_end }}
    ```
-
-4. Decide on which GitHub event you want to trigger the report generation. You can refer to the [GitHub Events Documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) for a detailed understanding of different events. In this example, the `workflow_dispatch` event is selected to allow the action to be manually triggered multiple times with different parameters. `report_date_start` and `report_date_end` can be set before running the action without modifying the code.
-5. Depending on your needs, you can use either the `GITHUB_TOKEN` or a generated **Personal Access Token (classic)**. In this example, we are using the `GITHUB_TOKEN`, but keep in mind that it won't allow you to collect data from multiple repositories or organizations, nor will it provide data segmented by GitHub teams. If these features are critical for you, create a token with the **repo** and **read:org** scopes selected on [tokens page](https://github.com/settings/tokens). You can read more about tokens in the [GitHub Documentation](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28).
-6. Configure the parameters to suit your needs according to the [Parameters Overview section](#configuration-parameters-overview).
-7. Merge the code into the main branch of the repository.
-8. Open the **Actions** tab and select the created action from the left sidebar. In our case, it's `PR Analytics`.
-9. In your repository, go to the **Actions** tab. Select **PR analytics** and start it via "Run workflow". Fill in any necessary parameters and execute the action. Depending on the number of PRs, it may take from 1 to several minutes to complete.
-10. Open the **Issues** tab, where you'll find the generated report.
+4. Check your repository settings if you want to publish reports in issues. Go to the repository's **Settings**, and under the **Features** section, make sure the **Issues** checkbox is selected. Additionally, if you are collecting statistics for an organization's repository using a **personal access token**, ensure that the token has the necessary permissions. To do this, go to the organization's **Settings** and navigate to the **Personal access token** tab. Verify that the tokens (classic) have permission to access the repository.
+5. Decide on which GitHub event you want to trigger the report generation. You can refer to the [GitHub Events Documentation](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) for a detailed understanding of different events. In this example, the `workflow_dispatch` event is selected to allow the action to be manually triggered multiple times with different parameters. `report_date_start` and `report_date_end` can be set before running the action without modifying the code.
+6. Depending on your needs, you can use either the `GITHUB_TOKEN` or a generated **Personal Access Token (classic)**. In this example, we are using the `GITHUB_TOKEN`, but keep in mind that it won't allow you to collect data from multiple repositories or organizations, nor will it provide data segmented by GitHub teams. If these features are critical for you, create a token with the **repo** and **read:org** scopes selected on [tokens page](https://github.com/settings/tokens). You can read more about tokens in the [GitHub Documentation](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28).
+7. Configure the parameters to suit your needs according to the [Parameters Overview section](#configuration-parameters-overview).
+8. Merge the code into the main branch of the repository.
+9. Open the **Actions** tab and select the created action from the left sidebar. In our case, it's `PR Analytics`.
+10. In your repository, go to the **Actions** tab. Select **PR analytics** and start it via "Run workflow". Fill in any necessary parameters and execute the action. Depending on the number of PRs, it may take from 1 to several minutes to complete.
+11. Open the **Issues** tab, where you'll find the generated report.
 
 ## Using GitHub Enterprise Server
 
@@ -259,10 +260,20 @@ Below is a table describing the possible outputs of **pull-request-analytics-act
 ## Recommendations and Tips
 
 - Use a **Personal Access Token (classic)** to generate reports for multiple repositories or to support teams.
+- Avoid running multiple actions simultaneously that use the same token. This will help prevent hitting secondary rate limits.
 - Utilize the `schedule` event for optimal report updates. You can refresh the report every few hours or days to avoid exceeding rate limits and to keep the report up to date. You can find an example configuration [here](https://github.com/AlexSim93/pull-request-analytics-action/blob/master/configs/yearReportWithoutDevelopers.yml).
 - To hide individual metrics, specify users in the `HIDE_USERS` parameter or leave `total` and GitHub team names in the `SHOW_USERS` parameter.
 - To avoid a long list of title changes when updating an existing issue, it is recommended to set the title yourself using the `ISSUE_TITLE` parameter.
 - You can filter pull requests using labels with the `EXCLUDE_LABELS` and `INCLUDE_LABELS` parameters.
+
+## Troubleshooting
+If you encounter a "Not Found" error:
+
+- Check the scopes of your personal access token if you're using one.
+- Verify that you have correctly specified the owner and repository.
+- Ensure that you have access to the specified repository.
+- If you're using GITHUB_TOKEN, remember that it only provides access to the repository where the action is running.
+You can read more about this in the [GitHub documentation](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api?apiVersion=2022-11-28#404-not-found-for-an-existing-resource).
 
 ## Privacy and Data Handling
 
