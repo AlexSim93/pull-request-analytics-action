@@ -3208,14 +3208,13 @@ const common_1 = __nccwpck_require__(64682);
 const createReviewTable = (data, users, date) => {
     const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
-        .filter((user) => data[user]?.[date]?.merged ||
-        data[user]?.[date]?.reviewsConducted?.total?.total ||
+        .filter((user) => data[user]?.[date]?.reviewsConducted?.total?.total ||
         data[user]?.[date]?.commentsConducted ||
         data[user]?.[date]?.discussions?.conducted?.total)
         .map((user) => {
         return [
             `**${user}**`,
-            data[user]?.[date]?.merged?.toString() || "0",
+            data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
             `${data[user]?.[date]?.discussions?.conducted?.agreed?.toString() || "0"} / ${data[user]?.[date]?.discussions?.conducted?.disagreed?.toString() ||
                 "0"} / ${data[user]?.[date]?.discussions?.conducted?.total?.toString() || "0"}`,
             data[user]?.[date]?.commentsConducted?.toString() || "0",
@@ -3232,7 +3231,7 @@ const createReviewTable = (data, users, date) => {
         table: {
             headers: [
                 "user",
-                constants_1.totalMergedPrsHeader,
+                constants_1.reviewConductedHeader,
                 constants_1.discussionsConductedHeader,
                 constants_1.commentsConductedHeader,
                 constants_1.prSizesHeader,
