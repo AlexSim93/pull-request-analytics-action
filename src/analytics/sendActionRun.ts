@@ -39,5 +39,7 @@ export const sendActionRun = () => {
       ),
       MERGE_TIME_INTERVALS: getMultipleValuesInput("MERGE_TIME_INTERVALS"),
     });
+  } else {
+    mixpanel.track("Anomymous action run");
   }
 };

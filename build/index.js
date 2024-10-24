@@ -76,6 +76,9 @@ const sendActionError = (error) => {
             MERGE_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("MERGE_TIME_INTERVALS"),
         });
     }
+    else {
+        mixpanel_1.mixpanel.track("Anonymous action error");
+    }
 };
 exports.sendActionError = sendActionError;
 
@@ -123,6 +126,9 @@ const sendActionRun = () => {
             APPROVAL_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("APPROVAL_TIME_INTERVALS"),
             MERGE_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("MERGE_TIME_INTERVALS"),
         });
+    }
+    else {
+        mixpanel_1.mixpanel.track("Anomymous action run");
     }
 };
 exports.sendActionRun = sendActionRun;

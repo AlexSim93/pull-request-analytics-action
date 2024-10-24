@@ -41,5 +41,7 @@ export const sendActionError = (error: Error) => {
       ),
       MERGE_TIME_INTERVALS: getMultipleValuesInput("MERGE_TIME_INTERVALS"),
     });
+  } else {
+    mixpanel.track("Anonymous action error");
   }
 };
