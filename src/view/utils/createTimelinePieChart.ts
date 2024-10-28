@@ -45,15 +45,33 @@ export const createTimelinePieChart = (
         data[user][date]?.[key] &&
         Object.values(data[user][date]?.[key]!).some((value) => value)
     )
-    .map((user) => [
-      `**${user}**`,
-      ...headers.map(
-        (header) => data[user][date]?.[key]?.[header]?.toString() || "0"
-      ),
-    ]);
+    .map((user) => {
+      const total = headers.reduce(
+        (acc, header) => acc + (data[user][date]?.[key]?.[header] || 0),
+        0
+      );
+      return [
+        `**${user}**`,
+        ...headers.map((header) =>
+          data[user][date]?.[key]?.[header]
+            ? `${data[user][date]?.[key]?.[header]?.toString() || "0"}(${
+                Math.round(
+                  ((data[user][date]?.[key]?.[header] || 0) / total) * 1000
+                ) / 10
+              }%)`
+            : "0"
+        ),
+      ];
+    });
   return createTable({
     title: `${titleMap[key]} ${date}`,
     description: "",
-    table: { headers: ["users", ...headers], rows: userRows },
+    table: {
+      headers: [
+        "users",
+        ...headers.map((header) => `${header.replace("-Infinity", "+")}h`),
+      ],
+      rows: userRows,
+    },
   });
 };

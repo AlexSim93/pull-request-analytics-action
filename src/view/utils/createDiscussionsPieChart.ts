@@ -41,15 +41,33 @@ export const createDiscussionsPieChart = (
           (value) => value.received?.total
         )
     )
-    .map((user) => [
-      `**${user}**`,
-      ...headers.map(
-        (header) =>
-          data[user][date]?.discussionsTypes?.[
-            header
-          ]?.received?.total?.toString() || "0"
-      ),
-    ]);
+    .map((user) => {
+      const total = headers.reduce(
+        (acc, header) =>
+          acc +
+          (data[user][date]?.discussionsTypes?.[header]?.received?.total || 0),
+        0
+      );
+      return [
+        `**${user}**`,
+        ...headers.map((header) =>
+          data[user][date]?.discussionsTypes?.[header]?.received?.total
+            ? `${
+                data[user][date]?.discussionsTypes?.[
+                  header
+                ]?.received?.total?.toString() || "0"
+              }(${
+                Math.round(
+                  ((data[user][date]?.discussionsTypes?.[header]?.received
+                    ?.total || 0) /
+                    total) *
+                    1000
+                ) / 10
+              }%)`
+            : "0"
+        ),
+      ];
+    });
   return createTable({
     title: `Discussion's types ${date}`,
     description: "",

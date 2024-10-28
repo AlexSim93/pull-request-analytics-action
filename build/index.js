@@ -3107,10 +3107,19 @@ const createDiscussionsPieChart = (data, users, date) => {
     const userRows = users
         .filter((user) => data[user][date]?.discussionsTypes &&
         Object.values(data[user][date]?.discussionsTypes).some((value) => value.received?.total))
-        .map((user) => [
-        `**${user}**`,
-        ...headers.map((header) => data[user][date]?.discussionsTypes?.[header]?.received?.total?.toString() || "0"),
-    ]);
+        .map((user) => {
+        const total = headers.reduce((acc, header) => acc +
+            (data[user][date]?.discussionsTypes?.[header]?.received?.total || 0), 0);
+        return [
+            `**${user}**`,
+            ...headers.map((header) => data[user][date]?.discussionsTypes?.[header]?.received?.total
+                ? `${data[user][date]?.discussionsTypes?.[header]?.received?.total?.toString() || "0"}(${Math.round(((data[user][date]?.discussionsTypes?.[header]?.received
+                    ?.total || 0) /
+                    total) *
+                    1000) / 10}%)`
+                : "0"),
+        ];
+    });
     return (0, common_1.createTable)({
         title: `Discussion's types ${date}`,
         description: "",
@@ -3555,14 +3564,25 @@ const createTimelinePieChart = (data, users, date, key) => {
     const userRows = users
         .filter((user) => data[user][date]?.[key] &&
         Object.values(data[user][date]?.[key]).some((value) => value))
-        .map((user) => [
-        `**${user}**`,
-        ...headers.map((header) => data[user][date]?.[key]?.[header]?.toString() || "0"),
-    ]);
+        .map((user) => {
+        const total = headers.reduce((acc, header) => acc + (data[user][date]?.[key]?.[header] || 0), 0);
+        return [
+            `**${user}**`,
+            ...headers.map((header) => data[user][date]?.[key]?.[header]
+                ? `${data[user][date]?.[key]?.[header]?.toString() || "0"}(${Math.round(((data[user][date]?.[key]?.[header] || 0) / total) * 1000) / 10}%)`
+                : "0"),
+        ];
+    });
     return (0, common_1.createTable)({
         title: `${titleMap[key]} ${date}`,
         description: "",
-        table: { headers: ["users", ...headers], rows: userRows },
+        table: {
+            headers: [
+                "users",
+                ...headers.map((header) => `${header.replace("-Infinity", "+")}h`),
+            ],
+            rows: userRows,
+        },
     });
 };
 exports.createTimelinePieChart = createTimelinePieChart;
