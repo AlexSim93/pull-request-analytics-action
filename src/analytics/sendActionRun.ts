@@ -38,8 +38,9 @@ export const sendActionRun = () => {
         "APPROVAL_TIME_INTERVALS"
       ),
       MERGE_TIME_INTERVALS: getMultipleValuesInput("MERGE_TIME_INTERVALS"),
+      USE_CHARTS: getValueAsIs("USE_CHARTS"),
     });
   } else {
-    mixpanel.track("Anomymous action run");
+    mixpanel.track("Anomymous action run", { distinct_id: "anonymous" });
   }
 };

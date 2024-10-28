@@ -106,6 +106,10 @@ inputs:
     description: "Allows sending non-sensitive inputs to mixpanel"
     required: false
     default: true
+  USE_CHARTS:
+    descriptions: "Primarily uses charts and diagrams instead of tables to display data"
+    required: false
+    default: false
 
 outputs:
   JSON_COLLECTION:

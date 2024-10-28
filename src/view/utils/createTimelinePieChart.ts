@@ -1,5 +1,6 @@
-import { createPieChart } from "./common";
+import { createPieChart, createTable } from "./common";
 import { Collection } from "../../converters/types";
+import { getValueAsIs } from "../../common/utils";
 
 const titleMap = {
   reviewTimeIntervals: "Review time",
@@ -13,25 +14,46 @@ export const createTimelinePieChart = (
   date: string,
   key: "reviewTimeIntervals" | "approvalTimeIntervals" | "mergeTimeIntervals"
 ) => {
-  return users
-    .map((user) => ({
-      user,
-      values: data[user][date]?.[key],
-    }))
+  if (getValueAsIs("USE_CHARTS") === "true") {
+    return users
+      .map((user) => ({
+        user,
+        values: data[user][date]?.[key],
+      }))
+      .filter(
+        (types) =>
+          types.values && Object.values(types.values).some((value) => value)
+      )
+      .map((data) => {
+        const values = Object.entries(data.values!)
+          .filter(([key, value]) => value)
+          .reduce((acc, value) => {
+            return {
+              ...acc,
+              [`${value[0].replace("-Infinity", "+")} hours`]: value[1],
+            };
+          }, {});
+        return createPieChart(`${titleMap[key]} ${data.user} ${date}`, values);
+      })
+      .join("\n");
+  }
+  const headers = Object.keys(data.total[date]?.[key] || {});
+  if (headers.length === 0) return "";
+  const userRows = users
     .filter(
-      (types) =>
-        types.values && Object.values(types.values).some((value) => value)
+      (user) =>
+        data[user][date]?.[key] &&
+        Object.values(data[user][date]?.[key]!).some((value) => value)
     )
-    .map((data) => {
-      const values = Object.entries(data.values!)
-        .filter(([key, value]) => value)
-        .reduce((acc, value) => {
-          return {
-            ...acc,
-            [`${value[0].replace("-Infinity", "+")} hours`]: value[1],
-          };
-        }, {});
-      return createPieChart(`${titleMap[key]} ${data.user} ${date}`, values);
-    })
-    .join("\n");
+    .map((user) => [
+      `**${user}**`,
+      ...headers.map(
+        (header) => data[user][date]?.[key]?.[header]?.toString() || "0"
+      ),
+    ]);
+  return createTable({
+    title: `${titleMap[key]} ${date}`,
+    description: "",
+    table: { headers: ["users", ...headers], rows: userRows },
+  });
 };

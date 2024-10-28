@@ -7,11 +7,13 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.sendActionError = exports.sendActionRun = void 0;
+exports.sendDiscussionUsage = exports.sendActionError = exports.sendActionRun = void 0;
 var sendActionRun_1 = __nccwpck_require__(7293);
 Object.defineProperty(exports, "sendActionRun", ({ enumerable: true, get: function () { return sendActionRun_1.sendActionRun; } }));
 var sendActionError_1 = __nccwpck_require__(59827);
 Object.defineProperty(exports, "sendActionError", ({ enumerable: true, get: function () { return sendActionError_1.sendActionError; } }));
+var sendDiscussionUsage_1 = __nccwpck_require__(19208);
+Object.defineProperty(exports, "sendDiscussionUsage", ({ enumerable: true, get: function () { return sendDiscussionUsage_1.sendDiscussionUsage; } }));
 
 
 /***/ }),
@@ -74,10 +76,11 @@ const sendActionError = (error) => {
             REVIEW_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("REVIEW_TIME_INTERVALS"),
             APPROVAL_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("APPROVAL_TIME_INTERVALS"),
             MERGE_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("MERGE_TIME_INTERVALS"),
+            USE_CHARTS: (0, utils_1.getValueAsIs)("USE_CHARTS"),
         });
     }
     else {
-        mixpanel_1.mixpanel.track("Anonymous action error");
+        mixpanel_1.mixpanel.track("Anonymous action error", { distinct_id: "anonymous" });
     }
 };
 exports.sendActionError = sendActionError;
@@ -125,13 +128,55 @@ const sendActionRun = () => {
             REVIEW_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("REVIEW_TIME_INTERVALS"),
             APPROVAL_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("APPROVAL_TIME_INTERVALS"),
             MERGE_TIME_INTERVALS: (0, utils_1.getMultipleValuesInput)("MERGE_TIME_INTERVALS"),
+            USE_CHARTS: (0, utils_1.getValueAsIs)("USE_CHARTS"),
         });
     }
     else {
-        mixpanel_1.mixpanel.track("Anomymous action run");
+        mixpanel_1.mixpanel.track("Anomymous action run", { distinct_id: "anonymous" });
     }
 };
 exports.sendActionRun = sendActionRun;
+
+
+/***/ }),
+
+/***/ 19208:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sendDiscussionUsage = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const mixpanel_1 = __nccwpck_require__(88238);
+const sendDiscussionUsage = (data) => {
+    if ((0, utils_1.getValueAsIs)("ALLOW_ANALYTICS") === "true") {
+        mixpanel_1.mixpanel.track("Discussion usage", {
+            distinct_id: (0, utils_1.encrypt)((0, utils_1.getMultipleValuesInput)("ORGANIZATIONS")[0] ||
+                (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS")[0].split("/")[0]),
+            GITHUB_OWNERS_REPOS: (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS").length,
+            ORGANIZATIONS: (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS").length,
+            SHOW_STATS_TYPES: (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES"),
+            AMOUNT: (0, utils_1.getValueAsIs)("AMOUNT"),
+            REPORT_DATE_START: (0, utils_1.getValueAsIs)("REPORT_DATE_START"),
+            REPORT_DATE_END: (0, utils_1.getValueAsIs)("REPORT_DATE_END"),
+            REPORT_PERIOD: (0, utils_1.getValueAsIs)("REPORT_PERIOD"),
+            EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
+            HOLIDAYS: (0, utils_1.getMultipleValuesInput)("HOLIDAYS").length,
+            DISCUSSION_USAGE: data.total.total.discussions?.received?.total &&
+                Object.entries(data.total.total?.discussionsTypes || {}).reduce((acc, type) => acc + (type[1].received?.total || 0), 0) / (data.total.total.discussions?.received?.total || 0),
+            DISCUSSION_AGREED: data.total.total.discussions?.received?.agreed &&
+                data.total.total.discussions?.received?.total &&
+                data.total.total.discussions?.received?.agreed /
+                    data.total.total.discussions?.received?.total,
+            DISCUSSION_DISAGREED: data.total.total.discussions?.received?.disagreed &&
+                data.total.total.discussions?.received?.total &&
+                data.total.total.discussions?.received?.disagreed /
+                    data.total.total.discussions?.received?.total,
+        });
+    }
+};
+exports.sendDiscussionUsage = sendDiscussionUsage;
 
 
 /***/ }),
@@ -2083,6 +2128,7 @@ async function main() {
             comments: [],
         });
         const preparedData = (0, converters_1.collectData)(mergedData, teams);
+        (0, analytics_1.sendDiscussionUsage)(preparedData);
         console.log("Calculation complete. Generating markdown.");
         await (0, createOutput_1.createOutput)(preparedData);
         const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
@@ -3010,6 +3056,7 @@ ${[
         "REPORT_DATE_END",
         "AMOUNT",
         "PERIOD_SPLIT_UNIT",
+        "USE_CHARTS",
         "INCLUDE_LABELS",
         "EXCLUDE_LABELS",
         "EXECUTION_OUTCOME",
@@ -3034,23 +3081,41 @@ exports.createConfigParamsCode = createConfigParamsCode;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createDiscussionsPieChart = void 0;
 const common_1 = __nccwpck_require__(64682);
+const utils_1 = __nccwpck_require__(41002);
 const createDiscussionsPieChart = (data, users, date) => {
-    return users
-        .map((user) => ({ user, values: data[user][date]?.discussionsTypes }))
-        .filter((types) => types.values &&
-        Object.values(types.values).some((value) => value.received?.total))
-        .map((data) => {
-        const values = Object.entries(data.values)
-            .filter(([key, value]) => value.received?.total)
-            .reduce((acc, value) => {
-            return {
-                ...acc,
-                [value[0]]: value[1].received?.total,
-            };
-        }, {});
-        return (0, common_1.createPieChart)(`Discussion's types ${data.user} ${date}`, values);
-    })
-        .join("\n");
+    if ((0, utils_1.getValueAsIs)("USE_CHARTS") === "true") {
+        return users
+            .map((user) => ({ user, values: data[user][date]?.discussionsTypes }))
+            .filter((types) => types.values &&
+            Object.values(types.values).some((value) => value.received?.total))
+            .map((data) => {
+            const values = Object.entries(data.values)
+                .filter(([key, value]) => value.received?.total)
+                .reduce((acc, value) => {
+                return {
+                    ...acc,
+                    [value[0]]: value[1].received?.total,
+                };
+            }, {});
+            return (0, common_1.createPieChart)(`Discussion's types ${data.user} ${date}`, values);
+        })
+            .join("\n");
+    }
+    const headers = Object.keys(data.total[date]?.discussionsTypes || {});
+    if (headers.length === 0)
+        return "";
+    const userRows = users
+        .filter((user) => data[user][date]?.discussionsTypes &&
+        Object.values(data[user][date]?.discussionsTypes).some((value) => value.received?.total))
+        .map((user) => [
+        `**${user}**`,
+        ...headers.map((header) => data[user][date]?.discussionsTypes?.[header]?.received?.total?.toString() || "0"),
+    ]);
+    return (0, common_1.createTable)({
+        title: `Discussion's types ${date}`,
+        description: "",
+        table: { headers: ["users", ...headers], rows: userRows },
+    });
 };
 exports.createDiscussionsPieChart = createDiscussionsPieChart;
 
@@ -3285,8 +3350,9 @@ const createTimelineContent = (data, users, date) => {
         const pullRequestTimelineTable = (0, createTimelineTable_1.createTimelineTable)(data, type, users, date);
         const pullRequestTimelineBar = (0, createTimelineGanttBar_1.createTimelineGanttBar)(data, type, users, date);
         return `
-${pullRequestTimelineTable}
-${pullRequestTimelineBar}
+${(0, utils_1.getValueAsIs)("USE_CHARTS") === "true"
+            ? pullRequestTimelineBar
+            : pullRequestTimelineTable}
 `;
     })
         .join("\n");
@@ -3456,30 +3522,48 @@ exports.createTimelineMonthsGanttBar = createTimelineMonthsGanttBar;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelinePieChart = void 0;
 const common_1 = __nccwpck_require__(64682);
+const utils_1 = __nccwpck_require__(41002);
 const titleMap = {
     reviewTimeIntervals: "Review time",
     approvalTimeIntervals: "Approval time",
     mergeTimeIntervals: "Merge time",
 };
 const createTimelinePieChart = (data, users, date, key) => {
-    return users
-        .map((user) => ({
-        user,
-        values: data[user][date]?.[key],
-    }))
-        .filter((types) => types.values && Object.values(types.values).some((value) => value))
-        .map((data) => {
-        const values = Object.entries(data.values)
-            .filter(([key, value]) => value)
-            .reduce((acc, value) => {
-            return {
-                ...acc,
-                [`${value[0].replace("-Infinity", "+")} hours`]: value[1],
-            };
-        }, {});
-        return (0, common_1.createPieChart)(`${titleMap[key]} ${data.user} ${date}`, values);
-    })
-        .join("\n");
+    if ((0, utils_1.getValueAsIs)("USE_CHARTS") === "true") {
+        return users
+            .map((user) => ({
+            user,
+            values: data[user][date]?.[key],
+        }))
+            .filter((types) => types.values && Object.values(types.values).some((value) => value))
+            .map((data) => {
+            const values = Object.entries(data.values)
+                .filter(([key, value]) => value)
+                .reduce((acc, value) => {
+                return {
+                    ...acc,
+                    [`${value[0].replace("-Infinity", "+")} hours`]: value[1],
+                };
+            }, {});
+            return (0, common_1.createPieChart)(`${titleMap[key]} ${data.user} ${date}`, values);
+        })
+            .join("\n");
+    }
+    const headers = Object.keys(data.total[date]?.[key] || {});
+    if (headers.length === 0)
+        return "";
+    const userRows = users
+        .filter((user) => data[user][date]?.[key] &&
+        Object.values(data[user][date]?.[key]).some((value) => value))
+        .map((user) => [
+        `**${user}**`,
+        ...headers.map((header) => data[user][date]?.[key]?.[header]?.toString() || "0"),
+    ]);
+    return (0, common_1.createTable)({
+        title: `${titleMap[key]} ${date}`,
+        description: "",
+        table: { headers: ["users", ...headers], rows: userRows },
+    });
 };
 exports.createTimelinePieChart = createTimelinePieChart;
 
