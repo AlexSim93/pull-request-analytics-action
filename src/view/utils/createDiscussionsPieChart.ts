@@ -31,7 +31,11 @@ export const createDiscussionsPieChart = (
       })
       .join("\n");
   }
-  const headers = Object.keys(data.total[date]?.discussionsTypes || {});
+  const headers = Object.keys(data.total[date]?.discussionsTypes || {}).sort(
+    (a, b) =>
+      (data.total[date]?.discussionsTypes?.[b]?.received?.total || 0) -
+      (data.total[date]?.discussionsTypes?.[a]?.received?.total || 0)
+  );
   if (headers.length === 0) return "";
   const userRows = users
     .filter(
