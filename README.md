@@ -174,9 +174,9 @@ To integrate **pull-request-analytics-action** into your GitHub repository, use 
            uses: AlexSim93/pull-request-analytics-action@v4
            with:
              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # In the case of a personal access token, it needs to be added to the repository's secrets and used in this field.
-             GITHUB_REPO_FOR_ISSUE: "repo" # Make sure to specify the name of the repository where the issue will be created
-             GITHUB_OWNER_FOR_ISSUE: "owner" # Make sure to specify the owner of the repository where the issue will be created
-             GITHUB_OWNERS_REPOS: "owner/repo" # Be sure to list the owner and repository name in the format owner/repo
+             GITHUB_REPO_FOR_ISSUE: # Make sure to specify the name of the repository where the issue will be created
+             GITHUB_OWNER_FOR_ISSUE: # Make sure to specify the owner of the repository where the issue will be created
+             GITHUB_OWNERS_REPOS: # Be sure to list the owner and repository name in the format owner/repo
              CORE_HOURS_START: "9:00"
              CORE_HOURS_END: "19:00"
              TIMEZONE: "Europe/Berlin"
