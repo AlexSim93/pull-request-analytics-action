@@ -56,8 +56,11 @@ export const createTimelineContent = (
       );
 
       return `
-${pullRequestTimelineTable}
-${pullRequestTimelineBar}
+${
+  getValueAsIs("USE_CHARTS") === "true"
+    ? pullRequestTimelineBar
+    : pullRequestTimelineTable
+}
 `;
     })
     .join("\n");

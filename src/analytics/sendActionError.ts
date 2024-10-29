@@ -40,6 +40,9 @@ export const sendActionError = (error: Error) => {
         "APPROVAL_TIME_INTERVALS"
       ),
       MERGE_TIME_INTERVALS: getMultipleValuesInput("MERGE_TIME_INTERVALS"),
+      USE_CHARTS: getValueAsIs("USE_CHARTS"),
     });
+  } else {
+    mixpanel.track("Anonymous action error", { distinct_id: "anonymous" });
   }
 };

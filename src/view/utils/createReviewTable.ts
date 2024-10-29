@@ -3,8 +3,8 @@ import {
   commentsConductedHeader,
   discussionsConductedHeader,
   prSizesHeader,
+  reviewConductedHeader,
   reviewTypesHeader,
-  totalMergedPrsHeader,
 } from "./constants";
 import { createTable } from "./common";
 
@@ -17,7 +17,6 @@ export const createReviewTable = (
   const tableRowsTotal = users
     .filter(
       (user) =>
-        data[user]?.[date]?.merged ||
         data[user]?.[date]?.reviewsConducted?.total?.total ||
         data[user]?.[date]?.commentsConducted ||
         data[user]?.[date]?.discussions?.conducted?.total
@@ -25,7 +24,7 @@ export const createReviewTable = (
     .map((user) => {
       return [
         `**${user}**`,
-        data[user]?.[date]?.merged?.toString() || "0",
+        data[user]?.[date]?.reviewsConducted?.total?.total?.toString() || "0",
         `${
           data[user]?.[date]?.discussions?.conducted?.agreed?.toString() || "0"
         } / ${
@@ -63,7 +62,7 @@ export const createReviewTable = (
     table: {
       headers: [
         "user",
-        totalMergedPrsHeader,
+        reviewConductedHeader,
         discussionsConductedHeader,
         commentsConductedHeader,
         prSizesHeader,

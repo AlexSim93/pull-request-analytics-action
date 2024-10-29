@@ -17,7 +17,11 @@ import {
   validate,
 } from "./common/utils";
 import { getRateLimit } from "./requests/getRateLimit";
-import { sendActionError, sendActionRun } from "./analytics";
+import {
+  sendActionError,
+  sendActionRun,
+  sendDiscussionUsage,
+} from "./analytics";
 
 async function main() {
   try {
@@ -87,6 +91,7 @@ async function main() {
       }
     );
     const preparedData = collectData(mergedData, teams);
+    sendDiscussionUsage(preparedData);
     console.log("Calculation complete. Generating markdown.");
     await createOutput(preparedData);
 
