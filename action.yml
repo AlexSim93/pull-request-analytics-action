@@ -110,10 +110,6 @@ inputs:
     description: "Primarily uses charts and diagrams instead of tables to display data"
     required: false
     default: false
-  USE_XY_CHART:
-    description: 'Uses XY charts for months comparison instead of Gantt bars'
-    required: false
-    default: true
 
 outputs:
   JSON_COLLECTION:

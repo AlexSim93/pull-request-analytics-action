@@ -3092,7 +3092,6 @@ ${[
         "AMOUNT",
         "PERIOD_SPLIT_UNIT",
         "USE_CHARTS",
-        "USE_XY_CHART",
         "INCLUDE_LABELS",
         "EXCLUDE_LABELS",
         "EXECUTION_OUTCOME",
@@ -3542,39 +3541,23 @@ exports.createTimelineMonthComparisonChart = void 0;
 const _1 = __nccwpck_require__(92884);
 const utils_1 = __nccwpck_require__(41002);
 const createContributionMonthXYChart_1 = __nccwpck_require__(78462);
-const createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
 const createTimelineMonthXYChart_1 = __nccwpck_require__(1796);
 const createTimelineMonthComparisonChart = (data, dates, users, references = []) => {
     const charts = users.map((user) => {
-        if ((0, utils_1.getValueAsIs)("USE_XY_CHART") === "true") {
-            const timelines = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-                .filter((type) => ["average", "median", "percentile"].includes(type) &&
-                Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
-                    value[type]?.timeToApprove &&
-                    value[type]?.timeToMerge).length > 2)
-                .map((type) => (0, createTimelineMonthXYChart_1.createTimelineMonthsXYChart)(data, type, dates.filter((date) => date !== "total"), user))
-                .join("\n");
-            const contribution = Object.values(data[user]).filter((value) => value.merged ||
-                value.discussions?.conducted?.total ||
-                value.discussions?.received?.total ||
-                value?.reviewsConducted?.total?.total).length > 2
-                ? (0, createContributionMonthXYChart_1.createContributionMonthsXYChart)(data, dates.filter((date) => date !== "total"), user)
-                : "";
-            return [timelines, contribution].join("\n");
-        }
-        if ((0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS").some((type) => ["average", "median", "percentile"].includes(type) &&
-            Object.values(data[user]).filter((value) => value[type]?.timeToReview ||
-                value[type]?.timeToApprove ||
-                value[type]?.timeToMerge).length > 2)) {
-            return (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-                .filter((type) => ["average", "median", "percentile"].includes(type) &&
-                Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
-                    value[type]?.timeToApprove &&
-                    value[type]?.timeToMerge).length > 2)
-                .map((type) => (0, createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
-                .join("\n");
-        }
-        return '';
+        const timelines = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+            .filter((type) => ["average", "median", "percentile"].includes(type) &&
+            Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
+                value[type]?.timeToApprove &&
+                value[type]?.timeToMerge).length > 2)
+            .map((type) => (0, createTimelineMonthXYChart_1.createTimelineMonthsXYChart)(data, type, dates.filter((date) => date !== "total"), user))
+            .join("\n");
+        const contribution = Object.values(data[user]).filter((value) => value.merged ||
+            value.discussions?.conducted?.total ||
+            value.discussions?.received?.total ||
+            value?.reviewsConducted?.total?.total).length > 2
+            ? (0, createContributionMonthXYChart_1.createContributionMonthsXYChart)(data, dates.filter((date) => date !== "total"), user)
+            : "";
+        return [timelines, contribution].join("\n");
     });
     if (charts.every((el) => !el.trim()))
         return "";
@@ -3665,62 +3648,6 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
     });
 };
 exports.createTimelineMonthsXYChart = createTimelineMonthsXYChart;
-
-
-/***/ }),
-
-/***/ 50193:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createTimelineMonthsGanttBar = void 0;
-const constants_1 = __nccwpck_require__(11474);
-const common_1 = __nccwpck_require__(64682);
-const _1 = __nccwpck_require__(92884);
-const utils_1 = __nccwpck_require__(41002);
-const createTimelineMonthsGanttBar = (data, type, dates, user) => {
-    return (0, common_1.createGanttBar)({
-        title: `Pull request's retrospective timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${user} / minutes`,
-        sections: dates
-            .filter((date) => data[user]?.[date]?.[type]?.timeToReview &&
-            data[user]?.[date]?.[type]?.timeToApprove &&
-            data[user]?.[date]?.[type]?.timeToMerge)
-            .map((date) => ({
-            name: date,
-            bars: [
-                {
-                    name: constants_1.timeInDraftHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeInDraft || 0,
-                },
-                {
-                    name: constants_1.timeToReviewRequestHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToReviewRequest || 0,
-                },
-                {
-                    name: constants_1.timeToReviewHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToReview || 0,
-                },
-                {
-                    name: constants_1.timeToApproveHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToApprove || 0,
-                },
-                {
-                    name: constants_1.timeToMergeHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToMerge || 0,
-                },
-            ],
-        })),
-        formatValue: (value) => (0, _1.formatMinutesDuration)(value),
-    });
-};
-exports.createTimelineMonthsGanttBar = createTimelineMonthsGanttBar;
 
 
 /***/ }),
@@ -3913,7 +3840,7 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createResponseTable = exports.createReferences = exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
+exports.createResponseTable = exports.createReferences = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
 var createTimelineMonthComparisonChart_1 = __nccwpck_require__(82264);
 Object.defineProperty(exports, "createTimelineMonthComparisonChart", ({ enumerable: true, get: function () { return createTimelineMonthComparisonChart_1.createTimelineMonthComparisonChart; } }));
 var createDiscussionsPieChart_1 = __nccwpck_require__(99622);
@@ -3942,8 +3869,6 @@ var common_2 = __nccwpck_require__(64682);
 Object.defineProperty(exports, "getDisplayUserList", ({ enumerable: true, get: function () { return common_2.getDisplayUserList; } }));
 var createTimelineContent_1 = __nccwpck_require__(50940);
 Object.defineProperty(exports, "createTimelineContent", ({ enumerable: true, get: function () { return createTimelineContent_1.createTimelineContent; } }));
-var createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
-Object.defineProperty(exports, "createTimelineMonthsGanttBar", ({ enumerable: true, get: function () { return createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar; } }));
 var createReferences_1 = __nccwpck_require__(96145);
 Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: function () { return createReferences_1.createReferences; } }));
 var createResponseTable_1 = __nccwpck_require__(70351);
