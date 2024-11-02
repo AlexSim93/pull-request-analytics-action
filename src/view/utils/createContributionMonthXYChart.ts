@@ -39,14 +39,14 @@ export const createContributionMonthsXYChart = (
         name: "Discussions\\ Conducted",
         values: dates.map(
           (date) => data[user]?.[date]?.discussions?.conducted?.total || 0
-        ),
+        ).reverse(),
       },
       {
         color: "darkblue",
         name: "Discussions\\ Received",
         values: dates.map(
           (date) => data[user]?.[date]?.discussions?.received?.total || 0
-        ),
+        ).reverse(),
       },
       {
         color: "crimson",
@@ -54,7 +54,7 @@ export const createContributionMonthsXYChart = (
         values: dates.map(
           (date) =>
             data[user]?.[date]?.reviewsConducted?.total?.changes_requested || 0
-        ),
+        ).reverse(),
       },
       {
         color: "firebrick",
@@ -64,19 +64,19 @@ export const createContributionMonthsXYChart = (
             data["total"]?.[date]?.reviewsConducted?.[user]?.[
               "changes_requested"
             ] || 0
-        ),
+        ).reverse(),
       },
       {
         color: "gold",
         name: "Reviews\\ Conducted",
         values: dates.map(
           (date) => data[user]?.[date]?.reviewsConducted?.total?.total || 0
-        ),
+        ).reverse(),
       },
       {
         color: "chartreuse",
         name: "Merged\\ PRs",
-        values: dates.map((date) => data[user]?.[date]?.merged || 0),
+        values: dates.map((date) => data[user]?.[date]?.merged || 0).reverse(),
       },
     ],
   });

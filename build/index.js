@@ -3131,32 +3131,32 @@ const createContributionMonthsXYChart = (data, dates, user) => {
             {
                 color: "blueviolet",
                 name: "Discussions\\ Conducted",
-                values: dates.map((date) => data[user]?.[date]?.discussions?.conducted?.total || 0),
+                values: dates.map((date) => data[user]?.[date]?.discussions?.conducted?.total || 0).reverse(),
             },
             {
                 color: "darkblue",
                 name: "Discussions\\ Received",
-                values: dates.map((date) => data[user]?.[date]?.discussions?.received?.total || 0),
+                values: dates.map((date) => data[user]?.[date]?.discussions?.received?.total || 0).reverse(),
             },
             {
                 color: "crimson",
                 name: "Changes\\ Requested\\ Conducted",
-                values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.changes_requested || 0),
+                values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.changes_requested || 0).reverse(),
             },
             {
                 color: "firebrick",
                 name: "Changes\\ Requested\\ Received",
-                values: dates.map((date) => data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"] || 0),
+                values: dates.map((date) => data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"] || 0).reverse(),
             },
             {
                 color: "gold",
                 name: "Reviews\\ Conducted",
-                values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.total || 0),
+                values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.total || 0).reverse(),
             },
             {
                 color: "chartreuse",
                 name: "Merged\\ PRs",
-                values: dates.map((date) => data[user]?.[date]?.merged || 0),
+                values: dates.map((date) => data[user]?.[date]?.merged || 0).reverse(),
             },
         ],
     });
@@ -3582,7 +3582,9 @@ const createXYChart_1 = __nccwpck_require__(80815);
 const createTimelineMonthsXYChart = (data, type, dates, user) => {
     return (0, createXYChart_1.createXYChart)({
         title: `Pull request's retrospective timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${user}`,
-        xAxis: dates.map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`)).reverse(),
+        xAxis: dates
+            .map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`))
+            .reverse(),
         yAxis: {
             min: 0,
             max: Math.ceil(Math.max(...dates.map((date) => Math.max(...[
@@ -3601,50 +3603,67 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
             {
                 color: "orange",
                 name: "Time\\ From\\ Initial\\ Request\\ To\\ Response",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeFromInitialRequestToResponse ||
-                    0) /
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]
+                    ?.timeFromInitialRequestToResponse || 0) /
                     60) *
-                    100) / 100),
+                    100) / 100)
+                    .reverse(),
             },
             {
                 color: "violet",
                 name: "Time\\ From\\ Opening\\ To\\ Response",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeFromOpenToResponse || 0) / 60) *
-                    100) / 100),
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeFromOpenToResponse || 0) /
+                    60) *
+                    100) / 100)
+                    .reverse(),
             },
             {
                 color: "mediumblue",
                 name: "Time\\ From\\ Rerequest\\ To\\ Response",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeFromRepeatedRequestToResponse ||
-                    0) /
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]
+                    ?.timeFromRepeatedRequestToResponse || 0) /
                     60) *
-                    100) / 100),
+                    100) / 100)
+                    .reverse(),
             },
             {
                 color: "dimgrey",
                 name: "Time\\ In\\ Draft",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeInDraft || 0) / 60) * 100) / 100),
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeInDraft || 0) / 60) * 100) / 100)
+                    .reverse(),
             },
             {
                 color: "firebrick",
                 name: "Time\\ To\\ Review\\ Request",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReviewRequest || 0) / 60) *
-                    100) / 100),
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReviewRequest || 0) / 60) *
+                    100) / 100)
+                    .reverse(),
             },
             {
                 color: "gold",
                 name: "Time\\ To\\ Review",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReview || 0) / 60) * 100) / 100),
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReview || 0) / 60) * 100) / 100)
+                    .reverse(),
             },
             {
                 color: "chartreuse",
                 name: "Time\\ To\\ Approve",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToApprove || 0) / 60) * 100) / 100),
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToApprove || 0) / 60) * 100) / 100)
+                    .reverse(),
             },
             {
                 color: "blueviolet",
                 name: "Time\\ To\\ Merge",
-                values: dates.map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToMerge || 0) / 60) * 100) / 100),
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToMerge || 0) / 60) * 100) / 100)
+                    .reverse(),
             },
         ],
     });
