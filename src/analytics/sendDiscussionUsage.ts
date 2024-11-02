@@ -21,21 +21,21 @@ export const sendDiscussionUsage = (
       EXECUTION_OUTCOME: getMultipleValuesInput("EXECUTION_OUTCOME"),
       HOLIDAYS: getMultipleValuesInput("HOLIDAYS").length,
       DISCUSSION_USAGE:
-        data.total.total.discussions?.received?.total &&
-        Object.entries(data.total.total?.discussionsTypes || {}).reduce(
+        data.total?.total?.discussions?.received?.total &&
+        Object.entries(data.total?.total?.discussionsTypes || {}).reduce(
           (acc, type) => acc + (type[1].received?.total || 0),
           0
-        ) / (data.total.total.discussions?.received?.total || 0),
+        ) / (data.total?.total?.discussions?.received?.total || 0),
       DISCUSSION_AGREED:
-        data.total.total.discussions?.received?.agreed &&
-        data.total.total.discussions?.received?.total &&
-        data.total.total.discussions?.received?.agreed /
-          data.total.total.discussions?.received?.total,
+        data.total.total?.discussions?.received?.agreed &&
+        data.total.total?.discussions?.received?.total &&
+        data.total.total?.discussions?.received?.agreed /
+          data.total.total?.discussions?.received?.total,
       DISCUSSION_DISAGREED:
-        data.total.total.discussions?.received?.disagreed &&
-        data.total.total.discussions?.received?.total &&
-        data.total.total.discussions?.received?.disagreed /
-          data.total.total.discussions?.received?.total,
+        data.total.total?.discussions?.received?.disagreed &&
+        data.total.total?.discussions?.received?.total &&
+        data.total.total?.discussions?.received?.disagreed /
+          data.total.total?.discussions?.received?.total,
     });
   }
 };

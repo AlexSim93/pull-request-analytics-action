@@ -32,16 +32,17 @@ export const createOutput = async (
         await clearComments(issueNumber);
       }
       const issue = await createIssue(markdown, issueNumber);
-      const monthComparison = getMultipleValuesInput(
-        "SHOW_STATS_TYPES"
-      ).includes(showStatsTypes.timeline)
-        ? createTimelineMonthComparisonChart(data, dates, users, [
-            {
-              title: "Pull Request report total",
-              link: `${issue.data.html_url}#`,
-            },
-          ])
-        : null;
+      const monthComparison = createTimelineMonthComparisonChart(
+        data,
+        dates,
+        users,
+        [
+          {
+            title: "Pull Request report total",
+            link: `${issue.data.html_url}#`,
+          },
+        ]
+      );
       const comments = [];
       if (monthComparison) {
         const comparisonComment = await octokit.rest.issues.createComment({

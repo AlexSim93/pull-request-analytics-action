@@ -163,16 +163,16 @@ const sendDiscussionUsage = (data) => {
             REPORT_PERIOD: (0, utils_1.getValueAsIs)("REPORT_PERIOD"),
             EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
             HOLIDAYS: (0, utils_1.getMultipleValuesInput)("HOLIDAYS").length,
-            DISCUSSION_USAGE: data.total.total.discussions?.received?.total &&
-                Object.entries(data.total.total?.discussionsTypes || {}).reduce((acc, type) => acc + (type[1].received?.total || 0), 0) / (data.total.total.discussions?.received?.total || 0),
-            DISCUSSION_AGREED: data.total.total.discussions?.received?.agreed &&
-                data.total.total.discussions?.received?.total &&
-                data.total.total.discussions?.received?.agreed /
-                    data.total.total.discussions?.received?.total,
-            DISCUSSION_DISAGREED: data.total.total.discussions?.received?.disagreed &&
-                data.total.total.discussions?.received?.total &&
-                data.total.total.discussions?.received?.disagreed /
-                    data.total.total.discussions?.received?.total,
+            DISCUSSION_USAGE: data.total?.total?.discussions?.received?.total &&
+                Object.entries(data.total?.total?.discussionsTypes || {}).reduce((acc, type) => acc + (type[1].received?.total || 0), 0) / (data.total?.total?.discussions?.received?.total || 0),
+            DISCUSSION_AGREED: data.total.total?.discussions?.received?.agreed &&
+                data.total.total?.discussions?.received?.total &&
+                data.total.total?.discussions?.received?.agreed /
+                    data.total.total?.discussions?.received?.total,
+            DISCUSSION_DISAGREED: data.total.total?.discussions?.received?.disagreed &&
+                data.total.total?.discussions?.received?.total &&
+                data.total.total?.discussions?.received?.disagreed /
+                    data.total.total?.discussions?.received?.total,
         });
     }
 };
@@ -1988,14 +1988,12 @@ const createOutput = async (data) => {
                 await (0, requests_1.clearComments)(issueNumber);
             }
             const issue = await (0, requests_1.createIssue)(markdown, issueNumber);
-            const monthComparison = (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES").includes(constants_1.showStatsTypes.timeline)
-                ? (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
-                    {
-                        title: "Pull Request report total",
-                        link: `${issue.data.html_url}#`,
-                    },
-                ])
-                : null;
+            const monthComparison = (0, utils_2.createTimelineMonthComparisonChart)(data, dates, users, [
+                {
+                    title: "Pull Request report total",
+                    link: `${issue.data.html_url}#`,
+                },
+            ]);
             const comments = [];
             if (monthComparison) {
                 const comparisonComment = await octokit_1.octokit.rest.issues.createComment({
@@ -2940,6 +2938,43 @@ exports.createTable = createTable;
 
 /***/ }),
 
+/***/ 80815:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createXYChart = void 0;
+const createXYChart = ({ title, xAxis, yAxis, lines, }) => {
+    if (!lines.length)
+        return "";
+    return `
+$$${lines.map((line) => `\\color{${line.color}}${line.name}`).join("\\ ")}$$
+\`\`\`mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "${lines
+        .map((line) => line.color || "black")
+        .join(", ")}"
+---
+xychart-beta
+    title "${title}"
+    x-axis [${xAxis.map((name) => `"${name}"`).join(", ")}]
+    y-axis "${yAxis.title}" ${yAxis.min} --> ${yAxis.max}
+    ${lines.map((line) => `line [${line.values.join(", ")}]`).join("\n")}
+\`\`\``;
+};
+exports.createXYChart = createXYChart;
+
+
+/***/ }),
+
 /***/ 90052:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -3069,6 +3104,64 @@ ${[
     `;
 };
 exports.createConfigParamsCode = createConfigParamsCode;
+
+
+/***/ }),
+
+/***/ 78462:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createContributionMonthsXYChart = void 0;
+const createXYChart_1 = __nccwpck_require__(80815);
+const createContributionMonthsXYChart = (data, dates, user) => {
+    return (0, createXYChart_1.createXYChart)({
+        title: `Pull request's retrospective contribution ${user}`,
+        xAxis: dates
+            .map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`))
+            .reverse(),
+        yAxis: {
+            min: 0,
+            max: Math.max(...dates.map((date) => Math.max(1, data[user]?.[date]?.merged || 0, data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"] || 0, data[user]?.[date]?.reviewsConducted?.total?.total || 0, data[user]?.[date]?.discussions?.received?.total || 0, data[user]?.[date]?.discussions?.conducted?.total || 0, data[user]?.[date]?.reviewsConducted?.total?.changes_requested || 0)), 1),
+            title: "amount",
+        },
+        lines: [
+            {
+                color: "blueviolet",
+                name: "Discussions\\ Conducted",
+                values: dates.map((date) => data[user]?.[date]?.discussions?.conducted?.total || 0).reverse(),
+            },
+            {
+                color: "darkblue",
+                name: "Discussions\\ Received",
+                values: dates.map((date) => data[user]?.[date]?.discussions?.received?.total || 0).reverse(),
+            },
+            {
+                color: "crimson",
+                name: "Changes\\ Requested\\ Conducted",
+                values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.changes_requested || 0).reverse(),
+            },
+            {
+                color: "firebrick",
+                name: "Changes\\ Requested\\ Received",
+                values: dates.map((date) => data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"] || 0).reverse(),
+            },
+            {
+                color: "gold",
+                name: "Reviews\\ Conducted",
+                values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.total || 0).reverse(),
+            },
+            {
+                color: "chartreuse",
+                name: "Merged\\ PRs",
+                values: dates.map((date) => data[user]?.[date]?.merged || 0).reverse(),
+            },
+        ],
+    });
+};
+exports.createContributionMonthsXYChart = createContributionMonthsXYChart;
 
 
 /***/ }),
@@ -3449,16 +3542,25 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTimelineMonthComparisonChart = void 0;
 const _1 = __nccwpck_require__(92884);
 const utils_1 = __nccwpck_require__(41002);
-const createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
+const createContributionMonthXYChart_1 = __nccwpck_require__(78462);
+const createTimelineMonthXYChart_1 = __nccwpck_require__(1796);
 const createTimelineMonthComparisonChart = (data, dates, users, references = []) => {
-    const charts = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
-        .filter((method) => ["average", "median", "percentile"].includes(method))
-        .map((type) => users
-        .filter((user) => Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
-        value[type]?.timeToApprove &&
-        value[type]?.timeToMerge).length > 2)
-        .map((user) => (0, createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar)(data, type, dates.filter((date) => date !== "total"), user))
-        .join("\n"));
+    const charts = users.map((user) => {
+        const timelines = (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+            .filter((type) => ["average", "median", "percentile"].includes(type) &&
+            Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
+                value[type]?.timeToApprove &&
+                value[type]?.timeToMerge).length > 2)
+            .map((type) => (0, createTimelineMonthXYChart_1.createTimelineMonthsXYChart)(data, type, dates.filter((date) => date !== "total"), user))
+            .join("\n");
+        const contribution = Object.values(data[user]).filter((value) => value.merged ||
+            value.discussions?.conducted?.total ||
+            value.discussions?.received?.total ||
+            value?.reviewsConducted?.total?.total).length > 2
+            ? (0, createContributionMonthXYChart_1.createContributionMonthsXYChart)(data, dates.filter((date) => date !== "total"), user)
+            : "";
+        return [timelines, contribution].join("\n");
+    });
     if (charts.every((el) => !el.trim()))
         return "";
     return [(0, _1.createReferences)(references)].concat(charts).join("\n").trim();
@@ -3468,58 +3570,105 @@ exports.createTimelineMonthComparisonChart = createTimelineMonthComparisonChart;
 
 /***/ }),
 
-/***/ 50193:
+/***/ 1796:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createTimelineMonthsGanttBar = void 0;
-const constants_1 = __nccwpck_require__(11474);
-const common_1 = __nccwpck_require__(64682);
-const _1 = __nccwpck_require__(92884);
+exports.createTimelineMonthsXYChart = void 0;
 const utils_1 = __nccwpck_require__(41002);
-const createTimelineMonthsGanttBar = (data, type, dates, user) => {
-    return (0, common_1.createGanttBar)({
-        title: `Pull request's retrospective timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${user} / minutes`,
-        sections: dates
-            .filter((date) => data[user]?.[date]?.[type]?.timeToReview &&
-            data[user]?.[date]?.[type]?.timeToApprove &&
-            data[user]?.[date]?.[type]?.timeToMerge)
-            .map((date) => ({
-            name: date,
-            bars: [
-                {
-                    name: constants_1.timeInDraftHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeInDraft || 0,
-                },
-                {
-                    name: constants_1.timeToReviewRequestHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToReviewRequest || 0,
-                },
-                {
-                    name: constants_1.timeToReviewHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToReview || 0,
-                },
-                {
-                    name: constants_1.timeToApproveHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToApprove || 0,
-                },
-                {
-                    name: constants_1.timeToMergeHeader,
-                    start: 0,
-                    end: data[user]?.[date]?.[type]?.timeToMerge || 0,
-                },
-            ],
-        })),
-        formatValue: (value) => (0, _1.formatMinutesDuration)(value),
+const createXYChart_1 = __nccwpck_require__(80815);
+const createTimelineMonthsXYChart = (data, type, dates, user) => {
+    return (0, createXYChart_1.createXYChart)({
+        title: `Pull request's retrospective timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${user}`,
+        xAxis: dates
+            .map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`))
+            .reverse(),
+        yAxis: {
+            min: 0,
+            max: Math.ceil(Math.max(...dates.map((date) => Math.max(...[
+                "timeInDraft",
+                "timeToReviewRequest",
+                "timeToReview",
+                "timeToApprove",
+                "timeToMerge",
+                "timeFromInitialRequestToResponse",
+                "timeFromOpenToResponse",
+                "timeFromRepeatedRequestToResponse",
+            ].map((key) => data[user]?.[date]?.[type]?.[key] || 0))), 1) / 60),
+            title: "hours",
+        },
+        lines: [
+            {
+                color: "orange",
+                name: "Time\\ From\\ Initial\\ Request\\ To\\ Response",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]
+                    ?.timeFromInitialRequestToResponse || 0) /
+                    60) *
+                    100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "violet",
+                name: "Time\\ From\\ Opening\\ To\\ Response",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeFromOpenToResponse || 0) /
+                    60) *
+                    100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "mediumblue",
+                name: "Time\\ From\\ Rerequest\\ To\\ Response",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]
+                    ?.timeFromRepeatedRequestToResponse || 0) /
+                    60) *
+                    100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "dimgrey",
+                name: "Time\\ In\\ Draft",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeInDraft || 0) / 60) * 100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "firebrick",
+                name: "Time\\ To\\ Review\\ Request",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReviewRequest || 0) / 60) *
+                    100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "gold",
+                name: "Time\\ To\\ Review",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReview || 0) / 60) * 100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "chartreuse",
+                name: "Time\\ To\\ Approve",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToApprove || 0) / 60) * 100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "blueviolet",
+                name: "Time\\ To\\ Merge",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToMerge || 0) / 60) * 100) / 100)
+                    .reverse(),
+            },
+        ],
     });
 };
-exports.createTimelineMonthsGanttBar = createTimelineMonthsGanttBar;
+exports.createTimelineMonthsXYChart = createTimelineMonthsXYChart;
 
 
 /***/ }),
@@ -3651,8 +3800,7 @@ const common_1 = __nccwpck_require__(64682);
 const createTotalTable = (data, users, date) => {
     const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
-        .filter((user) => data[user]?.[date]?.opened ||
-        data[user]?.[date]?.reviewsConducted?.total?.total)
+        .filter((user) => data[user]?.[date]?.opened)
         .map((user) => {
         return [
             `**${user}**`,
@@ -3669,7 +3817,7 @@ const createTotalTable = (data, users, date) => {
     });
     return (0, common_1.createTable)({
         title: `Contribution stats ${date}`,
-        description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-\d+/`. This pattern is used for reverts made via GitHub.",
+        description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.",
         table: {
             headers: [
                 "user",
@@ -3713,7 +3861,7 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createResponseTable = exports.createReferences = exports.createTimelineMonthsGanttBar = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
+exports.createResponseTable = exports.createReferences = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
 var createTimelineMonthComparisonChart_1 = __nccwpck_require__(82264);
 Object.defineProperty(exports, "createTimelineMonthComparisonChart", ({ enumerable: true, get: function () { return createTimelineMonthComparisonChart_1.createTimelineMonthComparisonChart; } }));
 var createDiscussionsPieChart_1 = __nccwpck_require__(99622);
@@ -3742,8 +3890,6 @@ var common_2 = __nccwpck_require__(64682);
 Object.defineProperty(exports, "getDisplayUserList", ({ enumerable: true, get: function () { return common_2.getDisplayUserList; } }));
 var createTimelineContent_1 = __nccwpck_require__(50940);
 Object.defineProperty(exports, "createTimelineContent", ({ enumerable: true, get: function () { return createTimelineContent_1.createTimelineContent; } }));
-var createTimelineMonthsGanttBar_1 = __nccwpck_require__(50193);
-Object.defineProperty(exports, "createTimelineMonthsGanttBar", ({ enumerable: true, get: function () { return createTimelineMonthsGanttBar_1.createTimelineMonthsGanttBar; } }));
 var createReferences_1 = __nccwpck_require__(96145);
 Object.defineProperty(exports, "createReferences", ({ enumerable: true, get: function () { return createReferences_1.createReferences; } }));
 var createResponseTable_1 = __nccwpck_require__(70351);

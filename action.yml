@@ -107,7 +107,7 @@ inputs:
     required: false
     default: true
   USE_CHARTS:
-    descriptions: "Primarily uses charts and diagrams instead of tables to display data"
+    description: "Primarily uses charts and diagrams instead of tables to display data"
     required: false
     default: false
 

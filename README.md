@@ -122,12 +122,12 @@ title Discussions types total 12/2023
 
 Measures how discussion-heavy PRs are from the reviewer's perspective, based on discussions, comments, and PR statuses. Helps understand reviewer engagement and decision-making. Use the `code-review-engagement` value in the `SHOW_STATS_TYPES` parameter and add thumbs up/down ( :+1: / :-1: ) reactions on opening comments.
 
-|   user    | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
-| :-------: | :--------------: | :----------------------------------------------: | :----------------: | :------------------: | :--------------------------------------: |
-| **dev1**  |        22        |                    0 / 0 / 0                     |         0          |      5/2/0/1/0       |                0 / 0 / 8                 |
-| **dev2**  |        13        |                    3 / 2 / 22                    |         33         |      10/3/4/0/3      |                5 / 8 / 20                |
-| **dev3**  |        2         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |
-| **total** |        47        |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |
+|   user    | Reviews conducted | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
+| :-------: | :---------------: | :----------------------------------------------: | :----------------: | :------------------: | :--------------------------------------: |
+| **dev1**  |         8         |                    0 / 0 / 0                     |         0          |      5/2/0/1/0       |                0 / 0 / 8                 |
+| **dev2**  |        20         |                    3 / 2 / 22                    |         33         |      10/3/4/0/3      |                5 / 8 / 20                |
+| **dev3**  |        10         |                    0 / 0 / 2                     |         3          |      4/2/1/2/1       |                1 / 1 / 10                |
+| **total** |        46         |                    3 / 2 / 25                    |         37         |      30/9/6/2/3      |               6 / 12 / 46                |
 
 ### Reviewer Response Time
 
@@ -139,6 +139,37 @@ Shows how quickly reviewers respond to review requests. Helps better understand 
 | **dev2**  |            271            |        56         |      10 hours 48 minutes      |          9 hours 42 minutes           |                                  |
 | **dev3**  |            218            |        66         |      6 hours 59 minutes       |          6 hours 55 minutes           |        3 hours 2 minutes         |
 | **total** |           1219            |        282        |      7 hours 15 minutes       |          6 hours 41 minutes           |        1 hour 57 minutes         |
+
+### Metric Trends Over Time
+
+This section displays metric changes over time using graphs, helping to understand how metrics have evolved over extended periods. To enable these graphs, ensure that `PERIOD_SPLIT_UNIT` is set and that the collected data covers at least two time periods (e.g., quarters or months).
+
+$$\color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge\ \color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response$$
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "dimgrey, firebrick, gold, chartreuse, blueviolet, orange, violet, mediumblue"
+---
+xychart-beta
+    title "Pull request's retrospective timeline(75th percentile) total"
+    x-axis ["4/23", "5/23", "6/23", "7/23", "8/23", "9/23", "10/23", "11/23", "12/23", "1/24", "2/24", "3/24", "4/24", "5/24", "6/24", "7/24", "8/24", "9/24", "10/24"]
+    y-axis "hours" 0 --> 47
+    line [0, 0, 0, 0, 0, 0, 0.13, 0.12, 0.13, 0.42, 0.23, 0.32, 0.15, 0.08, 0.15, 0.18, 0.13, 0.1, 0.17]
+line [0, 0, 0, 0, 0, 0.22, 0.13, 0.12, 0.13, 0.32, 0.23, 0.32, 0.18, 0.08, 0.15, 0.2, 0.13, 0.1, 0.17]
+line [0.77, 0.65, 1.52, 2.35, 1.42, 2.52, 3.2, 2.13, 4.7, 2.87, 5.95, 4.75, 5.85, 4.98, 3.05, 2.17, 2.5, 3.58, 5.28]
+line [2.28, 4.95, 4.1, 4.6, 4.07, 3.3, 6.82, 5.65, 6.72, 4.08, 6.77, 10.43, 7.18, 9.58, 6.9, 4.2, 7.13, 6.35, 8.05]
+line [21.52, 28.9, 23.47, 21.2, 23.63, 24.9, 20.72, 29.22, 26.07, 25.52, 22.33, 46.33, 23.43, 26.47, 17.22, 24.28, 21.32, 22.97, 21.95]
+line [0, 1.67, 2.62, 3.8, 2.33, 3.15, 4.8, 2.72, 4.9, 2.6, 5.55, 6.12, 5.75, 5.82, 2.98, 1.68, 2.95, 3.92, 5.6]
+line [0.5, 0.75, 2.07, 2.28, 1.4, 2.98, 5.17, 2.52, 4.93, 3.57, 6, 7.22, 6.33, 5.77, 3.62, 2.75, 3.28, 3.9, 5.35]
+line [0, 2.18, 0.92, 0.77, 5.47, 0.83, 4.85, 2.42, 4.28, 23.18, 0, 1.63, 1.98, 4.13, 1.32, 1.85, 1.63, 2.5, 6.72]
+```
 
 ### List of Notable PRs
 
