@@ -15,7 +15,7 @@ export const createTimelineMonthsXYChart = (
     }${type === "percentile" ? "th " : ""}${type}) ${user}`,
     xAxis: dates.map((date) =>
       date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`)
-    ),
+    ).reverse(),
     yAxis: {
       min: 0,
       max: Math.ceil(

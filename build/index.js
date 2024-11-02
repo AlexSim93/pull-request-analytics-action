@@ -163,16 +163,16 @@ const sendDiscussionUsage = (data) => {
             REPORT_PERIOD: (0, utils_1.getValueAsIs)("REPORT_PERIOD"),
             EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
             HOLIDAYS: (0, utils_1.getMultipleValuesInput)("HOLIDAYS").length,
-            DISCUSSION_USAGE: data.total.total.discussions?.received?.total &&
-                Object.entries(data.total.total?.discussionsTypes || {}).reduce((acc, type) => acc + (type[1].received?.total || 0), 0) / (data.total.total.discussions?.received?.total || 0),
-            DISCUSSION_AGREED: data.total.total.discussions?.received?.agreed &&
-                data.total.total.discussions?.received?.total &&
-                data.total.total.discussions?.received?.agreed /
-                    data.total.total.discussions?.received?.total,
-            DISCUSSION_DISAGREED: data.total.total.discussions?.received?.disagreed &&
-                data.total.total.discussions?.received?.total &&
-                data.total.total.discussions?.received?.disagreed /
-                    data.total.total.discussions?.received?.total,
+            DISCUSSION_USAGE: data.total?.total?.discussions?.received?.total &&
+                Object.entries(data.total?.total?.discussionsTypes || {}).reduce((acc, type) => acc + (type[1].received?.total || 0), 0) / (data.total?.total?.discussions?.received?.total || 0),
+            DISCUSSION_AGREED: data.total.total?.discussions?.received?.agreed &&
+                data.total.total?.discussions?.received?.total &&
+                data.total.total?.discussions?.received?.agreed /
+                    data.total.total?.discussions?.received?.total,
+            DISCUSSION_DISAGREED: data.total.total?.discussions?.received?.disagreed &&
+                data.total.total?.discussions?.received?.total &&
+                data.total.total?.discussions?.received?.disagreed /
+                    data.total.total?.discussions?.received?.total,
         });
     }
 };
@@ -3119,7 +3119,9 @@ const createXYChart_1 = __nccwpck_require__(80815);
 const createContributionMonthsXYChart = (data, dates, user) => {
     return (0, createXYChart_1.createXYChart)({
         title: `Pull request's retrospective contribution ${user}`,
-        xAxis: dates.map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`)),
+        xAxis: dates
+            .map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`))
+            .reverse(),
         yAxis: {
             min: 0,
             max: Math.max(...dates.map((date) => Math.max(1, data[user]?.[date]?.merged || 0, data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"] || 0, data[user]?.[date]?.reviewsConducted?.total?.total || 0, data[user]?.[date]?.discussions?.received?.total || 0, data[user]?.[date]?.discussions?.conducted?.total || 0, data[user]?.[date]?.reviewsConducted?.total?.changes_requested || 0)), 1),
@@ -3580,7 +3582,7 @@ const createXYChart_1 = __nccwpck_require__(80815);
 const createTimelineMonthsXYChart = (data, type, dates, user) => {
     return (0, createXYChart_1.createXYChart)({
         title: `Pull request's retrospective timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${user}`,
-        xAxis: dates.map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`)),
+        xAxis: dates.map((date) => date.replace(/\/(\d{4})$/, (match, year) => `/${year.slice(-2)}`)).reverse(),
         yAxis: {
             min: 0,
             max: Math.ceil(Math.max(...dates.map((date) => Math.max(...[
