@@ -2,6 +2,7 @@ import { createReferences } from ".";
 import { getMultipleValuesInput } from "../../common/utils";
 import { Collection } from "../../converters/types";
 import { createContributionMonthsXYChart } from "./createContributionMonthXYChart";
+import { createSizeDependencyXYChart } from "./createSizeDependencyXYChart";
 import { createTimelineMonthsXYChart } from "./createTimelineMonthXYChart";
 import { StatsType } from "./types";
 
@@ -24,12 +25,15 @@ export const createTimelineMonthComparisonChart = (
           ).length > 2
       )
       .map((type) =>
-        createTimelineMonthsXYChart(
-          data,
-          type as StatsType,
-          dates.filter((date) => date !== "total"),
-          user
-        )
+        [
+          createTimelineMonthsXYChart(
+            data,
+            type as StatsType,
+            dates.filter((date) => date !== "total"),
+            user
+          ),
+          createSizeDependencyXYChart(data, type as StatsType, user),
+        ].join("\n")
       )
       .join("\n");
     const contribution =

@@ -78,6 +78,29 @@ export type Collection = {
   discussions?: Discussion;
   discussionsTypes?: DiscussionType;
   prSizes?: string[];
+  sizes?: Record<
+    string,
+    {
+      timeToApprove: number[];
+      timeToReview: number[];
+      timeToMerge: number[];
+      percentile: {
+        timeToApprove?: number;
+        timeToReview?: number;
+        timeToMerge?: number;
+      };
+      average: {
+        timeToApprove?: number;
+        timeToReview?: number;
+        timeToMerge?: number;
+      };
+      median: {
+        timeToApprove?: number;
+        timeToReview?: number;
+        timeToMerge?: number;
+      };
+    }
+  >;
   reviewsConductedSize?: PullRequestSize[];
   pullRequestsInfo?: PullRequestTimelineInfo[];
 };

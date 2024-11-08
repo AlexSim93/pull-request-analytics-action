@@ -1683,6 +1683,27 @@ const preparePullRequestStats = (collection) => {
         reviewTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToReview?.map((el) => el / 60), reviewIntervals),
         approvalTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToApprove?.map((el) => el / 60), approvalIntervals),
         mergeTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToMerge?.map((el) => el / 60), mergeIntervals),
+        sizes: Object.entries(collection?.sizes || {}).reduce((acc, el) => ({
+            ...acc,
+            [el[0]]: {
+                ...acc[el[0]],
+                percentile: {
+                    timeToReview: (0, calculations_1.calcPercentileValue)(acc[el[0]]?.timeToReview),
+                    timeToApprove: (0, calculations_1.calcPercentileValue)(acc[el[0]]?.timeToApprove),
+                    timeToMerge: (0, calculations_1.calcPercentileValue)(acc[el[0]]?.timeToMerge),
+                },
+                median: {
+                    timeToReview: (0, calculations_1.calcMedianValue)(acc[el[0]]?.timeToReview),
+                    timeToApprove: (0, calculations_1.calcMedianValue)(acc[el[0]]?.timeToApprove),
+                    timeToMerge: (0, calculations_1.calcMedianValue)(acc[el[0]]?.timeToMerge),
+                },
+                average: {
+                    timeToReview: (0, calculations_1.calcAverageValue)(acc[el[0]]?.timeToReview),
+                    timeToApprove: (0, calculations_1.calcAverageValue)(acc[el[0]]?.timeToApprove),
+                    timeToMerge: (0, calculations_1.calcAverageValue)(acc[el[0]]?.timeToMerge),
+                },
+            },
+        }), collection?.sizes || {}),
         median: {
             timeToReview: (0, calculations_1.calcMedianValue)(collection.timeToReview),
             timeToApprove: (0, calculations_1.calcMedianValue)(collection.timeToApprove),
@@ -1760,21 +1781,45 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
     }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
     return {
         ...collection,
-        timeToReview: typeof timeToReview === 'number'
+        timeToReview: typeof timeToReview === "number"
             ? [...(collection?.timeToReview || []), timeToReview]
             : collection.timeToReview,
-        timeToApprove: typeof timeToApprove === 'number'
+        timeToApprove: typeof timeToApprove === "number"
             ? [...(collection?.timeToApprove || []), timeToApprove]
             : collection.timeToApprove,
-        timeToMerge: typeof timeToMerge === 'number'
+        timeToMerge: typeof timeToMerge === "number"
             ? [...(collection?.timeToMerge || []), timeToMerge]
             : collection.timeToMerge,
-        timeToReviewRequest: typeof timeToReviewRequest === 'number'
+        timeToReviewRequest: typeof timeToReviewRequest === "number"
             ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
             : collection.timeToReviewRequest,
-        timeInDraft: typeof timeInDraft === 'number'
+        timeInDraft: typeof timeInDraft === "number"
             ? [...(collection?.timeInDraft || []), timeInDraft]
             : collection.timeInDraft,
+        sizes: {
+            ...(collection.sizes || {}),
+            [(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)]: {
+                ...(collection.sizes?.[(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)] || {}),
+                timeToApprove: timeToApprove
+                    ? [
+                        ...(collection?.sizes?.[(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)]?.timeToApprove || []),
+                        timeToApprove,
+                    ]
+                    : collection?.sizes?.[(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)]?.timeToApprove,
+                timeToReview: timeToReview
+                    ? [
+                        ...(collection?.sizes?.[(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)]?.timeToReview || []),
+                        timeToReview,
+                    ]
+                    : collection?.sizes?.[(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)]?.timeToReview,
+                timeToMerge: timeToMerge
+                    ? [
+                        ...(collection?.sizes?.[(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)]?.timeToMerge || []),
+                        timeToMerge,
+                    ]
+                    : collection?.sizes?.[(0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions)]?.timeToMerge,
+            },
+        },
         pullRequestsInfo: [
             ...(collection?.pullRequestsInfo || []),
             {
@@ -3414,6 +3459,55 @@ exports.createReviewTable = createReviewTable;
 
 /***/ }),
 
+/***/ 54309:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createSizeDependencyXYChart = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const createXYChart_1 = __nccwpck_require__(80815);
+const sizes = ["xs", "s", "m", "l", "xl"];
+const createSizeDependencyXYChart = (data, type, user) => {
+    return (0, createXYChart_1.createXYChart)({
+        title: `Pull request's size dependency timeline(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${user}`,
+        xAxis: sizes,
+        yAxis: {
+            min: 0,
+            max: Math.ceil(Math.max(...sizes.map((size) => Math.max(...["timeToReview", "timeToApprove", "timeToMerge"].map((key) => data[user]?.total?.sizes?.[size]?.[type]?.[key] || 0))), 1) / 60),
+            title: "hours",
+        },
+        lines: [
+            {
+                color: "gold",
+                name: "Time\\ To\\ Review",
+                values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToReview || 0) /
+                    60) *
+                    100) / 100),
+            },
+            {
+                color: "chartreuse",
+                name: "Time\\ To\\ Approve",
+                values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToApprove || 0) /
+                    60) *
+                    100) / 100),
+            },
+            {
+                color: "blueviolet",
+                name: "Time\\ To\\ Merge",
+                values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToMerge || 0) /
+                    60) *
+                    100) / 100),
+            },
+        ],
+    });
+};
+exports.createSizeDependencyXYChart = createSizeDependencyXYChart;
+
+
+/***/ }),
+
 /***/ 50940:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -3543,6 +3637,7 @@ exports.createTimelineMonthComparisonChart = void 0;
 const _1 = __nccwpck_require__(92884);
 const utils_1 = __nccwpck_require__(41002);
 const createContributionMonthXYChart_1 = __nccwpck_require__(78462);
+const createSizeDependencyXYChart_1 = __nccwpck_require__(54309);
 const createTimelineMonthXYChart_1 = __nccwpck_require__(1796);
 const createTimelineMonthComparisonChart = (data, dates, users, references = []) => {
     const charts = users.map((user) => {
@@ -3551,7 +3646,10 @@ const createTimelineMonthComparisonChart = (data, dates, users, references = [])
             Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
                 value[type]?.timeToApprove &&
                 value[type]?.timeToMerge).length > 2)
-            .map((type) => (0, createTimelineMonthXYChart_1.createTimelineMonthsXYChart)(data, type, dates.filter((date) => date !== "total"), user))
+            .map((type) => [
+            (0, createTimelineMonthXYChart_1.createTimelineMonthsXYChart)(data, type, dates.filter((date) => date !== "total"), user),
+            (0, createSizeDependencyXYChart_1.createSizeDependencyXYChart)(data, type, user),
+        ].join("\n"))
             .join("\n");
         const contribution = Object.values(data[user]).filter((value) => value.merged ||
             value.discussions?.conducted?.total ||
