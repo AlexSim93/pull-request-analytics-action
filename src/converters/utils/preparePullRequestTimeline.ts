@@ -1,7 +1,11 @@
 import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
-import { calcDraftTime, getApproveTime } from "./calculations";
+import {
+  calcDraftTime,
+  getApproveTime,
+  getPullRequestSize,
+} from "./calculations";
 import { calcDifferenceInMinutes } from "./calculations/calcDifferenceInMinutes";
 
 export const preparePullRequestTimeline = (
@@ -89,21 +93,88 @@ export const preparePullRequestTimeline = (
 
   return {
     ...collection,
-    timeToReview: typeof timeToReview === 'number'
-      ? [...(collection?.timeToReview || []), timeToReview]
-      : collection.timeToReview,
-    timeToApprove: typeof timeToApprove === 'number'
-      ? [...(collection?.timeToApprove || []), timeToApprove]
-      : collection.timeToApprove,
-    timeToMerge: typeof timeToMerge === 'number'
-      ? [...(collection?.timeToMerge || []), timeToMerge]
-      : collection.timeToMerge,
-    timeToReviewRequest: typeof timeToReviewRequest === 'number'
-      ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
-      : collection.timeToReviewRequest,
-    timeInDraft: typeof timeInDraft === 'number'
-      ? [...(collection?.timeInDraft || []), timeInDraft]
-      : collection.timeInDraft,
+    timeToReview:
+      typeof timeToReview === "number"
+        ? [...(collection?.timeToReview || []), timeToReview]
+        : collection.timeToReview,
+    timeToApprove:
+      typeof timeToApprove === "number"
+        ? [...(collection?.timeToApprove || []), timeToApprove]
+        : collection.timeToApprove,
+    timeToMerge:
+      typeof timeToMerge === "number"
+        ? [...(collection?.timeToMerge || []), timeToMerge]
+        : collection.timeToMerge,
+    timeToReviewRequest:
+      typeof timeToReviewRequest === "number"
+        ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
+        : collection.timeToReviewRequest,
+    timeInDraft:
+      typeof timeInDraft === "number"
+        ? [...(collection?.timeInDraft || []), timeInDraft]
+        : collection.timeInDraft,
+    sizes: {
+      ...(collection.sizes || {}),
+      [getPullRequestSize(
+        pullRequestInfo?.additions,
+        pullRequestInfo?.deletions
+      )]: {
+        ...(collection.sizes?.[
+          getPullRequestSize(
+            pullRequestInfo?.additions,
+            pullRequestInfo?.deletions
+          )
+        ] || {}),
+        timeToApprove: timeToApprove
+          ? [
+              ...(collection?.sizes?.[
+                getPullRequestSize(
+                  pullRequestInfo?.additions,
+                  pullRequestInfo?.deletions
+                )
+              ]?.timeToApprove || []),
+              timeToApprove,
+            ]
+          : collection?.sizes?.[
+              getPullRequestSize(
+                pullRequestInfo?.additions,
+                pullRequestInfo?.deletions
+              )
+            ]?.timeToApprove,
+        timeToReview: timeToReview
+          ? [
+              ...(collection?.sizes?.[
+                getPullRequestSize(
+                  pullRequestInfo?.additions,
+                  pullRequestInfo?.deletions
+                )
+              ]?.timeToReview || []),
+              timeToReview,
+            ]
+          : collection?.sizes?.[
+              getPullRequestSize(
+                pullRequestInfo?.additions,
+                pullRequestInfo?.deletions
+              )
+            ]?.timeToReview,
+        timeToMerge: timeToMerge
+          ? [
+              ...(collection?.sizes?.[
+                getPullRequestSize(
+                  pullRequestInfo?.additions,
+                  pullRequestInfo?.deletions
+                )
+              ]?.timeToMerge || []),
+              timeToMerge,
+            ]
+          : collection?.sizes?.[
+              getPullRequestSize(
+                pullRequestInfo?.additions,
+                pullRequestInfo?.deletions
+              )
+            ]?.timeToMerge,
+      },
+    },
     pullRequestsInfo: [
       ...(collection?.pullRequestsInfo || []),
       {

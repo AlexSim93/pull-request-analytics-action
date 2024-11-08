@@ -34,6 +34,30 @@ export const preparePullRequestStats = (collection: Collection) => {
       collection.timeToMerge?.map((el) => el / 60),
       mergeIntervals
     ),
+    sizes: Object.entries(collection?.sizes || {}).reduce(
+      (acc, el) => ({
+        ...acc,
+        [el[0]]: {
+          ...acc[el[0]],
+          percentile: {
+            timeToReview: calcPercentileValue(acc[el[0]]?.timeToReview),
+            timeToApprove: calcPercentileValue(acc[el[0]]?.timeToApprove),
+            timeToMerge: calcPercentileValue(acc[el[0]]?.timeToMerge),
+          },
+          median: {
+            timeToReview: calcMedianValue(acc[el[0]]?.timeToReview),
+            timeToApprove: calcMedianValue(acc[el[0]]?.timeToApprove),
+            timeToMerge: calcMedianValue(acc[el[0]]?.timeToMerge),
+          },
+          average: {
+            timeToReview: calcAverageValue(acc[el[0]]?.timeToReview),
+            timeToApprove: calcAverageValue(acc[el[0]]?.timeToApprove),
+            timeToMerge: calcAverageValue(acc[el[0]]?.timeToMerge),
+          },
+        },
+      }),
+      collection?.sizes || {}
+    ),
     median: {
       timeToReview: calcMedianValue(collection.timeToReview),
       timeToApprove: calcMedianValue(collection.timeToApprove),
