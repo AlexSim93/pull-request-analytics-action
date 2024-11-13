@@ -89,21 +89,26 @@ export const preparePullRequestTimeline = (
 
   return {
     ...collection,
-    timeToReview: typeof timeToReview === 'number'
-      ? [...(collection?.timeToReview || []), timeToReview]
-      : collection.timeToReview,
-    timeToApprove: typeof timeToApprove === 'number'
-      ? [...(collection?.timeToApprove || []), timeToApprove]
-      : collection.timeToApprove,
-    timeToMerge: typeof timeToMerge === 'number'
-      ? [...(collection?.timeToMerge || []), timeToMerge]
-      : collection.timeToMerge,
-    timeToReviewRequest: typeof timeToReviewRequest === 'number'
-      ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
-      : collection.timeToReviewRequest,
-    timeInDraft: typeof timeInDraft === 'number'
-      ? [...(collection?.timeInDraft || []), timeInDraft]
-      : collection.timeInDraft,
+    timeToReview:
+      typeof timeToReview === "number"
+        ? [...(collection?.timeToReview || []), timeToReview]
+        : collection.timeToReview,
+    timeToApprove:
+      typeof timeToApprove === "number"
+        ? [...(collection?.timeToApprove || []), timeToApprove]
+        : collection.timeToApprove,
+    timeToMerge:
+      typeof timeToMerge === "number"
+        ? [...(collection?.timeToMerge || []), timeToMerge]
+        : collection.timeToMerge,
+    timeToReviewRequest:
+      typeof timeToReviewRequest === "number"
+        ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
+        : collection.timeToReviewRequest,
+    timeInDraft:
+      typeof timeInDraft === "number"
+        ? [...(collection?.timeInDraft || []), timeInDraft]
+        : collection.timeInDraft,
     pullRequestsInfo: [
       ...(collection?.pullRequestsInfo || []),
       {
@@ -111,6 +116,11 @@ export const preparePullRequestTimeline = (
         link: pullRequestInfo?._links?.html?.href,
         title: pullRequestInfo?.title,
         comments: pullRequestInfo?.review_comments,
+        sizePoints:
+          (pullRequestInfo?.additions || 0) +
+          (pullRequestInfo?.deletions || 0) * 0.5,
+        additions: pullRequestInfo?.additions || 0,
+        deletions: pullRequestInfo?.deletions || 0,
         timeToReview: timeToReview === null ? timeToMerge || 0 : timeToReview,
         timeToApprove:
           (timeToApprove === null ? timeToMerge || 0 : timeToApprove) -
