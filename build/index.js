@@ -1760,19 +1760,19 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
     }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
     return {
         ...collection,
-        timeToReview: typeof timeToReview === 'number'
+        timeToReview: typeof timeToReview === "number"
             ? [...(collection?.timeToReview || []), timeToReview]
             : collection.timeToReview,
-        timeToApprove: typeof timeToApprove === 'number'
+        timeToApprove: typeof timeToApprove === "number"
             ? [...(collection?.timeToApprove || []), timeToApprove]
             : collection.timeToApprove,
-        timeToMerge: typeof timeToMerge === 'number'
+        timeToMerge: typeof timeToMerge === "number"
             ? [...(collection?.timeToMerge || []), timeToMerge]
             : collection.timeToMerge,
-        timeToReviewRequest: typeof timeToReviewRequest === 'number'
+        timeToReviewRequest: typeof timeToReviewRequest === "number"
             ? [...(collection?.timeToReviewRequest || []), timeToReviewRequest]
             : collection.timeToReviewRequest,
-        timeInDraft: typeof timeInDraft === 'number'
+        timeInDraft: typeof timeInDraft === "number"
             ? [...(collection?.timeInDraft || []), timeInDraft]
             : collection.timeInDraft,
         pullRequestsInfo: [
@@ -1782,6 +1782,10 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
                 link: pullRequestInfo?._links?.html?.href,
                 title: pullRequestInfo?.title,
                 comments: pullRequestInfo?.review_comments,
+                sizePoints: (pullRequestInfo?.additions || 0) +
+                    (pullRequestInfo?.deletions || 0) * 0.5,
+                additions: pullRequestInfo?.additions || 0,
+                deletions: pullRequestInfo?.deletions || 0,
                 timeToReview: timeToReview === null ? timeToMerge || 0 : timeToReview,
                 timeToApprove: (timeToApprove === null ? timeToMerge || 0 : timeToApprove) -
                     (timeToReview === null ? timeToMerge || 0 : timeToReview),
@@ -3797,6 +3801,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createTotalTable = void 0;
 const constants_1 = __nccwpck_require__(11474);
 const common_1 = __nccwpck_require__(64682);
+const utils_1 = __nccwpck_require__(41002);
 const createTotalTable = (data, users, date) => {
     const sizes = ["xs", "s", "m", "l", "xl"];
     const tableRowsTotal = users
@@ -3815,22 +3820,33 @@ const createTotalTable = (data, users, date) => {
             data[user]?.[date]?.totalReviewComments?.toString() || "0",
         ];
     });
-    return (0, common_1.createTable)({
-        title: `Contribution stats ${date}`,
-        description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.",
-        table: {
-            headers: [
-                "user",
-                constants_1.totalOpenedPrsHeader,
-                constants_1.totalMergedPrsHeader,
-                constants_1.totalRevertedPrsHeader,
-                constants_1.additionsDeletionsHeader,
-                constants_1.prSizesHeader,
-                constants_1.reviewCommentsHeader,
-            ],
-            rows: tableRowsTotal,
-        },
-    });
+    const items = data.total?.[date]?.pullRequestsInfo
+        ?.slice()
+        ?.sort((a, b) => (b.sizePoints || 0) - (a.sizePoints || 0))
+        .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
+        .map((item) => ({
+        text: `${item.title}(+${item.additions}/-${item.deletions})`,
+        link: item.link || "",
+    })) || [];
+    return [
+        (0, common_1.createTable)({
+            title: `Contribution stats ${date}`,
+            description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.",
+            table: {
+                headers: [
+                    "user",
+                    constants_1.totalOpenedPrsHeader,
+                    constants_1.totalMergedPrsHeader,
+                    constants_1.totalRevertedPrsHeader,
+                    constants_1.additionsDeletionsHeader,
+                    constants_1.prSizesHeader,
+                    constants_1.reviewCommentsHeader,
+                ],
+                rows: tableRowsTotal,
+            },
+        }),
+        (0, common_1.createList)("The largest PRs", items),
+    ].join("\n");
 };
 exports.createTotalTable = createTotalTable;
 

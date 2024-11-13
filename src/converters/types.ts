@@ -37,6 +37,9 @@ type PullRequestTimelineInfo = {
   timeToReview: number;
   timeToMerge: number;
   timeToApprove: number;
+  sizePoints: number;
+  additions: number;
+  deletions: number;
 };
 
 type Discussion = {
