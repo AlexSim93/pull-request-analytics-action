@@ -1,10 +1,12 @@
+import { calcPRsize } from "./calcPRsize";
+
 export type PullRequestSize = "xs" | "s" | "m" | "l" | "xl";
 
 export const getPullRequestSize = (
   additions: number | undefined,
   deletions: number | undefined
 ): PullRequestSize => {
-  const size = (additions || 0) + (deletions || 0) * 0.5;
+  const size = calcPRsize(additions, deletions);
   if (size <= 50) {
     return "xs";
   }

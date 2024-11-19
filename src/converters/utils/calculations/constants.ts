@@ -1,0 +1,1 @@
+export const deletionCoefficient = 0.2;

@@ -1092,6 +1092,22 @@ exports.calcNonWorkingHours = calcNonWorkingHours;
 
 /***/ }),
 
+/***/ 8722:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.calcPRsize = void 0;
+const constants_1 = __nccwpck_require__(51666);
+const calcPRsize = (additions, deletions) => {
+    return (additions || 0) + (deletions || 0) * constants_1.deletionCoefficient;
+};
+exports.calcPRsize = calcPRsize;
+
+
+/***/ }),
+
 /***/ 24684:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1164,6 +1180,18 @@ exports.calcWeekendMinutes = calcWeekendMinutes;
 
 /***/ }),
 
+/***/ 51666:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.deletionCoefficient = void 0;
+exports.deletionCoefficient = 0.2;
+
+
+/***/ }),
+
 /***/ 39922:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -1206,14 +1234,15 @@ exports.getApproveTime = getApproveTime;
 /***/ }),
 
 /***/ 73882:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPullRequestSize = void 0;
+const calcPRsize_1 = __nccwpck_require__(8722);
 const getPullRequestSize = (additions, deletions) => {
-    const size = (additions || 0) + (deletions || 0) * 0.5;
+    const size = (0, calcPRsize_1.calcPRsize)(additions, deletions);
     if (size <= 50) {
         return "xs";
     }
@@ -1283,7 +1312,7 @@ exports.getResponses = getResponses;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getResponses = exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = exports.calcIntervals = exports.prepareIntervals = void 0;
+exports.deletionCoefficient = exports.getResponses = exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = exports.calcIntervals = exports.prepareIntervals = void 0;
 var prepareIntervals_1 = __nccwpck_require__(22723);
 Object.defineProperty(exports, "prepareIntervals", ({ enumerable: true, get: function () { return prepareIntervals_1.prepareIntervals; } }));
 var calcIntervals_1 = __nccwpck_require__(2414);
@@ -1308,6 +1337,8 @@ var calcDraftTime_1 = __nccwpck_require__(63506);
 Object.defineProperty(exports, "calcDraftTime", ({ enumerable: true, get: function () { return calcDraftTime_1.calcDraftTime; } }));
 var getResponses_1 = __nccwpck_require__(50779);
 Object.defineProperty(exports, "getResponses", ({ enumerable: true, get: function () { return getResponses_1.getResponses; } }));
+var constants_1 = __nccwpck_require__(51666);
+Object.defineProperty(exports, "deletionCoefficient", ({ enumerable: true, get: function () { return constants_1.deletionCoefficient; } }));
 
 
 /***/ }),
@@ -1683,6 +1714,27 @@ const preparePullRequestStats = (collection) => {
         reviewTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToReview?.map((el) => el / 60), reviewIntervals),
         approvalTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToApprove?.map((el) => el / 60), approvalIntervals),
         mergeTimeIntervals: (0, calculations_1.calcIntervals)(collection.timeToMerge?.map((el) => el / 60), mergeIntervals),
+        sizes: Object.entries(collection?.sizes || {}).reduce((acc, el) => ({
+            ...acc,
+            [el[0]]: {
+                ...acc[el[0]],
+                percentile: {
+                    timeToReview: (0, calculations_1.calcPercentileValue)(acc[el[0]]?.timeToReview),
+                    timeToApprove: (0, calculations_1.calcPercentileValue)(acc[el[0]]?.timeToApprove),
+                    timeToMerge: (0, calculations_1.calcPercentileValue)(acc[el[0]]?.timeToMerge),
+                },
+                median: {
+                    timeToReview: (0, calculations_1.calcMedianValue)(acc[el[0]]?.timeToReview),
+                    timeToApprove: (0, calculations_1.calcMedianValue)(acc[el[0]]?.timeToApprove),
+                    timeToMerge: (0, calculations_1.calcMedianValue)(acc[el[0]]?.timeToMerge),
+                },
+                average: {
+                    timeToReview: (0, calculations_1.calcAverageValue)(acc[el[0]]?.timeToReview),
+                    timeToApprove: (0, calculations_1.calcAverageValue)(acc[el[0]]?.timeToApprove),
+                    timeToMerge: (0, calculations_1.calcAverageValue)(acc[el[0]]?.timeToMerge),
+                },
+            },
+        }), collection?.sizes || {}),
         median: {
             timeToReview: (0, calculations_1.calcMedianValue)(collection.timeToReview),
             timeToApprove: (0, calculations_1.calcMedianValue)(collection.timeToApprove),
@@ -1730,6 +1782,7 @@ exports.preparePullRequestTimeline = void 0;
 const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
+const calcPRsize_1 = __nccwpck_require__(8722);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], reviewRequest, statuses = [], collection) => {
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
@@ -1742,11 +1795,11 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
             endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
             startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
         }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")) || 0), 0);
-    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at || pullRequestInfo?.merged_at, {
+    const timeToReview = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, firstReview?.submitted_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
     }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
-    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime || pullRequestInfo?.merged_at, {
+    const timeToApprove = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, approveTime, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
     }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
@@ -1754,10 +1807,7 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
     }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
-    const timeToClose = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, pullRequestInfo?.closed_at, {
-        endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
-        startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-    }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS"));
+    const pullRequestSize = (0, calculations_1.getPullRequestSize)(pullRequestInfo?.additions, pullRequestInfo?.deletions);
     return {
         ...collection,
         timeToReview: typeof timeToReview === "number"
@@ -1775,6 +1825,36 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
         timeInDraft: typeof timeInDraft === "number"
             ? [...(collection?.timeInDraft || []), timeInDraft]
             : collection.timeInDraft,
+        unreviewed: timeToReview
+            ? collection?.unreviewed || 0
+            : (collection?.unreviewed || 0) + 1,
+        unapproved: timeToApprove
+            ? collection?.unapproved || 0
+            : (collection?.unapproved || 0) + 1,
+        sizes: {
+            ...(collection.sizes || {}),
+            [pullRequestSize]: {
+                ...(collection.sizes?.[pullRequestSize] || {}),
+                timeToReview: timeToReview
+                    ? [
+                        ...(collection?.sizes?.[pullRequestSize]?.timeToReview || []),
+                        timeToReview,
+                    ]
+                    : collection?.sizes?.[pullRequestSize]?.timeToReview,
+                timeToApprove: timeToApprove
+                    ? [
+                        ...(collection?.sizes?.[pullRequestSize]?.timeToApprove || []),
+                        timeToApprove,
+                    ]
+                    : collection?.sizes?.[pullRequestSize]?.timeToApprove,
+                timeToMerge: timeToMerge
+                    ? [
+                        ...(collection?.sizes?.[pullRequestSize]?.timeToMerge || []),
+                        timeToMerge,
+                    ]
+                    : collection?.sizes?.[pullRequestSize]?.timeToMerge,
+            },
+        },
         pullRequestsInfo: [
             ...(collection?.pullRequestsInfo || []),
             {
@@ -1782,15 +1862,12 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
                 link: pullRequestInfo?._links?.html?.href,
                 title: pullRequestInfo?.title,
                 comments: pullRequestInfo?.review_comments,
-                sizePoints: (pullRequestInfo?.additions || 0) +
-                    (pullRequestInfo?.deletions || 0) * 0.5,
+                sizePoints: (0, calcPRsize_1.calcPRsize)(pullRequestInfo?.additions, pullRequestInfo?.deletions),
                 additions: pullRequestInfo?.additions || 0,
                 deletions: pullRequestInfo?.deletions || 0,
-                timeToReview: timeToReview === null ? timeToMerge || 0 : timeToReview,
-                timeToApprove: (timeToApprove === null ? timeToMerge || 0 : timeToApprove) -
-                    (timeToReview === null ? timeToMerge || 0 : timeToReview),
-                timeToMerge: (timeToMerge === null ? timeToClose || 0 : timeToMerge) -
-                    (timeToApprove === null ? timeToMerge || 0 : timeToApprove),
+                timeToReview: timeToReview || 0,
+                timeToApprove: timeToApprove ? timeToApprove - (timeToReview || 0) : 0,
+                timeToMerge: timeToMerge ? timeToMerge - (timeToApprove || 0) : 0,
             },
         ],
     };
@@ -2009,6 +2086,23 @@ const createOutput = async (data) => {
                 comments.push({
                     comment: comparisonComment,
                     title: "retrospective timeline",
+                });
+            }
+            if ((0, utils_1.getValueAsIs)("SHOW_CORRELATION_GRAPHS") === "true") {
+                const dependencyComment = await octokit_1.octokit.rest.issues.createComment({
+                    repo: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE"),
+                    owner: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE"),
+                    issue_number: issue.data.number,
+                    body: (0, utils_2.createDependencyMarkdown)(data, users, [
+                        {
+                            title: "Pull Request report total",
+                            link: `${issue.data.html_url}#`,
+                        },
+                    ]),
+                });
+                comments.push({
+                    comment: dependencyComment,
+                    title: "Correlation Graphs",
                 });
             }
             console.log("Issue successfully created.");
@@ -3031,7 +3125,7 @@ Object.defineProperty(exports, "createList", ({ enumerable: true, get: function 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.reviewCommentsHeader = exports.additionsDeletionsHeader = exports.totalRevertedPrsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
+exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.unapprovedPrsHeader = exports.unreviewedPrsHeader = exports.additionsDeletionsHeader = exports.totalRevertedPrsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
 exports.timeToReviewRequestHeader = "Time to review request";
 exports.timeInDraftHeader = "Time in draft";
 exports.timeToReviewHeader = "Time to review";
@@ -3040,8 +3134,9 @@ exports.timeToMergeHeader = "Time to merge";
 exports.totalMergedPrsHeader = "Total merged PRs";
 exports.totalOpenedPrsHeader = "Total opened PRs";
 exports.totalRevertedPrsHeader = "Total reverted PRs";
-exports.additionsDeletionsHeader = "Additions/Deletions";
-exports.reviewCommentsHeader = "Total comments";
+exports.additionsDeletionsHeader = "Additions / Deletions";
+exports.unreviewedPrsHeader = "PRs w/o review";
+exports.unapprovedPrsHeader = "PRs w/o approval";
 exports.reviewConductedHeader = "Reviews conducted";
 exports.reviewRequestConductedHeader = "Review requests conducted";
 exports.discussionsHeader = "Agreed / Disagreed / Total discussions received";
@@ -3083,6 +3178,7 @@ ${[
         "MERGE_TIME_INTERVALS",
         "TOP_LIST_AMOUNT",
         "AGGREGATE_VALUE_METHODS",
+        "SHOW_CORRELATION_GRAPHS",
         "PERCENTILE",
         "HIDE_USERS",
         "SHOW_USERS",
@@ -3166,6 +3262,32 @@ const createContributionMonthsXYChart = (data, dates, user) => {
     });
 };
 exports.createContributionMonthsXYChart = createContributionMonthsXYChart;
+
+
+/***/ }),
+
+/***/ 20702:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createDependencyMarkdown = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const createReferences_1 = __nccwpck_require__(96145);
+const createSizeDependencyXYChart_1 = __nccwpck_require__(54309);
+const createDependencyMarkdown = (data, users, references = []) => {
+    const charts = users
+        .filter((user) => Object.keys(data[user]?.total?.sizes || {}).length > 1)
+        .map((user) => {
+        return (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")
+            .map((type) => (0, createSizeDependencyXYChart_1.createSizeDependencyXYChart)(data, type, user))
+            .join("\n");
+    })
+        .join("\n");
+    return [(0, createReferences_1.createReferences)(references)].concat(charts).join("\n").trim();
+};
+exports.createDependencyMarkdown = createDependencyMarkdown;
 
 
 /***/ }),
@@ -3399,7 +3521,7 @@ const createReviewTable = (data, users, date) => {
     });
     return (0, common_1.createTable)({
         title: `Code review engagement ${date}`,
-        description: "**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Changes requested / Comments / Approvals** - number of reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.\n**Agreed** - discussions with at least 1 reaction :+1:.\n**Disagreed** - discussions with at least 1 reaction :-1:.",
+        description: "**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Changes requested / Comments / Approvals** - number of reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.\n**Agreed** - discussions with at least 1 reaction :+1:.\n**Disagreed** - discussions with at least 1 reaction :-1:.",
         table: {
             headers: [
                 "user",
@@ -3414,6 +3536,55 @@ const createReviewTable = (data, users, date) => {
     });
 };
 exports.createReviewTable = createReviewTable;
+
+
+/***/ }),
+
+/***/ 54309:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createSizeDependencyXYChart = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const createXYChart_1 = __nccwpck_require__(80815);
+const sizes = ["xs", "s", "m", "l", "xl"];
+const createSizeDependencyXYChart = (data, type, user) => {
+    return (0, createXYChart_1.createXYChart)({
+        title: `Pull request's time/size graph(${type === "percentile" ? parseInt((0, utils_1.getValueAsIs)("PERCENTILE")) : ""}${type === "percentile" ? "th " : ""}${type}) ${user}`,
+        xAxis: sizes,
+        yAxis: {
+            min: 0,
+            max: Math.ceil(Math.max(...sizes.map((size) => Math.max(...["timeToReview", "timeToApprove", "timeToMerge"].map((key) => data[user]?.total?.sizes?.[size]?.[type]?.[key] || 0))), 1) / 60),
+            title: "hours",
+        },
+        lines: [
+            {
+                color: "gold",
+                name: "Time\\ To\\ Review",
+                values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToReview || 0) /
+                    60) *
+                    100) / 100),
+            },
+            {
+                color: "chartreuse",
+                name: "Time\\ To\\ Approve",
+                values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToApprove || 0) /
+                    60) *
+                    100) / 100),
+            },
+            {
+                color: "blueviolet",
+                name: "Time\\ To\\ Merge",
+                values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToMerge || 0) /
+                    60) *
+                    100) / 100),
+            },
+        ],
+    });
+};
+exports.createSizeDependencyXYChart = createSizeDependencyXYChart;
 
 
 /***/ }),
@@ -3555,7 +3726,10 @@ const createTimelineMonthComparisonChart = (data, dates, users, references = [])
             Object.values(data[user]).filter((value) => value[type]?.timeToReview &&
                 value[type]?.timeToApprove &&
                 value[type]?.timeToMerge).length > 2)
-            .map((type) => (0, createTimelineMonthXYChart_1.createTimelineMonthsXYChart)(data, type, dates.filter((date) => date !== "total"), user))
+            .map((type) => (0, createTimelineMonthXYChart_1.createTimelineMonthsXYChart)(data, type, dates.filter((date) => date !== "total" &&
+            (data[user][date]?.timeToReview ||
+                data[user][date]?.timeToApprove ||
+                data[user][date]?.timeToMerge)), user))
             .join("\n");
         const contribution = Object.values(data[user]).filter((value) => value.merged ||
             value.discussions?.conducted?.total ||
@@ -3812,12 +3986,13 @@ const createTotalTable = (data, users, date) => {
             data[user]?.[date]?.opened?.toString() || "0",
             data[user]?.[date]?.merged?.toString() || "0",
             data[user]?.[date]?.reverted?.toString() || "0",
+            data[user]?.[date]?.unreviewed?.toString() || "0",
+            data[user]?.[date]?.unapproved?.toString() || "0",
             `+${data[user]?.[date].additions || 0}/-${data[user]?.[date].deletions || 0}`,
             `${sizes
                 .map((size) => data[user]?.[date]?.prSizes?.filter((prSize) => prSize === size)
                 .length || 0)
                 .join("/")}`,
-            data[user]?.[date]?.totalReviewComments?.toString() || "0",
         ];
     });
     const items = data.total?.[date]?.pullRequestsInfo
@@ -3831,16 +4006,17 @@ const createTotalTable = (data, users, date) => {
     return [
         (0, common_1.createTable)({
             title: `Contribution stats ${date}`,
-            description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.",
+            description: "**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.\n**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl\n**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.",
             table: {
                 headers: [
                     "user",
                     constants_1.totalOpenedPrsHeader,
                     constants_1.totalMergedPrsHeader,
                     constants_1.totalRevertedPrsHeader,
+                    constants_1.unreviewedPrsHeader,
+                    constants_1.unapprovedPrsHeader,
                     constants_1.additionsDeletionsHeader,
                     constants_1.prSizesHeader,
-                    constants_1.reviewCommentsHeader,
                 ],
                 rows: tableRowsTotal,
             },
@@ -3877,7 +4053,9 @@ exports.formatMinutesDuration = formatMinutesDuration;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createResponseTable = exports.createReferences = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = void 0;
+exports.createResponseTable = exports.createReferences = exports.createTimelineContent = exports.getDisplayUserList = exports.createPullRequestQualityTable = exports.createTimelineTable = exports.createTimelineGanttBar = exports.sortCollectionsByDate = exports.formatMinutesDuration = exports.createPieChart = exports.createGanttBar = exports.createTable = exports.createReviewTable = exports.createTotalTable = exports.createConfigParamsCode = exports.createDiscussionsPieChart = exports.createTimelineMonthComparisonChart = exports.createDependencyMarkdown = void 0;
+var createDependencyMarkdown_1 = __nccwpck_require__(20702);
+Object.defineProperty(exports, "createDependencyMarkdown", ({ enumerable: true, get: function () { return createDependencyMarkdown_1.createDependencyMarkdown; } }));
 var createTimelineMonthComparisonChart_1 = __nccwpck_require__(82264);
 Object.defineProperty(exports, "createTimelineMonthComparisonChart", ({ enumerable: true, get: function () { return createTimelineMonthComparisonChart_1.createTimelineMonthComparisonChart; } }));
 var createDiscussionsPieChart_1 = __nccwpck_require__(99622);

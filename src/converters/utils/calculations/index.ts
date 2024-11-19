@@ -10,3 +10,4 @@ export { calcAverageValue } from "./calcAverageValue";
 export { getPullRequestSize } from "./getPullRequestSize";
 export { calcDraftTime } from "./calcDraftTime";
 export { getResponses } from "./getResponses";
+export { deletionCoefficient } from "./constants";

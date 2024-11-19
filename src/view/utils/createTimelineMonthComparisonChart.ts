@@ -27,7 +27,13 @@ export const createTimelineMonthComparisonChart = (
         createTimelineMonthsXYChart(
           data,
           type as StatsType,
-          dates.filter((date) => date !== "total"),
+          dates.filter(
+            (date) =>
+              date !== "total" &&
+              (data[user][date]?.timeToReview ||
+                data[user][date]?.timeToApprove ||
+                data[user][date]?.timeToMerge)
+          ),
           user
         )
       )
