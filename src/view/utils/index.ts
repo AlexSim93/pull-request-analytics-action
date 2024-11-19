@@ -1,3 +1,4 @@
+export { createDependencyMarkdown } from './createDependencyMarkdown';
 export { createTimelineMonthComparisonChart } from "./createTimelineMonthComparisonChart";
 export { createDiscussionsPieChart } from "./createDiscussionsPieChart";
 export { createConfigParamsCode } from "./createConfigParamsCode";

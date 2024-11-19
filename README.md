@@ -90,12 +90,12 @@ title Review time total 12/2023
 
 Shows the total volume of code merged, reviews conducted, and comments in PRs. Helps to understand the context in which other metrics apply. Use the `workload` value in the `SHOW_STATS_TYPES` parameter.
 
-|   user    | Total opened PRs | Total merged PRs | Total reverted PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments |
-| :-------: | :--------------: | :--------------: | :----------------: | :-----------------: | :------------------: | :------------: |
-| **dev1**  |        24        |        22        |         1          |     +1448/-3110     |      14/5/4/0/1      |       41       |
-| **dev2**  |        14        |        13        |         0          |     +813/-2062      |      7/4/1/2/0       |       6        |
-| **dev3**  |        2         |        2         |         0          |       +15/-3        |      2/0/0/0/0       |       1        |
-| **total** |        50        |        47        |         1          |    +8530/-10137     |      30/9/6/2/3      |       71       |
+|   user    | Total opened PRs | Total merged PRs | Total reverted PRs | PRs w/o review | PRs w/o approval | Additions / Deletions | PR size: xs/s/m/l/xl |
+| :-------: | :--------------: | :--------------: | :----------------: | :------------: | :--------------: | :-------------------: | :------------------: |
+| **dev1**  |        17        |        17        |         0          |       0        |        1         |      +2324/-922       |      8/6/1/1/1       |
+| **dev2**  |        20        |        20        |         0          |       1        |        1         |      +1914/-1067      |      13/4/1/1/1      |
+| **dev3**  |        17        |        17        |         0          |       1        |        1         |      +1305/-310       |      14/1/1/0/1      |
+| **total** |        78        |        77        |         0          |       3        |        4         |      +8395/-3479      |     51/15/5/3/4      |
 
 ### Discussion Intensity (Author’s Perspective)
 
@@ -169,6 +169,32 @@ line [21.52, 28.9, 23.47, 21.2, 23.63, 24.9, 20.72, 29.22, 26.07, 25.52, 22.33, 
 line [0, 1.67, 2.62, 3.8, 2.33, 3.15, 4.8, 2.72, 4.9, 2.6, 5.55, 6.12, 5.75, 5.82, 2.98, 1.68, 2.95, 3.92, 5.6]
 line [0.5, 0.75, 2.07, 2.28, 1.4, 2.98, 5.17, 2.52, 4.93, 3.57, 6, 7.22, 6.33, 5.77, 3.62, 2.75, 3.28, 3.9, 5.35]
 line [0, 2.18, 0.92, 0.77, 5.47, 0.83, 4.85, 2.42, 4.28, 23.18, 0, 1.63, 1.98, 4.13, 1.32, 1.85, 1.63, 2.5, 6.72]
+```
+
+### Correlation Between Lead Time and Pull Request Size
+
+This graphs allow you to observe how pull request size impacts lead time. It can be especially useful for assessing the actual influence of PR size on lead time. For more accurate results, it's recommended to analyze a sufficiently large dataset to minimize error margins. To view the graphs, set the `SHOW_CORRELATION_GRAPHS` parameter to `true`.
+
+$$\color{gold}Time\ To\ Review\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "gold, chartreuse, blueviolet"
+---
+xychart-beta
+    title "Pull request's time/size graph(90th percentile) total"
+    x-axis ["xs", "s", "m", "l", "xl"]
+    y-axis "hours" 0 --> 95
+    line [2.45, 4.27, 6.38, 6.67, 11.53]
+line [3.27, 9.05, 14.88, 20.52, 43.67]
+line [16.25, 30, 43.25, 54.65, 94.35]
 ```
 
 ### List of Notable PRs
@@ -257,7 +283,7 @@ Below is a table outlining the various configuration parameters available for **
 | `REVIEW_TIME_INTERVALS`   | Enables viewing the percentage distribution among specified values for the time from opening to review, given in hours. Example: `4, 8, 12`                                                                                                                                                                                                                                                           | -                                                                       |
 | `APPROVAL_TIME_INTERVALS` | Enables viewing the percentage distribution among specified values for the time from opening to approve, given in hours. Example: `4, 8, 12`                                                                                                                                                                                                                                                          | -                                                                       |
 | `MERGE_TIME_INTERVALS`    | Enables viewing the percentage distribution among specified values for the time from opening to merge, given in hours. Example: `4, 8, 12`                                                                                                                                                                                                                                                            | -                                                                       |
-| `TOP_LIST_AMOUNT`         | The number of pull request links to display in the lists for longest-pending reviews, longest-pending approvals, longest-pending merges, the largest and the most commented PRs. Lists will be sorted in descending order, showing the PR title and its value.                                                                                                                                                    | `5`                                                                     |
+| `TOP_LIST_AMOUNT`         | The number of pull request links to display in the lists for longest-pending reviews, longest-pending approvals, longest-pending merges, the largest and the most commented PRs. Lists will be sorted in descending order, showing the PR title and its value.                                                                                                                                        | `5`                                                                     |
 | `REPORT_DATE_START`       | Sets the start of the period for generating the report. Use the format **d/MM/yyyy**. The end of the period can be specified with the `REPORT_DATE_END` input. `REPORT_PERIOD` takes precedence over `REPORT_DATE_START`. Example: `20/10/2023`                                                                                                                                                       | -                                                                       |
 | `REPORT_DATE_END`         | Sets the end of the period for generating the report. Use the format **d/MM/yyyy**. The start of the period can be specified with the `REPORT_DATE_START` input. Example: `25/10/2023`                                                                                                                                                                                                                | -                                                                       |
 | `REPORT_PERIOD`           | Allows generating a report for a specified time period starting from the action's execution time. If `REPORT_DATE_END` is specified, the period will be limited to this end date. Values format `[unit]:value` separated by commas. Supported units: `years`, `months`, `weeks`, `days`, `hours`, `minutes`, `seconds`. Example: `weeks:2`                                                            | -                                                                       |
@@ -271,6 +297,7 @@ Below is a table outlining the various configuration parameters available for **
 | `LABELS`                  | Labels for the created/updated issue with report separated by commas. Example: `Report`                                                                                                                                                                                                                                                                                                               | -                                                                       |
 | `ASSIGNEES`               | Assignees for the created/updated issue with report separated by commas. Example: `AlexSim93`                                                                                                                                                                                                                                                                                                         | -                                                                       |
 | `USE_CHARTS`              | Primarily uses charts and diagrams instead of tables to display data. Set the value to `true` to use charts instead of tables                                                                                                                                                                                                                                                                         | `false`                                                                 |
+| `SHOW_CORRELATION_GRAPHS` | Displays graphs showing the dependency of time to review, approval, and merge on pull request size. Set to `true` if this graph is needed.                                                                                                                                                                                                                                                            | `false`                                                                 |
 | `HIDE_USERS`              | Hides selected users from reports, while still including their data in the analytics. Use `total` to hide total stats. Users should be separated by commas.                                                                                                                                                                                                                                           | -                                                                       |
 | `SHOW_USERS`              | Displays only specified users in reports, but includes all users in the background analytics. Use `total` to show total stats. Users should be separated by commas.                                                                                                                                                                                                                                   | -                                                                       |
 | `EXCLUDE_LABELS`          | PRs with mentioned labels will be excluded from the report . Values should be separated by commas. Example: `bugfix, enhancement`                                                                                                                                                                                                                                                                     | -                                                                       |

@@ -110,6 +110,10 @@ inputs:
     description: "Primarily uses charts and diagrams instead of tables to display data"
     required: false
     default: false
+  SHOW_CORRELATION_GRAPHS:
+    description: "Shows correlation graphs"
+    required: false
+    default: false
 
 outputs:
   JSON_COLLECTION:

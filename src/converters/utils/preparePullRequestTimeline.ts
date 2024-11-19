@@ -1,8 +1,13 @@
 import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
-import { calcDraftTime, getApproveTime } from "./calculations";
+import {
+  calcDraftTime,
+  getApproveTime,
+  getPullRequestSize,
+} from "./calculations";
 import { calcDifferenceInMinutes } from "./calculations/calcDifferenceInMinutes";
+import { calcPRsize } from "./calculations/calcPRsize";
 
 export const preparePullRequestTimeline = (
   pullRequestInfo: Awaited<
@@ -49,7 +54,7 @@ export const preparePullRequestTimeline = (
 
   const timeToReview = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
-    firstReview?.submitted_at || pullRequestInfo?.merged_at,
+    firstReview?.submitted_at,
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
@@ -59,7 +64,7 @@ export const preparePullRequestTimeline = (
 
   const timeToApprove = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
-    approveTime || pullRequestInfo?.merged_at,
+    approveTime,
     {
       endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
       startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
@@ -77,14 +82,9 @@ export const preparePullRequestTimeline = (
     getMultipleValuesInput("HOLIDAYS")
   );
 
-  const timeToClose = calcDifferenceInMinutes(
-    pullRequestInfo?.created_at,
-    pullRequestInfo?.closed_at,
-    {
-      endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
-      startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
-    },
-    getMultipleValuesInput("HOLIDAYS")
+  const pullRequestSize = getPullRequestSize(
+    pullRequestInfo?.additions,
+    pullRequestInfo?.deletions
   );
 
   return {
@@ -109,6 +109,36 @@ export const preparePullRequestTimeline = (
       typeof timeInDraft === "number"
         ? [...(collection?.timeInDraft || []), timeInDraft]
         : collection.timeInDraft,
+    unreviewed: timeToReview
+      ? collection?.unreviewed || 0
+      : (collection?.unreviewed || 0) + 1,
+    unapproved: timeToApprove
+      ? collection?.unapproved || 0
+      : (collection?.unapproved || 0) + 1,
+    sizes: {
+      ...(collection.sizes || {}),
+      [pullRequestSize]: {
+        ...(collection.sizes?.[pullRequestSize] || {}),
+        timeToReview: timeToReview
+          ? [
+              ...(collection?.sizes?.[pullRequestSize]?.timeToReview || []),
+              timeToReview,
+            ]
+          : collection?.sizes?.[pullRequestSize]?.timeToReview,
+        timeToApprove: timeToApprove
+          ? [
+              ...(collection?.sizes?.[pullRequestSize]?.timeToApprove || []),
+              timeToApprove,
+            ]
+          : collection?.sizes?.[pullRequestSize]?.timeToApprove,
+        timeToMerge: timeToMerge
+          ? [
+              ...(collection?.sizes?.[pullRequestSize]?.timeToMerge || []),
+              timeToMerge,
+            ]
+          : collection?.sizes?.[pullRequestSize]?.timeToMerge,
+      },
+    },
     pullRequestsInfo: [
       ...(collection?.pullRequestsInfo || []),
       {
@@ -116,18 +146,15 @@ export const preparePullRequestTimeline = (
         link: pullRequestInfo?._links?.html?.href,
         title: pullRequestInfo?.title,
         comments: pullRequestInfo?.review_comments,
-        sizePoints:
-          (pullRequestInfo?.additions || 0) +
-          (pullRequestInfo?.deletions || 0) * 0.5,
+        sizePoints: calcPRsize(
+          pullRequestInfo?.additions,
+          pullRequestInfo?.deletions
+        ),
         additions: pullRequestInfo?.additions || 0,
         deletions: pullRequestInfo?.deletions || 0,
-        timeToReview: timeToReview === null ? timeToMerge || 0 : timeToReview,
-        timeToApprove:
-          (timeToApprove === null ? timeToMerge || 0 : timeToApprove) -
-          (timeToReview === null ? timeToMerge || 0 : timeToReview),
-        timeToMerge:
-          (timeToMerge === null ? timeToClose || 0 : timeToMerge) -
-          (timeToApprove === null ? timeToMerge || 0 : timeToApprove),
+        timeToReview: timeToReview || 0,
+        timeToApprove: timeToApprove ? timeToApprove - (timeToReview || 0) : 0,
+        timeToMerge: timeToMerge ? timeToMerge - (timeToApprove || 0) : 0,
       },
     ],
   };

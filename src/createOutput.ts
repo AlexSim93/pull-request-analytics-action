@@ -4,6 +4,7 @@ import { Collection } from "./converters";
 import { createMarkdown } from "./view/";
 import { clearComments, createComment, createIssue } from "./requests";
 import {
+  createDependencyMarkdown,
   createTimelineMonthComparisonChart,
   getDisplayUserList,
   sortCollectionsByDate,
@@ -54,6 +55,24 @@ export const createOutput = async (
         comments.push({
           comment: comparisonComment,
           title: "retrospective timeline",
+        });
+      }
+
+      if (getValueAsIs("SHOW_CORRELATION_GRAPHS") === "true") {
+        const dependencyComment = await octokit.rest.issues.createComment({
+          repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
+          owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
+          issue_number: issue.data.number,
+          body: createDependencyMarkdown(data, users, [
+            {
+              title: "Pull Request report total",
+              link: `${issue.data.html_url}#`,
+            },
+          ]),
+        });
+        comments.push({
+          comment: dependencyComment,
+          title: "Correlation Graphs",
         });
       }
       console.log("Issue successfully created.");
