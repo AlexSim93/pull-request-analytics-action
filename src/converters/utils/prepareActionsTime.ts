@@ -56,7 +56,7 @@ export const prepareActionsTime = (
       pullRequest?.user.login || invalidUserLogin,
       "total",
       "actionsTime",
-      openingHour,
+      mergingHour,
       "merged",
     ];
     set(collection, userKeys, get(collection, userKeys, 0) + 1);

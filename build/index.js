@@ -1468,7 +1468,7 @@ const prepareActionsTime = (pullRequest, events = [], collection) => {
             pullRequest?.user.login || constants_1.invalidUserLogin,
             "total",
             "actionsTime",
-            openingHour,
+            mergingHour,
             "merged",
         ];
         (0, lodash_1.set)(collection, userKeys, (0, lodash_1.get)(collection, userKeys, 0) + 1);
