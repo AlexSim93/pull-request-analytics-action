@@ -82,6 +82,16 @@ export type Collection = {
   commentsConducted?: number;
   discussions?: Discussion;
   discussionsTypes?: DiscussionType;
+  actionsTime?: Record<
+    string,
+    {
+      opened?: number;
+      merged?: number;
+      approved?: number;
+      changes_requested?: number;
+      commented?: number;
+    }
+  >;
   prSizes?: string[];
   sizes?: Record<
     string,

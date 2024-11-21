@@ -11,6 +11,7 @@ import {
 } from "./view/utils";
 import { octokit } from "./octokit";
 import { showStatsTypes } from "./common/constants";
+import { createActivityTimeMarkdown } from "./view/utils/createActivityTimeMarkdown";
 
 export const createOutput = async (
   data: Record<string, Record<string, Collection>>
@@ -73,6 +74,23 @@ export const createOutput = async (
         comments.push({
           comment: dependencyComment,
           title: "Correlation Graphs",
+        });
+      }
+      if (getValueAsIs("SHOW_ACTIVITY_TIME_GRAPHS") === "true") {
+        const activityComment = await octokit.rest.issues.createComment({
+          repo: getValueAsIs("GITHUB_REPO_FOR_ISSUE"),
+          owner: getValueAsIs("GITHUB_OWNER_FOR_ISSUE"),
+          issue_number: issue.data.number,
+          body: createActivityTimeMarkdown(data, users, [
+            {
+              title: "Pull Request report total",
+              link: `${issue.data.html_url}#`,
+            },
+          ]),
+        });
+        comments.push({
+          comment: activityComment,
+          title: "Activity time Graphs",
         });
       }
       console.log("Issue successfully created.");

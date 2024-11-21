@@ -114,6 +114,10 @@ inputs:
     description: "Shows correlation graphs"
     required: false
     default: false
+  SHOW_ACTIVITY_TIME_GRAPHS:
+    description: "Shows activity time graphs"
+    required: false
+    default: false
 
 outputs:
   JSON_COLLECTION:

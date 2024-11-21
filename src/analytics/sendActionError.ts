@@ -41,6 +41,8 @@ export const sendActionError = (error: Error) => {
       ),
       MERGE_TIME_INTERVALS: getMultipleValuesInput("MERGE_TIME_INTERVALS"),
       USE_CHARTS: getValueAsIs("USE_CHARTS"),
+      SHOW_CORRELATION_GRAPHS: getValueAsIs("SHOW_CORRELATION_GRAPHS"),
+      SHOW_ACTIVITY_TIME_GRAPHS: getValueAsIs("SHOW_ACTIVITY_TIME_GRAPHS"),
     });
   } else {
     mixpanel.track("Anonymous action error", { distinct_id: "anonymous" });
