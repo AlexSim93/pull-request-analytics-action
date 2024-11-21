@@ -12,6 +12,7 @@ import {
   preparePullRequestTimeline,
   prepareResponseTime,
   prepareRequestedReviews,
+  prepareActionsTime,
 } from "./utils";
 import {
   invalidUserLogin,
@@ -45,6 +46,12 @@ export const collectData = (
       [readyForReviewTimelineEvent, convertToDraftTimelineEvent].includes(
         el.event as string
       )
+    );
+
+    prepareActionsTime(
+      pullRequest,
+      data.events[index]?.filter((el) => el),
+      collection
     );
 
     const closedDate = pullRequest.closed_at
