@@ -2237,8 +2237,13 @@ async function main() {
             core.setFailed("Inputs are invalid. Action is failed with validation error");
             return;
         }
-        const rateLimitAtBeginning = await (0, getRateLimit_1.getRateLimit)();
-        console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
+        try {
+            const rateLimitAtBeginning = await (0, getRateLimit_1.getRateLimit)();
+            console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
+        }
+        catch (error) {
+            console.log("Rate limit could not be retrieved at the beginning of the action");
+        }
         const ownersRepos = (0, requests_1.getOwnersRepositories)();
         const organizationsRepos = await (0, requests_1.getOrganizationsRepositories)();
         const repos = Object.keys([...ownersRepos, ...organizationsRepos].reduce((acc, element) => {
@@ -2274,8 +2279,13 @@ async function main() {
         const preparedData = (0, converters_1.collectData)(mergedData, teams);
         console.log("Calculation complete. Generating markdown.");
         await (0, createOutput_1.createOutput)(preparedData);
-        const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
-        console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
+        try {
+            const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
+            console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
+        }
+        catch (error) {
+            console.log("Rate limit could not be retrieved at the end of the action");
+        }
     }
     catch (error) {
         (0, analytics_1.sendActionError)(error);
