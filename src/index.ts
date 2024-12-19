@@ -17,10 +17,7 @@ import {
   validate,
 } from "./common/utils";
 import { getRateLimit } from "./requests/getRateLimit";
-import {
-  sendActionError,
-  sendActionRun,
-} from "./analytics";
+import { sendActionError, sendActionRun } from "./analytics";
 
 async function main() {
   try {
@@ -34,11 +31,17 @@ async function main() {
       );
       return;
     }
-    const rateLimitAtBeginning = await getRateLimit();
-    console.log(
-      "RATE LIMIT REMAINING BEFORE REQUESTS: ",
-      rateLimitAtBeginning.data.rate.remaining
-    );
+    try {
+      const rateLimitAtBeginning = await getRateLimit();
+      console.log(
+        "RATE LIMIT REMAINING BEFORE REQUESTS: ",
+        rateLimitAtBeginning.data.rate.remaining
+      );
+    } catch (error) {
+      console.log(
+        "Rate limit could not be retrieved at the beginning of the action"
+      );
+    }
 
     const ownersRepos = getOwnersRepositories();
     const organizationsRepos = await getOrganizationsRepositories();
@@ -93,11 +96,15 @@ async function main() {
     console.log("Calculation complete. Generating markdown.");
     await createOutput(preparedData);
 
-    const rateLimitAtEnd = await getRateLimit();
-    console.log(
-      "RATE LIMIT REMAINING AFTER REQUESTS: ",
-      rateLimitAtEnd.data.rate.remaining
-    );
+    try {
+      const rateLimitAtEnd = await getRateLimit();
+      console.log(
+        "RATE LIMIT REMAINING AFTER REQUESTS: ",
+        rateLimitAtEnd.data.rate.remaining
+      );
+    } catch (error) {
+      console.log("Rate limit could not be retrieved at the end of the action");
+    }
   } catch (error) {
     sendActionError(error as Error);
     throw error;
