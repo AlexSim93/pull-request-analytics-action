@@ -103,6 +103,8 @@ const sendActionRun = () => {
             distinct_id: (0, utils_1.encrypt)((0, utils_1.getMultipleValuesInput)("ORGANIZATIONS")[0] ||
                 (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS")[0].split("/")[0]),
             GITHUB_OWNERS_REPOS: (0, utils_1.getMultipleValuesInput)("GITHUB_OWNERS_REPOS").length,
+            GITHUB_OWNER_FOR_ISSUE: (0, utils_1.getValueAsIs)("GITHUB_OWNER_FOR_ISSUE")?.length,
+            GITHUB_REPO_FOR_ISSUE: (0, utils_1.getValueAsIs)("GITHUB_REPO_FOR_ISSUE")?.length,
             ORGANIZATIONS: (0, utils_1.getMultipleValuesInput)("ORGANIZATIONS").length,
             SHOW_STATS_TYPES: (0, utils_1.getMultipleValuesInput)("SHOW_STATS_TYPES"),
             AMOUNT: (0, utils_1.getValueAsIs)("AMOUNT"),
