@@ -349,7 +349,7 @@ exports.getValueAsIs = getValueAsIs;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getOrgs = exports.encrypt = exports.checkCommentSkip = exports.validate = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = exports.getDateFormat = void 0;
+exports.getOrgs = exports.encrypt = exports.checkCommentSkip = exports.getMultipleValuesInput = exports.setTimezone = exports.getValueAsIs = exports.getDateFormat = void 0;
 var getDateFormat_1 = __nccwpck_require__(15010);
 Object.defineProperty(exports, "getDateFormat", ({ enumerable: true, get: function () { return getDateFormat_1.getDateFormat; } }));
 var getValueAsIs_1 = __nccwpck_require__(18863);
@@ -358,8 +358,6 @@ var setTimezone_1 = __nccwpck_require__(73220);
 Object.defineProperty(exports, "setTimezone", ({ enumerable: true, get: function () { return setTimezone_1.setTimezone; } }));
 var getMultipleValuesInput_1 = __nccwpck_require__(31437);
 Object.defineProperty(exports, "getMultipleValuesInput", ({ enumerable: true, get: function () { return getMultipleValuesInput_1.getMultipleValuesInput; } }));
-var validate_1 = __nccwpck_require__(43373);
-Object.defineProperty(exports, "validate", ({ enumerable: true, get: function () { return validate_1.validate; } }));
 var checkCommentSkip_1 = __nccwpck_require__(61585);
 Object.defineProperty(exports, "checkCommentSkip", ({ enumerable: true, get: function () { return checkCommentSkip_1.checkCommentSkip; } }));
 var encrypt_1 = __nccwpck_require__(30625);
@@ -385,397 +383,6 @@ const setTimezone = () => {
     }
 };
 exports.setTimezone = setTimezone;
-
-
-/***/ }),
-
-/***/ 43373:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validate = void 0;
-const core = __importStar(__nccwpck_require__(42186));
-const validators_1 = __nccwpck_require__(75733);
-const validators_2 = __nccwpck_require__(75733);
-const getMultipleValuesInput_1 = __nccwpck_require__(31437);
-const getValueAsIs_1 = __nccwpck_require__(18863);
-const validate = () => {
-    const requiredErrors = (0, validators_1.validateRequired)([
-        "GITHUB_TOKEN",
-        ["GITHUB_OWNERS_REPOS", "ORGANIZATIONS"],
-        ...((0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME").includes("new-issue") ||
-            (0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME").includes("existing-issue")
-            ? ["GITHUB_OWNER_FOR_ISSUE", "GITHUB_REPO_FOR_ISSUE"]
-            : []),
-    ]);
-    const { errors: multipleValuesErrors, warnings: multipleValuesWarnings } = (0, validators_2.validateMultipleValues)({
-        SHOW_STATS_TYPES: {
-            validValues: [
-                "timeline",
-                "workload",
-                "pr-quality",
-                "code-review-engagement",
-                "response-time",
-            ],
-            required: true,
-        },
-        AGGREGATE_VALUE_METHODS: {
-            validValues: ["percentile", "average", "median"],
-            required: false,
-        },
-        EXECUTION_OUTCOME: {
-            validValues: ["new-issue", "collection", "markdown", "existing-issue"],
-            required: true,
-        },
-    });
-    const { warnings: singleValueWarnings, errors: singleValueErrors } = (0, validators_1.validateSingleValue)({
-        PERIOD_SPLIT_UNIT: {
-            validValues: ["quarters", "none", "months", "years"],
-            required: false,
-        },
-    });
-    const { warnings: numbersWarnings, errors: numbersErrors } = (0, validators_1.validateNumber)({
-        AMOUNT: {
-            min: 0,
-            isCritical: !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") &&
-                !(0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END") &&
-                !(0, getValueAsIs_1.getValueAsIs)("REPORT_PERIOD"),
-        },
-        PERCENTILE: {
-            max: 100,
-            min: 0,
-            isCritical: (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS").length === 1 &&
-                (0, getMultipleValuesInput_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS")[0] === "percentile",
-        },
-        ISSUE_NUMBER: {
-            min: 1,
-            isCritical: (0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME").length === 1 &&
-                (0, getMultipleValuesInput_1.getMultipleValuesInput)("EXECUTION_OUTCOME")[0] === "existing-issue",
-        },
-        TOP_LIST_AMOUNT: { min: 0, isCritical: false },
-    });
-    const dateErrors = (0, validators_1.validateDate)();
-    const errors = {
-        ...multipleValuesErrors,
-        ...numbersErrors,
-        ...dateErrors,
-        ...singleValueErrors,
-        ...requiredErrors,
-    };
-    const warnings = {
-        ...multipleValuesWarnings,
-        ...singleValueWarnings,
-        ...numbersWarnings,
-    };
-    Object.values(errors).forEach((message) => {
-        core.error(message);
-    });
-    Object.values(warnings).forEach((message) => {
-        core.warning(message);
-    });
-    return errors;
-};
-exports.validate = validate;
-
-
-/***/ }),
-
-/***/ 75733:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateDate = exports.validateNumber = exports.validateSingleValue = exports.validateMultipleValues = exports.validateRequired = void 0;
-var validateRequired_1 = __nccwpck_require__(85069);
-Object.defineProperty(exports, "validateRequired", ({ enumerable: true, get: function () { return validateRequired_1.validateRequired; } }));
-var validateMultipleValues_1 = __nccwpck_require__(11886);
-Object.defineProperty(exports, "validateMultipleValues", ({ enumerable: true, get: function () { return validateMultipleValues_1.validateMultipleValues; } }));
-var validateSingleValue_1 = __nccwpck_require__(14242);
-Object.defineProperty(exports, "validateSingleValue", ({ enumerable: true, get: function () { return validateSingleValue_1.validateSingleValue; } }));
-var validateNumber_1 = __nccwpck_require__(20839);
-Object.defineProperty(exports, "validateNumber", ({ enumerable: true, get: function () { return validateNumber_1.validateNumber; } }));
-var validateDate_1 = __nccwpck_require__(39974);
-Object.defineProperty(exports, "validateDate", ({ enumerable: true, get: function () { return validateDate_1.validateDate; } }));
-
-
-/***/ }),
-
-/***/ 39974:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateDate = void 0;
-const parse_1 = __importDefault(__nccwpck_require__(71287));
-const getValueAsIs_1 = __nccwpck_require__(18863);
-const date_fns_1 = __nccwpck_require__(73314);
-const validateDate = () => {
-    let errors = {};
-    if ((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START") && (0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END")) {
-        const startDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_START"), "d/MM/yyyy", new Date());
-        const endDate = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("REPORT_DATE_END"), "d/MM/yyyy", new Date());
-        if ((0, date_fns_1.isAfter)(startDate, endDate)) {
-            errors = {
-                ...errors,
-                REPORT_DATE_START: "REPORT_DATE_START is after REPORT_DATE_END",
-            };
-        }
-        if (!(0, date_fns_1.isValid)(startDate)) {
-            errors = {
-                ...errors,
-                REPORT_DATE_START: "REPORT_DATE_START is invalid",
-            };
-        }
-        if (!(0, date_fns_1.isValid)(endDate)) {
-            errors = {
-                ...errors,
-                REPORT_DATE_END: "REPORT_DATE_END is invalid",
-            };
-        }
-    }
-    if ((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START") && (0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END")) {
-        const startCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_START"), "HH:mm", new Date());
-        const endCoreHours = (0, parse_1.default)((0, getValueAsIs_1.getValueAsIs)("CORE_HOURS_END"), "HH:mm", new Date());
-        if ((0, date_fns_1.isAfter)(startCoreHours, endCoreHours)) {
-            errors = {
-                ...errors,
-                CORE_HOURS_START: "CORE_HOURS_START is after CORE_HOURS_END",
-            };
-        }
-        if (!(0, date_fns_1.isValid)(startCoreHours)) {
-            errors = {
-                ...errors,
-                CORE_HOURS_START: "CORE_HOURS_START is invalid",
-            };
-        }
-        if (!(0, date_fns_1.isValid)(endCoreHours)) {
-            errors = {
-                ...errors,
-                CORE_HOURS_END: "CORE_HOURS_END is invalid",
-            };
-        }
-    }
-    return errors;
-};
-exports.validateDate = validateDate;
-
-
-/***/ }),
-
-/***/ 11886:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateMultipleValues = void 0;
-const getMultipleValuesInput_1 = __nccwpck_require__(31437);
-const validateMultipleValues = (fields) => {
-    return Object.entries(fields).reduce((acc, [key, value]) => {
-        const inputValues = (0, getMultipleValuesInput_1.getMultipleValuesInput)(key);
-        if (inputValues.length === 0) {
-            return value.required
-                ? {
-                    ...acc,
-                    errors: {
-                        ...acc.errors,
-                        [key]: `${key} is empty.`,
-                    },
-                }
-                : {
-                    ...acc,
-                    warnings: {
-                        ...acc.warnings,
-                        [key]: `${key} is empty.`,
-                    },
-                };
-        }
-        if (value.required &&
-            inputValues.length > 0 &&
-            inputValues.every((input) => !value.validValues.includes(input))) {
-            return {
-                ...acc,
-                errors: {
-                    ...acc.errors,
-                    [key]: `${key} doesn't contain any valid value. At least one value should be valid.`,
-                },
-            };
-        }
-        else if (value.required &&
-            inputValues.length > 0 &&
-            inputValues.some((input) => !value.validValues.includes(input))) {
-            return {
-                ...acc,
-                warnings: {
-                    ...acc.warnings,
-                    [key]: `Some values in ${key} are invalid.`,
-                },
-            };
-        }
-        if (value.required === false &&
-            inputValues.length > 0 &&
-            inputValues.some((input) => !value.validValues.includes(input))) {
-            return {
-                ...acc,
-                warnings: {
-                    ...acc.warnings,
-                    [key]: `Some values in ${key} are invalid.`,
-                },
-            };
-        }
-        return acc;
-    }, { errors: {}, warnings: {} });
-};
-exports.validateMultipleValues = validateMultipleValues;
-
-
-/***/ }),
-
-/***/ 20839:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateNumber = void 0;
-const getValueAsIs_1 = __nccwpck_require__(18863);
-const validateNumber = (field) => {
-    return Object.entries(field).reduce((acc, [key, value]) => {
-        const input = (0, getValueAsIs_1.getValueAsIs)(key);
-        const number = parseInt(input);
-        if (Number.isNaN(number) && value.isCritical) {
-            return {
-                ...acc,
-                errors: {
-                    ...acc.errors,
-                    [key]: `${key} is not a number`,
-                },
-            };
-        }
-        const isLessMinValue = typeof value.min === "number" && number < value.min;
-        const isMoreMaxValue = typeof value.max === "number" && number > value.max;
-        if (isLessMinValue) {
-            return {
-                ...acc,
-                [value.isCritical ? "errors" : "warnings"]: {
-                    ...acc[value.isCritical ? "errors" : "warnings"],
-                    [key]: `${key} should be more than ${value.min}`,
-                },
-            };
-        }
-        if (isMoreMaxValue) {
-            return {
-                ...acc,
-                [value.isCritical ? "errors" : "warnings"]: {
-                    ...acc[value.isCritical ? "errors" : "warnings"],
-                    [key]: `${key} should be less than ${value.max}`,
-                },
-            };
-        }
-        return acc;
-    }, { errors: {}, warnings: {} });
-};
-exports.validateNumber = validateNumber;
-
-
-/***/ }),
-
-/***/ 85069:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateRequired = void 0;
-const getValueAsIs_1 = __nccwpck_require__(18863);
-const validateRequired = (names) => {
-    return names.reduce((acc, name) => {
-        if (Array.isArray(name)) {
-            const isValid = name.some((el) => (0, getValueAsIs_1.getValueAsIs)(el));
-            if (isValid)
-                return acc;
-            return { ...acc, [name.join(", ")]: `${name.join(", ")} - One of these inputs must be filled` };
-        }
-        if (typeof name === "string") {
-            const value = (0, getValueAsIs_1.getValueAsIs)(name);
-            if (value)
-                return acc;
-            return { ...acc, [name]: `${name} is required` };
-        }
-        return acc;
-    }, {});
-};
-exports.validateRequired = validateRequired;
-
-
-/***/ }),
-
-/***/ 14242:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.validateSingleValue = void 0;
-const __1 = __nccwpck_require__(41002);
-const validateSingleValue = (fields) => {
-    return Object.entries(fields).reduce((acc, [key, value]) => {
-        const inputValue = (0, __1.getValueAsIs)(key);
-        if (value.required && !value.validValues.includes(inputValue)) {
-            return {
-                ...acc,
-                errors: {
-                    ...acc.errors,
-                    [key]: inputValue ? `${key} is invalid.` : `${key} is empty.`,
-                },
-            };
-        }
-        if (!value.required && !value.validValues.includes(inputValue)) {
-            return {
-                ...acc,
-                warnings: {
-                    ...acc.warnings,
-                    [key]: inputValue ? `${key} is invalid.` : `${key} is empty.`,
-                },
-            };
-        }
-        return acc;
-    }, {
-        errors: {},
-        warnings: {},
-    });
-};
-exports.validateSingleValue = validateSingleValue;
 
 
 /***/ }),
@@ -2163,7 +1770,7 @@ const createOutput = async (data) => {
                         link: `${issue.data.html_url}#`,
                     },
                 ]);
-                if (commentMarkdown === "")
+                if (commentMarkdown === "" || dates.length < 3)
                     continue;
                 const comment = await (0, requests_1.createComment)(issue.data.number, commentMarkdown);
                 comments.push({ comment, title: date });
@@ -2187,112 +1794,6 @@ const createOutput = async (data) => {
     }
 };
 exports.createOutput = createOutput;
-
-
-/***/ }),
-
-/***/ 79283:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__nccwpck_require__(44227);
-const core = __importStar(__nccwpck_require__(42186));
-const createOutput_1 = __nccwpck_require__(63119);
-const requests_1 = __nccwpck_require__(49591);
-const converters_1 = __nccwpck_require__(86200);
-const utils_1 = __nccwpck_require__(41002);
-const getRateLimit_1 = __nccwpck_require__(78028);
-const analytics_1 = __nccwpck_require__(88345);
-async function main() {
-    try {
-        (0, utils_1.setTimezone)();
-        const errors = (0, utils_1.validate)();
-        (0, analytics_1.sendActionRun)();
-        if (Object.entries(errors).length > 0) {
-            core.setFailed("Inputs are invalid. Action is failed with validation error");
-            return;
-        }
-        try {
-            const rateLimitAtBeginning = await (0, getRateLimit_1.getRateLimit)();
-            console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
-        }
-        catch (error) {
-            console.log("Rate limit could not be retrieved at the beginning of the action");
-        }
-        const ownersRepos = (0, requests_1.getOwnersRepositories)();
-        const organizationsRepos = await (0, requests_1.getOrganizationsRepositories)();
-        const repos = Object.keys([...ownersRepos, ...organizationsRepos].reduce((acc, element) => {
-            return { ...acc, [element.join("/")]: 1 };
-        }, {})).map((el) => el.split("/"));
-        console.log("Initiating data request.");
-        const data = [];
-        const orgs = (0, utils_1.getOrgs)();
-        const teams = await (0, requests_1.getTeams)(orgs);
-        for (let i = 0; i < repos.length; i++) {
-            const result = await (0, requests_1.makeComplexRequest)(parseInt((0, utils_1.getValueAsIs)("AMOUNT")), {
-                owner: repos[i][0],
-                repo: repos[i][1],
-            }, {
-                skipComments: (0, utils_1.checkCommentSkip)(),
-            });
-            data.push(result);
-        }
-        console.log("Data successfully retrieved. Starting report calculations.");
-        const mergedData = data.reduce((acc, element) => ({
-            ownerRepo: acc.ownerRepo
-                ? acc.ownerRepo.concat(",", element.ownerRepo)
-                : element.ownerRepo,
-            events: [...acc.events, ...element.events],
-            pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
-            comments: [...acc?.comments, ...element.comments],
-        }), {
-            ownerRepo: "",
-            events: [],
-            pullRequestInfo: [],
-            comments: [],
-        });
-        const preparedData = (0, converters_1.collectData)(mergedData, teams);
-        console.log("Calculation complete. Generating markdown.");
-        await (0, createOutput_1.createOutput)(preparedData);
-        try {
-            const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
-            console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
-        }
-        catch (error) {
-            console.log("Rate limit could not be retrieved at the end of the action");
-        }
-    }
-    catch (error) {
-        (0, analytics_1.sendActionError)(error);
-        throw error;
-    }
-}
-main();
 
 
 /***/ }),
@@ -93119,12 +92620,83 @@ module.exports = JSON.parse('{"name":"mixpanel","description":"A simple server-s
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(79283);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__nccwpck_require__(44227);
+const createOutput_1 = __nccwpck_require__(63119);
+const requests_1 = __nccwpck_require__(49591);
+const converters_1 = __nccwpck_require__(86200);
+const utils_1 = __nccwpck_require__(41002);
+const getRateLimit_1 = __nccwpck_require__(78028);
+const analytics_1 = __nccwpck_require__(88345);
+async function main() {
+    try {
+        (0, utils_1.setTimezone)();
+        (0, analytics_1.sendActionRun)();
+        try {
+            const rateLimitAtBeginning = await (0, getRateLimit_1.getRateLimit)();
+            console.log("RATE LIMIT REMAINING BEFORE REQUESTS: ", rateLimitAtBeginning.data.rate.remaining);
+        }
+        catch (error) {
+            console.log("Rate limit could not be retrieved at the beginning of the action");
+        }
+        const ownersRepos = (0, requests_1.getOwnersRepositories)();
+        const organizationsRepos = await (0, requests_1.getOrganizationsRepositories)();
+        const repos = Object.keys([...ownersRepos, ...organizationsRepos].reduce((acc, element) => {
+            return { ...acc, [element.join("/")]: 1 };
+        }, {})).map((el) => el.split("/"));
+        console.log("Initiating data request.");
+        const data = [];
+        const orgs = (0, utils_1.getOrgs)();
+        const teams = await (0, requests_1.getTeams)(orgs);
+        for (let i = 0; i < repos.length; i++) {
+            const result = await (0, requests_1.makeComplexRequest)(parseInt((0, utils_1.getValueAsIs)("AMOUNT")), {
+                owner: repos[i][0],
+                repo: repos[i][1],
+            }, {
+                skipComments: (0, utils_1.checkCommentSkip)(),
+            });
+            data.push(result);
+        }
+        console.log("Data successfully retrieved. Starting report calculations.");
+        const mergedData = data.reduce((acc, element) => ({
+            ownerRepo: acc.ownerRepo
+                ? acc.ownerRepo.concat(",", element.ownerRepo)
+                : element.ownerRepo,
+            events: [...acc.events, ...element.events],
+            pullRequestInfo: [...acc?.pullRequestInfo, ...element.pullRequestInfo],
+            comments: [...acc?.comments, ...element.comments],
+        }), {
+            ownerRepo: "",
+            events: [],
+            pullRequestInfo: [],
+            comments: [],
+        });
+        const preparedData = (0, converters_1.collectData)(mergedData, teams);
+        console.log("Calculation complete. Generating markdown.");
+        await (0, createOutput_1.createOutput)(preparedData);
+        try {
+            const rateLimitAtEnd = await (0, getRateLimit_1.getRateLimit)();
+            console.log("RATE LIMIT REMAINING AFTER REQUESTS: ", rateLimitAtEnd.data.rate.remaining);
+        }
+        catch (error) {
+            console.log("Rate limit could not be retrieved at the end of the action");
+        }
+    }
+    catch (error) {
+        (0, analytics_1.sendActionError)(error);
+        throw error;
+    }
+}
+main();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;

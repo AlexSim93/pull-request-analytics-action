@@ -14,7 +14,6 @@ import {
   getOrgs,
   getValueAsIs,
   setTimezone,
-  validate,
 } from "./common/utils";
 import { getRateLimit } from "./requests/getRateLimit";
 import { sendActionError, sendActionRun } from "./analytics";
@@ -22,15 +21,8 @@ import { sendActionError, sendActionRun } from "./analytics";
 async function main() {
   try {
     setTimezone();
-    const errors = validate();
     sendActionRun();
 
-    if (Object.entries(errors).length > 0) {
-      core.setFailed(
-        "Inputs are invalid. Action is failed with validation error"
-      );
-      return;
-    }
     try {
       const rateLimitAtBeginning = await getRateLimit();
       console.log(
