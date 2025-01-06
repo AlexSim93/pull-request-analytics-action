@@ -1383,6 +1383,7 @@ const preparePullRequestStats = (collection) => {
             timeFromInitialRequestToResponse: (0, calculations_1.calcMedianValue)(collection.timeFromInitialRequestToResponse),
             timeFromOpenToResponse: (0, calculations_1.calcMedianValue)(collection.timeFromOpenToResponse),
             timeFromRepeatedRequestToResponse: (0, calculations_1.calcMedianValue)(collection.timeFromRepeatedRequestToResponse),
+            timeWaitingForRepeatedReview: (0, calculations_1.calcMedianValue)(collection.timeWaitingForRepeatedReview),
         },
         percentile: {
             timeToReview: (0, calculations_1.calcPercentileValue)(collection.timeToReview),
@@ -1393,6 +1394,7 @@ const preparePullRequestStats = (collection) => {
             timeFromInitialRequestToResponse: (0, calculations_1.calcPercentileValue)(collection.timeFromInitialRequestToResponse),
             timeFromOpenToResponse: (0, calculations_1.calcPercentileValue)(collection.timeFromOpenToResponse),
             timeFromRepeatedRequestToResponse: (0, calculations_1.calcPercentileValue)(collection.timeFromRepeatedRequestToResponse),
+            timeWaitingForRepeatedReview: (0, calculations_1.calcPercentileValue)(collection.timeWaitingForRepeatedReview),
         },
         average: {
             timeToReview: (0, calculations_1.calcAverageValue)(collection.timeToReview),
@@ -1403,6 +1405,7 @@ const preparePullRequestStats = (collection) => {
             timeFromInitialRequestToResponse: (0, calculations_1.calcAverageValue)(collection.timeFromInitialRequestToResponse),
             timeFromOpenToResponse: (0, calculations_1.calcAverageValue)(collection.timeFromOpenToResponse),
             timeFromRepeatedRequestToResponse: (0, calculations_1.calcAverageValue)(collection.timeFromRepeatedRequestToResponse),
+            timeWaitingForRepeatedReview: (0, calculations_1.calcAverageValue)(collection.timeWaitingForRepeatedReview),
         },
     };
 };
@@ -1568,10 +1571,29 @@ const set_1 = __importDefault(__nccwpck_require__(82900));
 const get_1 = __importDefault(__nccwpck_require__(56908));
 const utils_1 = __nccwpck_require__(41002);
 const calculations_1 = __nccwpck_require__(16576);
+const constants_1 = __nccwpck_require__(95354);
 const prepareResponseTime = (events = [], pullRequest, collection, dateKey, teams) => {
     if (!events)
         return;
     const responses = (0, calculations_1.getResponses)(events);
+    const user = pullRequest?.user.login || constants_1.invalidUserLogin;
+    ["total", user, ...(teams[user] || [])].forEach((userKey) => {
+        [dateKey, "total"].forEach((key) => {
+            const awaitingResponse = Object.values(responses)
+                .reduce((acc, el) => {
+                const repeatedResponses = el.filter((_, index) => index > 0);
+                return [...acc, ...repeatedResponses];
+            }, [])
+                .map((element) => (0, calculations_1.calcDifferenceInMinutes)(element?.[0], element?.[1], {
+                endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
+                startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
+            }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")));
+            (0, set_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], [
+                ...(0, get_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], []),
+                ...awaitingResponse,
+            ]);
+        });
+    });
     Object.entries(responses).forEach(([user, responses]) => {
         ["total", dateKey].forEach((key) => {
             const timeFromInitialRequestToResponse = (0, calculations_1.calcDifferenceInMinutes)(responses[0]?.[0], responses[0]?.[1], {
@@ -2685,11 +2707,12 @@ Object.defineProperty(exports, "createList", ({ enumerable: true, get: function 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.unapprovedPrsHeader = exports.unreviewedPrsHeader = exports.additionsDeletionsHeader = exports.totalRevertedPrsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
+exports.timeFromRepeatedRequestToResponseHeader = exports.timeFromOpenToResponseHeader = exports.timeFromRequestToResponseHeader = exports.prSizesHeader = exports.requestChangesReceived = exports.reviewTypesHeader = exports.commentsReceivedHeader = exports.commentsConductedHeader = exports.discussionsConductedHeader = exports.discussionsHeader = exports.reviewRequestConductedHeader = exports.reviewConductedHeader = exports.unapprovedPrsHeader = exports.unreviewedPrsHeader = exports.additionsDeletionsHeader = exports.totalRevertedPrsHeader = exports.totalOpenedPrsHeader = exports.totalMergedPrsHeader = exports.timeToMergeHeader = exports.timeAwaitingRepeatedReviewHeader = exports.timeToApproveHeader = exports.timeToReviewHeader = exports.timeInDraftHeader = exports.timeToReviewRequestHeader = void 0;
 exports.timeToReviewRequestHeader = "Time to review request";
 exports.timeInDraftHeader = "Time in draft";
 exports.timeToReviewHeader = "Time to review";
 exports.timeToApproveHeader = "Time to approve";
+exports.timeAwaitingRepeatedReviewHeader = "Time to Review After Re-request";
 exports.timeToMergeHeader = "Time to merge";
 exports.totalMergedPrsHeader = "Total merged PRs";
 exports.totalOpenedPrsHeader = "Total opened PRs";
@@ -3408,6 +3431,7 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
                 "timeFromInitialRequestToResponse",
                 "timeFromOpenToResponse",
                 "timeFromRepeatedRequestToResponse",
+                "timeWaitingForRepeatedReview",
             ].map((key) => data[user]?.[date]?.[type]?.[key] || 0))), 1) / 60),
             title: "hours",
         },
@@ -3461,6 +3485,16 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
                 name: "Time\\ To\\ Review",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReview || 0) / 60) * 100) / 100)
+                    .reverse(),
+            },
+            {
+                color: "turquoise",
+                name: "Time\\ To\\ Review\\ After\\ Rerequest",
+                values: dates
+                    .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeWaitingForRepeatedReview ||
+                    0) /
+                    60) *
+                    100) / 100)
                     .reverse(),
             },
             {
@@ -3570,6 +3604,7 @@ const createTimelineTable = (data, type, users, date) => {
         return [
             `**${user}**`,
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeInDraft || 0),
+            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeWaitingForRepeatedReview || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToReviewRequest || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToReview || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToApprove || 0),
@@ -3584,6 +3619,7 @@ const createTimelineTable = (data, type, users, date) => {
             headers: [
                 "user",
                 constants_1.timeInDraftHeader,
+                constants_1.timeAwaitingRepeatedReviewHeader,
                 constants_1.timeToReviewRequestHeader,
                 constants_1.timeToReviewHeader,
                 constants_1.timeToApproveHeader,
