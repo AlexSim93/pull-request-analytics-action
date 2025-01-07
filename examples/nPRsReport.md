@@ -1,766 +1,721 @@
+
 ## Pull Request report
-
-This report based on 150 last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
-
+  This report based on 200 last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
+  
 Below are the settings applied for this report:
-
 ```
-GITHUB_OWNERS_REPOS: owner/repo
-GITHUB_OWNER_FOR_ISSUE: owner
-GITHUB_REPO_FOR_ISSUE: repo
-SHOW_STATS_TYPES: timeline, workload, pr-quality, code-review-engagement
-REVIEW_TIME_INTERVALS: 2,4,6,9,12,18
+GITHUB_OWNERS_REPOS: AlexSim93/example-repo
+GITHUB_OWNER_FOR_ISSUE: AlexSim93
+GITHUB_REPO_FOR_ISSUE: lang-card
+SHOW_STATS_TYPES: timeline, workload, pr-quality, code-review-engagement, response-time
+REVIEW_TIME_INTERVALS: 2,4,8,12,16,24
 TOP_LIST_AMOUNT: 0
 AGGREGATE_VALUE_METHODS: percentile
+SHOW_CORRELATION_GRAPHS: true
+SHOW_ACTIVITY_TIME_GRAPHS: true
 PERCENTILE: 75
-HIDE_USERS: dev1, dev2, dev3
+SHOW_USERS: dev1, dev2, dev3, dev4, dev5, total
 TIMEZONE: Europe/Berlin
 CORE_HOURS_START: 09:00
-CORE_HOURS_END: 18:00
+CORE_HOURS_END: 19:00
 AMOUNT: 150
 PERIOD_SPLIT_UNIT: months
+USE_CHARTS: false
 EXECUTION_OUTCOME: markdown
 ```
+    
+  
+    
+    
+  
 
-### Pull requests timeline(75th percentile) 12/2023
-
-**Time to review** - time from PR creation to first review.
-**Time to approve** - time from PR creation to first approval without requested changes.
+### Pull requests timeline(75th percentile) 12/2024
+**Time to review** - time from PR creation to first review. 
+**Time to approve** - time from PR creation to first approval without requested changes. 
 **Time to merge** - time from PR creation to merge.
-| user | Time in draft | Time to review request | Time to review | Time to approve | Time to merge | Total merged PRs |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 7 minutes | 7 minutes | 4 hours 12 minutes | 7 hours 32 minutes | 15 hours 31 minutes | 29 |
-| **dev8** | 8 minutes | 7 minutes | 3 hours 14 minutes | 3 hours 14 minutes | 16 hours 23 minutes | 19 |
-| **dev5** | 6 minutes | 6 minutes | 7 hours 43 minutes | 12 hours 13 minutes | 50 hours 11 minutes | 2 |
-| **dev6** | 29 minutes | 29 minutes | 3 hours 48 minutes | 3 hours 48 minutes | 32 hours 29 minutes | 6 |
-| **dev7** | 13 minutes | 13 minutes | 3 hours 50 minutes | 9 hours 19 minutes | 48 hours 18 minutes | 9 |
-| **total** | 8 minutes | 8 minutes | 4 hours 21 minutes | 6 hours 14 minutes | 24 hours 52 minutes | 65 |
+| user | Time in draft | Time to review request | Time to review | Time to Review After Re-request | Time to approve | Time to merge | Total merged PRs |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 6 minutes | 6 minutes | 40 minutes |  | 3 hours 27 minutes | 8 hours 21 minutes | 15 |
+| **dev2** | 6 minutes | 7 minutes | 4 hours 43 minutes |  | 8 hours 7 minutes | 14 hours 50 minutes | 23 |
+| **dev3** | 6 minutes | 6 minutes | 2 hours 26 minutes |  | 8 hours 48 minutes | 21 hours 7 minutes | 10 |
+| **dev4** | 27 minutes | 27 minutes | 3 hours 29 minutes | 3 hours 25 minutes | 8 hours 3 minutes | 56 hours 9 minutes | 17 |
+| **dev5** | 15 minutes | 9 minutes | 1 hour 8 minutes | 5 hours 29 minutes | 12 hours 2 minutes | 36 hours 31 minutes | 17 |
+| **total** | 9 minutes | 7 minutes | 2 hours 21 minutes | 4 hours 21 minutes | 8 hours 43 minutes | 22 hours 53 minutes | 83 |      
+    
 
-```mermaid
-gantt
-title Pull requests timeline(75th percentile) 12/2023 / minutes
-dateFormat X
-axisFormat %s
-section dev4
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(4 hours 12 minutes) :  0, 252
-Time to approve(7 hours 32 minutes) :  0, 452
-Time to merge(15 hours 31 minutes) :  0, 931
+  
+### Review time 12/2024
 
-section dev8
-                Time in draft(8 minutes) :  0, 8
-Time to review request(7 minutes) :  0, 7
-Time to review(3 hours 14 minutes) :  0, 194
-Time to approve(3 hours 14 minutes) :  0, 194
-Time to merge(16 hours 23 minutes) :  0, 983
+| users | 0-2h | 2-4h | 4-8h | 8-12h | 12-16h | 16-24h | 24+h |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 12(80%) | 1(6.7%) | 0 | 1(6.7%) | 0 | 0 | 1(6.7%) |
+| **dev2** | 16(69.6%) | 0 | 4(17.4%) | 3(13%) | 0 | 0 | 0 |
+| **dev3** | 6(60%) | 2(20%) | 2(20%) | 0 | 0 | 0 | 0 |
+| **dev4** | 12(70.6%) | 0 | 4(23.5%) | 0 | 0 | 1(5.9%) | 0 |
+| **dev5** | 13(76.5%) | 2(11.8%) | 1(5.9%) | 1(5.9%) | 0 | 0 | 0 |
+| **total** | 60(72.3%) | 5(6%) | 11(13.3%) | 5(6%) | 0 | 1(1.2%) | 1(1.2%) |      
+    
+  
+  
+  
+  
 
-section dev5
-                Time in draft(6 minutes) :  0, 6
-Time to review request(6 minutes) :  0, 6
-Time to review(7 hours 43 minutes) :  0, 463
-Time to approve(12 hours 13 minutes) :  0, 733
-Time to merge(50 hours 11 minutes) :  0, 3011
-
-section dev6
-                Time in draft(29 minutes) :  0, 29
-Time to review request(29 minutes) :  0, 29
-Time to review(3 hours 48 minutes) :  0, 228
-Time to approve(3 hours 48 minutes) :  0, 228
-Time to merge(32 hours 29 minutes) :  0, 1949
-
-section dev7
-                Time in draft(13 minutes) :  0, 13
-Time to review request(13 minutes) :  0, 13
-Time to review(3 hours 50 minutes) :  0, 230
-Time to approve(9 hours 19 minutes) :  0, 559
-Time to merge(48 hours 18 minutes) :  0, 2898
-
-section total
-                Time in draft(8 minutes) :  0, 8
-Time to review request(8 minutes) :  0, 8
-Time to review(4 hours 21 minutes) :  0, 261
-Time to approve(6 hours 14 minutes) :  0, 374
-Time to merge(24 hours 52 minutes) :  0, 1492
-
-```
-
-```mermaid
-pie
-title Review time dev4 12/2023
-"0-2 hours(15)":15
-"2-4 hours(5)":5
-"4-6 hours(4)":4
-"9-12 hours(3)":3
-"12-18 hours(1)":1
-```
-
-```mermaid
-pie
-title Review time dev8 12/2023
-"0-2 hours(11)":11
-"2-4 hours(3)":3
-"4-6 hours(2)":2
-"12-18 hours(2)":2
-```
-
-```mermaid
-pie
-title Review time dev5 12/2023
-"0-2 hours(1)":1
-"12-18 hours(1)":1
-```
-
-```mermaid
-pie
-title Review time dev6 12/2023
-"0-2 hours(3)":3
-"2-4 hours(1)":1
-"4-6 hours(2)":2
-```
-
-```mermaid
-pie
-title Review time dev7 12/2023
-"0-2 hours(6)":6
-"4-6 hours(2)":2
-"18+ hours(1)":1
-```
-
-```mermaid
-pie
-title Review time total 12/2023
-"0-2 hours(36)":36
-"2-4 hours(9)":9
-"4-6 hours(10)":10
-"9-12 hours(3)":3
-"12-18 hours(4)":4
-"18+ hours(1)":1
-```
-
-### Workload stats 12/2023
-
+### Contribution stats 12/2024
 **Reviews conducted** - number of reviews conducted. 1 PR may have only single review.
-**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
-| user | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments | Reviews conducted |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 32 | 29 | +2428/-6786 | 20/5/4/0/3 | 44 | 12 |
-| **dev8** | 20 | 19 | +954/-2167 | 11/6/1/2/0 | 6 | 28 |
-| **dev5** | 2 | 2 | +15/-3 | 2/0/0/0/0 | 1 | 13 |
-| **dev6** | 6 | 6 | +1164/-504 | 3/1/1/0/1 | 28 | 4 |
-| **dev7** | 9 | 9 | +5553/-4706 | 6/1/1/0/1 | 22 | 11 |
-| **total** | 69 | 65 | +10114/-14166 | 42/13/7/2/5 | 101 | 63 |
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.
+| user | Total opened PRs | Total merged PRs | Total reverted PRs | PRs w/o review | PRs w/o approval | Additions / Deletions | PR size: xs/s/m/l/xl |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 15 | 15 | 0 | 1 | 1 | +9316/-8217 | 11/2/0/1/1 |
+| **dev2** | 24 | 23 | 2 | 3 | 3 | +1358/-1442 | 19/2/1/2/0 |
+| **dev3** | 10 | 10 | 0 | 0 | 0 | +917/-217 | 5/3/2/0/0 |
+| **dev4** | 17 | 17 | 0 | 0 | 0 | +1591/-743 | 10/3/3/1/0 |
+| **dev5** | 17 | 17 | 1 | 4 | 3 | +3870/-1330 | 5/5/4/2/1 |
+| **total** | 84 | 83 | 3 | 8 | 7 | +17057/-11954 | 51/15/10/6/2 |      
+    
 
-### Pull request quality 12/2023
 
+### Pull request quality 12/2024
 **Agreed** - discussions with at least 1 reaction :+1:.
 **Disagreed** - discussions with at least 1 reaction :-1:.
 | user | Total merged PRs | Changes requested received | Agreed / Disagreed / Total discussions received | Comments received |
 | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 29 | 5 | 12 / 1 / 12 | 22 |
-| **dev8** | 19 | 1 | 2 / 0 / 2 | 3 |
-| **dev5** | 2 | 0 | 1 / 1 / 1 | 1 |
-| **dev6** | 6 | 1 | 13 / 2 / 15 | 16 |
-| **dev7** | 9 | 2 | 8 / 1 / 10 | 12 |
-| **total** | 65 | 9 | 36 / 5 / 40 | 54 |
+| **dev1** | 15 | 2 | 2 / 2 / 12 | 18 |
+| **dev2** | 23 | 2 | 3 / 6 / 20 | 24 |
+| **dev3** | 10 | 4 | 6 / 0 / 30 | 48 |
+| **dev4** | 17 | 5 | 9 / 4 / 68 | 82 |
+| **dev5** | 17 | 4 | 9 / 3 / 51 | 63 |
+| **total** | 83 | 17 | 29 / 15 / 181 | 235 |      
+    
 
-```mermaid
-pie
-title Discussion's types dev4 12/2023
-"Bug(1)":1
-```
+### Discussion's types 12/2024
 
-```mermaid
-pie
-title Discussion's types dev8 12/2023
-"Bug(1)":1
-```
+| users | imports between modules | browser support | Error handling | locale value getter | array performance | misprint | redux selectors |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 1(33.3%) | 1(33.3%) | 1(33.3%) | 0 | 0 | 0 | 0 |
+| **dev4** | 7(41.2%) | 4(23.5%) | 2(11.8%) | 2(11.8%) | 2(11.8%) | 0 | 0 |
+| **dev5** | 1(11.1%) | 2(22.2%) | 3(33.3%) | 0 | 0 | 2(22.2%) | 1(11.1%) |
+| **total** | 9(31%) | 7(24.1%) | 6(20.7%) | 2(6.9%) | 2(6.9%) | 2(6.9%) | 1(3.4%) |      
+    
 
-```mermaid
-pie
-title Discussion's types dev6 12/2023
-"Performance(1)":1
-"Bug(1)":1
-```
 
-```mermaid
-pie
-title Discussion's types dev7 12/2023
-"Bug(2)":2
-"Formatting(2)":2
-"Performance(1)":1
-```
-
-```mermaid
-pie
-title Discussion's types total 12/2023
-"Bug(5)":5
-"Performance(2)":2
-"Formatting(2)":2
-```
-
-### Code review engagement 12/2023
-
-**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+### Code review engagement 12/2024
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
 **Changes requested / Comments / Approvals** - number of reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.
 **Agreed** - discussions with at least 1 reaction :+1:.
 **Disagreed** - discussions with at least 1 reaction :-1:.
-| user | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved | Review requests conducted |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 29 | 4 / 0 / 4 | 4 | 7/3/1/1/0 | 0 / 1 / 12 | 37 |
-| **dev8** | 19 | 27 / 4 / 31 | 44 | 14/5/4/0/5 | 8 / 7 / 28 | 49 |
-| **dev5** | 2 | 4 / 0 / 4 | 5 | 7/2/1/2/1 | 1 / 0 / 13 | 67 |
-| **dev6** | 6 | 1 / 1 / 1 | 1 | 4/0/0/0/0 | 0 / 1 / 4 | 63 |
-| **dev7** | 9 | 0 / 0 / 0 | 0 | 8/2/1/0/0 | 0 / 0 / 11 | 59 |
-| **total** | 65 | 36 / 5 / 40 | 54 | 42/13/7/2/5 | 9 / 9 / 63 | 275 |
+| user | Reviews conducted | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 25 | 0 / 0 / 46 | 64 | 8/6/7/3/1 | 8 / 10 / 24 |
+| **dev2** | 28 | 0 / 0 / 11 | 12 | 16/6/5/1/0 | 8 / 0 / 28 |
+| **dev3** | 8 | 0 / 0 / 1 | 1 | 6/1/0/0/1 | 0 / 1 / 8 |
+| **dev4** | 20 | 0 / 0 / 2 | 2 | 16/2/1/1/0 | 1 / 0 / 20 |
+| **dev5** | 8 | 0 / 0 / 4 | 5 | 6/1/1/0/0 | 2 / 0 / 8 |
+| **total** | 83 | 29 / 15 / 181 | 235 | 51/15/10/6/2 | 17 / 39 / 83 |      
+    
 
-### Pull requests timeline(75th percentile) 11/2023
+### Review Response Time(75th percentile) 12/2024
+**Time from re-request to response** - time from a review re-request to the response. Multiple re-requests and responses can occur in a single pull request
+| user | Review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 67 | 25 | 6 hours 39 minutes | 7 hours 39 minutes | 5 hours 18 minutes |
+| **dev2** | 58 | 28 | 6 hours 3 minutes | 5 hours 55 minutes | 2 hours 56 minutes |
+| **dev3** | 73 | 8 | 4 hours | 4 hours |  |
+| **dev4** | 63 | 20 | 7 hours 13 minutes | 6 hours 57 minutes |  |
+| **dev5** | 66 | 8 | 3 hours 51 minutes | 3 hours 46 minutes |  |
+| **total** | 334 | 83 | 6 hours 3 minutes | 6 hours 8 minutes | 4 hours 33 minutes |      
+    
+    
 
-**Time to review** - time from PR creation to first review.
-**Time to approve** - time from PR creation to first approval without requested changes.
+    
+  
+
+### Pull requests timeline(75th percentile) 11/2024
+**Time to review** - time from PR creation to first review. 
+**Time to approve** - time from PR creation to first approval without requested changes. 
 **Time to merge** - time from PR creation to merge.
-| user | Time in draft | Time to review request | Time to review | Time to approve | Time to merge | Total merged PRs |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 17 minutes | 10 minutes | 55 minutes | 8 hours 4 minutes | 17 hours 1 minute | 9 |
-| **dev8** | 6 minutes | 6 minutes | 1 hour 10 minutes | 1 hour 30 minutes | 3 hours 29 minutes | 23 |
-| **dev5** | 18 minutes | 18 minutes | 8 hours 3 minutes | 8 hours 7 minutes | 36 hours 28 minutes | 12 |
-| **dev6** | 7 minutes | 7 minutes | 1 hour 59 minutes | 2 hours 19 minutes | 35 hours 34 minutes | 17 |
-| **dev7** | 6 minutes | 6 minutes | 1 hour 30 minutes | 8 hours | 25 hours 1 minute | 13 |
-| **total** | 7 minutes | 7 minutes | 2 hours 16 minutes | 5 hours 9 minutes | 26 hours 13 minutes | 74 |
+| user | Time in draft | Time to review request | Time to review | Time to Review After Re-request | Time to approve | Time to merge | Total merged PRs |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 4 minutes | 4 minutes | 1 hour 40 minutes |  | 1 hour 42 minutes | 10 hours 1 minute | 4 |
+| **dev2** | 45 minutes | 45 minutes | 1 hour 16 minutes | 4 hours 50 minutes | 6 hours 1 minute | 15 hours 53 minutes | 17 |
+| **dev3** | 26 minutes | 24 minutes | 1 hour 51 minutes |  | 9 hours 33 minutes | 23 hours 16 minutes | 13 |
+| **dev4** | 10 minutes | 12 minutes | 1 hour 9 minutes | 57 minutes | 1 hour 9 minutes | 9 hours 17 minutes | 13 |
+| **dev5** | 7 minutes | 7 minutes | 4 hours 5 minutes | 3 hours 37 minutes | 13 hours 8 minutes | 27 hours 53 minutes | 15 |
+| **total** | 15 minutes | 15 minutes | 1 hour 59 minutes | 3 hours 37 minutes | 7 hours 50 minutes | 23 hours 48 minutes | 62 |      
+    
 
-```mermaid
-gantt
-title Pull requests timeline(75th percentile) 11/2023 / minutes
-dateFormat X
-axisFormat %s
-section dev4
-                Time in draft(17 minutes) :  0, 17
-Time to review request(10 minutes) :  0, 10
-Time to review(55 minutes) :  0, 55
-Time to approve(8 hours 4 minutes) :  0, 484
-Time to merge(17 hours 1 minute) :  0, 1021
+  
+### Review time 11/2024
 
-section dev8
-                Time in draft(6 minutes) :  0, 6
-Time to review request(6 minutes) :  0, 6
-Time to review(1 hour 10 minutes) :  0, 70
-Time to approve(1 hour 30 minutes) :  0, 90
-Time to merge(3 hours 29 minutes) :  0, 209
+| users | 0-2h | 2-4h | 4-8h | 8-12h | 12-16h | 16-24h | 24+h |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 3(75%) | 1(25%) | 0 | 0 | 0 | 0 | 0 |
+| **dev2** | 13(76.5%) | 0 | 1(5.9%) | 1(5.9%) | 1(5.9%) | 0 | 1(5.9%) |
+| **dev3** | 10(76.9%) | 1(7.7%) | 1(7.7%) | 1(7.7%) | 0 | 0 | 0 |
+| **dev4** | 10(76.9%) | 1(7.7%) | 1(7.7%) | 1(7.7%) | 0 | 0 | 0 |
+| **dev5** | 10(66.7%) | 1(6.7%) | 3(20%) | 1(6.7%) | 0 | 0 | 0 |
+| **total** | 46(74.2%) | 4(6.5%) | 6(9.7%) | 4(6.5%) | 1(1.6%) | 0 | 1(1.6%) |      
+    
+  
+  
+  
+  
 
-section dev5
-                Time in draft(18 minutes) :  0, 18
-Time to review request(18 minutes) :  0, 18
-Time to review(8 hours 3 minutes) :  0, 483
-Time to approve(8 hours 7 minutes) :  0, 487
-Time to merge(36 hours 28 minutes) :  0, 2188
-
-section dev6
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(1 hour 59 minutes) :  0, 119
-Time to approve(2 hours 19 minutes) :  0, 139
-Time to merge(35 hours 34 minutes) :  0, 2134
-
-section dev7
-                Time in draft(6 minutes) :  0, 6
-Time to review request(6 minutes) :  0, 6
-Time to review(1 hour 30 minutes) :  0, 90
-Time to approve(8 hours) :  0, 480
-Time to merge(25 hours 1 minute) :  0, 1501
-
-section total
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(2 hours 16 minutes) :  0, 136
-Time to approve(5 hours 9 minutes) :  0, 309
-Time to merge(26 hours 13 minutes) :  0, 1573
-
-```
-
-```mermaid
-pie
-title Review time dev4 11/2023
-"0-2 hours(9)":9
-"2-4 hours(1)":1
-```
-
-```mermaid
-pie
-title Review time dev8 11/2023
-"0-2 hours(17)":17
-"2-4 hours(1)":1
-"4-6 hours(1)":1
-"6-9 hours(1)":1
-"9-12 hours(1)":1
-"18+ hours(1)":1
-```
-
-```mermaid
-pie
-title Review time dev5 11/2023
-"0-2 hours(6)":6
-"4-6 hours(1)":1
-"6-9 hours(3)":3
-"9-12 hours(1)":1
-"12-18 hours(1)":1
-```
-
-```mermaid
-pie
-title Review time dev6 11/2023
-"0-2 hours(12)":12
-"2-4 hours(4)":4
-```
-
-```mermaid
-pie
-title Review time dev7 11/2023
-"0-2 hours(9)":9
-"2-4 hours(2)":2
-"6-9 hours(1)":1
-```
-
-```mermaid
-pie
-title Review time total 11/2023
-"0-2 hours(53)":53
-"2-4 hours(8)":8
-"4-6 hours(2)":2
-"6-9 hours(5)":5
-"9-12 hours(2)":2
-"12-18 hours(1)":1
-"18+ hours(2)":2
-```
-
-### Workload stats 11/2023
-
+### Contribution stats 11/2024
 **Reviews conducted** - number of reviews conducted. 1 PR may have only single review.
-**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
-| user | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments | Reviews conducted |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 11 | 9 | +2878/-1919 | 4/3/2/1/1 | 58 | 10 |
-| **dev8** | 23 | 23 | +2535/-2379 | 16/4/1/0/2 | 5 | 24 |
-| **dev5** | 13 | 12 | +1283/-627 | 10/0/2/1/0 | 10 | 25 |
-| **dev6** | 19 | 17 | +2294/-1668 | 11/5/0/1/2 | 42 | 21 |
-| **dev7** | 13 | 13 | +1568/-800 | 8/2/1/1/1 | 70 | 8 |
-| **total** | 81 | 74 | +18759/-7452 | 50/14/6/4/7 | 190 | 76 |
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.
+| user | Total opened PRs | Total merged PRs | Total reverted PRs | PRs w/o review | PRs w/o approval | Additions / Deletions | PR size: xs/s/m/l/xl |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 4 | 4 | 0 | 1 | 0 | +415/-89 | 1/3/0/0/0 |
+| **dev2** | 17 | 17 | 0 | 0 | 0 | +3253/-2378 | 7/4/3/2/1 |
+| **dev3** | 13 | 13 | 0 | 0 | 0 | +1713/-1742 | 4/6/1/2/0 |
+| **dev4** | 14 | 13 | 0 | 1 | 1 | +1116/-1032 | 10/2/1/0/1 |
+| **dev5** | 15 | 15 | 0 | 0 | 0 | +1048/-341 | 9/3/3/0/0 |
+| **total** | 63 | 62 | 0 | 2 | 1 | +7545/-5582 | 31/18/8/4/2 |      
+    
 
-### Pull request quality 11/2023
 
+### Pull request quality 11/2024
 **Agreed** - discussions with at least 1 reaction :+1:.
 **Disagreed** - discussions with at least 1 reaction :-1:.
 | user | Total merged PRs | Changes requested received | Agreed / Disagreed / Total discussions received | Comments received |
 | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 9 | 5 | 18 / 2 / 21 | 30 |
-| **dev8** | 23 | 0 | 3 / 2 / 3 | 3 |
-| **dev5** | 12 | 1 | 2 / 0 / 2 | 4 |
-| **dev6** | 17 | 4 | 18 / 4 / 21 | 22 |
-| **dev7** | 13 | 4 | 28 / 5 / 31 | 34 |
-| **total** | 74 | 14 | 71 / 13 / 80 | 95 |
+| **dev1** | 4 | 1 | 0 / 0 / 4 | 8 |
+| **dev2** | 17 | 7 | 0 / 0 / 23 | 36 |
+| **dev3** | 13 | 5 | 0 / 0 / 19 | 24 |
+| **dev4** | 13 | 1 | 0 / 0 / 7 | 9 |
+| **dev5** | 15 | 6 | 0 / 0 / 14 | 23 |
+| **total** | 62 | 20 | 0 / 0 / 67 | 100 |      
+    
 
-```mermaid
-pie
-title Discussion's types dev4 11/2023
-"Performance(2)":2
-"Formatting(3)":3
-"Bug(1)":1
-"Naming Convention(1)":1
-```
 
-```mermaid
-pie
-title Discussion's types dev8 11/2023
-"Bug(1)":1
-```
 
-```mermaid
-pie
-title Discussion's types dev5 11/2023
-"Formatting(1)":1
-```
-
-```mermaid
-pie
-title Discussion's types dev6 11/2023
-"Overengineering(1)":1
-"Naming Convention(1)":1
-"Performance(1)":1
-"Bug(1)":1
-```
-
-```mermaid
-pie
-title Discussion's types dev7 11/2023
-"Naming Convention(1)":1
-"Formatting(3)":3
-"Bug(3)":3
-"Overengineering(1)":1
-"Performance(1)":1
-```
-
-```mermaid
-pie
-title Discussion's types total 11/2023
-"Performance(4)":4
-"Formatting(7)":7
-"Bug(6)":6
-"Naming Convention(3)":3
-"Overengineering(3)":3
-```
-
-### Code review engagement 11/2023
-
-**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+### Code review engagement 11/2024
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
 **Changes requested / Comments / Approvals** - number of reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.
 **Agreed** - discussions with at least 1 reaction :+1:.
 **Disagreed** - discussions with at least 1 reaction :-1:.
-| user | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved | Review requests conducted |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 9 | 5 / 2 / 5 | 5 | 6/3/0/0/1 | 0 / 5 / 6 | 67 |
-| **dev8** | 23 | 44 / 6 / 50 | 63 | 12/4/2/3/3 | 11 / 4 / 24 | 52 |
-| **dev5** | 12 | 18 / 5 / 21 | 22 | 16/5/1/1/2 | 3 / 3 / 22 | 64 |
-| **dev6** | 17 | 1 / 0 / 1 | 1 | 16/1/2/1/1 | 0 / 1 / 21 | 60 |
-| **dev7** | 13 | 2 / 0 / 2 | 2 | 3/4/1/0/0 | 0 / 1 / 8 | 63 |
-| **total** | 74 | 71 / 13 / 80 | 95 | 50/14/6/4/7 | 14 / 12 / 75 | 306 |
+| user | Reviews conducted | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 19 | 0 / 0 / 39 | 64 | 6/7/3/3/0 | 12 / 3 / 18 |
+| **dev2** | 19 | 0 / 0 / 12 | 17 | 11/5/2/0/1 | 5 / 1 / 19 |
+| **dev3** | 12 | 0 / 0 / 2 | 3 | 9/2/1/0/0 | 0 / 1 / 12 |
+| **dev4** | 18 | 0 / 0 / 11 | 13 | 8/6/2/1/1 | 4 / 0 / 18 |
+| **dev5** | 2 | 0 / 0 / 0 | 0 | 2/0/0/0/0 | 0 / 0 / 2 |
+| **total** | 62 | 0 / 0 / 67 | 100 | 31/18/8/4/2 | 20 / 9 / 62 |      
+    
+
+### Review Response Time(75th percentile) 11/2024
+**Time from re-request to response** - time from a review re-request to the response. Multiple re-requests and responses can occur in a single pull request
+| user | Review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 58 | 19 | 2 hours 26 minutes | 1 hour 29 minutes | 3 hours 46 minutes |
+| **dev2** | 45 | 19 | 3 hours 29 minutes | 3 hours 25 minutes | 3 hours 7 minutes |
+| **dev3** | 49 | 12 | 1 hour 40 minutes | 1 hour 36 minutes |  |
+| **dev4** | 49 | 18 | 1 hour 6 minutes | 44 minutes |  |
+| **dev5** | 47 | 2 | 1 hour 25 minutes | 1 hour 20 minutes |  |
+| **total** | 253 | 62 | 3 hours 13 minutes | 1 hour 49 minutes | 6 hours 55 minutes |      
+    
+    
+
+    
+  
+
+### Pull requests timeline(75th percentile) 10/2024
+**Time to review** - time from PR creation to first review. 
+**Time to approve** - time from PR creation to first approval without requested changes. 
+**Time to merge** - time from PR creation to merge.
+| user | Time in draft | Time to review request | Time to review | Time to Review After Re-request | Time to approve | Time to merge | Total merged PRs |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 7 minutes | 7 minutes | 4 hours 15 minutes |  | 4 hours 15 minutes | 16 hours 11 minutes | 9 |
+| **dev2** | 11 minutes | 11 minutes | 5 hours 31 minutes |  | 6 hours 54 minutes | 11 hours 52 minutes | 14 |
+| **dev3** | 26 minutes | 26 minutes | 5 hours 31 minutes |  | 14 hours 44 minutes | 22 hours 40 minutes | 9 |
+| **dev4** | 6 minutes | 6 minutes | 2 hours 8 minutes |  | 2 hours 8 minutes | 17 hours 36 minutes | 4 |
+| **dev5** | 6 minutes | 6 minutes | 5 hours 55 minutes | 10 hours 12 minutes | 11 hours 8 minutes | 44 hours 47 minutes | 11 |
+| **total** | 8 minutes | 8 minutes | 5 hours 21 minutes | 9 hours 22 minutes | 8 hours 29 minutes | 22 hours 18 minutes | 48 |      
+    
+
+  
+### Review time 10/2024
+
+| users | 0-2h | 2-4h | 4-8h | 8-12h | 12-16h | 16-24h | 24+h |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 3(33.3%) | 3(33.3%) | 3(33.3%) | 0 | 0 | 0 | 0 |
+| **dev2** | 9(64.3%) | 1(7.1%) | 2(14.3%) | 1(7.1%) | 0 | 0 | 1(7.1%) |
+| **dev3** | 1(11.1%) | 2(22.2%) | 4(44.4%) | 1(11.1%) | 0 | 1(11.1%) | 0 |
+| **dev4** | 2(50%) | 1(25%) | 1(25%) | 0 | 0 | 0 | 0 |
+| **dev5** | 5(38.5%) | 3(23.1%) | 3(23.1%) | 2(15.4%) | 0 | 0 | 0 |
+| **total** | 21(42%) | 10(20%) | 13(26%) | 4(8%) | 0 | 1(2%) | 1(2%) |      
+    
+  
+  
+  
+  
+
+### Contribution stats 10/2024
+**Reviews conducted** - number of reviews conducted. 1 PR may have only single review.
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.
+| user | Total opened PRs | Total merged PRs | Total reverted PRs | PRs w/o review | PRs w/o approval | Additions / Deletions | PR size: xs/s/m/l/xl |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 9 | 9 | 0 | 0 | 0 | +424/-499 | 7/0/2/0/0 |
+| **dev2** | 14 | 14 | 0 | 1 | 1 | +952/-531 | 8/3/3/0/0 |
+| **dev3** | 9 | 9 | 0 | 0 | 0 | +489/-1576 | 4/3/2/0/0 |
+| **dev4** | 4 | 4 | 0 | 0 | 0 | +181/-226 | 3/1/0/0/0 |
+| **dev5** | 14 | 11 | 0 | 1 | 2 | +1502/-314 | 8/3/1/2/0 |
+| **total** | 51 | 48 | 0 | 2 | 3 | +3581/-3155 | 31/10/8/2/0 |      
+    
+
+
+### Pull request quality 10/2024
+**Agreed** - discussions with at least 1 reaction :+1:.
+**Disagreed** - discussions with at least 1 reaction :-1:.
+| user | Total merged PRs | Changes requested received | Agreed / Disagreed / Total discussions received | Comments received |
+| :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 9 | 2 | 0 / 0 / 2 | 2 |
+| **dev2** | 14 | 4 | 0 / 0 / 9 | 15 |
+| **dev3** | 9 | 5 | 0 / 0 / 20 | 23 |
+| **dev4** | 4 | 1 | 0 / 0 / 0 | 1 |
+| **dev5** | 11 | 4 | 0 / 0 / 10 | 13 |
+| **total** | 48 | 16 | 0 / 0 / 41 | 54 |      
+    
+
+
+
+### Code review engagement 10/2024
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+**Changes requested / Comments / Approvals** - number of reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.
+**Agreed** - discussions with at least 1 reaction :+1:.
+**Disagreed** - discussions with at least 1 reaction :-1:.
+| user | Reviews conducted | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 20 | 0 / 0 / 24 | 33 | 12/5/3/0/0 | 9 / 5 / 18 |
+| **dev2** | 13 | 0 / 0 / 7 | 10 | 7/4/2/0/0 | 5 / 2 / 13 |
+| **dev3** | 8 | 0 / 0 / 1 | 1 | 6/1/1/0/0 | 0 / 1 / 7 |
+| **dev4** | 11 | 0 / 0 / 6 | 7 | 6/2/2/1/0 | 3 / 0 / 11 |
+| **dev5** | 4 | 0 / 0 / 3 | 3 | 3/0/1/0/0 | 0 / 1 / 3 |
+| **total** | 50 | 0 / 0 / 41 | 54 | 31/10/8/2/0 | 16 / 9 / 49 |      
+    
+
+### Review Response Time(75th percentile) 10/2024
+**Time from re-request to response** - time from a review re-request to the response. Multiple re-requests and responses can occur in a single pull request
+| user | Review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 41 | 20 | 5 hours 21 minutes | 4 hours 27 minutes | 7 hours 26 minutes |
+| **dev2** | 35 | 13 | 3 hours 41 minutes | 2 hours 8 minutes | 2 hours 16 minutes |
+| **dev3** | 41 | 8 | 5 hours 51 minutes | 6 hours |  |
+| **dev4** | 46 | 11 | 48 minutes | 29 minutes |  |
+| **dev5** | 36 | 4 | 5 hours 35 minutes | 6 hours 21 minutes |  |
+| **total** | 199 | 50 | 5 hours 21 minutes | 5 hours 8 minutes | 9 hours 22 minutes |      
+    
+    
+
+
+
+    
+  
 
 ### Pull requests timeline(75th percentile) total
-
-**Time to review** - time from PR creation to first review.
-**Time to approve** - time from PR creation to first approval without requested changes.
+**Time to review** - time from PR creation to first review. 
+**Time to approve** - time from PR creation to first approval without requested changes. 
 **Time to merge** - time from PR creation to merge.
-| user | Time in draft | Time to review request | Time to review | Time to approve | Time to merge | Total merged PRs |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 9 minutes | 8 minutes | 3 hours 1 minute | 7 hours 34 minutes | 16 hours 58 minutes | 38 |
-| **dev8** | 7 minutes | 7 minutes | 2 hours 29 minutes | 2 hours 27 minutes | 11 hours 6 minutes | 42 |
-| **dev5** | 16 minutes | 16 minutes | 8 hours 5 minutes | 9 hours 51 minutes | 42 hours 48 minutes | 14 |
-| **dev6** | 7 minutes | 7 minutes | 2 hours 14 minutes | 2 hours 59 minutes | 37 hours 1 minute | 23 |
-| **dev7** | 7 minutes | 7 minutes | 2 hours 15 minutes | 9 hours 19 minutes | 28 hours 44 minutes | 22 |
-| **total** | 8 minutes | 7 minutes | 3 hours 8 minutes | 5 hours 45 minutes | 25 hours 47 minutes | 139 |
+| user | Time in draft | Time to review request | Time to review | Time to Review After Re-request | Time to approve | Time to merge | Total merged PRs |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 6 minutes | 6 minutes | 2 hours 37 minutes |  | 3 hours 44 minutes | 10 hours 1 minute | 28 |
+| **dev2** | 12 minutes | 13 minutes | 5 hours 26 minutes | 7 hours 10 minutes | 7 hours 38 minutes | 15 hours 20 minutes | 54 |
+| **dev3** | 26 minutes | 26 minutes | 4 hours 17 minutes |  | 10 hours 22 minutes | 23 hours 15 minutes | 32 |
+| **dev4** | 11 minutes | 12 minutes | 2 hours 5 minutes | 2 hours 53 minutes | 4 hours 56 minutes | 22 hours 27 minutes | 34 |
+| **dev5** | 8 minutes | 7 minutes | 3 hours 26 minutes | 7 hours 13 minutes | 13 hours 4 minutes | 37 hours 53 minutes | 43 |
+| **total** | 10 minutes | 10 minutes | 3 hours 48 minutes | 6 hours 21 minutes | 8 hours 33 minutes | 23 hours 11 minutes | 193 |      
+    
 
-```mermaid
-gantt
-title Pull requests timeline(75th percentile) total / minutes
-dateFormat X
-axisFormat %s
-section dev4
-                Time in draft(9 minutes) :  0, 9
-Time to review request(8 minutes) :  0, 8
-Time to review(3 hours 1 minute) :  0, 181
-Time to approve(7 hours 34 minutes) :  0, 454
-Time to merge(16 hours 58 minutes) :  0, 1018
+  
+### Review time total
 
-section dev8
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(2 hours 29 minutes) :  0, 149
-Time to approve(2 hours 27 minutes) :  0, 147
-Time to merge(11 hours 6 minutes) :  0, 666
+| users | 0-2h | 2-4h | 4-8h | 8-12h | 12-16h | 16-24h | 24+h |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 18(64.3%) | 5(17.9%) | 3(10.7%) | 1(3.6%) | 0 | 0 | 1(3.6%) |
+| **dev2** | 38(70.4%) | 1(1.9%) | 7(13%) | 5(9.3%) | 1(1.9%) | 0 | 2(3.7%) |
+| **dev3** | 17(53.1%) | 5(15.6%) | 7(21.9%) | 2(6.3%) | 0 | 1(3.1%) | 0 |
+| **dev4** | 24(70.6%) | 2(5.9%) | 6(17.6%) | 1(2.9%) | 0 | 1(2.9%) | 0 |
+| **dev5** | 28(62.2%) | 6(13.3%) | 7(15.6%) | 4(8.9%) | 0 | 0 | 0 |
+| **total** | 127(65.1%) | 19(9.7%) | 30(15.4%) | 13(6.7%) | 1(0.5%) | 2(1%) | 3(1.5%) |      
+    
+  
+  
+  
+  
 
-section dev5
-                Time in draft(16 minutes) :  0, 16
-Time to review request(16 minutes) :  0, 16
-Time to review(8 hours 5 minutes) :  0, 485
-Time to approve(9 hours 51 minutes) :  0, 591
-Time to merge(42 hours 48 minutes) :  0, 2568
-
-section dev6
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(2 hours 14 minutes) :  0, 134
-Time to approve(2 hours 59 minutes) :  0, 179
-Time to merge(37 hours 1 minute) :  0, 2221
-
-section dev7
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(2 hours 15 minutes) :  0, 135
-Time to approve(9 hours 19 minutes) :  0, 559
-Time to merge(28 hours 44 minutes) :  0, 1724
-
-section total
-                Time in draft(8 minutes) :  0, 8
-Time to review request(7 minutes) :  0, 7
-Time to review(3 hours 8 minutes) :  0, 188
-Time to approve(5 hours 45 minutes) :  0, 345
-Time to merge(25 hours 47 minutes) :  0, 1547
-
-```
-
-```mermaid
-pie
-title Review time dev4 total
-"0-2 hours(24)":24
-"2-4 hours(6)":6
-"4-6 hours(4)":4
-"9-12 hours(3)":3
-"12-18 hours(1)":1
-```
-
-```mermaid
-pie
-title Review time dev8 total
-"0-2 hours(28)":28
-"2-4 hours(4)":4
-"4-6 hours(3)":3
-"6-9 hours(1)":1
-"9-12 hours(1)":1
-"12-18 hours(2)":2
-"18+ hours(1)":1
-```
-
-```mermaid
-pie
-title Review time dev5 total
-"0-2 hours(7)":7
-"4-6 hours(1)":1
-"6-9 hours(3)":3
-"9-12 hours(1)":1
-"12-18 hours(2)":2
-```
-
-```mermaid
-pie
-title Review time dev6 total
-"0-2 hours(15)":15
-"2-4 hours(5)":5
-"4-6 hours(2)":2
-```
-
-```mermaid
-pie
-title Review time dev7 total
-"0-2 hours(15)":15
-"2-4 hours(2)":2
-"4-6 hours(2)":2
-"6-9 hours(1)":1
-"18+ hours(1)":1
-```
-
-```mermaid
-pie
-title Review time total total
-"0-2 hours(89)":89
-"2-4 hours(17)":17
-"4-6 hours(12)":12
-"6-9 hours(5)":5
-"9-12 hours(5)":5
-"12-18 hours(5)":5
-"18+ hours(3)":3
-```
-
-### Workload stats total
-
+### Contribution stats total
 **Reviews conducted** - number of reviews conducted. 1 PR may have only single review.
-**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
-| user | Total opened PRs | Total merged PRs | Additions/Deletions | PR size: xs/s/m/l/xl | Total comments | Reviews conducted |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 43 | 38 | +5306/-8705 | 24/8/6/1/4 | 102 | 22 |
-| **dev8** | 43 | 42 | +3489/-4546 | 27/10/2/2/2 | 11 | 52 |
-| **dev5** | 15 | 14 | +1298/-630 | 12/0/2/1/0 | 11 | 38 |
-| **dev6** | 25 | 23 | +3458/-2172 | 14/6/1/1/3 | 70 | 25 |
-| **dev7** | 22 | 22 | +7121/-5506 | 14/3/2/1/2 | 92 | 19 |
-| **total** | 150 | 139 | +28873/-21618 | 92/27/13/6/12 | 291 | 139 |
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+**Total reverted PRs** - The number of reverted PRs based on the branch name pattern `/^revert-d+/`. This pattern is used for reverts made via GitHub.
+| user | Total opened PRs | Total merged PRs | Total reverted PRs | PRs w/o review | PRs w/o approval | Additions / Deletions | PR size: xs/s/m/l/xl |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 28 | 28 | 0 | 2 | 1 | +10155/-8805 | 19/5/2/1/1 |
+| **dev2** | 55 | 54 | 2 | 4 | 4 | +5563/-4351 | 34/9/7/4/1 |
+| **dev3** | 32 | 32 | 0 | 0 | 0 | +3119/-3535 | 13/12/5/2/0 |
+| **dev4** | 35 | 34 | 0 | 1 | 1 | +2888/-2001 | 23/6/4/1/1 |
+| **dev5** | 46 | 43 | 1 | 5 | 5 | +6420/-1985 | 22/11/8/4/1 |
+| **total** | 200 | 193 | 3 | 14 | 13 | +28185/-20708 | 115/43/26/12/4 |      
+    
+
 
 ### Pull request quality total
-
 **Agreed** - discussions with at least 1 reaction :+1:.
 **Disagreed** - discussions with at least 1 reaction :-1:.
 | user | Total merged PRs | Changes requested received | Agreed / Disagreed / Total discussions received | Comments received |
 | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 38 | 10 | 30 / 3 / 33 | 52 |
-| **dev8** | 42 | 1 | 5 / 2 / 5 | 6 |
-| **dev5** | 14 | 1 | 3 / 1 / 3 | 5 |
-| **dev6** | 23 | 5 | 31 / 6 / 36 | 38 |
-| **dev7** | 22 | 6 | 36 / 6 / 41 | 46 |
-| **total** | 139 | 23 | 107 / 18 / 120 | 149 |
+| **dev1** | 28 | 5 | 2 / 2 / 18 | 28 |
+| **dev2** | 54 | 13 | 3 / 6 / 52 | 75 |
+| **dev3** | 32 | 14 | 6 / 0 / 69 | 95 |
+| **dev4** | 34 | 7 | 9 / 4 / 75 | 92 |
+| **dev5** | 43 | 14 | 9 / 3 / 75 | 99 |
+| **total** | 193 | 53 | 29 / 15 / 289 | 389 |      
+    
 
-```mermaid
-pie
-title Discussion's types dev4 total
-"Bug(2)":2
-"Performance(2)":2
-"Formatting(3)":3
-"Naming Convention(1)":1
-```
+### Discussion's types total
 
-```mermaid
-pie
-title Discussion's types dev8 total
-"Bug(2)":2
-```
+| users | imports between modules | browser support | Error handling | locale value getter | array performance | misprint | redux selectors |
+| :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 1(33.3%) | 1(33.3%) | 1(33.3%) | 0 | 0 | 0 | 0 |
+| **dev4** | 7(41.2%) | 4(23.5%) | 2(11.8%) | 2(11.8%) | 2(11.8%) | 0 | 0 |
+| **dev5** | 1(11.1%) | 2(22.2%) | 3(33.3%) | 0 | 0 | 2(22.2%) | 1(11.1%) |
+| **total** | 9(31%) | 7(24.1%) | 6(20.7%) | 2(6.9%) | 2(6.9%) | 2(6.9%) | 1(3.4%) |      
+    
 
-```mermaid
-pie
-title Discussion's types dev5 total
-"Formatting(1)":1
-```
-
-```mermaid
-pie
-title Discussion's types dev6 total
-"Performance(2)":2
-"Bug(2)":2
-"Overengineering(1)":1
-"Naming Convention(1)":1
-```
-
-```mermaid
-pie
-title Discussion's types dev7 total
-"Bug(5)":5
-"Formatting(5)":5
-"Performance(2)":2
-"Naming Convention(1)":1
-"Overengineering(1)":1
-```
-
-```mermaid
-pie
-title Discussion's types total total
-"Bug(11)":11
-"Performance(6)":6
-"Formatting(9)":9
-"Naming Convention(3)":3
-"Overengineering(3)":3
-```
 
 ### Code review engagement total
-
-**PR Size** - determined using the formula: `additions + deletions * 0.5`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
+**PR Size** - determined using the formula: `additions + deletions * 0.2`. Based on this calculation: 0-50: xs, 51-200: s, 201-400: m, 401-700: l, 701+: xl
 **Changes requested / Comments / Approvals** - number of reviews conducted by user. For a single pull request, only one review of each status will be counted for a user.
 **Agreed** - discussions with at least 1 reaction :+1:.
 **Disagreed** - discussions with at least 1 reaction :-1:.
-| user | Total merged PRs | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved | Review requests conducted |
-| :------: | :------: | :------: | :------: | :------: | :------: | :------: |
-| **dev4** | 38 | 9 / 2 / 9 | 9 | 13/6/1/1/1 | 0 / 6 / 18 | 104 |
-| **dev8** | 42 | 71 / 10 / 81 | 107 | 26/9/6/3/8 | 19 / 11 / 52 | 101 |
-| **dev5** | 14 | 22 / 5 / 25 | 27 | 23/7/2/3/3 | 4 / 3 / 35 | 131 |
-| **dev6** | 23 | 2 / 1 / 2 | 2 | 20/1/2/1/1 | 0 / 2 / 25 | 123 |
-| **dev7** | 22 | 2 / 0 / 2 | 2 | 11/6/2/0/0 | 0 / 1 / 19 | 122 |
-| **total** | 139 | 107 / 18 / 120 | 149 | 92/27/13/6/12 | 23 / 21 / 138 | 581 |
+| user | Reviews conducted | Agreed / Disagreed / Total discussions conducted | Comments conducted | PR size: xs/s/m/l/xl | Changes requested / Commented / Approved |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 64 | 0 / 0 / 109 | 161 | 26/18/13/6/1 | 29 / 18 / 60 |
+| **dev2** | 60 | 0 / 0 / 30 | 39 | 34/15/9/1/1 | 18 / 3 / 60 |
+| **dev3** | 28 | 0 / 0 / 4 | 5 | 21/4/2/0/1 | 0 / 3 / 27 |
+| **dev4** | 49 | 0 / 0 / 19 | 22 | 30/10/5/3/1 | 8 / 0 / 49 |
+| **dev5** | 14 | 0 / 0 / 7 | 8 | 11/1/2/0/0 | 2 / 1 / 13 |
+| **total** | 195 | 29 / 15 / 289 | 389 | 115/43/26/12/4 | 53 / 57 / 194 |      
+    
 
+### Review Response Time(75th percentile) total
+**Time from re-request to response** - time from a review re-request to the response. Multiple re-requests and responses can occur in a single pull request
+| user | Review requests conducted | Reviews conducted | Time from opening to response | Time from initial request to response | Time from re-request to response |
+| :------: | :------: | :------: | :------: | :------: | :------: |
+| **dev1** | 168 | 64 | 5 hours 39 minutes | 4 hours 27 minutes | 6 hours 51 minutes |
+| **dev2** | 139 | 60 | 4 hours 10 minutes | 4 hours 3 minutes | 3 hours 11 minutes |
+| **dev3** | 164 | 28 | 4 hours 56 minutes | 4 hours 22 minutes |  |
+| **dev4** | 159 | 49 | 2 hours 2 minutes | 1 hour 19 minutes | 10 hours 46 minutes |
+| **dev5** | 150 | 14 | 4 hours 45 minutes | 4 hours 59 minutes |  |
+| **total** | 792 | 195 | 5 hours 20 minutes | 4 hours 4 minutes | 6 hours 55 minutes |      
+    
+    
+  
+$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
 ```mermaid
-gantt
-title Pull request's retrospective timeline(75th percentile) dev4 / minutes
-dateFormat X
-axisFormat %s
-section 12/2023
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(4 hours 12 minutes) :  0, 252
-Time to approve(7 hours 32 minutes) :  0, 452
-Time to merge(15 hours 31 minutes) :  0, 931
-
-section 11/2023
-                Time in draft(17 minutes) :  0, 17
-Time to review request(10 minutes) :  0, 10
-Time to review(55 minutes) :  0, 55
-Time to approve(8 hours 4 minutes) :  0, 484
-Time to merge(17 hours 1 minute) :  0, 1021
-
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "orange, violet, mediumblue, dimgrey, firebrick, gold, turquoise, chartreuse, blueviolet"
+---
+xychart-beta
+    title "Pull request's retrospective timeline(75th percentile) dev1"
+    x-axis ["10/24", "11/24", "12/24"]
+    y-axis "hours" 0 --> 17
+    line [4.45, 1.48, 7.65]
+line [5.35, 2.43, 6.65]
+line [7.43, 3.77, 5.3]
+line [0.12, 0.07, 0.1]
+line [0.12, 0.07, 0.1]
+line [4.25, 1.67, 0.67]
+line [0, 0, 0]
+line [4.25, 1.7, 3.45]
+line [16.18, 10.02, 8.35]
 ```
 
+$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
 ```mermaid
-gantt
-title Pull request's retrospective timeline(75th percentile) dev8 / minutes
-dateFormat X
-axisFormat %s
-section 12/2023
-                Time in draft(8 minutes) :  0, 8
-Time to review request(7 minutes) :  0, 7
-Time to review(3 hours 14 minutes) :  0, 194
-Time to approve(3 hours 14 minutes) :  0, 194
-Time to merge(16 hours 23 minutes) :  0, 983
-
-section 11/2023
-                Time in draft(6 minutes) :  0, 6
-Time to review request(6 minutes) :  0, 6
-Time to review(1 hour 10 minutes) :  0, 70
-Time to approve(1 hour 30 minutes) :  0, 90
-Time to merge(3 hours 29 minutes) :  0, 209
-
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "blueviolet, darkblue, crimson, firebrick, gold, chartreuse"
+---
+xychart-beta
+    title "Pull request's retrospective contribution dev1"
+    x-axis ["11/23", "7/24", "10/24", "11/24", "12/24"]
+    y-axis "amount" 0 --> 46
+    line [0, 0, 24, 39, 46]
+line [0, 0, 2, 4, 12]
+line [0, 0, 9, 12, 8]
+line [0, 0, 2, 1, 2]
+line [0, 0, 20, 19, 25]
+line [0, 0, 9, 4, 15]
 ```
 
+$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
 ```mermaid
-gantt
-title Pull request's retrospective timeline(75th percentile) dev5 / minutes
-dateFormat X
-axisFormat %s
-section 12/2023
-                Time in draft(6 minutes) :  0, 6
-Time to review request(6 minutes) :  0, 6
-Time to review(7 hours 43 minutes) :  0, 463
-Time to approve(12 hours 13 minutes) :  0, 733
-Time to merge(50 hours 11 minutes) :  0, 3011
-
-section 11/2023
-                Time in draft(18 minutes) :  0, 18
-Time to review request(18 minutes) :  0, 18
-Time to review(8 hours 3 minutes) :  0, 483
-Time to approve(8 hours 7 minutes) :  0, 487
-Time to merge(36 hours 28 minutes) :  0, 2188
-
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "orange, violet, mediumblue, dimgrey, firebrick, gold, turquoise, chartreuse, blueviolet"
+---
+xychart-beta
+    title "Pull request's retrospective timeline(75th percentile) dev2"
+    x-axis ["10/24", "11/24", "12/24"]
+    y-axis "hours" 0 --> 16
+    line [2.13, 3.42, 5.92]
+line [3.68, 3.48, 6.05]
+line [2.27, 3.12, 2.93]
+line [0.18, 0.75, 0.1]
+line [0.18, 0.75, 0.12]
+line [5.52, 1.27, 4.72]
+line [0, 4.83, 0]
+line [6.9, 6.02, 8.12]
+line [11.87, 15.88, 14.83]
 ```
 
+$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
 ```mermaid
-gantt
-title Pull request's retrospective timeline(75th percentile) dev6 / minutes
-dateFormat X
-axisFormat %s
-section 12/2023
-                Time in draft(29 minutes) :  0, 29
-Time to review request(29 minutes) :  0, 29
-Time to review(3 hours 48 minutes) :  0, 228
-Time to approve(3 hours 48 minutes) :  0, 228
-Time to merge(32 hours 29 minutes) :  0, 1949
-
-section 11/2023
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(1 hour 59 minutes) :  0, 119
-Time to approve(2 hours 19 minutes) :  0, 139
-Time to merge(35 hours 34 minutes) :  0, 2134
-
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "blueviolet, darkblue, crimson, firebrick, gold, chartreuse"
+---
+xychart-beta
+    title "Pull request's retrospective contribution dev2"
+    x-axis ["11/23", "7/24", "10/24", "11/24", "12/24"]
+    y-axis "amount" 0 --> 28
+    line [0, 0, 7, 12, 11]
+line [0, 0, 9, 23, 20]
+line [0, 0, 5, 5, 8]
+line [0, 0, 4, 7, 2]
+line [0, 0, 13, 19, 28]
+line [0, 0, 14, 17, 23]
 ```
 
+$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
 ```mermaid
-gantt
-title Pull request's retrospective timeline(75th percentile) dev7 / minutes
-dateFormat X
-axisFormat %s
-section 12/2023
-                Time in draft(13 minutes) :  0, 13
-Time to review request(13 minutes) :  0, 13
-Time to review(3 hours 50 minutes) :  0, 230
-Time to approve(9 hours 19 minutes) :  0, 559
-Time to merge(48 hours 18 minutes) :  0, 2898
-
-section 11/2023
-                Time in draft(6 minutes) :  0, 6
-Time to review request(6 minutes) :  0, 6
-Time to review(1 hour 30 minutes) :  0, 90
-Time to approve(8 hours) :  0, 480
-Time to merge(25 hours 1 minute) :  0, 1501
-
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "orange, violet, mediumblue, dimgrey, firebrick, gold, turquoise, chartreuse, blueviolet"
+---
+xychart-beta
+    title "Pull request's retrospective timeline(75th percentile) dev3"
+    x-axis ["10/24", "11/24", "12/24"]
+    y-axis "hours" 0 --> 24
+    line [6, 1.6, 4]
+line [5.85, 1.67, 4]
+line [0, 0, 0]
+line [0.43, 0.43, 0.1]
+line [0.43, 0.4, 0.1]
+line [5.52, 1.85, 2.43]
+line [0, 0, 0]
+line [14.73, 9.55, 8.8]
+line [22.67, 23.27, 21.12]
 ```
 
+$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
 ```mermaid
-gantt
-title Pull request's retrospective timeline(75th percentile) total / minutes
-dateFormat X
-axisFormat %s
-section 12/2023
-                Time in draft(8 minutes) :  0, 8
-Time to review request(8 minutes) :  0, 8
-Time to review(4 hours 21 minutes) :  0, 261
-Time to approve(6 hours 14 minutes) :  0, 374
-Time to merge(24 hours 52 minutes) :  0, 1492
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "blueviolet, darkblue, crimson, firebrick, gold, chartreuse"
+---
+xychart-beta
+    title "Pull request's retrospective contribution dev3"
+    x-axis ["11/23", "7/24", "10/24", "11/24", "12/24"]
+    y-axis "amount" 0 --> 30
+    line [0, 0, 1, 2, 1]
+line [0, 0, 20, 19, 30]
+line [0, 0, 0, 0, 0]
+line [0, 0, 5, 5, 4]
+line [0, 0, 8, 12, 8]
+line [0, 0, 9, 13, 10]
+```
 
-section 11/2023
-                Time in draft(7 minutes) :  0, 7
-Time to review request(7 minutes) :  0, 7
-Time to review(2 hours 16 minutes) :  0, 136
-Time to approve(5 hours 9 minutes) :  0, 309
-Time to merge(26 hours 13 minutes) :  0, 1573
+$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "orange, violet, mediumblue, dimgrey, firebrick, gold, turquoise, chartreuse, blueviolet"
+---
+xychart-beta
+    title "Pull request's retrospective timeline(75th percentile) dev4"
+    x-axis ["10/24", "11/24", "12/24"]
+    y-axis "hours" 0 --> 57
+    line [0.48, 0.73, 6.95]
+line [0.8, 1.1, 7.22]
+line [0, 0, 0]
+line [0.1, 0.17, 0.45]
+line [0.1, 0.2, 0.45]
+line [2.13, 1.15, 3.48]
+line [0, 0.95, 3.42]
+line [2.13, 1.15, 8.05]
+line [17.6, 9.28, 56.15]
+```
 
+$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "blueviolet, darkblue, crimson, firebrick, gold, chartreuse"
+---
+xychart-beta
+    title "Pull request's retrospective contribution dev4"
+    x-axis ["11/23", "7/24", "10/24", "11/24", "12/24"]
+    y-axis "amount" 0 --> 68
+    line [0, 0, 6, 11, 2]
+line [0, 0, 0, 7, 68]
+line [0, 0, 3, 4, 1]
+line [0, 0, 1, 1, 5]
+line [0, 0, 11, 18, 20]
+line [0, 0, 4, 13, 17]
+```
+
+$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "orange, violet, mediumblue, dimgrey, firebrick, gold, turquoise, chartreuse, blueviolet"
+---
+xychart-beta
+    title "Pull request's retrospective timeline(75th percentile) dev5"
+    x-axis ["10/24", "11/24", "12/24"]
+    y-axis "hours" 0 --> 45
+    line [6.35, 1.33, 3.77]
+line [5.58, 1.42, 3.85]
+line [0, 0, 0]
+line [0.1, 0.12, 0.25]
+line [0.1, 0.12, 0.15]
+line [5.92, 4.08, 1.13]
+line [10.2, 3.62, 5.48]
+line [11.13, 13.13, 12.03]
+line [44.78, 27.88, 36.52]
+```
+
+$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "blueviolet, darkblue, crimson, firebrick, gold, chartreuse"
+---
+xychart-beta
+    title "Pull request's retrospective contribution dev5"
+    x-axis ["11/23", "7/24", "10/24", "11/24", "12/24"]
+    y-axis "amount" 0 --> 51
+    line [0, 0, 3, 0, 4]
+line [0, 0, 10, 14, 51]
+line [0, 0, 0, 0, 2]
+line [0, 0, 4, 6, 4]
+line [0, 0, 4, 2, 8]
+line [0, 0, 11, 15, 17]
+```
+
+$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "orange, violet, mediumblue, dimgrey, firebrick, gold, turquoise, chartreuse, blueviolet"
+---
+xychart-beta
+    title "Pull request's retrospective timeline(75th percentile) total"
+    x-axis ["10/24", "11/24", "12/24"]
+    y-axis "hours" 0 --> 24
+    line [5.13, 1.82, 6.13]
+line [5.35, 3.22, 6.05]
+line [9.37, 6.92, 4.55]
+line [0.13, 0.25, 0.15]
+line [0.13, 0.25, 0.12]
+line [5.35, 1.98, 2.35]
+line [9.37, 3.62, 4.35]
+line [8.48, 7.83, 8.72]
+line [22.3, 23.8, 22.88]
+```
+
+$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+```mermaid
+---
+config:
+    xyChart:
+        width: 900
+        height: 600
+    themeVariables:
+        xyChart:
+            titleColor: "black"
+            plotColorPalette: "blueviolet, darkblue, crimson, firebrick, gold, chartreuse"
+---
+xychart-beta
+    title "Pull request's retrospective contribution total"
+    x-axis ["11/23", "7/24", "10/24", "11/24", "12/24"]
+    y-axis "amount" 0 --> 181
+    line [0, 0, 41, 67, 181]
+line [0, 0, 41, 67, 181]
+line [0, 0, 16, 20, 17]
+line [0, 0, 16, 20, 17]
+line [0, 0, 50, 62, 83]
+line [0, 0, 48, 62, 83]
 ```
