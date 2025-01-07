@@ -35,12 +35,12 @@ All metrics are presented in the form of tables, charts, and lists ([Report exam
 
 Displays the time from PR creation to each displayed status. Helps identify bottlenecks in the code review process. Use the `timeline` value in the `SHOW_STATS_TYPES` parameter.
 
-|   user    | Time in draft | Time to review request |   Time to review    |  Time to approve   |    Time to merge    | Total merged PRs |
-| :-------: | :-----------: | :--------------------: | :-----------------: | :----------------: | :-----------------: | :--------------: |
-| **dev1**  |  34 minutes   |       17 minutes       | 3 hours 34 minutes  | 7 hours 32 minutes | 14 hours 9 minutes  |        22        |
-| **dev2**  |  21 minutes   |       20 minutes       |       4 hours       |      4 hours       |  23 hours 1 minute  |        13        |
-| **dev3**  |  15 minutes   |       18 minutes       | 15 hours 16 minutes | 24 hours 7 minutes | 53 hours 43 minutes |        2         |
-| **total** |  27 minutes   |       18 minutes       | 4 hours 21 minutes  | 7 hours 36 minutes | 26 hours 14 minutes |        47        |
+|   user    | Time in draft | Time to review request |   Time to review   | Time to Review After Re-request |  Time to approve   |    Time to merge    | Total merged PRs |
+| :-------: | :-----------: | :--------------------: | :----------------: | :-----------------------------: | :----------------: | :-----------------: | :--------------: |
+| **dev1**  |   6 minutes   |       6 minutes        | 3 hours 27 minutes |       5 hours 17 minutes        | 4 hours 26 minutes | 17 hours 50 minutes |        29        |
+| **dev2**  |   9 minutes   |       9 minutes        | 4 hours 53 minutes |       7 hours 10 minutes        | 6 hours 36 minutes | 13 hours 21 minutes |        54        |
+| **dev3**  |  13 minutes   |       13 minutes       | 4 hours 12 minutes |       2 hours 21 minutes        | 4 hours 48 minutes | 22 hours 8 minutes  |        54        |
+| **total** |  10 minutes   |       10 minutes       | 4 hours 15 minutes |       4 hours 43 minutes        | 7 hours 21 minutes | 22 hours 36 minutes |       232        |
 
 ```mermaid
 gantt
@@ -144,7 +144,7 @@ Shows how quickly reviewers respond to review requests. Helps better understand 
 
 This section displays metric changes over time using graphs, helping to understand how metrics have evolved over extended periods. To enable these graphs, ensure that `PERIOD_SPLIT_UNIT` is set and that the collected data covers at least two time periods (e.g., quarters or months).
 
-$$\color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge\ \color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response$$
+$$\color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge\ \color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response$$
 
 ```mermaid
 ---
@@ -167,6 +167,7 @@ line [0.77, 0.65, 1.52, 2.35, 1.42, 2.52, 3.2, 2.13, 4.7, 2.87, 5.95, 4.75, 5.85
 line [2.28, 4.95, 4.1, 4.6, 4.07, 3.3, 6.82, 5.65, 6.72, 4.08, 6.77, 10.43, 7.18, 9.58, 6.9, 4.2, 7.13, 6.35, 8.05]
 line [21.52, 28.9, 23.47, 21.2, 23.63, 24.9, 20.72, 29.22, 26.07, 25.52, 22.33, 46.33, 23.43, 26.47, 17.22, 24.28, 21.32, 22.97, 21.95]
 line [0, 1.67, 2.62, 3.8, 2.33, 3.15, 4.8, 2.72, 4.9, 2.6, 5.55, 6.12, 5.75, 5.82, 2.98, 1.68, 2.95, 3.92, 5.6]
+line [0.41, 0.65, 1.57, 2.17, 1.11, 2.17, 3.22, 2.13, 4.13, 3.07, 5, 7.02, 4.03, 4.27, 2.62, 1.75, 1.28, 2.9, 3.35]
 line [0.5, 0.75, 2.07, 2.28, 1.4, 2.98, 5.17, 2.52, 4.93, 3.57, 6, 7.22, 6.33, 5.77, 3.62, 2.75, 3.28, 3.9, 5.35]
 line [0, 2.18, 0.92, 0.77, 5.47, 0.83, 4.85, 2.42, 4.28, 23.18, 0, 1.63, 1.98, 4.13, 1.32, 1.85, 1.63, 2.5, 6.72]
 ```
