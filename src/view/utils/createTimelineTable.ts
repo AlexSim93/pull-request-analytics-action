@@ -1,5 +1,6 @@
 import { Collection } from "../../converters/types";
 import {
+  timeAwaitingRepeatedReviewHeader,
   timeInDraftHeader,
   timeToApproveHeader,
   timeToMergeHeader,
@@ -28,6 +29,9 @@ export const createTimelineTable = (
           data[user]?.[date]?.[type]?.timeToReviewRequest || 0
         ),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToReview || 0),
+        formatMinutesDuration(
+          data[user]?.[date]?.[type]?.timeWaitingForRepeatedReview || 0
+        ),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToApprove || 0),
         formatMinutesDuration(data[user]?.[date]?.[type]?.timeToMerge || 0),
         data[user]?.[date]?.merged?.toString() || "0",
@@ -46,6 +50,7 @@ export const createTimelineTable = (
         timeInDraftHeader,
         timeToReviewRequestHeader,
         timeToReviewHeader,
+        timeAwaitingRepeatedReviewHeader,
         timeToApproveHeader,
         timeToMergeHeader,
         totalMergedPrsHeader,

@@ -2,6 +2,8 @@ export const timeToReviewRequestHeader = "Time to review request";
 export const timeInDraftHeader = "Time in draft";
 export const timeToReviewHeader = "Time to review";
 export const timeToApproveHeader = "Time to approve";
+export const timeAwaitingRepeatedReviewHeader =
+  "Time to Review After Re-request";
 export const timeToMergeHeader = "Time to merge";
 export const totalMergedPrsHeader = "Total merged PRs";
 export const totalOpenedPrsHeader = "Total opened PRs";

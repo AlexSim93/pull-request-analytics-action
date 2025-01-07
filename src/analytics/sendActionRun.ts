@@ -9,6 +9,8 @@ export const sendActionRun = () => {
           getMultipleValuesInput("GITHUB_OWNERS_REPOS")[0].split("/")[0]
       ),
       GITHUB_OWNERS_REPOS: getMultipleValuesInput("GITHUB_OWNERS_REPOS").length,
+      GITHUB_OWNER_FOR_ISSUE: getValueAsIs("GITHUB_OWNER_FOR_ISSUE")?.length,
+      GITHUB_REPO_FOR_ISSUE: getValueAsIs("GITHUB_REPO_FOR_ISSUE")?.length,
       ORGANIZATIONS: getMultipleValuesInput("ORGANIZATIONS").length,
       SHOW_STATS_TYPES: getMultipleValuesInput("SHOW_STATS_TYPES"),
       AMOUNT: getValueAsIs("AMOUNT"),

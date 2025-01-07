@@ -108,7 +108,7 @@ export const createOutput = async (
             },
           ]
         );
-        if (commentMarkdown === "") continue;
+        if (commentMarkdown === "" || dates.length < 3) continue;
         const comment = await createComment(issue.data.number, commentMarkdown);
         comments.push({ comment, title: date });
       }

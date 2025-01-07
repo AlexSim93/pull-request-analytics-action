@@ -33,6 +33,7 @@ export const createTimelineMonthsXYChart = (
                 "timeFromInitialRequestToResponse",
                 "timeFromOpenToResponse",
                 "timeFromRepeatedRequestToResponse",
+                "timeWaitingForRepeatedReview",
               ].map(
                 (key) =>
                   data[user]?.[date]?.[type]?.[
@@ -45,6 +46,7 @@ export const createTimelineMonthsXYChart = (
                       | "timeFromInitialRequestToResponse"
                       | "timeFromOpenToResponse"
                       | "timeFromRepeatedRequestToResponse"
+                      | "timeWaitingForRepeatedReview"
                   ] || 0
               )
             )
@@ -132,6 +134,21 @@ export const createTimelineMonthsXYChart = (
             (date) =>
               Math.round(
                 ((data[user]?.[date]?.[type]?.timeToReview || 0) / 60) * 100
+              ) / 100
+          )
+          .reverse(),
+      },
+      {
+        color: "turquoise",
+        name: "Time\\ To\\ Review\\ After\\ Rerequest",
+        values: dates
+          .map(
+            (date) =>
+              Math.round(
+                ((data[user]?.[date]?.[type]?.timeWaitingForRepeatedReview ||
+                  0) /
+                  60) *
+                  100
               ) / 100
           )
           .reverse(),

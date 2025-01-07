@@ -1,1507 +1,3596 @@
 {
     "total": {
-        "3/2024": {
-            "reviewRequestsConducted": 39,
-            "opened": 10,
-            "closed": 10,
-            "merged": 10,
-            "comments": 1,
-            "totalReviewComments": 5,
-            "additions": 387,
-            "deletions": 299,
-            "prSizes": [
-                "xs",
-                "s",
-                "s",
-                "xs",
-                "xs",
-                "xs",
-                "s",
-                "s",
-                "xs",
-                "xs"
-            ],
-            "timeToReview": [
-                173,
-                5,
-                34,
-                228,
-                132,
-                344,
-                1445,
-                1453,
-                296,
-                4
-            ],
-            "timeToApprove": [
-                493,
-                5,
-                34,
-                228,
-                132,
-                540,
-                1445,
-                1453,
-                296,
-                4
-            ],
-            "timeToMerge": [
-                1740,
-                5,
-                104,
-                350,
-                211,
-                610,
-                4715,
-                3050,
-                1867,
-                20
-            ],
-            "timeToReviewRequest": [
-                5,
-                5,
-                30,
-                89,
-                5,
-                17,
-                80,
-                25,
-                20
-            ],
-            "timeInDraft": [
-                5,
-                5,
-                30,
-                89,
-                5,
-                17,
-                80,
-                25,
-                20
-            ],
-            "pullRequestsInfo": [
+        "total": {
+            "actionsTime": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
                 {
-                    "number": 4046,
-                    "link": "https://github.com/owner/repo/pull/1",
-                    "title": "PR Example",
-                    "comments": 1,
-                    "timeToReview": 173,
-                    "timeToApprove": 320,
-                    "timeToMerge": 1247
+                    "approved": 2
+                },
+                null,
+                {
+                    "merged": 4,
+                    "approved": 1,
+                    "changes_requested": 2,
+                    "opened": 2
                 },
                 {
-                    "number": 4055,
-                    "link": "https://github.com/owner/repo/pull/2",
-                    "title": "PR Example",
+                    "approved": 3,
+                    "merged": 2,
+                    "changes_requested": 3
+                },
+                {
+                    "opened": 2,
+                    "approved": 1
+                },
+                {
+                    "approved": 2
+                },
+                {
+                    "opened": 5,
+                    "approved": 2,
+                    "merged": 2
+                },
+                {
+                    "approved": 3,
+                    "merged": 3,
+                    "changes_requested": 1,
+                    "opened": 2
+                },
+                {
+                    "merged": 1,
+                    "changes_requested": 1,
+                    "opened": 2
+                },
+                {
+                    "opened": 1,
+                    "approved": 1
+                },
+                null,
+                {
+                    "merged": 1
+                }
+            ],
+            "reviewRequestsConducted": 55,
+            "opened": 14,
+            "closed": 14,
+            "merged": 13,
+            "comments": 9,
+            "totalReviewComments": 18,
+            "reverted": 1,
+            "additions": 2230,
+            "deletions": 4615,
+            "prSizes": [
+                "s",
+                "m",
+                "xl",
+                "s",
+                "l",
+                "l",
+                "s",
+                "xs",
+                "m",
+                "xs",
+                "s",
+                "xs",
+                "m",
+                "m"
+            ],
+            "timeToReview": [
+                1139,
+                1216,
+                374,
+                409,
+                647,
+                209,
+                71,
+                7,
+                31,
+                10,
+                211,
+                11,
+                51
+            ],
+            "timeToApprove": [
+                1139,
+                1216,
+                3159,
+                409,
+                647,
+                209,
+                71,
+                7,
+                923,
+                10,
+                381,
+                11,
+                151
+            ],
+            "timeToMerge": [
+                1448,
+                1829,
+                5721,
+                980,
+                1641,
+                453,
+                1574,
+                268,
+                2116,
+                10,
+                936,
+                239,
+                213
+            ],
+            "timeToReviewRequest": [
+                464,
+                20,
+                12,
+                5,
+                34,
+                225,
+                6,
+                6,
+                23,
+                6,
+                6,
+                6,
+                9,
+                38
+            ],
+            "timeInDraft": [
+                464,
+                20,
+                12,
+                5,
+                34,
+                225,
+                6,
+                6,
+                23,
+                6,
+                6,
+                6,
+                9,
+                38
+            ],
+            "unreviewed": 1,
+            "unapproved": 1,
+            "sizes": {
+                "s": {
+                    "timeToReview": [
+                        1139,
+                        409,
+                        71,
+                        10
+                    ],
+                    "timeToApprove": [
+                        1139,
+                        409,
+                        71,
+                        10
+                    ],
+                    "timeToMerge": [
+                        1448,
+                        980,
+                        1574,
+                        10
+                    ],
+                    "percentile": {
+                        "timeToReview": 409,
+                        "timeToApprove": 409,
+                        "timeToMerge": 1448
+                    },
+                    "median": {
+                        "timeToReview": 240,
+                        "timeToApprove": 240,
+                        "timeToMerge": 1214
+                    },
+                    "average": {
+                        "timeToReview": 408,
+                        "timeToApprove": 408,
+                        "timeToMerge": 1003
+                    }
+                },
+                "m": {
+                    "timeToReview": [
+                        1216,
+                        31,
+                        11,
+                        51
+                    ],
+                    "timeToApprove": [
+                        1216,
+                        923,
+                        11,
+                        151
+                    ],
+                    "timeToMerge": [
+                        1829,
+                        2116,
+                        239,
+                        213
+                    ],
+                    "percentile": {
+                        "timeToReview": 51,
+                        "timeToApprove": 923,
+                        "timeToMerge": 1829
+                    },
+                    "median": {
+                        "timeToReview": 41,
+                        "timeToApprove": 537,
+                        "timeToMerge": 1034
+                    },
+                    "average": {
+                        "timeToReview": 328,
+                        "timeToApprove": 576,
+                        "timeToMerge": 1100
+                    }
+                },
+                "xl": {
+                    "timeToReview": [
+                        374
+                    ],
+                    "timeToApprove": [
+                        3159
+                    ],
+                    "timeToMerge": [
+                        5721
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    },
+                    "average": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    }
+                },
+                "l": {
+                    "timeToReview": [
+                        647,
+                        209
+                    ],
+                    "timeToApprove": [
+                        647,
+                        209
+                    ],
+                    "timeToMerge": [
+                        1641,
+                        453
+                    ],
+                    "percentile": {
+                        "timeToReview": 428,
+                        "timeToApprove": 428,
+                        "timeToMerge": 1047
+                    },
+                    "median": {
+                        "timeToReview": 428,
+                        "timeToApprove": 428,
+                        "timeToMerge": 1047
+                    },
+                    "average": {
+                        "timeToReview": 428,
+                        "timeToApprove": 428,
+                        "timeToMerge": 1047
+                    }
+                },
+                "xs": {
+                    "timeToReview": [
+                        7,
+                        211
+                    ],
+                    "timeToApprove": [
+                        7,
+                        381
+                    ],
+                    "timeToMerge": [
+                        268,
+                        936
+                    ],
+                    "percentile": {
+                        "timeToReview": 109,
+                        "timeToApprove": 194,
+                        "timeToMerge": 602
+                    },
+                    "median": {
+                        "timeToReview": 109,
+                        "timeToApprove": 194,
+                        "timeToMerge": 602
+                    },
+                    "average": {
+                        "timeToReview": 109,
+                        "timeToApprove": 194,
+                        "timeToMerge": 602
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 0,
-                    "timeToReview": 5,
+                    "sizePoints": 117,
+                    "additions": 112,
+                    "deletions": 25,
+                    "timeToReview": 1139,
+                    "timeToApprove": 0,
+                    "timeToMerge": 309
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 2,
+                    "sizePoints": 251,
+                    "additions": 237,
+                    "deletions": 70,
+                    "timeToReview": 1216,
+                    "timeToApprove": 0,
+                    "timeToMerge": 613
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 714.4,
+                    "additions": 703,
+                    "deletions": 57,
+                    "timeToReview": 374,
+                    "timeToApprove": 2785,
+                    "timeToMerge": 2562
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 72.8,
+                    "additions": 56,
+                    "deletions": 84,
+                    "timeToReview": 409,
+                    "timeToApprove": 0,
+                    "timeToMerge": 571
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 602.8,
+                    "additions": 126,
+                    "deletions": 2384,
+                    "timeToReview": 647,
+                    "timeToApprove": 0,
+                    "timeToMerge": 994
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 411,
+                    "additions": 343,
+                    "deletions": 340,
+                    "timeToReview": 209,
+                    "timeToApprove": 0,
+                    "timeToMerge": 244
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 67.8,
+                    "additions": 67,
+                    "deletions": 4,
+                    "timeToReview": 71,
+                    "timeToApprove": 0,
+                    "timeToMerge": 1503
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 1.2,
+                    "additions": 1,
+                    "deletions": 1,
+                    "timeToReview": 7,
+                    "timeToApprove": 0,
+                    "timeToMerge": 261
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 6,
+                    "sizePoints": 229,
+                    "additions": 173,
+                    "deletions": 280,
+                    "timeToReview": 31,
+                    "timeToApprove": 892,
+                    "timeToMerge": 1193
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 6.6,
+                    "additions": 4,
+                    "deletions": 13,
+                    "timeToReview": 0,
                     "timeToApprove": 0,
                     "timeToMerge": 0
                 },
                 {
-                    "number": 4053,
-                    "link": "https://github.com/owner/repo/pull/3",
-                    "title": "PR Example",
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 0,
-                    "timeToReview": 34,
+                    "sizePoints": 98.4,
+                    "additions": 87,
+                    "deletions": 57,
+                    "timeToReview": 10,
                     "timeToApprove": 0,
-                    "timeToMerge": 70
+                    "timeToMerge": 0
                 },
                 {
-                    "number": 4049,
-                    "link": "https://github.com/owner/repo/pull/4",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 228,
-                    "timeToApprove": 0,
-                    "timeToMerge": 122
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 13.8,
+                    "additions": 13,
+                    "deletions": 4,
+                    "timeToReview": 211,
+                    "timeToApprove": 170,
+                    "timeToMerge": 555
                 },
                 {
-                    "number": 4051,
-                    "link": "https://github.com/owner/repo/pull/5",
-                    "title": "PR Example",
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 0,
-                    "timeToReview": 132,
+                    "sizePoints": 217.4,
+                    "additions": 20,
+                    "deletions": 987,
+                    "timeToReview": 11,
                     "timeToApprove": 0,
-                    "timeToMerge": 79
+                    "timeToMerge": 228
                 },
                 {
-                    "number": 4048,
-                    "link": "https://github.com/owner/repo/pull/6",
-                    "title": "PR Example",
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 2,
-                    "timeToReview": 344,
-                    "timeToApprove": 196,
-                    "timeToMerge": 70
-                },
-                {
-                    "number": 4029,
-                    "link": "https://github.com/owner/repo/pull/7",
-                    "title": "PR Example",
-                    "comments": 2,
-                    "timeToReview": 1445,
-                    "timeToApprove": 0,
-                    "timeToMerge": 3270
-                },
-                {
-                    "number": 4038,
-                    "link": "https://github.com/owner/repo/pull/8",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 1453,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1597
-                },
-                {
-                    "number": 4040,
-                    "link": "https://github.com/owner/repo/pull/9",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 296,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1571
-                },
-                {
-                    "number": 4045,
-                    "link": "https://github.com/owner/repo/pull/10",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 4,
-                    "timeToApprove": 0,
-                    "timeToMerge": 16
+                    "sizePoints": 349.8,
+                    "additions": 288,
+                    "deletions": 309,
+                    "timeToReview": 51,
+                    "timeToApprove": 100,
+                    "timeToMerge": 62
                 }
             ],
             "reviewsConducted": {
-                "dev1": {
-                    "commented": 1,
-                    "total": 2,
-                    "approved": 2
+                "dev4": {
+                    "approved": 4,
+                    "total": 4,
+                    "changes_requested": 1
                 },
                 "total": {
-                    "commented": 2,
-                    "total": 9,
-                    "approved": 9,
-                    "dismissed": 1
+                    "approved": 13,
+                    "total": 13,
+                    "changes_requested": 4
                 },
                 "dev2": {
+                    "approved": 4,
+                    "total": 4,
+                    "changes_requested": 1
+                },
+                "dev5": {
+                    "approved": 1,
+                    "total": 1
+                },
+                "dev1": {
                     "approved": 1,
                     "total": 1
                 },
                 "dev3": {
-                    "approved": 4,
-                    "total": 4,
-                    "dismissed": 1
-                },
-                "dev4": {
-                    "commented": 1,
-                    "total": 2,
-                    "approved": 2
+                    "changes_requested": 2,
+                    "total": 3,
+                    "approved": 3
                 }
             },
             "reviewsConductedSize": [
+                "s",
+                "m",
+                "xl",
+                "s",
+                "l",
+                "l",
+                "s",
+                "xs",
+                "m",
                 "xs",
                 "s",
-                "s",
                 "xs",
-                "xs",
-                "xs",
-                "s",
-                "s",
-                "xs",
-                "xs"
+                "m",
+                "m"
             ],
-            "discussionsTypes": {},
-            "commentsConducted": 3,
-            "reviewComments": 3,
+            "timeWaitingForRepeatedReview": [
+                49
+            ],
+            "timeFromInitialRequestToResponse": [
+                675,
+                1196,
+                2934,
+                362,
+                404,
+                613,
+                65,
+                1,
+                8,
+                4,
+                300,
+                205,
+                2,
+                13
+            ],
+            "timeFromOpenToResponse": [
+                1139,
+                1216,
+                2946,
+                374,
+                409,
+                647,
+                209,
+                71,
+                7,
+                31,
+                10,
+                306,
+                211,
+                11,
+                51
+            ],
+            "timeFromRepeatedRequestToResponse": [
+                49
+            ],
+            "reviewComments": 9,
             "discussions": {
-                "conducted": {
-                    "total": 3,
+                "received": {
+                    "total": 8,
                     "agreed": 0,
                     "disagreed": 0
                 },
-                "received": {
-                    "total": 3,
+                "conducted": {
+                    "total": 8,
                     "agreed": 0,
                     "disagreed": 0
                 }
             },
-            "reviewTimeIntervals": {},
+            "commentsConducted": 9,
+            "reviewTimeIntervals": {
+                "0-2": 6,
+                "2-4": 2,
+                "4-8": 2,
+                "8-12": 1,
+                "12-16": 0,
+                "16-24": 2,
+                "24-Infinity": 0
+            },
             "approvalTimeIntervals": {},
             "mergeTimeIntervals": {},
             "median": {
-                "timeToReview": 200,
-                "timeToApprove": 262,
-                "timeToMerge": 480,
-                "timeToReviewRequest": 20,
-                "timeInDraft": 20
+                "timeToReview": 209,
+                "timeToApprove": 381,
+                "timeToMerge": 980,
+                "timeToReviewRequest": 10,
+                "timeInDraft": 10,
+                "timeFromInitialRequestToResponse": 252,
+                "timeFromOpenToResponse": 211,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 49
             },
             "percentile": {
-                "timeToReview": 320,
-                "timeToApprove": 516,
-                "timeToMerge": 1803,
+                "timeToReview": 400,
+                "timeToApprove": 854,
+                "timeToMerge": 1624,
                 "timeToReviewRequest": 28,
-                "timeInDraft": 28
+                "timeInDraft": 28,
+                "timeFromInitialRequestToResponse": 508,
+                "timeFromOpenToResponse": 468,
+                "timeFromRepeatedRequestToResponse": null,
+                "timeWaitingForRepeatedReview": null
             },
             "average": {
-                "timeToReview": 412,
-                "timeToApprove": 463,
-                "timeToMerge": 1268,
-                "timeToReviewRequest": 31,
-                "timeInDraft": 31
+                "timeToReview": 338,
+                "timeToApprove": 641,
+                "timeToMerge": 1341,
+                "timeToReviewRequest": 62,
+                "timeInDraft": 62,
+                "timeFromInitialRequestToResponse": 485,
+                "timeFromOpenToResponse": 510,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 49
             }
         },
-        "total": {
-            "reviewRequestsConducted": 39,
-            "opened": 10,
-            "closed": 10,
-            "merged": 10,
-            "comments": 1,
-            "totalReviewComments": 5,
-            "additions": 387,
-            "deletions": 299,
+        "10/2024": {
+            "reviewRequestsConducted": 55,
+            "opened": 14,
+            "closed": 14,
+            "merged": 13,
+            "comments": 9,
+            "totalReviewComments": 18,
+            "reverted": 1,
+            "additions": 2230,
+            "deletions": 4615,
             "prSizes": [
+                "s",
+                "m",
+                "xl",
+                "s",
+                "l",
+                "l",
+                "s",
+                "xs",
+                "m",
                 "xs",
                 "s",
-                "s",
                 "xs",
-                "xs",
-                "xs",
-                "s",
-                "s",
-                "xs",
-                "xs"
+                "m",
+                "m"
             ],
             "timeToReview": [
-                173,
-                5,
-                34,
-                228,
-                132,
-                344,
-                1445,
-                1453,
-                296,
-                4
+                1139,
+                1216,
+                374,
+                409,
+                647,
+                209,
+                71,
+                7,
+                31,
+                10,
+                211,
+                11,
+                51
             ],
             "timeToApprove": [
-                493,
-                5,
-                34,
-                228,
-                132,
-                540,
-                1445,
-                1453,
-                296,
-                4
+                1139,
+                1216,
+                3159,
+                409,
+                647,
+                209,
+                71,
+                7,
+                923,
+                10,
+                381,
+                11,
+                151
             ],
             "timeToMerge": [
-                1740,
-                5,
-                104,
-                350,
-                211,
-                610,
-                4715,
-                3050,
-                1867,
-                20
+                1448,
+                1829,
+                5721,
+                980,
+                1641,
+                453,
+                1574,
+                268,
+                2116,
+                10,
+                936,
+                239,
+                213
             ],
             "timeToReviewRequest": [
+                464,
+                20,
+                12,
                 5,
-                5,
-                30,
-                89,
-                5,
-                17,
-                80,
-                25,
-                20
+                34,
+                225,
+                6,
+                6,
+                23,
+                6,
+                6,
+                6,
+                9,
+                38
             ],
             "timeInDraft": [
+                464,
+                20,
+                12,
                 5,
-                5,
-                30,
-                89,
-                5,
-                17,
-                80,
-                25,
-                20
+                34,
+                225,
+                6,
+                6,
+                23,
+                6,
+                6,
+                6,
+                9,
+                38
             ],
+            "unreviewed": 1,
+            "unapproved": 1,
+            "sizes": {
+                "s": {
+                    "timeToReview": [
+                        1139,
+                        409,
+                        71,
+                        10
+                    ],
+                    "timeToApprove": [
+                        1139,
+                        409,
+                        71,
+                        10
+                    ],
+                    "timeToMerge": [
+                        1448,
+                        980,
+                        1574,
+                        10
+                    ],
+                    "percentile": {
+                        "timeToReview": 409,
+                        "timeToApprove": 409,
+                        "timeToMerge": 1448
+                    },
+                    "median": {
+                        "timeToReview": 240,
+                        "timeToApprove": 240,
+                        "timeToMerge": 1214
+                    },
+                    "average": {
+                        "timeToReview": 408,
+                        "timeToApprove": 408,
+                        "timeToMerge": 1003
+                    }
+                },
+                "m": {
+                    "timeToReview": [
+                        1216,
+                        31,
+                        11,
+                        51
+                    ],
+                    "timeToApprove": [
+                        1216,
+                        923,
+                        11,
+                        151
+                    ],
+                    "timeToMerge": [
+                        1829,
+                        2116,
+                        239,
+                        213
+                    ],
+                    "percentile": {
+                        "timeToReview": 51,
+                        "timeToApprove": 923,
+                        "timeToMerge": 1829
+                    },
+                    "median": {
+                        "timeToReview": 41,
+                        "timeToApprove": 537,
+                        "timeToMerge": 1034
+                    },
+                    "average": {
+                        "timeToReview": 328,
+                        "timeToApprove": 576,
+                        "timeToMerge": 1100
+                    }
+                },
+                "xl": {
+                    "timeToReview": [
+                        374
+                    ],
+                    "timeToApprove": [
+                        3159
+                    ],
+                    "timeToMerge": [
+                        5721
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    },
+                    "average": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    }
+                },
+                "l": {
+                    "timeToReview": [
+                        647,
+                        209
+                    ],
+                    "timeToApprove": [
+                        647,
+                        209
+                    ],
+                    "timeToMerge": [
+                        1641,
+                        453
+                    ],
+                    "percentile": {
+                        "timeToReview": 428,
+                        "timeToApprove": 428,
+                        "timeToMerge": 1047
+                    },
+                    "median": {
+                        "timeToReview": 428,
+                        "timeToApprove": 428,
+                        "timeToMerge": 1047
+                    },
+                    "average": {
+                        "timeToReview": 428,
+                        "timeToApprove": 428,
+                        "timeToMerge": 1047
+                    }
+                },
+                "xs": {
+                    "timeToReview": [
+                        7,
+                        211
+                    ],
+                    "timeToApprove": [
+                        7,
+                        381
+                    ],
+                    "timeToMerge": [
+                        268,
+                        936
+                    ],
+                    "percentile": {
+                        "timeToReview": 109,
+                        "timeToApprove": 194,
+                        "timeToMerge": 602
+                    },
+                    "median": {
+                        "timeToReview": 109,
+                        "timeToApprove": 194,
+                        "timeToMerge": 602
+                    },
+                    "average": {
+                        "timeToReview": 109,
+                        "timeToApprove": 194,
+                        "timeToMerge": 602
+                    }
+                }
+            },
             "pullRequestsInfo": [
                 {
-                    "number": 4046,
-                    "link": "https://github.com/owner/repo/pull/11",
-                    "title": "PR Example",
-                    "comments": 1,
-                    "timeToReview": 173,
-                    "timeToApprove": 320,
-                    "timeToMerge": 1247
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 117,
+                    "additions": 112,
+                    "deletions": 25,
+                    "timeToReview": 1139,
+                    "timeToApprove": 0,
+                    "timeToMerge": 309
                 },
                 {
-                    "number": 4055,
-                    "link": "https://github.com/owner/repo/pull/12",
-                    "title": "PR Example",
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 2,
+                    "sizePoints": 251,
+                    "additions": 237,
+                    "deletions": 70,
+                    "timeToReview": 1216,
+                    "timeToApprove": 0,
+                    "timeToMerge": 613
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 714.4,
+                    "additions": 703,
+                    "deletions": 57,
+                    "timeToReview": 374,
+                    "timeToApprove": 2785,
+                    "timeToMerge": 2562
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 0,
-                    "timeToReview": 5,
+                    "sizePoints": 72.8,
+                    "additions": 56,
+                    "deletions": 84,
+                    "timeToReview": 409,
+                    "timeToApprove": 0,
+                    "timeToMerge": 571
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 602.8,
+                    "additions": 126,
+                    "deletions": 2384,
+                    "timeToReview": 647,
+                    "timeToApprove": 0,
+                    "timeToMerge": 994
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 411,
+                    "additions": 343,
+                    "deletions": 340,
+                    "timeToReview": 209,
+                    "timeToApprove": 0,
+                    "timeToMerge": 244
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 67.8,
+                    "additions": 67,
+                    "deletions": 4,
+                    "timeToReview": 71,
+                    "timeToApprove": 0,
+                    "timeToMerge": 1503
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 1.2,
+                    "additions": 1,
+                    "deletions": 1,
+                    "timeToReview": 7,
+                    "timeToApprove": 0,
+                    "timeToMerge": 261
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 6,
+                    "sizePoints": 229,
+                    "additions": 173,
+                    "deletions": 280,
+                    "timeToReview": 31,
+                    "timeToApprove": 892,
+                    "timeToMerge": 1193
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 6.6,
+                    "additions": 4,
+                    "deletions": 13,
+                    "timeToReview": 0,
                     "timeToApprove": 0,
                     "timeToMerge": 0
                 },
                 {
-                    "number": 4053,
-                    "link": "https://github.com/owner/repo/pull/13",
-                    "title": "PR Example",
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 0,
-                    "timeToReview": 34,
+                    "sizePoints": 98.4,
+                    "additions": 87,
+                    "deletions": 57,
+                    "timeToReview": 10,
                     "timeToApprove": 0,
-                    "timeToMerge": 70
+                    "timeToMerge": 0
                 },
                 {
-                    "number": 4049,
-                    "link": "https://github.com/owner/repo/pull/14",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 228,
-                    "timeToApprove": 0,
-                    "timeToMerge": 122
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 13.8,
+                    "additions": 13,
+                    "deletions": 4,
+                    "timeToReview": 211,
+                    "timeToApprove": 170,
+                    "timeToMerge": 555
                 },
                 {
-                    "number": 4051,
-                    "link": "https://github.com/owner/repo/pull/15",
-                    "title": "PR Example",
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 0,
-                    "timeToReview": 132,
+                    "sizePoints": 217.4,
+                    "additions": 20,
+                    "deletions": 987,
+                    "timeToReview": 11,
                     "timeToApprove": 0,
-                    "timeToMerge": 79
+                    "timeToMerge": 228
                 },
                 {
-                    "number": 4048,
-                    "link": "https://github.com/owner/repo/pull/16",
-                    "title": "PR Example",
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
                     "comments": 2,
-                    "timeToReview": 344,
-                    "timeToApprove": 196,
-                    "timeToMerge": 70
-                },
-                {
-                    "number": 4029,
-                    "link": "https://github.com/owner/repo/pull/17",
-                    "title": "PR Example",
-                    "comments": 2,
-                    "timeToReview": 1445,
-                    "timeToApprove": 0,
-                    "timeToMerge": 3270
-                },
-                {
-                    "number": 4038,
-                    "link": "https://github.com/owner/repo/pull/18",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 1453,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1597
-                },
-                {
-                    "number": 4040,
-                    "link": "https://github.com/owner/repo/pull/19",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 296,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1571
-                },
-                {
-                    "number": 4045,
-                    "link": "https://github.com/owner/repo/pull/20",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 4,
-                    "timeToApprove": 0,
-                    "timeToMerge": 16
+                    "sizePoints": 349.8,
+                    "additions": 288,
+                    "deletions": 309,
+                    "timeToReview": 51,
+                    "timeToApprove": 100,
+                    "timeToMerge": 62
                 }
             ],
             "reviewsConducted": {
-                "dev1": {
-                    "commented": 1,
-                    "total": 2,
-                    "approved": 2
+                "dev4": {
+                    "approved": 4,
+                    "total": 4,
+                    "changes_requested": 1
                 },
                 "total": {
-                    "commented": 2,
-                    "total": 9,
-                    "approved": 9,
-                    "dismissed": 1
+                    "approved": 13,
+                    "total": 13,
+                    "changes_requested": 4
                 },
                 "dev2": {
+                    "approved": 4,
+                    "total": 4,
+                    "changes_requested": 1
+                },
+                "dev5": {
+                    "approved": 1,
+                    "total": 1
+                },
+                "dev1": {
                     "approved": 1,
                     "total": 1
                 },
                 "dev3": {
-                    "approved": 4,
-                    "total": 4,
-                    "dismissed": 1
-                },
-                "dev4": {
-                    "commented": 1,
-                    "total": 2,
-                    "approved": 2
+                    "changes_requested": 2,
+                    "total": 3,
+                    "approved": 3
                 }
             },
             "reviewsConductedSize": [
+                "s",
+                "m",
+                "xl",
+                "s",
+                "l",
+                "l",
+                "s",
+                "xs",
+                "m",
                 "xs",
                 "s",
-                "s",
                 "xs",
-                "xs",
-                "xs",
-                "s",
-                "s",
-                "xs",
-                "xs"
+                "m",
+                "m"
             ],
-            "discussionsTypes": {},
-            "commentsConducted": 3,
-            "reviewComments": 3,
+            "timeWaitingForRepeatedReview": [
+                49
+            ],
+            "timeFromInitialRequestToResponse": [
+                675,
+                1196,
+                2934,
+                362,
+                404,
+                613,
+                65,
+                1,
+                8,
+                4,
+                300,
+                205,
+                2,
+                13
+            ],
+            "timeFromOpenToResponse": [
+                1139,
+                1216,
+                2946,
+                374,
+                409,
+                647,
+                209,
+                71,
+                7,
+                31,
+                10,
+                306,
+                211,
+                11,
+                51
+            ],
+            "timeFromRepeatedRequestToResponse": [
+                49
+            ],
+            "reviewComments": 9,
             "discussions": {
-                "conducted": {
-                    "total": 3,
+                "received": {
+                    "total": 8,
                     "agreed": 0,
                     "disagreed": 0
                 },
-                "received": {
-                    "total": 3,
+                "conducted": {
+                    "total": 8,
                     "agreed": 0,
                     "disagreed": 0
                 }
             },
-            "reviewTimeIntervals": {},
+            "commentsConducted": 9,
+            "reviewTimeIntervals": {
+                "0-2": 6,
+                "2-4": 2,
+                "4-8": 2,
+                "8-12": 1,
+                "12-16": 0,
+                "16-24": 2,
+                "24-Infinity": 0
+            },
             "approvalTimeIntervals": {},
             "mergeTimeIntervals": {},
             "median": {
-                "timeToReview": 200,
-                "timeToApprove": 262,
-                "timeToMerge": 480,
-                "timeToReviewRequest": 20,
-                "timeInDraft": 20
+                "timeToReview": 209,
+                "timeToApprove": 381,
+                "timeToMerge": 980,
+                "timeToReviewRequest": 10,
+                "timeInDraft": 10,
+                "timeFromInitialRequestToResponse": 252,
+                "timeFromOpenToResponse": 211,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 49
             },
             "percentile": {
-                "timeToReview": 320,
-                "timeToApprove": 516,
-                "timeToMerge": 1803,
+                "timeToReview": 400,
+                "timeToApprove": 854,
+                "timeToMerge": 1624,
                 "timeToReviewRequest": 28,
-                "timeInDraft": 28
+                "timeInDraft": 28,
+                "timeFromInitialRequestToResponse": 508,
+                "timeFromOpenToResponse": 468,
+                "timeFromRepeatedRequestToResponse": null,
+                "timeWaitingForRepeatedReview": null
             },
             "average": {
-                "timeToReview": 412,
-                "timeToApprove": 463,
-                "timeToMerge": 1268,
-                "timeToReviewRequest": 31,
-                "timeInDraft": 31
-            }
-        }
-    },
-    "dev1": {
-        "total": {
-            "opened": 3,
-            "closed": 3,
-            "merged": 3,
-            "comments": 0,
-            "totalReviewComments": 1,
-            "additions": 187,
-            "deletions": 116,
-            "prSizes": [
-                "xs",
-                "s",
-                "s"
-            ],
-            "timeToReview": [
-                173,
-                5,
-                1453
-            ],
-            "timeToApprove": [
-                493,
-                5,
-                1453
-            ],
-            "timeToMerge": [
-                1740,
-                5,
-                3050
-            ],
-            "timeToReviewRequest": [
-                5,
-                5,
-                80
-            ],
-            "timeInDraft": [
-                5,
-                5,
-                80
-            ],
-            "pullRequestsInfo": [
-                {
-                    "number": 4046,
-                    "link": "https://github.com/owner/repo/pull/21",
-                    "title": "PR Example",
-                    "comments": 1,
-                    "timeToReview": 173,
-                    "timeToApprove": 320,
-                    "timeToMerge": 1247
-                },
-                {
-                    "number": 4055,
-                    "link": "https://github.com/owner/repo/pull/22",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 5,
-                    "timeToApprove": 0,
-                    "timeToMerge": 0
-                },
-                {
-                    "number": 4038,
-                    "link": "https://github.com/owner/repo/pull/23",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 1453,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1597
-                }
-            ],
-            "discussionsTypes": {},
-            "reviewComments": 1,
-            "discussions": {
-                "received": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                }
-            },
-            "reviewRequestsConducted": 7,
-            "reviewsConducted": {
-                "dev2": {
-                    "approved": 1,
-                    "total": 1
-                },
-                "total": {
-                    "approved": 1,
-                    "total": 1
-                }
-            },
-            "reviewsConductedSize": [
-                "s"
-            ],
-            "reviewTimeIntervals": {},
-            "approvalTimeIntervals": {},
-            "mergeTimeIntervals": {},
-            "median": {
-                "timeToReview": 173,
-                "timeToApprove": 493,
-                "timeToMerge": 1740,
-                "timeToReviewRequest": 5,
-                "timeInDraft": 5
-            },
-            "percentile": {
-                "timeToReview": 493,
-                "timeToApprove": 733,
-                "timeToMerge": 2067,
-                "timeToReviewRequest": 23,
-                "timeInDraft": 23
-            },
-            "average": {
-                "timeToReview": 544,
-                "timeToApprove": 651,
-                "timeToMerge": 1599,
-                "timeToReviewRequest": 30,
-                "timeInDraft": 30
-            }
-        },
-        "3/2024": {
-            "opened": 3,
-            "closed": 3,
-            "merged": 3,
-            "comments": 0,
-            "totalReviewComments": 1,
-            "additions": 187,
-            "deletions": 116,
-            "prSizes": [
-                "xs",
-                "s",
-                "s"
-            ],
-            "timeToReview": [
-                173,
-                5,
-                1453
-            ],
-            "timeToApprove": [
-                493,
-                5,
-                1453
-            ],
-            "timeToMerge": [
-                1740,
-                5,
-                3050
-            ],
-            "timeToReviewRequest": [
-                5,
-                5,
-                80
-            ],
-            "timeInDraft": [
-                5,
-                5,
-                80
-            ],
-            "pullRequestsInfo": [
-                {
-                    "number": 4046,
-                    "link": "https://github.com/owner/repo/pull/25",
-                    "title": "PR Example",
-                    "comments": 1,
-                    "timeToReview": 173,
-                    "timeToApprove": 320,
-                    "timeToMerge": 1247
-                },
-                {
-                    "number": 4055,
-                    "link": "https://github.com/owner/repo/pull/26",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 5,
-                    "timeToApprove": 0,
-                    "timeToMerge": 0
-                },
-                {
-                    "number": 4038,
-                    "link": "https://github.com/owner/repo/pull/27",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 1453,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1597
-                }
-            ],
-            "discussionsTypes": {},
-            "reviewComments": 1,
-            "discussions": {
-                "received": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                }
-            },
-            "reviewRequestsConducted": 7,
-            "reviewsConducted": {
-                "dev2": {
-                    "approved": 1,
-                    "total": 1
-                },
-                "total": {
-                    "approved": 1,
-                    "total": 1
-                }
-            },
-            "reviewsConductedSize": [
-                "s"
-            ],
-            "reviewTimeIntervals": {},
-            "approvalTimeIntervals": {},
-            "mergeTimeIntervals": {},
-            "median": {
-                "timeToReview": 173,
-                "timeToApprove": 493,
-                "timeToMerge": 1740,
-                "timeToReviewRequest": 5,
-                "timeInDraft": 5
-            },
-            "percentile": {
-                "timeToReview": 493,
-                "timeToApprove": 733,
-                "timeToMerge": 2067,
-                "timeToReviewRequest": 23,
-                "timeInDraft": 23
-            },
-            "average": {
-                "timeToReview": 544,
-                "timeToApprove": 651,
-                "timeToMerge": 1599,
-                "timeToReviewRequest": 30,
-                "timeInDraft": 30
-            }
-        }
-    },
-    "dev3": {
-        "3/2024": {
-            "reviewRequestsConducted": 6,
-            "reviewsConducted": {
-                "dev1": {
-                    "commented": 1,
-                    "total": 1,
-                    "approved": 1
-                },
-                "total": {
-                    "commented": 1,
-                    "total": 1,
-                    "approved": 1
-                }
-            },
-            "reviewsConductedSize": [
-                "xs"
-            ],
-            "discussionsTypes": {},
-            "commentsConducted": 1,
-            "discussions": {
-                "conducted": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                },
-                "received": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                }
-            },
-            "opened": 4,
-            "closed": 4,
-            "merged": 4,
-            "comments": 1,
-            "totalReviewComments": 2,
-            "additions": 77,
-            "deletions": 15,
-            "prSizes": [
-                "xs",
-                "xs",
-                "xs",
-                "xs"
-            ],
-            "timeToReview": [
-                228,
-                132,
-                344,
-                296
-            ],
-            "timeToApprove": [
-                228,
-                132,
-                540,
-                296
-            ],
-            "timeToMerge": [
-                350,
-                211,
-                610,
-                1867
-            ],
-            "timeToReviewRequest": [
-                89,
-                5,
-                25
-            ],
-            "timeInDraft": [
-                89,
-                5,
-                25
-            ],
-            "pullRequestsInfo": [
-                {
-                    "number": 4049,
-                    "link": "https://github.com/owner/repo/pull/28",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 228,
-                    "timeToApprove": 0,
-                    "timeToMerge": 122
-                },
-                {
-                    "number": 4051,
-                    "link": "https://github.com/owner/repo/pull/29",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 132,
-                    "timeToApprove": 0,
-                    "timeToMerge": 79
-                },
-                {
-                    "number": 4048,
-                    "link": "https://github.com/owner/repo/pull/30",
-                    "title": "PR Example",
-                    "comments": 2,
-                    "timeToReview": 344,
-                    "timeToApprove": 196,
-                    "timeToMerge": 70
-                },
-                {
-                    "number": 4040,
-                    "link": "https://github.com/owner/repo/pull/31",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 296,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1571
-                }
-            ],
-            "reviewComments": 1,
-            "reviewTimeIntervals": {},
-            "approvalTimeIntervals": {},
-            "mergeTimeIntervals": {},
-            "median": {
-                "timeToReview": 262,
-                "timeToApprove": 262,
-                "timeToMerge": 480,
-                "timeToReviewRequest": 25,
-                "timeInDraft": 25
-            },
-            "percentile": {
-                "timeToReview": 296,
-                "timeToApprove": 296,
-                "timeToMerge": 610,
-                "timeToReviewRequest": 41,
-                "timeInDraft": 41
-            },
-            "average": {
-                "timeToReview": 250,
-                "timeToApprove": 299,
-                "timeToMerge": 760,
-                "timeToReviewRequest": 40,
-                "timeInDraft": 40
-            }
-        },
-        "total": {
-            "reviewRequestsConducted": 6,
-            "reviewsConducted": {
-                "dev1": {
-                    "commented": 1,
-                    "total": 1,
-                    "approved": 1
-                },
-                "total": {
-                    "commented": 1,
-                    "total": 1,
-                    "approved": 1
-                }
-            },
-            "reviewsConductedSize": [
-                "xs"
-            ],
-            "discussionsTypes": {},
-            "commentsConducted": 1,
-            "discussions": {
-                "conducted": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                },
-                "received": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                }
-            },
-            "opened": 4,
-            "closed": 4,
-            "merged": 4,
-            "comments": 1,
-            "totalReviewComments": 2,
-            "additions": 77,
-            "deletions": 15,
-            "prSizes": [
-                "xs",
-                "xs",
-                "xs",
-                "xs"
-            ],
-            "timeToReview": [
-                228,
-                132,
-                344,
-                296
-            ],
-            "timeToApprove": [
-                228,
-                132,
-                540,
-                296
-            ],
-            "timeToMerge": [
-                350,
-                211,
-                610,
-                1867
-            ],
-            "timeToReviewRequest": [
-                89,
-                5,
-                25
-            ],
-            "timeInDraft": [
-                89,
-                5,
-                25
-            ],
-            "pullRequestsInfo": [
-                {
-                    "number": 4049,
-                    "link": "https://github.com/owner/repo/pull/32",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 228,
-                    "timeToApprove": 0,
-                    "timeToMerge": 122
-                },
-                {
-                    "number": 4051,
-                    "link": "https://github.com/owner/repo/pull/33",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 132,
-                    "timeToApprove": 0,
-                    "timeToMerge": 79
-                },
-                {
-                    "number": 4048,
-                    "link": "https://github.com/owner/repo/pull/34",
-                    "title": "PR Example",
-                    "comments": 2,
-                    "timeToReview": 344,
-                    "timeToApprove": 196,
-                    "timeToMerge": 70
-                },
-                {
-                    "number": 4040,
-                    "link": "https://github.com/owner/repo/pull/35",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 296,
-                    "timeToApprove": 0,
-                    "timeToMerge": 1571
-                }
-            ],
-            "reviewComments": 1,
-            "reviewTimeIntervals": {},
-            "approvalTimeIntervals": {},
-            "mergeTimeIntervals": {},
-            "median": {
-                "timeToReview": 262,
-                "timeToApprove": 262,
-                "timeToMerge": 480,
-                "timeToReviewRequest": 25,
-                "timeInDraft": 25
-            },
-            "percentile": {
-                "timeToReview": 296,
-                "timeToApprove": 296,
-                "timeToMerge": 610,
-                "timeToReviewRequest": 41,
-                "timeInDraft": 41
-            },
-            "average": {
-                "timeToReview": 250,
-                "timeToApprove": 299,
-                "timeToMerge": 760,
-                "timeToReviewRequest": 40,
-                "timeInDraft": 40
+                "timeToReview": 338,
+                "timeToApprove": 641,
+                "timeToMerge": 1341,
+                "timeToReviewRequest": 62,
+                "timeInDraft": 62,
+                "timeFromInitialRequestToResponse": 485,
+                "timeFromOpenToResponse": 510,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 49
             }
         }
     },
     "dev2": {
-        "3/2024": {
-            "reviewRequestsConducted": 9,
-            "reviewsConducted": {
-                "dev1": {
+        "total": {
+            "actionsTime": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "approved": 1
+                },
+                null,
+                {
+                    "merged": 1,
+                    "approved": 1
+                },
+                {
                     "approved": 1,
-                    "total": 1
+                    "merged": 1
+                },
+                null,
+                null,
+                {
+                    "opened": 3,
+                    "approved": 1
+                },
+                {
+                    "merged": 1,
+                    "opened": 1
+                },
+                {
+                    "opened": 1
+                },
+                null,
+                null,
+                {
+                    "merged": 1
+                }
+            ],
+            "reviewRequestsConducted": 8,
+            "reviewsConducted": {
+                "dev4": {
+                    "approved": 3,
+                    "total": 3
                 },
                 "total": {
                     "approved": 4,
-                    "total": 4,
-                    "dismissed": 1
+                    "total": 4
                 },
                 "dev3": {
-                    "approved": 3,
-                    "total": 3,
-                    "dismissed": 1
+                    "approved": 1,
+                    "total": 1
                 }
             },
             "reviewsConductedSize": [
-                "xs",
-                "xs",
+                "s",
+                "l",
+                "s",
+                "xs"
+            ],
+            "timeFromInitialRequestToResponse": [
+                675,
+                4,
+                205
+            ],
+            "timeFromOpenToResponse": [
+                1139,
+                209,
+                10,
+                211
+            ],
+            "timeFromRepeatedRequestToResponse": [],
+            "opened": 5,
+            "closed": 5,
+            "merged": 4,
+            "comments": 0,
+            "totalReviewComments": 6,
+            "reverted": 1,
+            "additions": 1001,
+            "deletions": 225,
+            "prSizes": [
+                "m",
+                "xl",
+                "s",
                 "xs",
                 "xs"
             ],
-            "opened": 1,
-            "closed": 1,
-            "merged": 1,
-            "comments": 0,
-            "totalReviewComments": 0,
-            "additions": 57,
-            "deletions": 57,
-            "prSizes": [
-                "s"
-            ],
             "timeToReview": [
-                34
+                1216,
+                374,
+                409,
+                7
             ],
             "timeToApprove": [
-                34
+                1216,
+                3159,
+                409,
+                7
             ],
             "timeToMerge": [
-                104
+                1829,
+                5721,
+                980,
+                268
             ],
             "timeToReviewRequest": [
-                30
+                20,
+                12,
+                5,
+                6,
+                6
             ],
             "timeInDraft": [
-                30
+                20,
+                12,
+                5,
+                6,
+                6
             ],
+            "unreviewed": 1,
+            "unapproved": 1,
+            "sizes": {
+                "m": {
+                    "timeToReview": [
+                        1216
+                    ],
+                    "timeToApprove": [
+                        1216
+                    ],
+                    "timeToMerge": [
+                        1829
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 1216,
+                        "timeToApprove": 1216,
+                        "timeToMerge": 1829
+                    },
+                    "average": {
+                        "timeToReview": 1216,
+                        "timeToApprove": 1216,
+                        "timeToMerge": 1829
+                    }
+                },
+                "xl": {
+                    "timeToReview": [
+                        374
+                    ],
+                    "timeToApprove": [
+                        3159
+                    ],
+                    "timeToMerge": [
+                        5721
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    },
+                    "average": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    }
+                },
+                "s": {
+                    "timeToReview": [
+                        409
+                    ],
+                    "timeToApprove": [
+                        409
+                    ],
+                    "timeToMerge": [
+                        980
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 409,
+                        "timeToApprove": 409,
+                        "timeToMerge": 980
+                    },
+                    "average": {
+                        "timeToReview": 409,
+                        "timeToApprove": 409,
+                        "timeToMerge": 980
+                    }
+                },
+                "xs": {
+                    "timeToReview": [
+                        7
+                    ],
+                    "timeToApprove": [
+                        7
+                    ],
+                    "timeToMerge": [
+                        268
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 7,
+                        "timeToApprove": 7,
+                        "timeToMerge": 268
+                    },
+                    "average": {
+                        "timeToReview": 7,
+                        "timeToApprove": 7,
+                        "timeToMerge": 268
+                    }
+                }
+            },
             "pullRequestsInfo": [
                 {
-                    "number": 4053,
-                    "link": "https://github.com/owner/repo/pull/36",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 34,
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 2,
+                    "sizePoints": 251,
+                    "additions": 237,
+                    "deletions": 70,
+                    "timeToReview": 1216,
                     "timeToApprove": 0,
-                    "timeToMerge": 70
+                    "timeToMerge": 613
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 714.4,
+                    "additions": 703,
+                    "deletions": 57,
+                    "timeToReview": 374,
+                    "timeToApprove": 2785,
+                    "timeToMerge": 2562
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 72.8,
+                    "additions": 56,
+                    "deletions": 84,
+                    "timeToReview": 409,
+                    "timeToApprove": 0,
+                    "timeToMerge": 571
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 1.2,
+                    "additions": 1,
+                    "deletions": 1,
+                    "timeToReview": 7,
+                    "timeToApprove": 0,
+                    "timeToMerge": 261
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 6.6,
+                    "additions": 4,
+                    "deletions": 13,
+                    "timeToReview": 0,
+                    "timeToApprove": 0,
+                    "timeToMerge": 0
                 }
             ],
-            "reviewComments": 0,
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 3,
             "discussions": {
                 "received": {
-                    "total": 0,
-                    "agreed": 0,
-                    "disagreed": 0
-                },
-                "conducted": {
-                    "total": 1,
+                    "total": 3,
                     "agreed": 0,
                     "disagreed": 0
                 }
             },
-            "discussionsTypes": {},
-            "commentsConducted": 1,
-            "reviewTimeIntervals": {},
+            "reviewTimeIntervals": {
+                "0-2": 1,
+                "2-4": 0,
+                "4-8": 2,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 1,
+                "24-Infinity": 0
+            },
             "approvalTimeIntervals": {},
             "mergeTimeIntervals": {},
             "median": {
-                "timeToReview": 34,
-                "timeToApprove": 34,
-                "timeToMerge": 104,
-                "timeToReviewRequest": 30,
-                "timeInDraft": 30
+                "timeToReview": 391,
+                "timeToApprove": 812,
+                "timeToMerge": 1404,
+                "timeToReviewRequest": 6,
+                "timeInDraft": 6,
+                "timeFromInitialRequestToResponse": 205,
+                "timeFromOpenToResponse": 210,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
             },
             "percentile": {
-                "timeToReview": null,
-                "timeToApprove": null,
-                "timeToMerge": null,
-                "timeToReviewRequest": null,
-                "timeInDraft": null
+                "timeToReview": 409,
+                "timeToApprove": 1216,
+                "timeToMerge": 1829,
+                "timeToReviewRequest": 10,
+                "timeInDraft": 10,
+                "timeFromInitialRequestToResponse": 322,
+                "timeFromOpenToResponse": 211,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
             },
             "average": {
-                "timeToReview": 34,
-                "timeToApprove": 34,
-                "timeToMerge": 104,
-                "timeToReviewRequest": 30,
-                "timeInDraft": 30
+                "timeToReview": 502,
+                "timeToApprove": 1198,
+                "timeToMerge": 2200,
+                "timeToReviewRequest": 10,
+                "timeInDraft": 10,
+                "timeFromInitialRequestToResponse": 295,
+                "timeFromOpenToResponse": 393,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
             }
         },
-        "total": {
-            "reviewRequestsConducted": 9,
+        "10/2024": {
+            "reviewRequestsConducted": 8,
             "reviewsConducted": {
-                "dev1": {
-                    "approved": 1,
-                    "total": 1
+                "dev4": {
+                    "approved": 3,
+                    "total": 3
                 },
                 "total": {
                     "approved": 4,
-                    "total": 4,
-                    "dismissed": 1
+                    "total": 4
                 },
                 "dev3": {
-                    "approved": 3,
-                    "total": 3,
-                    "dismissed": 1
+                    "approved": 1,
+                    "total": 1
                 }
             },
             "reviewsConductedSize": [
-                "xs",
-                "xs",
+                "s",
+                "l",
+                "s",
+                "xs"
+            ],
+            "timeFromInitialRequestToResponse": [
+                675,
+                4,
+                205
+            ],
+            "timeFromOpenToResponse": [
+                1139,
+                209,
+                10,
+                211
+            ],
+            "timeFromRepeatedRequestToResponse": [],
+            "opened": 5,
+            "closed": 5,
+            "merged": 4,
+            "comments": 0,
+            "totalReviewComments": 6,
+            "reverted": 1,
+            "additions": 1001,
+            "deletions": 225,
+            "prSizes": [
+                "m",
+                "xl",
+                "s",
                 "xs",
                 "xs"
             ],
-            "opened": 1,
-            "closed": 1,
-            "merged": 1,
-            "comments": 0,
-            "totalReviewComments": 0,
-            "additions": 57,
-            "deletions": 57,
-            "prSizes": [
-                "s"
-            ],
             "timeToReview": [
-                34
+                1216,
+                374,
+                409,
+                7
             ],
             "timeToApprove": [
-                34
+                1216,
+                3159,
+                409,
+                7
             ],
             "timeToMerge": [
-                104
+                1829,
+                5721,
+                980,
+                268
             ],
             "timeToReviewRequest": [
-                30
+                20,
+                12,
+                5,
+                6,
+                6
             ],
             "timeInDraft": [
-                30
+                20,
+                12,
+                5,
+                6,
+                6
             ],
+            "unreviewed": 1,
+            "unapproved": 1,
+            "sizes": {
+                "m": {
+                    "timeToReview": [
+                        1216
+                    ],
+                    "timeToApprove": [
+                        1216
+                    ],
+                    "timeToMerge": [
+                        1829
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 1216,
+                        "timeToApprove": 1216,
+                        "timeToMerge": 1829
+                    },
+                    "average": {
+                        "timeToReview": 1216,
+                        "timeToApprove": 1216,
+                        "timeToMerge": 1829
+                    }
+                },
+                "xl": {
+                    "timeToReview": [
+                        374
+                    ],
+                    "timeToApprove": [
+                        3159
+                    ],
+                    "timeToMerge": [
+                        5721
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    },
+                    "average": {
+                        "timeToReview": 374,
+                        "timeToApprove": 3159,
+                        "timeToMerge": 5721
+                    }
+                },
+                "s": {
+                    "timeToReview": [
+                        409
+                    ],
+                    "timeToApprove": [
+                        409
+                    ],
+                    "timeToMerge": [
+                        980
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 409,
+                        "timeToApprove": 409,
+                        "timeToMerge": 980
+                    },
+                    "average": {
+                        "timeToReview": 409,
+                        "timeToApprove": 409,
+                        "timeToMerge": 980
+                    }
+                },
+                "xs": {
+                    "timeToReview": [
+                        7
+                    ],
+                    "timeToApprove": [
+                        7
+                    ],
+                    "timeToMerge": [
+                        268
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 7,
+                        "timeToApprove": 7,
+                        "timeToMerge": 268
+                    },
+                    "average": {
+                        "timeToReview": 7,
+                        "timeToApprove": 7,
+                        "timeToMerge": 268
+                    }
+                }
+            },
             "pullRequestsInfo": [
                 {
-                    "number": 4053,
-                    "link": "https://github.com/owner/repo/pull/37",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 34,
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 2,
+                    "sizePoints": 251,
+                    "additions": 237,
+                    "deletions": 70,
+                    "timeToReview": 1216,
                     "timeToApprove": 0,
-                    "timeToMerge": 70
+                    "timeToMerge": 613
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 714.4,
+                    "additions": 703,
+                    "deletions": 57,
+                    "timeToReview": 374,
+                    "timeToApprove": 2785,
+                    "timeToMerge": 2562
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 72.8,
+                    "additions": 56,
+                    "deletions": 84,
+                    "timeToReview": 409,
+                    "timeToApprove": 0,
+                    "timeToMerge": 571
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 1.2,
+                    "additions": 1,
+                    "deletions": 1,
+                    "timeToReview": 7,
+                    "timeToApprove": 0,
+                    "timeToMerge": 261
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 6.6,
+                    "additions": 4,
+                    "deletions": 13,
+                    "timeToReview": 0,
+                    "timeToApprove": 0,
+                    "timeToMerge": 0
                 }
             ],
-            "reviewComments": 0,
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 3,
             "discussions": {
                 "received": {
-                    "total": 0,
-                    "agreed": 0,
-                    "disagreed": 0
-                },
-                "conducted": {
-                    "total": 1,
+                    "total": 3,
                     "agreed": 0,
                     "disagreed": 0
                 }
             },
-            "discussionsTypes": {},
-            "commentsConducted": 1,
-            "reviewTimeIntervals": {},
+            "reviewTimeIntervals": {
+                "0-2": 1,
+                "2-4": 0,
+                "4-8": 2,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 1,
+                "24-Infinity": 0
+            },
             "approvalTimeIntervals": {},
             "mergeTimeIntervals": {},
             "median": {
-                "timeToReview": 34,
-                "timeToApprove": 34,
-                "timeToMerge": 104,
-                "timeToReviewRequest": 30,
-                "timeInDraft": 30
+                "timeToReview": 391,
+                "timeToApprove": 812,
+                "timeToMerge": 1404,
+                "timeToReviewRequest": 6,
+                "timeInDraft": 6,
+                "timeFromInitialRequestToResponse": 205,
+                "timeFromOpenToResponse": 210,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
             },
             "percentile": {
-                "timeToReview": null,
-                "timeToApprove": null,
-                "timeToMerge": null,
-                "timeToReviewRequest": null,
-                "timeInDraft": null
+                "timeToReview": 409,
+                "timeToApprove": 1216,
+                "timeToMerge": 1829,
+                "timeToReviewRequest": 10,
+                "timeInDraft": 10,
+                "timeFromInitialRequestToResponse": 322,
+                "timeFromOpenToResponse": 211,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
             },
             "average": {
-                "timeToReview": 34,
-                "timeToApprove": 34,
-                "timeToMerge": 104,
-                "timeToReviewRequest": 30,
-                "timeInDraft": 30
-            }
-        }
-    },
-    "dev5": {
-        "3/2024": {
-            "reviewRequestsConducted": 9,
-            "reviewsConducted": {
-                "dev4": {
-                    "commented": 1,
-                    "total": 2,
-                    "approved": 2
-                },
-                "total": {
-                    "commented": 1,
-                    "total": 4,
-                    "approved": 4
-                },
-                "dev1": {
-                    "approved": 1,
-                    "total": 1
-                },
-                "dev3": {
-                    "approved": 1,
-                    "total": 1
-                }
-            },
-            "reviewsConductedSize": [
-                "s",
-                "s",
-                "xs",
-                "xs"
-            ],
-            "discussionsTypes": {},
-            "commentsConducted": 1,
-            "discussions": {
-                "conducted": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                }
-            },
-            "median": {
-                "timeToReview": 0,
-                "timeToApprove": 0,
-                "timeToMerge": 0,
-                "timeToReviewRequest": 0,
-                "timeInDraft": 0
-            },
-            "percentile": {
-                "timeToReview": 0,
-                "timeToApprove": 0,
-                "timeToMerge": 0,
-                "timeToReviewRequest": 0,
-                "timeInDraft": 0
-            },
-            "average": {
-                "timeToReview": 0,
-                "timeToApprove": 0,
-                "timeToMerge": 0,
-                "timeToReviewRequest": 0,
-                "timeInDraft": 0
-            }
-        },
-        "total": {
-            "reviewRequestsConducted": 9,
-            "reviewsConducted": {
-                "dev4": {
-                    "commented": 1,
-                    "total": 2,
-                    "approved": 2
-                },
-                "total": {
-                    "commented": 1,
-                    "total": 4,
-                    "approved": 4
-                },
-                "dev1": {
-                    "approved": 1,
-                    "total": 1
-                },
-                "dev3": {
-                    "approved": 1,
-                    "total": 1
-                }
-            },
-            "reviewsConductedSize": [
-                "s",
-                "s",
-                "xs",
-                "xs"
-            ],
-            "discussionsTypes": {},
-            "commentsConducted": 1,
-            "discussions": {
-                "conducted": {
-                    "total": 1,
-                    "agreed": 0,
-                    "disagreed": 0
-                }
-            },
-            "median": {
-                "timeToReview": 0,
-                "timeToApprove": 0,
-                "timeToMerge": 0,
-                "timeToReviewRequest": 0,
-                "timeInDraft": 0
-            },
-            "percentile": {
-                "timeToReview": 0,
-                "timeToApprove": 0,
-                "timeToMerge": 0,
-                "timeToReviewRequest": 0,
-                "timeInDraft": 0
-            },
-            "average": {
-                "timeToReview": 0,
-                "timeToApprove": 0,
-                "timeToMerge": 0,
-                "timeToReviewRequest": 0,
-                "timeInDraft": 0
+                "timeToReview": 502,
+                "timeToApprove": 1198,
+                "timeToMerge": 2200,
+                "timeToReviewRequest": 10,
+                "timeInDraft": 10,
+                "timeFromInitialRequestToResponse": 295,
+                "timeFromOpenToResponse": 393,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
             }
         }
     },
     "dev4": {
-        "3/2024": {
-            "reviewRequestsConducted": 8,
-            "opened": 2,
-            "closed": 2,
-            "merged": 2,
-            "comments": 0,
-            "totalReviewComments": 2,
-            "additions": 66,
-            "deletions": 111,
-            "prSizes": [
-                "s",
-                "xs"
-            ],
-            "timeToReview": [
-                1445,
-                4
-            ],
-            "timeToApprove": [
-                1445,
-                4
-            ],
-            "timeToMerge": [
-                4715,
-                20
-            ],
-            "timeToReviewRequest": [
-                17,
-                20
-            ],
-            "timeInDraft": [
-                17,
-                20
-            ],
-            "pullRequestsInfo": [
+        "total": {
+            "actionsTime": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
                 {
-                    "number": 4029,
-                    "link": "https://github.com/owner/repo/pull/38",
-                    "title": "[OG-4762] feat: new roles",
-                    "comments": 2,
-                    "timeToReview": 1445,
-                    "timeToApprove": 0,
-                    "timeToMerge": 3270
+                    "opened": 1
+                },
+                null,
+                {
+                    "opened": 1,
+                    "approved": 1
+                },
+                null,
+                {
+                    "opened": 1,
+                    "merged": 2
                 },
                 {
-                    "number": 4045,
-                    "link": "https://github.com/owner/repo/pull/39",
-                    "title": "[OG-4802] feat: stripe enabled feature flag remove",
-                    "comments": 0,
-                    "timeToReview": 4,
-                    "timeToApprove": 0,
-                    "timeToMerge": 16
+                    "approved": 1,
+                    "merged": 1
+                },
+                {
+                    "merged": 1
+                },
+                {
+                    "opened": 1
                 }
             ],
-            "discussionsTypes": {},
+            "opened": 4,
+            "closed": 4,
+            "merged": 4,
+            "comments": 1,
+            "totalReviewComments": 2,
+            "reverted": 0,
+            "additions": 830,
+            "deletions": 731,
+            "prSizes": [
+                "s",
+                "l",
+                "s",
+                "m"
+            ],
+            "timeToReview": [
+                1139,
+                209,
+                10,
+                51
+            ],
+            "timeToApprove": [
+                1139,
+                209,
+                10,
+                151
+            ],
+            "timeToMerge": [
+                1448,
+                453,
+                10,
+                213
+            ],
+            "timeToReviewRequest": [
+                464,
+                225,
+                6,
+                38
+            ],
+            "timeInDraft": [
+                464,
+                225,
+                6,
+                38
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "s": {
+                    "timeToReview": [
+                        1139,
+                        10
+                    ],
+                    "timeToApprove": [
+                        1139,
+                        10
+                    ],
+                    "timeToMerge": [
+                        1448,
+                        10
+                    ],
+                    "percentile": {
+                        "timeToReview": 574,
+                        "timeToApprove": 574,
+                        "timeToMerge": 729
+                    },
+                    "median": {
+                        "timeToReview": 574,
+                        "timeToApprove": 574,
+                        "timeToMerge": 729
+                    },
+                    "average": {
+                        "timeToReview": 575,
+                        "timeToApprove": 575,
+                        "timeToMerge": 729
+                    }
+                },
+                "l": {
+                    "timeToReview": [
+                        209
+                    ],
+                    "timeToApprove": [
+                        209
+                    ],
+                    "timeToMerge": [
+                        453
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 209,
+                        "timeToApprove": 209,
+                        "timeToMerge": 453
+                    },
+                    "average": {
+                        "timeToReview": 209,
+                        "timeToApprove": 209,
+                        "timeToMerge": 453
+                    }
+                },
+                "m": {
+                    "timeToReview": [
+                        51
+                    ],
+                    "timeToApprove": [
+                        151
+                    ],
+                    "timeToMerge": [
+                        213
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 51,
+                        "timeToApprove": 151,
+                        "timeToMerge": 213
+                    },
+                    "average": {
+                        "timeToReview": 51,
+                        "timeToApprove": 151,
+                        "timeToMerge": 213
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 117,
+                    "additions": 112,
+                    "deletions": 25,
+                    "timeToReview": 1139,
+                    "timeToApprove": 0,
+                    "timeToMerge": 309
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 411,
+                    "additions": 343,
+                    "deletions": 340,
+                    "timeToReview": 209,
+                    "timeToApprove": 0,
+                    "timeToMerge": 244
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 98.4,
+                    "additions": 87,
+                    "deletions": 57,
+                    "timeToReview": 10,
+                    "timeToApprove": 0,
+                    "timeToMerge": 0
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 2,
+                    "sizePoints": 349.8,
+                    "additions": 288,
+                    "deletions": 309,
+                    "timeToReview": 51,
+                    "timeToApprove": 100,
+                    "timeToMerge": 62
+                }
+            ],
+            "timeWaitingForRepeatedReview": [
+                49
+            ],
             "reviewComments": 1,
             "discussions": {
                 "received": {
                     "total": 1,
                     "agreed": 0,
                     "disagreed": 0
+                },
+                "conducted": {
+                    "total": 1,
+                    "agreed": 0,
+                    "disagreed": 0
                 }
             },
-            "reviewTimeIntervals": {},
+            "reviewRequestsConducted": 10,
+            "reviewsConducted": {
+                "dev2": {
+                    "approved": 2,
+                    "total": 2
+                },
+                "total": {
+                    "approved": 2,
+                    "total": 2
+                }
+            },
+            "reviewsConductedSize": [
+                "m",
+                "xl"
+            ],
+            "timeFromInitialRequestToResponse": [
+                1196,
+                362
+            ],
+            "timeFromOpenToResponse": [
+                1216,
+                374
+            ],
+            "timeFromRepeatedRequestToResponse": [],
+            "commentsConducted": 1,
+            "reviewTimeIntervals": {
+                "0-2": 2,
+                "2-4": 1,
+                "4-8": 0,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 1,
+                "24-Infinity": 0
+            },
             "approvalTimeIntervals": {},
             "mergeTimeIntervals": {},
             "median": {
-                "timeToReview": 724,
-                "timeToApprove": 724,
-                "timeToMerge": 2367,
-                "timeToReviewRequest": 18,
-                "timeInDraft": 18
+                "timeToReview": 130,
+                "timeToApprove": 180,
+                "timeToMerge": 333,
+                "timeToReviewRequest": 131,
+                "timeInDraft": 131,
+                "timeFromInitialRequestToResponse": 779,
+                "timeFromOpenToResponse": 795,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 49
             },
             "percentile": {
-                "timeToReview": 724,
-                "timeToApprove": 724,
-                "timeToMerge": 2367,
-                "timeToReviewRequest": 18,
-                "timeInDraft": 18
+                "timeToReview": 209,
+                "timeToApprove": 209,
+                "timeToMerge": 453,
+                "timeToReviewRequest": 225,
+                "timeInDraft": 225,
+                "timeFromInitialRequestToResponse": 779,
+                "timeFromOpenToResponse": 795,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": null
             },
             "average": {
-                "timeToReview": 725,
-                "timeToApprove": 725,
-                "timeToMerge": 2368,
-                "timeToReviewRequest": 19,
-                "timeInDraft": 19
+                "timeToReview": 353,
+                "timeToApprove": 378,
+                "timeToMerge": 531,
+                "timeToReviewRequest": 184,
+                "timeInDraft": 184,
+                "timeFromInitialRequestToResponse": 779,
+                "timeFromOpenToResponse": 795,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 49
+            }
+        },
+        "10/2024": {
+            "opened": 4,
+            "closed": 4,
+            "merged": 4,
+            "comments": 1,
+            "totalReviewComments": 2,
+            "reverted": 0,
+            "additions": 830,
+            "deletions": 731,
+            "prSizes": [
+                "s",
+                "l",
+                "s",
+                "m"
+            ],
+            "timeToReview": [
+                1139,
+                209,
+                10,
+                51
+            ],
+            "timeToApprove": [
+                1139,
+                209,
+                10,
+                151
+            ],
+            "timeToMerge": [
+                1448,
+                453,
+                10,
+                213
+            ],
+            "timeToReviewRequest": [
+                464,
+                225,
+                6,
+                38
+            ],
+            "timeInDraft": [
+                464,
+                225,
+                6,
+                38
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "s": {
+                    "timeToReview": [
+                        1139,
+                        10
+                    ],
+                    "timeToApprove": [
+                        1139,
+                        10
+                    ],
+                    "timeToMerge": [
+                        1448,
+                        10
+                    ],
+                    "percentile": {
+                        "timeToReview": 574,
+                        "timeToApprove": 574,
+                        "timeToMerge": 729
+                    },
+                    "median": {
+                        "timeToReview": 574,
+                        "timeToApprove": 574,
+                        "timeToMerge": 729
+                    },
+                    "average": {
+                        "timeToReview": 575,
+                        "timeToApprove": 575,
+                        "timeToMerge": 729
+                    }
+                },
+                "l": {
+                    "timeToReview": [
+                        209
+                    ],
+                    "timeToApprove": [
+                        209
+                    ],
+                    "timeToMerge": [
+                        453
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 209,
+                        "timeToApprove": 209,
+                        "timeToMerge": 453
+                    },
+                    "average": {
+                        "timeToReview": 209,
+                        "timeToApprove": 209,
+                        "timeToMerge": 453
+                    }
+                },
+                "m": {
+                    "timeToReview": [
+                        51
+                    ],
+                    "timeToApprove": [
+                        151
+                    ],
+                    "timeToMerge": [
+                        213
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 51,
+                        "timeToApprove": 151,
+                        "timeToMerge": 213
+                    },
+                    "average": {
+                        "timeToReview": 51,
+                        "timeToApprove": 151,
+                        "timeToMerge": 213
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 117,
+                    "additions": 112,
+                    "deletions": 25,
+                    "timeToReview": 1139,
+                    "timeToApprove": 0,
+                    "timeToMerge": 309
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 411,
+                    "additions": 343,
+                    "deletions": 340,
+                    "timeToReview": 209,
+                    "timeToApprove": 0,
+                    "timeToMerge": 244
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 98.4,
+                    "additions": 87,
+                    "deletions": 57,
+                    "timeToReview": 10,
+                    "timeToApprove": 0,
+                    "timeToMerge": 0
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 2,
+                    "sizePoints": 349.8,
+                    "additions": 288,
+                    "deletions": 309,
+                    "timeToReview": 51,
+                    "timeToApprove": 100,
+                    "timeToMerge": 62
+                }
+            ],
+            "timeWaitingForRepeatedReview": [
+                49
+            ],
+            "reviewComments": 1,
+            "discussions": {
+                "received": {
+                    "total": 1,
+                    "agreed": 0,
+                    "disagreed": 0
+                },
+                "conducted": {
+                    "total": 1,
+                    "agreed": 0,
+                    "disagreed": 0
+                }
+            },
+            "reviewRequestsConducted": 10,
+            "reviewsConducted": {
+                "dev2": {
+                    "approved": 2,
+                    "total": 2
+                },
+                "total": {
+                    "approved": 2,
+                    "total": 2
+                }
+            },
+            "reviewsConductedSize": [
+                "m",
+                "xl"
+            ],
+            "timeFromInitialRequestToResponse": [
+                1196,
+                362
+            ],
+            "timeFromOpenToResponse": [
+                1216,
+                374
+            ],
+            "timeFromRepeatedRequestToResponse": [],
+            "commentsConducted": 1,
+            "reviewTimeIntervals": {
+                "0-2": 2,
+                "2-4": 1,
+                "4-8": 0,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 1,
+                "24-Infinity": 0
+            },
+            "approvalTimeIntervals": {},
+            "mergeTimeIntervals": {},
+            "median": {
+                "timeToReview": 130,
+                "timeToApprove": 180,
+                "timeToMerge": 333,
+                "timeToReviewRequest": 131,
+                "timeInDraft": 131,
+                "timeFromInitialRequestToResponse": 779,
+                "timeFromOpenToResponse": 795,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 49
+            },
+            "percentile": {
+                "timeToReview": 209,
+                "timeToApprove": 209,
+                "timeToMerge": 453,
+                "timeToReviewRequest": 225,
+                "timeInDraft": 225,
+                "timeFromInitialRequestToResponse": 779,
+                "timeFromOpenToResponse": 795,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": null
+            },
+            "average": {
+                "timeToReview": 353,
+                "timeToApprove": 378,
+                "timeToMerge": 531,
+                "timeToReviewRequest": 184,
+                "timeInDraft": 184,
+                "timeFromInitialRequestToResponse": 779,
+                "timeFromOpenToResponse": 795,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 49
+            }
+        }
+    },
+    "dev1": {
+        "10/2024": {
+            "reviewRequestsConducted": 13,
+            "timeFromInitialRequestToResponse": [
+                2934,
+                404,
+                613,
+                8,
+                300,
+                2,
+                13
+            ],
+            "timeFromOpenToResponse": [
+                2946,
+                409,
+                647,
+                31,
+                306,
+                11,
+                51
+            ],
+            "timeFromRepeatedRequestToResponse": [
+                49
+            ],
+            "reviewsConducted": {
+                "dev2": {
+                    "changes_requested": 1,
+                    "total": 2,
+                    "approved": 2
+                },
+                "total": {
+                    "changes_requested": 4,
+                    "total": 7,
+                    "approved": 7
+                },
+                "dev5": {
+                    "approved": 1,
+                    "total": 1
+                },
+                "dev3": {
+                    "changes_requested": 2,
+                    "total": 3,
+                    "approved": 3
+                },
+                "dev4": {
+                    "changes_requested": 1,
+                    "total": 1,
+                    "approved": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "xl",
+                "s",
+                "l",
+                "m",
+                "xs",
+                "m",
+                "m"
+            ],
+            "commentsConducted": 8,
+            "discussions": {
+                "conducted": {
+                    "total": 7,
+                    "agreed": 0,
+                    "disagreed": 0
+                },
+                "received": {
+                    "total": 0,
+                    "agreed": 0,
+                    "disagreed": 0
+                }
+            },
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 1,
+            "totalReviewComments": 0,
+            "reverted": 0,
+            "additions": 67,
+            "deletions": 4,
+            "prSizes": [
+                "s"
+            ],
+            "timeToReview": [
+                71
+            ],
+            "timeToApprove": [
+                71
+            ],
+            "timeToMerge": [
+                1574
+            ],
+            "timeToReviewRequest": [
+                6
+            ],
+            "timeInDraft": [
+                6
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "s": {
+                    "timeToReview": [
+                        71
+                    ],
+                    "timeToApprove": [
+                        71
+                    ],
+                    "timeToMerge": [
+                        1574
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 71,
+                        "timeToApprove": 71,
+                        "timeToMerge": 1574
+                    },
+                    "average": {
+                        "timeToReview": 71,
+                        "timeToApprove": 71,
+                        "timeToMerge": 1574
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 67.8,
+                    "additions": 67,
+                    "deletions": 4,
+                    "timeToReview": 71,
+                    "timeToApprove": 0,
+                    "timeToMerge": 1503
+                }
+            ],
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 0,
+            "reviewTimeIntervals": {
+                "0-2": 1,
+                "2-4": 0,
+                "4-8": 0,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 0,
+                "24-Infinity": 0
+            },
+            "approvalTimeIntervals": {},
+            "mergeTimeIntervals": {},
+            "median": {
+                "timeToReview": 71,
+                "timeToApprove": 71,
+                "timeToMerge": 1574,
+                "timeToReviewRequest": 6,
+                "timeInDraft": 6,
+                "timeFromInitialRequestToResponse": 300,
+                "timeFromOpenToResponse": 306,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "percentile": {
+                "timeToReview": null,
+                "timeToApprove": null,
+                "timeToMerge": null,
+                "timeToReviewRequest": null,
+                "timeInDraft": null,
+                "timeFromInitialRequestToResponse": 456,
+                "timeFromOpenToResponse": 468,
+                "timeFromRepeatedRequestToResponse": null,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "average": {
+                "timeToReview": 71,
+                "timeToApprove": 71,
+                "timeToMerge": 1574,
+                "timeToReviewRequest": 6,
+                "timeInDraft": 6,
+                "timeFromInitialRequestToResponse": 611,
+                "timeFromOpenToResponse": 629,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 0
             }
         },
         "total": {
-            "reviewRequestsConducted": 8,
-            "opened": 2,
-            "closed": 2,
-            "merged": 2,
-            "comments": 0,
-            "totalReviewComments": 2,
-            "additions": 66,
-            "deletions": 111,
-            "prSizes": [
-                "s",
-                "xs"
+            "reviewRequestsConducted": 13,
+            "timeFromInitialRequestToResponse": [
+                2934,
+                404,
+                613,
+                8,
+                300,
+                2,
+                13
             ],
-            "timeToReview": [
-                1445,
-                4
+            "timeFromOpenToResponse": [
+                2946,
+                409,
+                647,
+                31,
+                306,
+                11,
+                51
             ],
-            "timeToApprove": [
-                1445,
-                4
+            "timeFromRepeatedRequestToResponse": [
+                49
             ],
-            "timeToMerge": [
-                4715,
-                20
-            ],
-            "timeToReviewRequest": [
-                17,
-                20
-            ],
-            "timeInDraft": [
-                17,
-                20
-            ],
-            "pullRequestsInfo": [
+            "actionsTime": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
                 {
-                    "number": 4029,
-                    "link": "https://github.com/owner/repo/pull/40",
-                    "title": "PR Example",
-                    "comments": 2,
-                    "timeToReview": 1445,
-                    "timeToApprove": 0,
-                    "timeToMerge": 3270
+                    "approved": 1
+                },
+                null,
+                {
+                    "merged": 1,
+                    "changes_requested": 2
                 },
                 {
-                    "number": 4045,
-                    "link": "https://github.com/owner/repo/pull/41",
-                    "title": "PR Example",
-                    "comments": 0,
-                    "timeToReview": 4,
-                    "timeToApprove": 0,
-                    "timeToMerge": 16
+                    "approved": 2,
+                    "changes_requested": 3
+                },
+                null,
+                {
+                    "approved": 2
+                },
+                {
+                    "opened": 1
+                },
+                {
+                    "changes_requested": 1,
+                    "approved": 1
+                },
+                {
+                    "changes_requested": 1
+                },
+                {
+                    "approved": 1
                 }
             ],
-            "discussionsTypes": {},
-            "reviewComments": 1,
-            "discussions": {
-                "received": {
+            "reviewsConducted": {
+                "dev2": {
+                    "changes_requested": 1,
+                    "total": 2,
+                    "approved": 2
+                },
+                "total": {
+                    "changes_requested": 4,
+                    "total": 7,
+                    "approved": 7
+                },
+                "dev5": {
+                    "approved": 1,
+                    "total": 1
+                },
+                "dev3": {
+                    "changes_requested": 2,
+                    "total": 3,
+                    "approved": 3
+                },
+                "dev4": {
+                    "changes_requested": 1,
                     "total": 1,
+                    "approved": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "xl",
+                "s",
+                "l",
+                "m",
+                "xs",
+                "m",
+                "m"
+            ],
+            "commentsConducted": 8,
+            "discussions": {
+                "conducted": {
+                    "total": 7,
+                    "agreed": 0,
+                    "disagreed": 0
+                },
+                "received": {
+                    "total": 0,
                     "agreed": 0,
                     "disagreed": 0
                 }
             },
-            "reviewTimeIntervals": {},
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 1,
+            "totalReviewComments": 0,
+            "reverted": 0,
+            "additions": 67,
+            "deletions": 4,
+            "prSizes": [
+                "s"
+            ],
+            "timeToReview": [
+                71
+            ],
+            "timeToApprove": [
+                71
+            ],
+            "timeToMerge": [
+                1574
+            ],
+            "timeToReviewRequest": [
+                6
+            ],
+            "timeInDraft": [
+                6
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "s": {
+                    "timeToReview": [
+                        71
+                    ],
+                    "timeToApprove": [
+                        71
+                    ],
+                    "timeToMerge": [
+                        1574
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 71,
+                        "timeToApprove": 71,
+                        "timeToMerge": 1574
+                    },
+                    "average": {
+                        "timeToReview": 71,
+                        "timeToApprove": 71,
+                        "timeToMerge": 1574
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 67.8,
+                    "additions": 67,
+                    "deletions": 4,
+                    "timeToReview": 71,
+                    "timeToApprove": 0,
+                    "timeToMerge": 1503
+                }
+            ],
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 0,
+            "reviewTimeIntervals": {
+                "0-2": 1,
+                "2-4": 0,
+                "4-8": 0,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 0,
+                "24-Infinity": 0
+            },
             "approvalTimeIntervals": {},
             "mergeTimeIntervals": {},
             "median": {
-                "timeToReview": 724,
-                "timeToApprove": 724,
-                "timeToMerge": 2367,
-                "timeToReviewRequest": 18,
-                "timeInDraft": 18
+                "timeToReview": 71,
+                "timeToApprove": 71,
+                "timeToMerge": 1574,
+                "timeToReviewRequest": 6,
+                "timeInDraft": 6,
+                "timeFromInitialRequestToResponse": 300,
+                "timeFromOpenToResponse": 306,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 0
             },
             "percentile": {
-                "timeToReview": 724,
-                "timeToApprove": 724,
-                "timeToMerge": 2367,
-                "timeToReviewRequest": 18,
-                "timeInDraft": 18
+                "timeToReview": null,
+                "timeToApprove": null,
+                "timeToMerge": null,
+                "timeToReviewRequest": null,
+                "timeInDraft": null,
+                "timeFromInitialRequestToResponse": 456,
+                "timeFromOpenToResponse": 468,
+                "timeFromRepeatedRequestToResponse": null,
+                "timeWaitingForRepeatedReview": 0
             },
             "average": {
-                "timeToReview": 725,
-                "timeToApprove": 725,
-                "timeToMerge": 2368,
-                "timeToReviewRequest": 19,
-                "timeInDraft": 19
+                "timeToReview": 71,
+                "timeToApprove": 71,
+                "timeToMerge": 1574,
+                "timeToReviewRequest": 6,
+                "timeInDraft": 6,
+                "timeFromInitialRequestToResponse": 611,
+                "timeFromOpenToResponse": 629,
+                "timeFromRepeatedRequestToResponse": 49,
+                "timeWaitingForRepeatedReview": 0
+            }
+        }
+    },
+    "dev3": {
+        "10/2024": {
+            "reviewRequestsConducted": 11,
+            "timeFromInitialRequestToResponse": [
+                65,
+                1
+            ],
+            "timeFromOpenToResponse": [
+                71,
+                7
+            ],
+            "timeFromRepeatedRequestToResponse": [],
+            "reviewsConducted": {
+                "dev1": {
+                    "approved": 1,
+                    "total": 1
+                },
+                "total": {
+                    "approved": 2,
+                    "total": 2
+                },
+                "dev2": {
+                    "approved": 1,
+                    "total": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "s",
+                "xs"
+            ],
+            "opened": 3,
+            "closed": 3,
+            "merged": 3,
+            "comments": 5,
+            "totalReviewComments": 10,
+            "reverted": 0,
+            "additions": 206,
+            "deletions": 1271,
+            "prSizes": [
+                "m",
+                "xs",
+                "m"
+            ],
+            "timeToReview": [
+                31,
+                211,
+                11
+            ],
+            "timeToApprove": [
+                923,
+                381,
+                11
+            ],
+            "timeToMerge": [
+                2116,
+                936,
+                239
+            ],
+            "timeToReviewRequest": [
+                23,
+                6,
+                9
+            ],
+            "timeInDraft": [
+                23,
+                6,
+                9
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "m": {
+                    "timeToReview": [
+                        31,
+                        11
+                    ],
+                    "timeToApprove": [
+                        923,
+                        11
+                    ],
+                    "timeToMerge": [
+                        2116,
+                        239
+                    ],
+                    "percentile": {
+                        "timeToReview": 21,
+                        "timeToApprove": 467,
+                        "timeToMerge": 1177
+                    },
+                    "median": {
+                        "timeToReview": 21,
+                        "timeToApprove": 467,
+                        "timeToMerge": 1177
+                    },
+                    "average": {
+                        "timeToReview": 21,
+                        "timeToApprove": 467,
+                        "timeToMerge": 1178
+                    }
+                },
+                "xs": {
+                    "timeToReview": [
+                        211
+                    ],
+                    "timeToApprove": [
+                        381
+                    ],
+                    "timeToMerge": [
+                        936
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 211,
+                        "timeToApprove": 381,
+                        "timeToMerge": 936
+                    },
+                    "average": {
+                        "timeToReview": 211,
+                        "timeToApprove": 381,
+                        "timeToMerge": 936
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 6,
+                    "sizePoints": 229,
+                    "additions": 173,
+                    "deletions": 280,
+                    "timeToReview": 31,
+                    "timeToApprove": 892,
+                    "timeToMerge": 1193
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 13.8,
+                    "additions": 13,
+                    "deletions": 4,
+                    "timeToReview": 211,
+                    "timeToApprove": 170,
+                    "timeToMerge": 555
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 217.4,
+                    "additions": 20,
+                    "deletions": 987,
+                    "timeToReview": 11,
+                    "timeToApprove": 0,
+                    "timeToMerge": 228
+                }
+            ],
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 5,
+            "discussions": {
+                "received": {
+                    "total": 4,
+                    "agreed": 0,
+                    "disagreed": 0
+                }
+            },
+            "reviewTimeIntervals": {
+                "0-2": 2,
+                "2-4": 1,
+                "4-8": 0,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 0,
+                "24-Infinity": 0
+            },
+            "approvalTimeIntervals": {},
+            "mergeTimeIntervals": {},
+            "median": {
+                "timeToReview": 31,
+                "timeToApprove": 381,
+                "timeToMerge": 936,
+                "timeToReviewRequest": 9,
+                "timeInDraft": 9,
+                "timeFromInitialRequestToResponse": 33,
+                "timeFromOpenToResponse": 39,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "percentile": {
+                "timeToReview": 76,
+                "timeToApprove": 516,
+                "timeToMerge": 1231,
+                "timeToReviewRequest": 12,
+                "timeInDraft": 12,
+                "timeFromInitialRequestToResponse": 33,
+                "timeFromOpenToResponse": 39,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "average": {
+                "timeToReview": 85,
+                "timeToApprove": 439,
+                "timeToMerge": 1097,
+                "timeToReviewRequest": 13,
+                "timeInDraft": 13,
+                "timeFromInitialRequestToResponse": 33,
+                "timeFromOpenToResponse": 39,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            }
+        },
+        "total": {
+            "reviewRequestsConducted": 11,
+            "timeFromInitialRequestToResponse": [
+                65,
+                1
+            ],
+            "timeFromOpenToResponse": [
+                71,
+                7
+            ],
+            "timeFromRepeatedRequestToResponse": [],
+            "actionsTime": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "opened": 1,
+                    "merged": 1
+                },
+                {
+                    "merged": 1
+                },
+                null,
+                null,
+                {
+                    "approved": 1
+                },
+                {
+                    "approved": 1,
+                    "merged": 1,
+                    "opened": 1
+                },
+                {
+                    "opened": 1
+                }
+            ],
+            "reviewsConducted": {
+                "dev1": {
+                    "approved": 1,
+                    "total": 1
+                },
+                "total": {
+                    "approved": 2,
+                    "total": 2
+                },
+                "dev2": {
+                    "approved": 1,
+                    "total": 1
+                }
+            },
+            "reviewsConductedSize": [
+                "s",
+                "xs"
+            ],
+            "opened": 3,
+            "closed": 3,
+            "merged": 3,
+            "comments": 5,
+            "totalReviewComments": 10,
+            "reverted": 0,
+            "additions": 206,
+            "deletions": 1271,
+            "prSizes": [
+                "m",
+                "xs",
+                "m"
+            ],
+            "timeToReview": [
+                31,
+                211,
+                11
+            ],
+            "timeToApprove": [
+                923,
+                381,
+                11
+            ],
+            "timeToMerge": [
+                2116,
+                936,
+                239
+            ],
+            "timeToReviewRequest": [
+                23,
+                6,
+                9
+            ],
+            "timeInDraft": [
+                23,
+                6,
+                9
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "m": {
+                    "timeToReview": [
+                        31,
+                        11
+                    ],
+                    "timeToApprove": [
+                        923,
+                        11
+                    ],
+                    "timeToMerge": [
+                        2116,
+                        239
+                    ],
+                    "percentile": {
+                        "timeToReview": 21,
+                        "timeToApprove": 467,
+                        "timeToMerge": 1177
+                    },
+                    "median": {
+                        "timeToReview": 21,
+                        "timeToApprove": 467,
+                        "timeToMerge": 1177
+                    },
+                    "average": {
+                        "timeToReview": 21,
+                        "timeToApprove": 467,
+                        "timeToMerge": 1178
+                    }
+                },
+                "xs": {
+                    "timeToReview": [
+                        211
+                    ],
+                    "timeToApprove": [
+                        381
+                    ],
+                    "timeToMerge": [
+                        936
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 211,
+                        "timeToApprove": 381,
+                        "timeToMerge": 936
+                    },
+                    "average": {
+                        "timeToReview": 211,
+                        "timeToApprove": 381,
+                        "timeToMerge": 936
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 6,
+                    "sizePoints": 229,
+                    "additions": 173,
+                    "deletions": 280,
+                    "timeToReview": 31,
+                    "timeToApprove": 892,
+                    "timeToMerge": 1193
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 4,
+                    "sizePoints": 13.8,
+                    "additions": 13,
+                    "deletions": 4,
+                    "timeToReview": 211,
+                    "timeToApprove": 170,
+                    "timeToMerge": 555
+                },
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 217.4,
+                    "additions": 20,
+                    "deletions": 987,
+                    "timeToReview": 11,
+                    "timeToApprove": 0,
+                    "timeToMerge": 228
+                }
+            ],
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 5,
+            "discussions": {
+                "received": {
+                    "total": 4,
+                    "agreed": 0,
+                    "disagreed": 0
+                }
+            },
+            "reviewTimeIntervals": {
+                "0-2": 2,
+                "2-4": 1,
+                "4-8": 0,
+                "8-12": 0,
+                "12-16": 0,
+                "16-24": 0,
+                "24-Infinity": 0
+            },
+            "approvalTimeIntervals": {},
+            "mergeTimeIntervals": {},
+            "median": {
+                "timeToReview": 31,
+                "timeToApprove": 381,
+                "timeToMerge": 936,
+                "timeToReviewRequest": 9,
+                "timeInDraft": 9,
+                "timeFromInitialRequestToResponse": 33,
+                "timeFromOpenToResponse": 39,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "percentile": {
+                "timeToReview": 76,
+                "timeToApprove": 516,
+                "timeToMerge": 1231,
+                "timeToReviewRequest": 12,
+                "timeInDraft": 12,
+                "timeFromInitialRequestToResponse": 33,
+                "timeFromOpenToResponse": 39,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "average": {
+                "timeToReview": 85,
+                "timeToApprove": 439,
+                "timeToMerge": 1097,
+                "timeToReviewRequest": 13,
+                "timeInDraft": 13,
+                "timeFromInitialRequestToResponse": 33,
+                "timeFromOpenToResponse": 39,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            }
+        }
+    },
+    "dev5": {
+        "10/2024": {
+            "reviewRequestsConducted": 13,
+            "timeFromInitialRequestToResponse": [],
+            "timeFromOpenToResponse": [],
+            "timeFromRepeatedRequestToResponse": [],
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 2,
+            "totalReviewComments": 0,
+            "reverted": 0,
+            "additions": 126,
+            "deletions": 2384,
+            "prSizes": [
+                "l"
+            ],
+            "timeToReview": [
+                647
+            ],
+            "timeToApprove": [
+                647
+            ],
+            "timeToMerge": [
+                1641
+            ],
+            "timeToReviewRequest": [
+                34
+            ],
+            "timeInDraft": [
+                34
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "l": {
+                    "timeToReview": [
+                        647
+                    ],
+                    "timeToApprove": [
+                        647
+                    ],
+                    "timeToMerge": [
+                        1641
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 647,
+                        "timeToApprove": 647,
+                        "timeToMerge": 1641
+                    },
+                    "average": {
+                        "timeToReview": 647,
+                        "timeToApprove": 647,
+                        "timeToMerge": 1641
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 602.8,
+                    "additions": 126,
+                    "deletions": 2384,
+                    "timeToReview": 647,
+                    "timeToApprove": 0,
+                    "timeToMerge": 994
+                }
+            ],
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 0,
+            "discussions": {
+                "received": {
+                    "total": 0,
+                    "agreed": 0,
+                    "disagreed": 0
+                }
+            },
+            "reviewTimeIntervals": {
+                "0-2": 0,
+                "2-4": 0,
+                "4-8": 0,
+                "8-12": 1,
+                "12-16": 0,
+                "16-24": 0,
+                "24-Infinity": 0
+            },
+            "approvalTimeIntervals": {},
+            "mergeTimeIntervals": {},
+            "median": {
+                "timeToReview": 647,
+                "timeToApprove": 647,
+                "timeToMerge": 1641,
+                "timeToReviewRequest": 34,
+                "timeInDraft": 34,
+                "timeFromInitialRequestToResponse": 0,
+                "timeFromOpenToResponse": 0,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "percentile": {
+                "timeToReview": null,
+                "timeToApprove": null,
+                "timeToMerge": null,
+                "timeToReviewRequest": null,
+                "timeInDraft": null,
+                "timeFromInitialRequestToResponse": 0,
+                "timeFromOpenToResponse": 0,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "average": {
+                "timeToReview": 647,
+                "timeToApprove": 647,
+                "timeToMerge": 1641,
+                "timeToReviewRequest": 34,
+                "timeInDraft": 34,
+                "timeFromInitialRequestToResponse": 0,
+                "timeFromOpenToResponse": 0,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            }
+        },
+        "total": {
+            "reviewRequestsConducted": 13,
+            "timeFromInitialRequestToResponse": [],
+            "timeFromOpenToResponse": [],
+            "timeFromRepeatedRequestToResponse": [],
+            "actionsTime": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                {
+                    "merged": 1
+                },
+                null,
+                {
+                    "opened": 1
+                }
+            ],
+            "opened": 1,
+            "closed": 1,
+            "merged": 1,
+            "comments": 2,
+            "totalReviewComments": 0,
+            "reverted": 0,
+            "additions": 126,
+            "deletions": 2384,
+            "prSizes": [
+                "l"
+            ],
+            "timeToReview": [
+                647
+            ],
+            "timeToApprove": [
+                647
+            ],
+            "timeToMerge": [
+                1641
+            ],
+            "timeToReviewRequest": [
+                34
+            ],
+            "timeInDraft": [
+                34
+            ],
+            "unreviewed": 0,
+            "unapproved": 0,
+            "sizes": {
+                "l": {
+                    "timeToReview": [
+                        647
+                    ],
+                    "timeToApprove": [
+                        647
+                    ],
+                    "timeToMerge": [
+                        1641
+                    ],
+                    "percentile": {
+                        "timeToReview": null,
+                        "timeToApprove": null,
+                        "timeToMerge": null
+                    },
+                    "median": {
+                        "timeToReview": 647,
+                        "timeToApprove": 647,
+                        "timeToMerge": 1641
+                    },
+                    "average": {
+                        "timeToReview": 647,
+                        "timeToApprove": 647,
+                        "timeToMerge": 1641
+                    }
+                }
+            },
+            "pullRequestsInfo": [
+                {
+                    "number": 1,
+                    "link": "https://github.com/owner/repo-example/pull/1",
+                    "title": "Example pull request",
+                    "comments": 0,
+                    "sizePoints": 602.8,
+                    "additions": 126,
+                    "deletions": 2384,
+                    "timeToReview": 647,
+                    "timeToApprove": 0,
+                    "timeToMerge": 994
+                }
+            ],
+            "timeWaitingForRepeatedReview": [],
+            "reviewComments": 0,
+            "discussions": {
+                "received": {
+                    "total": 0,
+                    "agreed": 0,
+                    "disagreed": 0
+                }
+            },
+            "reviewTimeIntervals": {
+                "0-2": 0,
+                "2-4": 0,
+                "4-8": 0,
+                "8-12": 1,
+                "12-16": 0,
+                "16-24": 0,
+                "24-Infinity": 0
+            },
+            "approvalTimeIntervals": {},
+            "mergeTimeIntervals": {},
+            "median": {
+                "timeToReview": 647,
+                "timeToApprove": 647,
+                "timeToMerge": 1641,
+                "timeToReviewRequest": 34,
+                "timeInDraft": 34,
+                "timeFromInitialRequestToResponse": 0,
+                "timeFromOpenToResponse": 0,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "percentile": {
+                "timeToReview": null,
+                "timeToApprove": null,
+                "timeToMerge": null,
+                "timeToReviewRequest": null,
+                "timeInDraft": null,
+                "timeFromInitialRequestToResponse": 0,
+                "timeFromOpenToResponse": 0,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
+            },
+            "average": {
+                "timeToReview": 647,
+                "timeToApprove": 647,
+                "timeToMerge": 1641,
+                "timeToReviewRequest": 34,
+                "timeInDraft": 34,
+                "timeFromInitialRequestToResponse": 0,
+                "timeFromOpenToResponse": 0,
+                "timeFromRepeatedRequestToResponse": 0,
+                "timeWaitingForRepeatedReview": 0
             }
         }
     }

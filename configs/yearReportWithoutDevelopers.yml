@@ -1,16 +1,37 @@
-name: "Yearly Statistics Update Every Weekday"
+name: "Manual Annual Report"
 on:
-  schedule:
-    - cron: "0 23 * * 1,2,3,4,5"
+  workflow_dispatch:
+    inputs:
+      report_date_start:
+        description: "Report date start(d/MM/yyyy)"
+        required: false
+        default: "01/01/2024"
+      report_date_end:
+        description: "Report date end(d/MM/yyyy)"
+        required: false
+        default: "31/12/2024"
+      issue_title:
+        description: "Issue title"
+        required: false
+      period_split_unit:
+        description: "Unit for time segmentation"
+        required: false
+        default: "months"
+        type: choice
+        options:
+          - years
+          - quarters
+          - months
+          - none
 jobs:
   create-report:
     name: "Create report"
     runs-on: ubuntu-latest
     steps:
       - name: "Runs script for analytics"
-        uses: AlexSim93/pull-request-analytics-action@v3
+        uses: AlexSim93/pull-request-analytics-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Generate a classic token, add it to Actions secrets, and use it in this field
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # If you're interested in analytics for a single repository without team breakdowns, GITHUB_TOKEN is sufficient.
           GITHUB_OWNER_FOR_ISSUE: "owner" # Make sure to specify the owner of the repository where the issue will be created
           GITHUB_REPO_FOR_ISSUE: "repo" # Make sure to specify the name of the repository where the issue will be created
           GITHUB_OWNERS_REPOS: "owner/repo" # Be sure to list the owner and repository name in the format owner/repo
@@ -18,8 +39,12 @@ jobs:
           CORE_HOURS_START: "9:00"
           CORE_HOURS_END: "19:00"
           TIMEZONE: "Europe/Berlin"
-          REPORT_DATE_START: 01/01/2024
+          REPORT_DATE_START: ${{ inputs.report_date_start }}
+          REPORT_DATE_END: ${{ inputs.report_date_end }}
+          ISSUE_TITLE: ${{ inputs.issue_title }}
+          PERIOD_SPLIT_UNIT: ${{ inputs.period_split_unit }}
           TOP_LIST_AMOUNT: 5
           SHOW_USERS: total
-          EXECUTION_OUTCOME: existing-issue
-          ISSUE_NUMBER: 1 # Set issue number or change EXECUTION_OUTCOME to new-issue
+          EXECUTION_OUTCOME: new-issue
+          SHOW_CORRELATION_GRAPHS: true
+          SHOW_ACTIVITY_TIME_GRAPHS: true

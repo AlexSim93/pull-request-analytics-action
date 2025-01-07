@@ -112,6 +112,24 @@ const commentedReview = [
   },
 ];
 
+const dismissedBySecondReviewer = [
+  {
+    state: "approved",
+    submitted_at: "2024-01-11T09:00:00Z",
+    user: { login: "dev1" },
+  },
+  {
+    state: "changes_requested",
+    submitted_at: "2024-01-11T11:00:00Z",
+    user: { login: "dev2" },
+  },
+  {
+    state: "dismissed",
+    submitted_at: "2024-01-11T13:00:00Z",
+    user: { login: "dev2" },
+  },
+];
+
 describe("check getApproveTime", () => {
   it("Check PR without reviews and return null", () => {
     expect(getApproveTime(notReviewed)).toBe(null);
@@ -148,5 +166,10 @@ describe("check getApproveTime", () => {
   });
   it("Check commented PR and return time of the approval", () => {
     expect(getApproveTime(commentedReview)).toBe("2024-01-12T05:00:00Z");
+  });
+  it("Check PR with dismissed changes requested status from second reviewer and return time of the approval", () => {
+    expect(getApproveTime(dismissedBySecondReviewer)).toBe(
+      "2024-01-11T13:00:00Z"
+    );
   });
 });

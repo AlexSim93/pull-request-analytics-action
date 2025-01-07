@@ -5,6 +5,7 @@ import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 import { calcDifferenceInMinutes, getResponses } from "./calculations";
+import { invalidUserLogin } from "../constants";
 
 export const prepareResponseTime = (
   events: any[] | undefined | null = [],
@@ -17,6 +18,42 @@ export const prepareResponseTime = (
 ) => {
   if (!events) return;
   const responses = getResponses(events);
+  const user = pullRequest?.user.login || invalidUserLogin;
+  ["total", user, ...(teams[user] || [])].forEach((userKey) => {
+    [dateKey, "total"].forEach((key) => {
+      const awaitingResponse = Object.values(
+        responses as Record<string, any[][]>
+      )
+        .reduce((acc, el) => {
+          const repeatedResponses = el.filter((_, index) => index > 0);
+          return [...acc, ...repeatedResponses];
+        }, [])
+        .map((element) =>
+          calcDifferenceInMinutes(
+            element?.[0],
+            element?.[1],
+            {
+              endOfWorkingTime: getValueAsIs("CORE_HOURS_END"),
+              startOfWorkingTime: getValueAsIs("CORE_HOURS_START"),
+            },
+            getMultipleValuesInput("HOLIDAYS")
+          )
+        )
+        .filter((el) => typeof el === "number") as number[];
+      set(
+        collection,
+        [userKey, key, "timeWaitingForRepeatedReview"],
+        [
+          ...get(
+            collection,
+            [userKey, key, "timeWaitingForRepeatedReview"],
+            []
+          ),
+          ...awaitingResponse,
+        ]
+      );
+    });
+  });
 
   Object.entries(responses as Record<string, any[][]>).forEach(
     ([user, responses]) => {
