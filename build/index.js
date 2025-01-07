@@ -3604,9 +3604,9 @@ const createTimelineTable = (data, type, users, date) => {
         return [
             `**${user}**`,
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeInDraft || 0),
-            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeWaitingForRepeatedReview || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToReviewRequest || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToReview || 0),
+            (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeWaitingForRepeatedReview || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToApprove || 0),
             (0, formatMinutesDuration_1.formatMinutesDuration)(data[user]?.[date]?.[type]?.timeToMerge || 0),
             data[user]?.[date]?.merged?.toString() || "0",
@@ -3619,9 +3619,9 @@ const createTimelineTable = (data, type, users, date) => {
             headers: [
                 "user",
                 constants_1.timeInDraftHeader,
-                constants_1.timeAwaitingRepeatedReviewHeader,
                 constants_1.timeToReviewRequestHeader,
                 constants_1.timeToReviewHeader,
+                constants_1.timeAwaitingRepeatedReviewHeader,
                 constants_1.timeToApproveHeader,
                 constants_1.timeToMergeHeader,
                 constants_1.totalMergedPrsHeader,
