@@ -1587,7 +1587,8 @@ const prepareResponseTime = (events = [], pullRequest, collection, dateKey, team
                 .map((element) => (0, calculations_1.calcDifferenceInMinutes)(element?.[0], element?.[1], {
                 endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
-            }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")));
+            }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")))
+                .filter((el) => typeof el === "number");
             (0, set_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], [
                 ...(0, get_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], []),
                 ...awaitingResponse,

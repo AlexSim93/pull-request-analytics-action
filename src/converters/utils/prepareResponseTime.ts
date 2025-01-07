@@ -38,12 +38,17 @@ export const prepareResponseTime = (
             },
             getMultipleValuesInput("HOLIDAYS")
           )
-        );
+        )
+        .filter((el) => typeof el === "number") as number[];
       set(
         collection,
         [userKey, key, "timeWaitingForRepeatedReview"],
         [
-          ...get(collection, [userKey, key, "timeWaitingForRepeatedReview"], []),
+          ...get(
+            collection,
+            [userKey, key, "timeWaitingForRepeatedReview"],
+            []
+          ),
           ...awaitingResponse,
         ]
       );
