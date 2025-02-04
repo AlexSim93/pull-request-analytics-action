@@ -1,39 +1,36 @@
 import {
   differenceInMinutes,
   eachDayOfInterval,
-  eachWeekendOfInterval,
-  isWeekend,
   setHours,
   setMinutes,
 } from "date-fns";
 import { isHoliday } from "./isHoliday";
+import { checkWeekend } from "./checkWeekend";
 
 export const calcWeekendMinutes = (
   firstDate: Date,
   secondDate: Date,
   holidays?: string[]
 ) => {
-  const weekendsOfInterval = eachWeekendOfInterval({
-    start: firstDate,
-    end: secondDate,
-  });
-
   const days = eachDayOfInterval({
     start: firstDate,
     end: secondDate,
   });
+
+  const weekendsOfInterval = days.filter((day) => checkWeekend(day));
+
   const minutesOnHolidays = days.reduce((acc, day) => {
-    if (isHoliday(day, holidays) && !isWeekend(day)) return acc + 24 * 60;
+    if (isHoliday(day, holidays) && !checkWeekend(day)) return acc + 24 * 60;
     return acc;
   }, 0);
   let minutesInWeekend =
     24 * 60 * weekendsOfInterval.length + (minutesOnHolidays || 0);
 
-  const isStartedAtWeekend = isWeekend(firstDate);
+  const isStartedAtWeekend = checkWeekend(firstDate);
 
   const isStartedOnHoliday = isHoliday(firstDate, holidays);
 
-  const isEndedAtWeekend = isWeekend(secondDate);
+  const isEndedAtWeekend = checkWeekend(secondDate);
 
   const isEndedOnHoliday = isHoliday(secondDate, holidays);
 

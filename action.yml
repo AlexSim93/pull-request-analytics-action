@@ -43,6 +43,10 @@ inputs:
   CORE_HOURS_END:
     description: "End time of core hours(HH:mm)"
     required: false
+  WEEKENDS:
+    description: "Specifies the days of the week considered as weekends. Values are represented as numbers, where 0 corresponds to Sunday"
+    required: false
+    default: "0,6"
   HOLIDAYS:
     description: "Holidays separated by comma(d/MM/yyyy)"
     required: false
