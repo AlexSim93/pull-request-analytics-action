@@ -2864,6 +2864,7 @@ ${[
         "TIMEZONE",
         "CORE_HOURS_START",
         "CORE_HOURS_END",
+        "WEEKENDS",
         "HOLIDAYS",
         "REPORT_PERIOD",
         "REPORT_DATE_START",
