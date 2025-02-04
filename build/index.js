@@ -606,6 +606,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcNonWorkingHours = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const isHoliday_1 = __nccwpck_require__(33345);
+const checkWeekend_1 = __nccwpck_require__(994);
 const calcNonWorkingHours = (firstDate, secondDate, { startOfWorkingTime, endOfWorkingTime }, holidays) => {
     const daysOfInterval = (0, date_fns_1.eachDayOfInterval)({
         start: firstDate,
@@ -619,7 +620,7 @@ const calcNonWorkingHours = (firstDate, secondDate, { startOfWorkingTime, endOfW
         const startOfWorkingHours = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, startHours), startMinutes);
         const endOfWorkingHours = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, endHours), endMinutes);
         const endOfDay = (0, date_fns_1.setMinutes)((0, date_fns_1.setHours)(day, 23), 59);
-        if ((0, date_fns_1.isWeekend)(day) || (0, isHoliday_1.isHoliday)(day, holidays))
+        if ((0, checkWeekend_1.checkWeekend)(day) || (0, isHoliday_1.isHoliday)(day, holidays))
             return acc;
         if (arr.length === 1) {
             if ((0, date_fns_1.isBefore)(secondDate, startOfWorkingHours) ||
@@ -711,6 +712,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcWeekendMinutes = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const isHoliday_1 = __nccwpck_require__(33345);
+const checkWeekend_1 = __nccwpck_require__(994);
 const calcWeekendMinutes = (firstDate, secondDate, holidays) => {
     const weekendsOfInterval = (0, date_fns_1.eachWeekendOfInterval)({
         start: firstDate,
@@ -721,14 +723,14 @@ const calcWeekendMinutes = (firstDate, secondDate, holidays) => {
         end: secondDate,
     });
     const minutesOnHolidays = days.reduce((acc, day) => {
-        if ((0, isHoliday_1.isHoliday)(day, holidays) && !(0, date_fns_1.isWeekend)(day))
+        if ((0, isHoliday_1.isHoliday)(day, holidays) && !(0, checkWeekend_1.checkWeekend)(day))
             return acc + 24 * 60;
         return acc;
     }, 0);
     let minutesInWeekend = 24 * 60 * weekendsOfInterval.length + (minutesOnHolidays || 0);
-    const isStartedAtWeekend = (0, date_fns_1.isWeekend)(firstDate);
+    const isStartedAtWeekend = (0, checkWeekend_1.checkWeekend)(firstDate);
     const isStartedOnHoliday = (0, isHoliday_1.isHoliday)(firstDate, holidays);
-    const isEndedAtWeekend = (0, date_fns_1.isWeekend)(secondDate);
+    const isEndedAtWeekend = (0, checkWeekend_1.checkWeekend)(secondDate);
     const isEndedOnHoliday = (0, isHoliday_1.isHoliday)(secondDate, holidays);
     if (isStartedAtWeekend) {
         minutesInWeekend -= (0, date_fns_1.differenceInMinutes)(firstDate, weekendsOfInterval[0]);
@@ -747,6 +749,25 @@ const calcWeekendMinutes = (firstDate, secondDate, holidays) => {
     return minutesInWeekend;
 };
 exports.calcWeekendMinutes = calcWeekendMinutes;
+
+
+/***/ }),
+
+/***/ 994:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkWeekend = void 0;
+const date_fns_1 = __nccwpck_require__(73314);
+const utils_1 = __nccwpck_require__(41002);
+const checkWeekend = (date) => {
+    const currentDay = (0, date_fns_1.getDay)(date);
+    const weekends = (0, utils_1.getMultipleValuesInput)('WEEKENDS').map((el) => +el);
+    return weekends.includes(currentDay);
+};
+exports.checkWeekend = checkWeekend;
 
 
 /***/ }),
