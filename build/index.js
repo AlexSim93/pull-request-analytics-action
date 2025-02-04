@@ -714,14 +714,11 @@ const date_fns_1 = __nccwpck_require__(73314);
 const isHoliday_1 = __nccwpck_require__(33345);
 const checkWeekend_1 = __nccwpck_require__(994);
 const calcWeekendMinutes = (firstDate, secondDate, holidays) => {
-    const weekendsOfInterval = (0, date_fns_1.eachWeekendOfInterval)({
-        start: firstDate,
-        end: secondDate,
-    });
     const days = (0, date_fns_1.eachDayOfInterval)({
         start: firstDate,
         end: secondDate,
     });
+    const weekendsOfInterval = days.filter((day) => (0, checkWeekend_1.checkWeekend)(day));
     const minutesOnHolidays = days.reduce((acc, day) => {
         if ((0, isHoliday_1.isHoliday)(day, holidays) && !(0, checkWeekend_1.checkWeekend)(day))
             return acc + 24 * 60;
@@ -764,7 +761,8 @@ const date_fns_1 = __nccwpck_require__(73314);
 const utils_1 = __nccwpck_require__(41002);
 const checkWeekend = (date) => {
     const currentDay = (0, date_fns_1.getDay)(date);
-    const weekends = (0, utils_1.getMultipleValuesInput)('WEEKENDS').map((el) => +el);
+    const weekends = (0, utils_1.getMultipleValuesInput)('WEEKENDS').map((el) => parseInt(el));
+    console.log('weekends', weekends, currentDay);
     return weekends.includes(currentDay);
 };
 exports.checkWeekend = checkWeekend;
