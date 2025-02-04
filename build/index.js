@@ -762,7 +762,6 @@ const utils_1 = __nccwpck_require__(41002);
 const checkWeekend = (date) => {
     const currentDay = (0, date_fns_1.getDay)(date);
     const weekends = (0, utils_1.getMultipleValuesInput)('WEEKENDS').map((el) => parseInt(el));
-    console.log('weekends', weekends, currentDay);
     return weekends.includes(currentDay);
 };
 exports.checkWeekend = checkWeekend;
