@@ -1,5 +1,6 @@
 import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
+import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import {
   calcDraftTime,
@@ -151,6 +152,7 @@ export const preparePullRequestTimeline = (
           pullRequestInfo?.deletions
         ),
         additions: pullRequestInfo?.additions || 0,
+        author: pullRequestInfo?.user?.login || invalidUserLogin,
         deletions: pullRequestInfo?.deletions || 0,
         timeToReview: timeToReview || 0,
         timeToApprove: timeToApprove ? timeToApprove - (timeToReview || 0) : 0,

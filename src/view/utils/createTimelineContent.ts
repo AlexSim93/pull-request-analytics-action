@@ -31,7 +31,7 @@ export const createTimelineContent = (
           .map((item) => ({
             text: `${item.title}(${
               formatMinutesDuration(item[milestone]) || "-"
-            })`,
+            })(Author: ${item.author})`,
             link: item.link || "",
           })) || [];
       return createList(milestoneTitle[milestone], items);
