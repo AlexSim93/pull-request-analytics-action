@@ -47,7 +47,7 @@ export const createPullRequestQualityTable = (
       ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
       .slice(0, parseInt(getValueAsIs("TOP_LIST_AMOUNT")))
       .map((item) => ({
-        text: `${item.title}(${item.comments || 0})`,
+        text: `${item.title}(${item.comments || 0})(Author: ${item.author})`,
         link: item.link || "",
       })) || [];
 

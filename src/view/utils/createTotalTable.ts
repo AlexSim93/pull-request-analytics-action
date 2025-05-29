@@ -46,7 +46,7 @@ export const createTotalTable = (
       ?.sort((a, b) => (b.sizePoints || 0) - (a.sizePoints || 0))
       .slice(0, parseInt(getValueAsIs("TOP_LIST_AMOUNT")))
       .map((item) => ({
-        text: `${item.title}(+${item.additions}/-${item.deletions})`,
+        text: `${item.title}(+${item.additions}/-${item.deletions})(Author: ${item.author})`,
         link: item.link || "",
       })) || [];
 

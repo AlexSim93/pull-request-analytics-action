@@ -1442,6 +1442,7 @@ exports.preparePullRequestStats = preparePullRequestStats;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.preparePullRequestTimeline = void 0;
 const utils_1 = __nccwpck_require__(41002);
+const constants_1 = __nccwpck_require__(95354);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const calcPRsize_1 = __nccwpck_require__(8722);
@@ -1526,6 +1527,7 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
                 comments: pullRequestInfo?.review_comments,
                 sizePoints: (0, calcPRsize_1.calcPRsize)(pullRequestInfo?.additions, pullRequestInfo?.deletions),
                 additions: pullRequestInfo?.additions || 0,
+                author: pullRequestInfo?.user?.login || constants_1.invalidUserLogin,
                 deletions: pullRequestInfo?.deletions || 0,
                 timeToReview: timeToReview || 0,
                 timeToApprove: timeToApprove ? timeToApprove - (timeToReview || 0) : 0,
@@ -3062,7 +3064,7 @@ const createPullRequestQualityTable = (data, users, date) => {
         ?.sort((a, b) => (b.comments || 0) - (a.comments || 0))
         .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
         .map((item) => ({
-        text: `${item.title}(${item.comments || 0})`,
+        text: `${item.title}(${item.comments || 0})(Author: ${item.author})`,
         link: item.link || "",
     })) || [];
     return [
@@ -3294,7 +3296,7 @@ const createTimelineContent = (data, users, date) => {
             ?.sort((a, b) => b[milestone] - a[milestone])
             .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
             .map((item) => ({
-            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone]) || "-"})`,
+            text: `${item.title}(${(0, formatMinutesDuration_1.formatMinutesDuration)(item[milestone]) || "-"})(Author: ${item.author})`,
             link: item.link || "",
         })) || [];
         return (0, common_1.createList)(milestoneTitle[milestone], items);
@@ -3692,7 +3694,7 @@ const createTotalTable = (data, users, date) => {
         ?.sort((a, b) => (b.sizePoints || 0) - (a.sizePoints || 0))
         .slice(0, parseInt((0, utils_1.getValueAsIs)("TOP_LIST_AMOUNT")))
         .map((item) => ({
-        text: `${item.title}(+${item.additions}/-${item.deletions})`,
+        text: `${item.title}(+${item.additions}/-${item.deletions})(Author: ${item.author})`,
         link: item.link || "",
     })) || [];
     return [
