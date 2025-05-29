@@ -41,7 +41,7 @@ type PullRequestTimelineInfo = {
   sizePoints: number;
   additions: number;
   deletions: number;
-  author?: string;
+  author: string;
 };
 
 type Discussion = {
