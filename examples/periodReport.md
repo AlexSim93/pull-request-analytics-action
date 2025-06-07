@@ -303,7 +303,7 @@ EXECUTION_OUTCOME: markdown
     
     
   
-$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+`#FFA500`Time From Initial Request To Response, `#EE82EE`Time From Opening To Response, `#0000CD`Time From Rerequest To Response, `#696969`Time In Draft, `#B22222`Time To Review Request, `#FFD700`Time To Review, `#40E0D0`Time To Review After Rerequest, `#7FFF00`Time To Approve, `#8A2BE2`Time To Merge
 ```mermaid
 ---
 config:
@@ -330,7 +330,7 @@ line [4.93, 1.7]
 line [23.57, 10.02]
 ```
 
-$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+`#8A2BE2`Discussions Conducted, `#00008B`Discussions Received, `#DC143C`Changes Requested Conducted, `#B22222`Changes Requested Received, `#FFD700`Reviews Conducted, `#7FFF00`Merged PRs
 ```mermaid
 ---
 config:
@@ -354,7 +354,7 @@ line [30, 19]
 line [13, 4]
 ```
 
-$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+`#FFA500`Time From Initial Request To Response, `#EE82EE`Time From Opening To Response, `#0000CD`Time From Rerequest To Response, `#696969`Time In Draft, `#B22222`Time To Review Request, `#FFD700`Time To Review, `#40E0D0`Time To Review After Rerequest, `#7FFF00`Time To Approve, `#8A2BE2`Time To Merge
 ```mermaid
 ---
 config:
@@ -381,7 +381,7 @@ line [7.47, 6.02]
 line [16.33, 15.88]
 ```
 
-$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+`#8A2BE2`Discussions Conducted, `#00008B`Discussions Received, `#DC143C`Changes Requested Conducted, `#B22222`Changes Requested Received, `#FFD700`Reviews Conducted, `#7FFF00`Merged PRs
 ```mermaid
 ---
 config:
@@ -405,7 +405,7 @@ line [27, 19]
 line [20, 17]
 ```
 
-$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+`#FFA500`Time From Initial Request To Response, `#EE82EE`Time From Opening To Response, `#0000CD`Time From Rerequest To Response, `#696969`Time In Draft, `#B22222`Time To Review Request, `#FFD700`Time To Review, `#40E0D0`Time To Review After Rerequest, `#7FFF00`Time To Approve, `#8A2BE2`Time To Merge
 ```mermaid
 ---
 config:
@@ -432,7 +432,7 @@ line [13.82, 9.55]
 line [22.1, 23.27]
 ```
 
-$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+`#8A2BE2`Discussions Conducted, `#00008B`Discussions Received, `#DC143C`Changes Requested Conducted, `#B22222`Changes Requested Received, `#FFD700`Reviews Conducted, `#7FFF00`Merged PRs
 ```mermaid
 ---
 config:
@@ -456,7 +456,7 @@ line [18, 12]
 line [14, 13]
 ```
 
-$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+`#FFA500`Time From Initial Request To Response, `#EE82EE`Time From Opening To Response, `#0000CD`Time From Rerequest To Response, `#696969`Time In Draft, `#B22222`Time To Review Request, `#FFD700`Time To Review, `#40E0D0`Time To Review After Rerequest, `#7FFF00`Time To Approve, `#8A2BE2`Time To Merge
 ```mermaid
 ---
 config:
@@ -483,7 +483,7 @@ line [3.53, 1.15]
 line [18.7, 9.28]
 ```
 
-$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+`#8A2BE2`Discussions Conducted, `#00008B`Discussions Received, `#DC143C`Changes Requested Conducted, `#B22222`Changes Requested Received, `#FFD700`Reviews Conducted, `#7FFF00`Merged PRs
 ```mermaid
 ---
 config:
@@ -507,7 +507,7 @@ line [15, 18]
 line [18, 13]
 ```
 
-$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+`#FFA500`Time From Initial Request To Response, `#EE82EE`Time From Opening To Response, `#0000CD`Time From Rerequest To Response, `#696969`Time In Draft, `#B22222`Time To Review Request, `#FFD700`Time To Review, `#40E0D0`Time To Review After Rerequest, `#7FFF00`Time To Approve, `#8A2BE2`Time To Merge
 ```mermaid
 ---
 config:
@@ -534,7 +534,7 @@ line [10.22, 13.13]
 line [30.72, 27.88]
 ```
 
-$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+`#8A2BE2`Discussions Conducted, `#00008B`Discussions Received, `#DC143C`Changes Requested Conducted, `#B22222`Changes Requested Received, `#FFD700`Reviews Conducted, `#7FFF00`Merged PRs
 ```mermaid
 ---
 config:
@@ -558,7 +558,7 @@ line [11, 2]
 line [22, 15]
 ```
 
-$$\color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response\ \color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+`#FFA500`Time From Initial Request To Response, `#EE82EE`Time From Opening To Response, `#0000CD`Time From Rerequest To Response, `#696969`Time In Draft, `#B22222`Time To Review Request, `#FFD700`Time To Review, `#40E0D0`Time To Review After Rerequest, `#7FFF00`Time To Approve, `#8A2BE2`Time To Merge
 ```mermaid
 ---
 config:
@@ -585,7 +585,7 @@ line [8.05, 7.83]
 line [21.95, 23.8]
 ```
 
-$$\color{blueviolet}Discussions\ Conducted\ \color{darkblue}Discussions\ Received\ \color{crimson}Changes\ Requested\ Conducted\ \color{firebrick}Changes\ Requested\ Received\ \color{gold}Reviews\ Conducted\ \color{chartreuse}Merged\ PRs$$
+`#8A2BE2`Discussions Conducted, `#00008B`Discussions Received, `#DC143C`Changes Requested Conducted, `#B22222`Changes Requested Received, `#FFD700`Reviews Conducted, `#7FFF00`Merged PRs
 ```mermaid
 ---
 config:

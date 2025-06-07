@@ -144,7 +144,7 @@ Shows how quickly reviewers respond to review requests. Helps better understand 
 
 This section displays metric changes over time using graphs, helping to understand how metrics have evolved over extended periods. To enable these graphs, ensure that `PERIOD_SPLIT_UNIT` is set and that the collected data covers at least two time periods (e.g., quarters or months).
 
-$$\color{dimgrey}Time\ In\ Draft\ \color{firebrick}Time\ To\ Review\ Request\ \color{gold}Time\ To\ Review\ \color{turquoise}Time\ To\ Review\ After\ Rerequest\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge\ \color{orange}Time\ From\ Initial\ Request\ To\ Response\ \color{violet}Time\ From\ Opening\ To\ Response\ \color{mediumblue}Time\ From\ Rerequest\ To\ Response$$
+`#FFA500`Time From Initial Request To Response,`#EE82EE`Time From Opening To Response,`#0000CD`Time From Rerequest To Response,`#696969`Time In Draft,`#B22222`Time To Review Request,`#FFD700`Time To Review,`#40E0D0`Time To Review After Rerequest,`#7FFF00`Time To Approve,`#8A2BE2`Time To Merge
 
 ```mermaid
 ---
@@ -176,7 +176,7 @@ line [0, 2.18, 0.92, 0.77, 5.47, 0.83, 4.85, 2.42, 4.28, 23.18, 0, 1.63, 1.98, 4
 
 This graphs allow you to observe how pull request size impacts lead time. It can be especially useful for assessing the actual influence of PR size on lead time. For more accurate results, it's recommended to analyze a sufficiently large dataset to minimize error margins. To view the graphs, set the `SHOW_CORRELATION_GRAPHS` parameter to `true`.
 
-$$\color{gold}Time\ To\ Review\ \color{chartreuse}Time\ To\ Approve\ \color{blueviolet}Time\ To\ Merge$$
+`#FFD700`Time To Review, `#7FFF00`Time To Approve, `#8A2BE2`Time To Merge
 
 ```mermaid
 ---
@@ -202,7 +202,7 @@ line [16.25, 30, 43.25, 54.65, 94.35]
 
 The graph shows when users perform key actions such as opening, closing, and reviewing PRs. To view the graphs, set the `SHOW_ACTIVITY_TIME_GRAPHS` parameter to `true`.
 
-$$\color{black}Opened\ \color{purple}Merged\ \color{green}Approved\ \color{red}Changes Requested\ \color{blue}Commented$$
+`#000000`Opened, `#800080`Merged, `#008000`Approved, `#FF0000`Changes Requested, `#0000FF`Commented
 
 ```mermaid
 ---
