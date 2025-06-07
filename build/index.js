@@ -2652,7 +2652,7 @@ const createXYChart = ({ title, xAxis, yAxis, lines, }) => {
     if (!lines.length)
         return "";
     return `
-$$${lines.map((line) => `\\color{${line.color}}${line.name}`).join("\\ ")}$$
+${lines.map((line) => `\`${line.color}\`${line.name}`).join(",")}
 \`\`\`mermaid
 ---
 config:
@@ -2663,7 +2663,7 @@ config:
         xyChart:
             titleColor: "black"
             plotColorPalette: "${lines
-        .map((line) => line.color || "black")
+        .map((line) => line.color || "#000000")
         .join(", ")}"
 ---
 xychart-beta
@@ -2801,27 +2801,27 @@ const createActivityXYChart = (data, user) => {
         lines: [
             {
                 name: "Opened",
-                color: "black",
+                color: "#000000",
                 values: hours.map((el) => data[user]?.total?.actionsTime?.[el]?.opened || 0),
             },
             {
                 name: "Merged",
-                color: "purple",
+                color: "#800080",
                 values: hours.map((el) => data[user]?.total?.actionsTime?.[el]?.merged || 0),
             },
             {
                 name: "Approved",
-                color: "green",
+                color: "#008000",
                 values: hours.map((el) => data[user]?.total?.actionsTime?.[el]?.approved || 0),
             },
             {
                 name: "Changes Requested",
-                color: "red",
+                color: "#ff0000",
                 values: hours.map((el) => data[user]?.total?.actionsTime?.[el]?.changes_requested || 0),
             },
             {
                 name: "Commented",
-                color: "blue",
+                color: "#0000ff",
                 values: hours.map((el) => data[user]?.total?.actionsTime?.[el]?.commented || 0),
             },
         ],
@@ -2910,33 +2910,33 @@ const createContributionMonthsXYChart = (data, dates, user) => {
         },
         lines: [
             {
-                color: "blueviolet",
-                name: "Discussions\\ Conducted",
+                color: "#8A2BE2",
+                name: "Discussions Conducted",
                 values: dates.map((date) => data[user]?.[date]?.discussions?.conducted?.total || 0).reverse(),
             },
             {
-                color: "darkblue",
-                name: "Discussions\\ Received",
+                color: "#00008B",
+                name: "Discussions Received",
                 values: dates.map((date) => data[user]?.[date]?.discussions?.received?.total || 0).reverse(),
             },
             {
-                color: "crimson",
-                name: "Changes\\ Requested\\ Conducted",
+                color: "#DC143C",
+                name: "Changes Requested Conducted",
                 values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.changes_requested || 0).reverse(),
             },
             {
-                color: "firebrick",
-                name: "Changes\\ Requested\\ Received",
+                color: "#B22222",
+                name: "Changes Requested Received",
                 values: dates.map((date) => data["total"]?.[date]?.reviewsConducted?.[user]?.["changes_requested"] || 0).reverse(),
             },
             {
-                color: "gold",
-                name: "Reviews\\ Conducted",
+                color: "#FFD700",
+                name: "Reviews Conducted",
                 values: dates.map((date) => data[user]?.[date]?.reviewsConducted?.total?.total || 0).reverse(),
             },
             {
-                color: "chartreuse",
-                name: "Merged\\ PRs",
+                color: "#7FFF00",
+                name: "Merged PRs",
                 values: dates.map((date) => data[user]?.[date]?.merged || 0).reverse(),
             },
         ],
@@ -3242,22 +3242,22 @@ const createSizeDependencyXYChart = (data, type, user) => {
         },
         lines: [
             {
-                color: "gold",
-                name: "Time\\ To\\ Review",
+                color: "#FFD700",
+                name: "Time To Review",
                 values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToReview || 0) /
                     60) *
                     100) / 100),
             },
             {
-                color: "chartreuse",
-                name: "Time\\ To\\ Approve",
+                color: "#7FFF00",
+                name: "Time To Approve",
                 values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToApprove || 0) /
                     60) *
                     100) / 100),
             },
             {
-                color: "blueviolet",
-                name: "Time\\ To\\ Merge",
+                color: "#8A2BE2",
+                name: "Time To Merge",
                 values: sizes.map((size) => Math.round(((data[user]?.total?.sizes?.[size]?.[type]?.timeToMerge || 0) /
                     60) *
                     100) / 100),
@@ -3461,8 +3461,8 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
         },
         lines: [
             {
-                color: "orange",
-                name: "Time\\ From\\ Initial\\ Request\\ To\\ Response",
+                color: "#FFA500",
+                name: "Time From Initial Request To Response",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]
                     ?.timeFromInitialRequestToResponse || 0) /
@@ -3471,8 +3471,8 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
                     .reverse(),
             },
             {
-                color: "violet",
-                name: "Time\\ From\\ Opening\\ To\\ Response",
+                color: "#EE82EE",
+                name: "Time From Opening To Response",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeFromOpenToResponse || 0) /
                     60) *
@@ -3480,8 +3480,8 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
                     .reverse(),
             },
             {
-                color: "mediumblue",
-                name: "Time\\ From\\ Rerequest\\ To\\ Response",
+                color: "#0000CD",
+                name: "Time From Rerequest To Response",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]
                     ?.timeFromRepeatedRequestToResponse || 0) /
@@ -3490,30 +3490,30 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
                     .reverse(),
             },
             {
-                color: "dimgrey",
-                name: "Time\\ In\\ Draft",
+                color: "#696969",
+                name: "Time In Draft",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeInDraft || 0) / 60) * 100) / 100)
                     .reverse(),
             },
             {
-                color: "firebrick",
-                name: "Time\\ To\\ Review\\ Request",
+                color: "#B22222",
+                name: "Time To Review Request",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReviewRequest || 0) / 60) *
                     100) / 100)
                     .reverse(),
             },
             {
-                color: "gold",
-                name: "Time\\ To\\ Review",
+                color: "#FFD700",
+                name: "Time To Review",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToReview || 0) / 60) * 100) / 100)
                     .reverse(),
             },
             {
-                color: "turquoise",
-                name: "Time\\ To\\ Review\\ After\\ Rerequest",
+                color: "#40E0D0",
+                name: "Time To Review After Rerequest",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeWaitingForRepeatedReview ||
                     0) /
@@ -3522,15 +3522,15 @@ const createTimelineMonthsXYChart = (data, type, dates, user) => {
                     .reverse(),
             },
             {
-                color: "chartreuse",
-                name: "Time\\ To\\ Approve",
+                color: "#7FFF00",
+                name: "Time To Approve",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToApprove || 0) / 60) * 100) / 100)
                     .reverse(),
             },
             {
-                color: "blueviolet",
-                name: "Time\\ To\\ Merge",
+                color: "#8A2BE2",
+                name: "Time To Merge",
                 values: dates
                     .map((date) => Math.round(((data[user]?.[date]?.[type]?.timeToMerge || 0) / 60) * 100) / 100)
                     .reverse(),

@@ -22,35 +22,35 @@ export const createActivityXYChart = (
     lines: [
       {
         name: "Opened",
-        color: "black",
+        color: "#000000",
         values: hours.map(
           (el) => data[user]?.total?.actionsTime?.[el]?.opened || 0
         ),
       },
       {
         name: "Merged",
-        color: "purple",
+        color: "#800080",
         values: hours.map(
           (el) => data[user]?.total?.actionsTime?.[el]?.merged || 0
         ),
       },
       {
         name: "Approved",
-        color: "green",
+        color: "#008000",
         values: hours.map(
           (el) => data[user]?.total?.actionsTime?.[el]?.approved || 0
         ),
       },
       {
         name: "Changes Requested",
-        color: "red",
+        color: "#ff0000",
         values: hours.map(
           (el) => data[user]?.total?.actionsTime?.[el]?.changes_requested || 0
         ),
       },
       {
         name: "Commented",
-        color: "blue",
+        color: "#0000ff",
         values: hours.map(
           (el) => data[user]?.total?.actionsTime?.[el]?.commented || 0
         ),

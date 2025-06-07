@@ -35,8 +35,8 @@ export const createSizeDependencyXYChart = (
     },
     lines: [
       {
-        color: "gold",
-        name: "Time\\ To\\ Review",
+        color: "#FFD700",
+        name: "Time To Review",
         values: sizes.map(
           (size) =>
             Math.round(
@@ -47,8 +47,8 @@ export const createSizeDependencyXYChart = (
         ),
       },
       {
-        color: "chartreuse",
-        name: "Time\\ To\\ Approve",
+        color: "#7FFF00",
+        name: "Time To Approve",
         values: sizes.map(
           (size) =>
             Math.round(
@@ -59,8 +59,8 @@ export const createSizeDependencyXYChart = (
         ),
       },
       {
-        color: "blueviolet",
-        name: "Time\\ To\\ Merge",
+        color: "#8A2BE2",
+        name: "Time To Merge",
         values: sizes.map(
           (size) =>
             Math.round(

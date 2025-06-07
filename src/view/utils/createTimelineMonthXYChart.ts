@@ -58,8 +58,8 @@ export const createTimelineMonthsXYChart = (
     },
     lines: [
       {
-        color: "orange",
-        name: "Time\\ From\\ Initial\\ Request\\ To\\ Response",
+        color: "#FFA500",
+        name: "Time From Initial Request To Response",
         values: dates
           .map(
             (date) =>
@@ -73,8 +73,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "violet",
-        name: "Time\\ From\\ Opening\\ To\\ Response",
+        color: "#EE82EE",
+        name: "Time From Opening To Response",
         values: dates
           .map(
             (date) =>
@@ -87,8 +87,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "mediumblue",
-        name: "Time\\ From\\ Rerequest\\ To\\ Response",
+        color: "#0000CD",
+        name: "Time From Rerequest To Response",
         values: dates
           .map(
             (date) =>
@@ -102,8 +102,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "dimgrey",
-        name: "Time\\ In\\ Draft",
+        color: "#696969",
+        name: "Time In Draft",
         values: dates
           .map(
             (date) =>
@@ -114,8 +114,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "firebrick",
-        name: "Time\\ To\\ Review\\ Request",
+        color: "#B22222",
+        name: "Time To Review Request",
         values: dates
           .map(
             (date) =>
@@ -127,8 +127,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "gold",
-        name: "Time\\ To\\ Review",
+        color: "#FFD700",
+        name: "Time To Review",
         values: dates
           .map(
             (date) =>
@@ -139,8 +139,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "turquoise",
-        name: "Time\\ To\\ Review\\ After\\ Rerequest",
+        color: "#40E0D0",
+        name: "Time To Review After Rerequest",
         values: dates
           .map(
             (date) =>
@@ -154,8 +154,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "chartreuse",
-        name: "Time\\ To\\ Approve",
+        color: "#7FFF00",
+        name: "Time To Approve",
         values: dates
           .map(
             (date) =>
@@ -166,8 +166,8 @@ export const createTimelineMonthsXYChart = (
           .reverse(),
       },
       {
-        color: "blueviolet",
-        name: "Time\\ To\\ Merge",
+        color: "#8A2BE2",
+        name: "Time To Merge",
         values: dates
           .map(
             (date) =>
