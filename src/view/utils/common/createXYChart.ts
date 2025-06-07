@@ -11,7 +11,7 @@ export const createXYChart = ({
 }) => {
   if (!lines.length) return "";
   return `
-$$${lines.map((line) => `\\color{${line.color}}${line.name}`).join("\\ ")}$$
+${lines.map((line) => `\`${line.color}\`${line.name}`).join(",")}
 \`\`\`mermaid
 ---
 config:
@@ -22,7 +22,7 @@ config:
         xyChart:
             titleColor: "black"
             plotColorPalette: "${lines
-              .map((line) => line.color || "black")
+              .map((line) => line.color || "#000000")
               .join(", ")}"
 ---
 xychart-beta
