@@ -1,4 +1,5 @@
 import { Collection } from "../types";
+import { checkUserInclusive } from "./calculations";
 import { PullRequestSize } from "./calculations/getPullRequestSize";
 
 export const prepareConductedReviews = (
@@ -19,6 +20,7 @@ export const prepareConductedReviews = (
 
   [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach(
     (key) => {
+      if(!checkUserInclusive(key)) return;
       const statusesReviewsStats = statuses.reduce((acc, status) => {
         return {
           ...acc,

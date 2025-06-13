@@ -5,6 +5,7 @@ import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import { PullRequestSize } from "./calculations/getPullRequestSize";
 import { prepareConductedReviews } from "./prepareConductedReviews";
+import { checkUserInclusive } from "./calculations";
 
 export const prepareReviews = (
   reviews: any[] = [],
@@ -18,26 +19,29 @@ export const prepareReviews = (
   const users = Object.keys(
     reviews?.reduce((acc, review) => {
       const userLogin = review.user?.login || invalidUserLogin;
-      if (userLogin !== pullRequestLogin) {
+      if (userLogin !== pullRequestLogin && checkUserInclusive(userLogin)) {
         const teamsNames = (teams[userLogin] || []).reduce(
           (acc, team) => ({ ...acc, [team]: 1 }),
           {}
         );
         teamNames = Object.keys(teamsNames);
-        return { ...acc, [userLogin]: 1, ...teamsNames };
+        return { ...acc, [userLogin]: 1, ...teamsNames, total: 1 };
       }
       return acc;
     }, {}) || {}
-  ).concat("total");
+  );
 
   users.forEach((user) => {
     const userReviews =
       Array.isArray(reviews) && user !== "total" && !teamNames.includes(user)
         ? reviews?.filter((review) => {
             const userLogin = review.user?.login || invalidUserLogin;
-            return userLogin === user;
+            return userLogin === user && checkUserInclusive(userLogin);
           })
-        : reviews;
+        : reviews?.filter((review) => {
+            const userLogin = review.user?.login || invalidUserLogin;
+            return checkUserInclusive(userLogin);
+          });
     [dateKey, "total"].forEach((key) => {
       set(
         collection,

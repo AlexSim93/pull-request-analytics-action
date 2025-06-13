@@ -3,6 +3,7 @@ import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
 import { get, set } from "lodash";
 import { invalidUserLogin, reviewedTimelineEvent } from "../constants";
+import { checkUserInclusive } from "./calculations";
 
 export const prepareActionsTime = (
   pullRequest: Awaited<
@@ -24,41 +25,25 @@ export const prepareActionsTime = (
       const submitHour = el?.submitted_at
         ? getHours(parseISO(el?.submitted_at))
         : -1;
-      if (submitHour !== -1) {
+      const user = el?.user?.login || invalidUserLogin;
+      if (submitHour !== -1 && checkUserInclusive(user)) {
         const keys = ["total", "total", "actionsTime", submitHour, el.state];
         set(collection, keys, (get(collection, keys, 0) as number) + 1);
-        const userKeys = [
-          el?.user?.login || invalidUserLogin,
-          "total",
-          "actionsTime",
-          submitHour,
-          el.state,
-        ];
+        const userKeys = [user, "total", "actionsTime", submitHour, el.state];
         set(collection, userKeys, (get(collection, userKeys, 0) as number) + 1);
       }
     });
-  if (openingHour !== -1) {
+  const prAuthor = pullRequest?.user?.login || invalidUserLogin;
+  if (openingHour !== -1 && checkUserInclusive(prAuthor)) {
     const keys = ["total", "total", "actionsTime", openingHour, "opened"];
     set(collection, keys, get(collection, keys, 0) + 1);
-    const userKeys = [
-      pullRequest?.user.login || invalidUserLogin,
-      "total",
-      "actionsTime",
-      openingHour,
-      "opened",
-    ];
+    const userKeys = [prAuthor, "total", "actionsTime", openingHour, "opened"];
     set(collection, userKeys, get(collection, userKeys, 0) + 1);
   }
-  if (mergingHour !== -1) {
+  if (mergingHour !== -1 && checkUserInclusive(prAuthor)) {
     const keys = ["total", "total", "actionsTime", mergingHour, "merged"];
     set(collection, keys, get(collection, keys, 0) + 1);
-    const userKeys = [
-      pullRequest?.user.login || invalidUserLogin,
-      "total",
-      "actionsTime",
-      mergingHour,
-      "merged",
-    ];
+    const userKeys = [prAuthor, "total", "actionsTime", mergingHour, "merged"];
     set(collection, userKeys, get(collection, userKeys, 0) + 1);
   }
 };

@@ -4,6 +4,7 @@ import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import {
   calcDraftTime,
+  checkUserInclusive,
   getApproveTime,
   getPullRequestSize,
 } from "./calculations";
@@ -19,8 +20,13 @@ export const preparePullRequestTimeline = (
   statuses: any[] | undefined = [],
   collection: Collection
 ) => {
+  if (!checkUserInclusive(pullRequestInfo?.user?.login || invalidUserLogin)) {
+    return collection;
+  }
   const firstReview = pullRequestReviews?.find(
-    (review) => review.user?.login !== pullRequestInfo?.user?.login
+    (review) =>
+      review.user?.login !== pullRequestInfo?.user?.login &&
+      checkUserInclusive(review.user?.login || invalidUserLogin)
   );
   const approveTime = getApproveTime(pullRequestReviews);
 
