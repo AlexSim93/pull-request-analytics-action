@@ -1509,10 +1509,10 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
         timeInDraft: typeof timeInDraft === "number"
             ? [...(collection?.timeInDraft || []), timeInDraft]
             : collection.timeInDraft,
-        unreviewed: timeToReview
+        unreviewed: timeToReview !== null
             ? collection?.unreviewed || 0
             : (collection?.unreviewed || 0) + 1,
-        unapproved: timeToApprove
+        unapproved: timeToApprove !== null
             ? collection?.unapproved || 0
             : (collection?.unapproved || 0) + 1,
         sizes: {

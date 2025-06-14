@@ -116,12 +116,14 @@ export const preparePullRequestTimeline = (
       typeof timeInDraft === "number"
         ? [...(collection?.timeInDraft || []), timeInDraft]
         : collection.timeInDraft,
-    unreviewed: timeToReview
-      ? collection?.unreviewed || 0
-      : (collection?.unreviewed || 0) + 1,
-    unapproved: timeToApprove
-      ? collection?.unapproved || 0
-      : (collection?.unapproved || 0) + 1,
+    unreviewed:
+      timeToReview !== null
+        ? collection?.unreviewed || 0
+        : (collection?.unreviewed || 0) + 1,
+    unapproved:
+      timeToApprove !== null
+        ? collection?.unapproved || 0
+        : (collection?.unapproved || 0) + 1,
     sizes: {
       ...(collection.sizes || {}),
       [pullRequestSize]: {
