@@ -1,6 +1,7 @@
 import { isBefore, parseISO } from "date-fns";
 import { makeComplexRequest } from "../../../requests";
 import { invalidUserLogin } from "../../constants";
+import { checkUserInclusive } from "./checkUserInclusive";
 
 export const getApproveTime = (
   reviews: Awaited<ReturnType<typeof makeComplexRequest>>["events"][number]
@@ -12,6 +13,9 @@ export const getApproveTime = (
         review: any
       ) => {
         const user = review.user?.login || invalidUserLogin;
+        if(!checkUserInclusive(user)){
+          return acc;
+        }
         const statusesEntries = Object.keys(acc) as string[];
         const isApproved =
           statusesEntries.some((user) => acc[user].state === "approved") &&

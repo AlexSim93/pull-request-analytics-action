@@ -40,9 +40,7 @@ export const createMarkdown = (
 
   if (content.join("").trim() === "") return "";
 
-  const issueDescription = `This report based on ${
-    data.total?.total?.closed || 0
-  } last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
+  const issueDescription = `To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${createConfigParamsCode()}`;
 
   return `

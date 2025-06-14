@@ -3,6 +3,7 @@ import get from "lodash/get";
 
 import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
+import { checkUserInclusive } from "./calculations";
 
 export const prepareRequestedReviews = (
   requests: any[] = [],
@@ -14,6 +15,7 @@ export const prepareRequestedReviews = (
     const user = request.requested_reviewer
       ? request.requested_reviewer?.login || invalidUserLogin
       : request.requested_team?.name || "Invalid Team";
+    if(!checkUserInclusive(user)) return acc;
     return { ...acc, [user]: 1 };
   }, {});
 
@@ -27,12 +29,14 @@ export const prepareRequestedReviews = (
 
   [dateKey, "total"].forEach((date) => {
     Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
-      set(
-        collection,
-        [user, date, "reviewRequestsConducted"],
-        get(collection, [user, date, "reviewRequestsConducted"], 0) +
-          (value as number)
-      );
+      if (checkUserInclusive(user)) {
+        set(
+          collection,
+          [user, date, "reviewRequestsConducted"],
+          get(collection, [user, date, "reviewRequestsConducted"], 0) +
+            (value as number)
+        );
+      }
     });
   });
 };

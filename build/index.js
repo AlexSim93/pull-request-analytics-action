@@ -428,7 +428,9 @@ const collectData = (data, teams) => {
         (0, utils_1.prepareRequestedReviews)(reviewRequests, collection, dateKey, teams);
         ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
             ["total", dateKey].forEach((innerKey) => {
-                (0, set_1.default)(collection, [key, innerKey], (0, utils_1.preparePullRequestInfo)(pullRequest, (0, get_1.default)(collection, [key, innerKey], {})));
+                if ((0, calculations_1.checkUserInclusive)(userKey)) {
+                    (0, set_1.default)(collection, [key, innerKey], (0, utils_1.preparePullRequestInfo)(pullRequest, (0, get_1.default)(collection, [key, innerKey], {})));
+                }
                 (0, set_1.default)(collection, [key, innerKey], (0, utils_1.preparePullRequestTimeline)(pullRequest, reviews, reviewRequests?.[0], statuses, (0, get_1.default)(collection, [key, innerKey], {})));
             });
         });
@@ -752,6 +754,32 @@ exports.calcWeekendMinutes = calcWeekendMinutes;
 
 /***/ }),
 
+/***/ 50477:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkUserInclusive = void 0;
+const utils_1 = __nccwpck_require__(41002);
+const checkUserInclusive = (name) => {
+    if ((0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").length === 0 &&
+        (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").length === 0) {
+        return true;
+    }
+    if ((0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").length > 0 &&
+        (0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").includes(name)) {
+        return false;
+    }
+    return (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").length > 0
+        ? (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").includes(name)
+        : true;
+};
+exports.checkUserInclusive = checkUserInclusive;
+
+
+/***/ }),
+
 /***/ 994:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -792,9 +820,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getApproveTime = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const constants_1 = __nccwpck_require__(95354);
+const checkUserInclusive_1 = __nccwpck_require__(50477);
 const getApproveTime = (reviews) => {
     const statuses = Object.values(reviews?.reduce((acc, review) => {
         const user = review.user?.login || constants_1.invalidUserLogin;
+        if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+            return acc;
+        }
         const statusesEntries = Object.keys(acc);
         const isApproved = statusesEntries.some((user) => acc[user].state === "approved") &&
             !statusesEntries.some((user) => acc[user].state === "changes_requested") &&
@@ -861,10 +893,14 @@ exports.getPullRequestSize = getPullRequestSize;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getResponses = void 0;
 const constants_1 = __nccwpck_require__(95354);
+const checkUserInclusive_1 = __nccwpck_require__(50477);
 const getResponses = (events = []) => {
     return events?.reduce((acc, event) => {
         if (event.event === constants_1.reviewRequestedTimelineEvent) {
             const user = event.requested_reviewer?.login || constants_1.invalidUserLogin;
+            if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+                return acc;
+            }
             return {
                 ...acc,
                 [user]: [...(acc?.[user] || []), [event?.created_at]],
@@ -872,6 +908,9 @@ const getResponses = (events = []) => {
         }
         if (event.event === constants_1.reviewedTimelineEvent) {
             const user = event.user?.login || constants_1.invalidUserLogin;
+            if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+                return acc;
+            }
             return {
                 ...acc,
                 [user]: acc[user]?.map((el, index, arr) => index === arr.length - 1 && el.length < 2
@@ -881,6 +920,9 @@ const getResponses = (events = []) => {
         }
         if (event.event === constants_1.reviewRequestRemoved) {
             const user = event.requested_reviewer?.login || constants_1.invalidUserLogin;
+            if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+                return acc;
+            }
             return {
                 ...acc,
                 [user]: acc[user].map((el) => [
@@ -903,7 +945,7 @@ exports.getResponses = getResponses;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deletionCoefficient = exports.getResponses = exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = exports.calcIntervals = exports.prepareIntervals = void 0;
+exports.checkUserInclusive = exports.deletionCoefficient = exports.getResponses = exports.calcDraftTime = exports.getPullRequestSize = exports.calcAverageValue = exports.calcDifferenceInMinutes = exports.calcMedianValue = exports.calcNonWorkingHours = exports.calcWeekendMinutes = exports.getApproveTime = exports.calcPercentileValue = exports.calcIntervals = exports.prepareIntervals = void 0;
 var prepareIntervals_1 = __nccwpck_require__(22723);
 Object.defineProperty(exports, "prepareIntervals", ({ enumerable: true, get: function () { return prepareIntervals_1.prepareIntervals; } }));
 var calcIntervals_1 = __nccwpck_require__(2414);
@@ -930,6 +972,8 @@ var getResponses_1 = __nccwpck_require__(50779);
 Object.defineProperty(exports, "getResponses", ({ enumerable: true, get: function () { return getResponses_1.getResponses; } }));
 var constants_1 = __nccwpck_require__(51666);
 Object.defineProperty(exports, "deletionCoefficient", ({ enumerable: true, get: function () { return constants_1.deletionCoefficient; } }));
+var checkUserInclusive_1 = __nccwpck_require__(50477);
+Object.defineProperty(exports, "checkUserInclusive", ({ enumerable: true, get: function () { return checkUserInclusive_1.checkUserInclusive; } }));
 
 
 /***/ }),
@@ -1052,6 +1096,7 @@ exports.prepareActionsTime = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const lodash_1 = __nccwpck_require__(90250);
 const constants_1 = __nccwpck_require__(95354);
+const calculations_1 = __nccwpck_require__(16576);
 const prepareActionsTime = (pullRequest, events = [], collection) => {
     const openingHour = pullRequest?.created_at
         ? (0, date_fns_1.getHours)((0, date_fns_1.parseISO)(pullRequest?.created_at))
@@ -1065,41 +1110,25 @@ const prepareActionsTime = (pullRequest, events = [], collection) => {
         const submitHour = el?.submitted_at
             ? (0, date_fns_1.getHours)((0, date_fns_1.parseISO)(el?.submitted_at))
             : -1;
-        if (submitHour !== -1) {
+        const user = el?.user?.login || constants_1.invalidUserLogin;
+        if (submitHour !== -1 && (0, calculations_1.checkUserInclusive)(user)) {
             const keys = ["total", "total", "actionsTime", submitHour, el.state];
             (0, lodash_1.set)(collection, keys, (0, lodash_1.get)(collection, keys, 0) + 1);
-            const userKeys = [
-                el?.user?.login || constants_1.invalidUserLogin,
-                "total",
-                "actionsTime",
-                submitHour,
-                el.state,
-            ];
+            const userKeys = [user, "total", "actionsTime", submitHour, el.state];
             (0, lodash_1.set)(collection, userKeys, (0, lodash_1.get)(collection, userKeys, 0) + 1);
         }
     });
-    if (openingHour !== -1) {
+    const prAuthor = pullRequest?.user?.login || constants_1.invalidUserLogin;
+    if (openingHour !== -1 && (0, calculations_1.checkUserInclusive)(prAuthor)) {
         const keys = ["total", "total", "actionsTime", openingHour, "opened"];
         (0, lodash_1.set)(collection, keys, (0, lodash_1.get)(collection, keys, 0) + 1);
-        const userKeys = [
-            pullRequest?.user.login || constants_1.invalidUserLogin,
-            "total",
-            "actionsTime",
-            openingHour,
-            "opened",
-        ];
+        const userKeys = [prAuthor, "total", "actionsTime", openingHour, "opened"];
         (0, lodash_1.set)(collection, userKeys, (0, lodash_1.get)(collection, userKeys, 0) + 1);
     }
-    if (mergingHour !== -1) {
+    if (mergingHour !== -1 && (0, calculations_1.checkUserInclusive)(prAuthor)) {
         const keys = ["total", "total", "actionsTime", mergingHour, "merged"];
         (0, lodash_1.set)(collection, keys, (0, lodash_1.get)(collection, keys, 0) + 1);
-        const userKeys = [
-            pullRequest?.user.login || constants_1.invalidUserLogin,
-            "total",
-            "actionsTime",
-            mergingHour,
-            "merged",
-        ];
+        const userKeys = [prAuthor, "total", "actionsTime", mergingHour, "merged"];
         (0, lodash_1.set)(collection, userKeys, (0, lodash_1.get)(collection, userKeys, 0) + 1);
     }
 };
@@ -1109,12 +1138,13 @@ exports.prepareActionsTime = prepareActionsTime;
 /***/ }),
 
 /***/ 15278:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareConductedReviews = void 0;
+const calculations_1 = __nccwpck_require__(16576);
 const prepareConductedReviews = (pullRequestLogin, pullRequestReviews = [], collection, pullRequestSize, teams) => {
     const reviewsConducted = {
         ...(collection?.reviewsConducted || {}),
@@ -1123,6 +1153,8 @@ const prepareConductedReviews = (pullRequestLogin, pullRequestReviews = [], coll
         return { ...acc, [review.state]: 1, total: 1 };
     }, {}) || {});
     [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((key) => {
+        if (!(0, calculations_1.checkUserInclusive)(key))
+            return;
         const statusesReviewsStats = statuses.reduce((acc, status) => {
             return {
                 ...acc,
@@ -1162,108 +1194,91 @@ const set_1 = __importDefault(__nccwpck_require__(82900));
 const get_1 = __importDefault(__nccwpck_require__(56908));
 const constants_1 = __nccwpck_require__(95354);
 const getDiscussionType_1 = __nccwpck_require__(49575);
+const calculations_1 = __nccwpck_require__(16576);
 const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin, teams) => {
-    const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== comment.user?.login);
+    const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== (comment.user?.login || constants_1.invalidUserLogin) &&
+        (0, calculations_1.checkUserInclusive)(comment.user?.login || constants_1.invalidUserLogin));
     const discussions = comments[index]?.filter((comment) => {
         const userLogin = comment.user?.login || constants_1.invalidUserLogin;
-        return !comment.in_reply_to_id && pullRequestLogin !== userLogin;
+        return (!comment.in_reply_to_id &&
+            pullRequestLogin !== userLogin &&
+            (0, calculations_1.checkUserInclusive)(userLogin));
     });
     ["total", dateKey].forEach((key) => {
         discussions?.forEach((discussion) => {
             const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
             (0, getDiscussionType_1.getDiscussionType)(discussion.body).forEach((type) => {
-                [userLogin, ...(teams[userLogin] || [])].forEach((userKey) => {
-                    (0, set_1.default)(collection, [userKey, key, "discussionsTypes", type], {
-                        ...(0, get_1.default)(collection, [userKey, key, "discussionsTypes", type], {}),
-                        conducted: {
-                            total: (0, get_1.default)(collection, [
-                                userKey,
-                                key,
-                                "discussionsTypes",
-                                type,
-                                "conducted",
-                                "total",
-                            ], 0) + 1,
-                            agreed: (0, get_1.default)(collection, [
-                                userKey,
-                                key,
-                                "discussionsTypes",
-                                type,
-                                "conducted",
-                                "agreed",
-                            ], 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-                            disagreed: (0, get_1.default)(collection, [
-                                userKey,
-                                key,
-                                "discussionsTypes",
-                                type,
-                                "conducted",
-                                "disagreed",
-                            ], 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-                        },
-                    });
+                [userLogin, ...(teams[userLogin] || []), "total"].forEach((userKey) => {
+                    if ((0, calculations_1.checkUserInclusive)(userLogin)) {
+                        (0, set_1.default)(collection, [userKey, key, "discussionsTypes", type], {
+                            ...(0, get_1.default)(collection, [userKey, key, "discussionsTypes", type], {}),
+                            conducted: {
+                                total: (0, get_1.default)(collection, [
+                                    userKey,
+                                    key,
+                                    "discussionsTypes",
+                                    type,
+                                    "conducted",
+                                    "total",
+                                ], 0) + 1,
+                                agreed: (0, get_1.default)(collection, [
+                                    userKey,
+                                    key,
+                                    "discussionsTypes",
+                                    type,
+                                    "conducted",
+                                    "agreed",
+                                ], 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                                disagreed: (0, get_1.default)(collection, [
+                                    userKey,
+                                    key,
+                                    "discussionsTypes",
+                                    type,
+                                    "conducted",
+                                    "disagreed",
+                                ], 0) + (discussion.reactions?.["-1"] ? 1 : 0),
+                            },
+                        });
+                    }
                 });
-                [pullRequestLogin, ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
-                    (0, set_1.default)(collection, [userKey, key, "discussionsTypes", type], {
-                        ...(0, get_1.default)(collection, [userKey, key, "discussionsTypes", type], {}),
-                        received: {
-                            total: (0, get_1.default)(collection, [
-                                userKey,
-                                key,
-                                "discussionsTypes",
-                                type,
-                                "received",
-                                "total",
-                            ], 0) + 1,
-                            agreed: (0, get_1.default)(collection, [
-                                userKey,
-                                key,
-                                "discussionsTypes",
-                                type,
-                                "received",
-                                "agreed",
-                            ], 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-                            disagreed: (0, get_1.default)(collection, [
-                                userKey,
-                                key,
-                                "discussionsTypes",
-                                type,
-                                "received",
-                                "disagreed",
-                            ], 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-                        },
-                    });
-                });
-                (0, set_1.default)(collection, ["total", key, "discussionsTypes", type], {
-                    ...(0, get_1.default)(collection, ["total", key, "discussionsTypes", type], {}),
-                    conducted: {
-                        total: (0, get_1.default)(collection, ["total", key, "discussionsTypes", type, "conducted", "total"], 0) + 1,
-                        agreed: (0, get_1.default)(collection, ["total", key, "discussionsTypes", type, "conducted", "agreed"], 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-                        disagreed: (0, get_1.default)(collection, [
-                            "total",
-                            key,
-                            "discussionsTypes",
-                            type,
-                            "conducted",
-                            "disagreed",
-                        ], 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-                    },
-                    received: {
-                        total: (0, get_1.default)(collection, ["total", key, "discussionsTypes", type, "received", "total"], 0) + 1,
-                        agreed: (0, get_1.default)(collection, ["total", key, "discussionsTypes", type, "received", "agreed"], 0) + (discussion.reactions?.["+1"] ? 1 : 0),
-                        disagreed: (0, get_1.default)(collection, [
-                            "total",
-                            key,
-                            "discussionsTypes",
-                            type,
-                            "received",
-                            "disagreed",
-                        ], 0) + (discussion.reactions?.["-1"] ? 1 : 0),
-                    },
+                [pullRequestLogin, ...(teams[pullRequestLogin] || []), "total"].forEach((userKey) => {
+                    if ((0, calculations_1.checkUserInclusive)(userLogin)) {
+                        (0, set_1.default)(collection, [userKey, key, "discussionsTypes", type], {
+                            ...(0, get_1.default)(collection, [userKey, key, "discussionsTypes", type], {}),
+                            received: {
+                                total: (0, get_1.default)(collection, [
+                                    userKey,
+                                    key,
+                                    "discussionsTypes",
+                                    type,
+                                    "received",
+                                    "total",
+                                ], 0) + 1,
+                                agreed: (0, get_1.default)(collection, [
+                                    userKey,
+                                    key,
+                                    "discussionsTypes",
+                                    type,
+                                    "received",
+                                    "agreed",
+                                ], 0) + (discussion.reactions?.["+1"] ? 1 : 0),
+                                disagreed: (0, get_1.default)(collection, [
+                                    userKey,
+                                    key,
+                                    "discussionsTypes",
+                                    type,
+                                    "received",
+                                    "disagreed",
+                                ], 0) + (discussion.reactions?.["-1"] ? 1 : 0),
+                            },
+                        });
+                    }
                 });
             });
         });
-        comments[index]?.forEach((comment) => {
+        comments[index]
+            ?.filter((comment) => (0, calculations_1.checkUserInclusive)(comment.user?.login || constants_1.invalidUserLogin))
+            .forEach((comment) => {
             const userLogin = comment.user?.login || constants_1.invalidUserLogin;
             if (pullRequestLogin !== userLogin) {
                 [userLogin, "total", ...(teams[userLogin] || [])].forEach((userKey) => {
@@ -1271,7 +1286,7 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                 });
             }
         });
-        if (pullRequestLogin) {
+        if (pullRequestLogin && (0, calculations_1.checkUserInclusive)(pullRequestLogin)) {
             [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
                 (0, set_1.default)(collection, [userKey, key, "reviewComments"], (reviewComments?.length || 0) +
                     (0, get_1.default)(collection, [userKey, key, "reviewComments"], 0));
@@ -1294,14 +1309,16 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
             const agreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["+1"]);
             const disagreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["-1"]);
             [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
-                (0, set_1.default)(collection, [userKey, key, "discussions"], {
-                    ...(0, get_1.default)(collection, [userKey, key, "discussions"], {}),
-                    received: {
-                        total: (0, get_1.default)(collection, [userKey, key, "discussions", "received", "total"], 0) + (discussions?.length || 0),
-                        agreed: (0, get_1.default)(collection, [userKey, key, "discussions", "received", "agreed"], 0) + (agreedDiscussions?.length || 0),
-                        disagreed: (0, get_1.default)(collection, [userKey, key, "discussions", "received", "disagreed"], 0) + (disagreedDiscussions?.length || 0),
-                    },
-                });
+                if ((0, calculations_1.checkUserInclusive)(pullRequestLogin)) {
+                    (0, set_1.default)(collection, [userKey, key, "discussions"], {
+                        ...(0, get_1.default)(collection, [userKey, key, "discussions"], {}),
+                        received: {
+                            total: (0, get_1.default)(collection, [userKey, key, "discussions", "received", "total"], 0) + (discussions?.length || 0),
+                            agreed: (0, get_1.default)(collection, [userKey, key, "discussions", "received", "agreed"], 0) + (agreedDiscussions?.length || 0),
+                            disagreed: (0, get_1.default)(collection, [userKey, key, "discussions", "received", "disagreed"], 0) + (disagreedDiscussions?.length || 0),
+                        },
+                    });
+                }
             });
         }
     });
@@ -1447,7 +1464,11 @@ const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const calcPRsize_1 = __nccwpck_require__(8722);
 const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], reviewRequest, statuses = [], collection) => {
-    const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login);
+    if (!(0, calculations_1.checkUserInclusive)(pullRequestInfo?.user?.login || constants_1.invalidUserLogin)) {
+        return collection;
+    }
+    const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login &&
+        (0, calculations_1.checkUserInclusive)(review.user?.login || constants_1.invalidUserLogin));
     const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
     const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
@@ -1488,10 +1509,10 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
         timeInDraft: typeof timeInDraft === "number"
             ? [...(collection?.timeInDraft || []), timeInDraft]
             : collection.timeInDraft,
-        unreviewed: timeToReview
+        unreviewed: timeToReview !== null
             ? collection?.unreviewed || 0
             : (collection?.unreviewed || 0) + 1,
-        unapproved: timeToApprove
+        unapproved: timeToApprove !== null
             ? collection?.unapproved || 0
             : (collection?.unapproved || 0) + 1,
         sizes: {
@@ -1554,11 +1575,14 @@ exports.prepareRequestedReviews = void 0;
 const set_1 = __importDefault(__nccwpck_require__(82900));
 const get_1 = __importDefault(__nccwpck_require__(56908));
 const constants_1 = __nccwpck_require__(95354);
+const calculations_1 = __nccwpck_require__(16576);
 const prepareRequestedReviews = (requests = [], collection, dateKey, teams) => {
     const requestedReviewers = requests.reduce((acc, request) => {
         const user = request.requested_reviewer
             ? request.requested_reviewer?.login || constants_1.invalidUserLogin
             : request.requested_team?.name || "Invalid Team";
+        if (!(0, calculations_1.checkUserInclusive)(user))
+            return acc;
         return { ...acc, [user]: 1 };
     }, {});
     requestedReviewers["total"] = Object.keys(requestedReviewers).length;
@@ -1569,8 +1593,10 @@ const prepareRequestedReviews = (requests = [], collection, dateKey, teams) => {
     });
     [dateKey, "total"].forEach((date) => {
         Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
-            (0, set_1.default)(collection, [user, date, "reviewRequestsConducted"], (0, get_1.default)(collection, [user, date, "reviewRequestsConducted"], 0) +
-                value);
+            if ((0, calculations_1.checkUserInclusive)(user)) {
+                (0, set_1.default)(collection, [user, date, "reviewRequestsConducted"], (0, get_1.default)(collection, [user, date, "reviewRequestsConducted"], 0) +
+                    value);
+            }
         });
     });
 };
@@ -1611,10 +1637,12 @@ const prepareResponseTime = (events = [], pullRequest, collection, dateKey, team
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")))
                 .filter((el) => typeof el === "number");
-            (0, set_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], [
-                ...(0, get_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], []),
-                ...awaitingResponse,
-            ]);
+            if ((0, calculations_1.checkUserInclusive)(userKey)) {
+                (0, set_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], [
+                    ...(0, get_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], []),
+                    ...awaitingResponse,
+                ]);
+            }
         });
     });
     Object.entries(responses).forEach(([user, responses]) => {
@@ -1634,25 +1662,27 @@ const prepareResponseTime = (events = [], pullRequest, collection, dateKey, team
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")));
             ["total", user, ...(teams[user] || [])].forEach((userKey) => {
-                (0, set_1.default)(collection, [userKey, key], {
-                    ...(0, get_1.default)(collection, [userKey, key], {}),
-                    timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
-                        ? [
-                            ...(0, get_1.default)(collection, [userKey, key, "timeFromInitialRequestToResponse"], []),
-                            timeFromInitialRequestToResponse,
-                        ]
-                        : (0, get_1.default)(collection, [userKey, key, "timeFromInitialRequestToResponse"], []),
-                    timeFromOpenToResponse: typeof timeFromOpenToResponse === "number"
-                        ? [
-                            ...(0, get_1.default)(collection, [userKey, key, "timeFromOpenToResponse"], []),
-                            timeFromOpenToResponse,
-                        ]
-                        : (0, get_1.default)(collection, [userKey, key, "timeFromOpenToResponse"], []),
-                    timeFromRepeatedRequestToResponse: [
-                        ...(0, get_1.default)(collection, [userKey, key, "timeFromRepeatedRequestToResponse"], []),
-                        ...timeFromRepeatedRequestToResponse.filter((el) => typeof el === "number"),
-                    ],
-                });
+                if ((0, calculations_1.checkUserInclusive)(userKey)) {
+                    (0, set_1.default)(collection, [userKey, key], {
+                        ...(0, get_1.default)(collection, [userKey, key], {}),
+                        timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
+                            ? [
+                                ...(0, get_1.default)(collection, [userKey, key, "timeFromInitialRequestToResponse"], []),
+                                timeFromInitialRequestToResponse,
+                            ]
+                            : (0, get_1.default)(collection, [userKey, key, "timeFromInitialRequestToResponse"], []),
+                        timeFromOpenToResponse: typeof timeFromOpenToResponse === "number"
+                            ? [
+                                ...(0, get_1.default)(collection, [userKey, key, "timeFromOpenToResponse"], []),
+                                timeFromOpenToResponse,
+                            ]
+                            : (0, get_1.default)(collection, [userKey, key, "timeFromOpenToResponse"], []),
+                        timeFromRepeatedRequestToResponse: [
+                            ...(0, get_1.default)(collection, [userKey, key, "timeFromRepeatedRequestToResponse"], []),
+                            ...timeFromRepeatedRequestToResponse.filter((el) => typeof el === "number"),
+                        ],
+                    });
+                }
             });
         });
     });
@@ -1676,24 +1706,28 @@ const set_1 = __importDefault(__nccwpck_require__(82900));
 const get_1 = __importDefault(__nccwpck_require__(56908));
 const constants_1 = __nccwpck_require__(95354);
 const prepareConductedReviews_1 = __nccwpck_require__(15278);
+const calculations_1 = __nccwpck_require__(16576);
 const prepareReviews = (reviews = [], collection, dateKey, pullRequestLogin, pullRequestSize, teams) => {
     let teamNames = [];
     const users = Object.keys(reviews?.reduce((acc, review) => {
         const userLogin = review.user?.login || constants_1.invalidUserLogin;
-        if (userLogin !== pullRequestLogin) {
+        if (userLogin !== pullRequestLogin && (0, calculations_1.checkUserInclusive)(userLogin)) {
             const teamsNames = (teams[userLogin] || []).reduce((acc, team) => ({ ...acc, [team]: 1 }), {});
             teamNames = Object.keys(teamsNames);
-            return { ...acc, [userLogin]: 1, ...teamsNames };
+            return { ...acc, [userLogin]: 1, ...teamsNames, total: 1 };
         }
         return acc;
-    }, {}) || {}).concat("total");
+    }, {}) || {});
     users.forEach((user) => {
         const userReviews = Array.isArray(reviews) && user !== "total" && !teamNames.includes(user)
             ? reviews?.filter((review) => {
                 const userLogin = review.user?.login || constants_1.invalidUserLogin;
-                return userLogin === user;
+                return userLogin === user && (0, calculations_1.checkUserInclusive)(userLogin);
             })
-            : reviews;
+            : reviews?.filter((review) => {
+                const userLogin = review.user?.login || constants_1.invalidUserLogin;
+                return (0, calculations_1.checkUserInclusive)(userLogin);
+            });
         [dateKey, "total"].forEach((key) => {
             (0, set_1.default)(collection, [user, key], (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, (0, get_1.default)(collection, [user, key], {}), pullRequestSize, teams));
         });
@@ -2511,7 +2545,7 @@ const createMarkdown = (data, users, dates, title = "Pull Request report", refer
     });
     if (content.join("").trim() === "")
         return "";
-    const issueDescription = `This report based on ${data.total?.total?.closed || 0} last updated PRs. To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
+    const issueDescription = `To learn more about the project and its configuration, please visit [Pull request analytics action](https://github.com/AlexSim93/pull-request-analytics-action).
   ${(0, utils_1.createConfigParamsCode)()}`;
     return `
 ## ${title}
@@ -2875,6 +2909,8 @@ ${[
         "USE_CHARTS",
         "INCLUDE_LABELS",
         "EXCLUDE_LABELS",
+        "INCLUDE_USERS",
+        "EXCLUDE_USERS",
         "EXECUTION_OUTCOME",
         "ISSUE_NUMBER",
     ]

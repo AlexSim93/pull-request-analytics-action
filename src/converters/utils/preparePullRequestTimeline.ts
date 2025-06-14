@@ -4,6 +4,7 @@ import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import {
   calcDraftTime,
+  checkUserInclusive,
   getApproveTime,
   getPullRequestSize,
 } from "./calculations";
@@ -19,8 +20,13 @@ export const preparePullRequestTimeline = (
   statuses: any[] | undefined = [],
   collection: Collection
 ) => {
+  if (!checkUserInclusive(pullRequestInfo?.user?.login || invalidUserLogin)) {
+    return collection;
+  }
   const firstReview = pullRequestReviews?.find(
-    (review) => review.user?.login !== pullRequestInfo?.user?.login
+    (review) =>
+      review.user?.login !== pullRequestInfo?.user?.login &&
+      checkUserInclusive(review.user?.login || invalidUserLogin)
   );
   const approveTime = getApproveTime(pullRequestReviews);
 
@@ -110,12 +116,14 @@ export const preparePullRequestTimeline = (
       typeof timeInDraft === "number"
         ? [...(collection?.timeInDraft || []), timeInDraft]
         : collection.timeInDraft,
-    unreviewed: timeToReview
-      ? collection?.unreviewed || 0
-      : (collection?.unreviewed || 0) + 1,
-    unapproved: timeToApprove
-      ? collection?.unapproved || 0
-      : (collection?.unapproved || 0) + 1,
+    unreviewed:
+      timeToReview !== null
+        ? collection?.unreviewed || 0
+        : (collection?.unreviewed || 0) + 1,
+    unapproved:
+      timeToApprove !== null
+        ? collection?.unapproved || 0
+        : (collection?.unapproved || 0) + 1,
     sizes: {
       ...(collection.sizes || {}),
       [pullRequestSize]: {

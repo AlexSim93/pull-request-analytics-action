@@ -22,7 +22,7 @@ import {
   readyForReviewTimelineEvent,
   convertToDraftTimelineEvent,
 } from "./constants";
-import { getPullRequestSize } from "./utils/calculations";
+import { checkUserInclusive, getPullRequestSize } from "./utils/calculations";
 import { getDateFormat } from "../common/utils";
 
 export const collectData = (
@@ -68,14 +68,16 @@ export const collectData = (
 
     ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {
-        set(
-          collection,
-          [key, innerKey],
-          preparePullRequestInfo(
-            pullRequest,
-            get(collection, [key, innerKey], {})
-          )
-        );
+        if (checkUserInclusive(userKey)) {
+          set(
+            collection,
+            [key, innerKey],
+            preparePullRequestInfo(
+              pullRequest,
+              get(collection, [key, innerKey], {})
+            )
+          );
+        }
 
         set(
           collection,

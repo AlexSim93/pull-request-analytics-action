@@ -96,6 +96,12 @@ inputs:
   EXCLUDE_LABELS:
     description: "Excludes PRs with mentioned labels. Values should be separated by comma"
     required: false
+  INCLUDE_USERS:
+    description: "Only data for the specified users will be included in the report. Multiple values should be separated by commas"
+    required: false
+  EXCLUDE_USERS:
+    description: "Data for the specified users will be excluded from the report. Multiple values should be separated by commas"
+    required: false
   TIMEZONE:
     description: "Timezone to use in action"
     required: false

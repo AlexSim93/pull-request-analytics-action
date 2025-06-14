@@ -4,7 +4,11 @@ import get from "lodash/get";
 import { getMultipleValuesInput, getValueAsIs } from "../../common/utils";
 import { makeComplexRequest } from "../../requests";
 import { Collection } from "../types";
-import { calcDifferenceInMinutes, getResponses } from "./calculations";
+import {
+  calcDifferenceInMinutes,
+  checkUserInclusive,
+  getResponses,
+} from "./calculations";
 import { invalidUserLogin } from "../constants";
 
 export const prepareResponseTime = (
@@ -40,18 +44,20 @@ export const prepareResponseTime = (
           )
         )
         .filter((el) => typeof el === "number") as number[];
-      set(
-        collection,
-        [userKey, key, "timeWaitingForRepeatedReview"],
-        [
-          ...get(
-            collection,
-            [userKey, key, "timeWaitingForRepeatedReview"],
-            []
-          ),
-          ...awaitingResponse,
-        ]
-      );
+      if (checkUserInclusive(userKey)) {
+        set(
+          collection,
+          [userKey, key, "timeWaitingForRepeatedReview"],
+          [
+            ...get(
+              collection,
+              [userKey, key, "timeWaitingForRepeatedReview"],
+              []
+            ),
+            ...awaitingResponse,
+          ]
+        );
+      }
     });
   });
 
@@ -93,45 +99,51 @@ export const prepareResponseTime = (
           );
 
         ["total", user, ...(teams[user] || [])].forEach((userKey) => {
-          set(collection, [userKey, key], {
-            ...get(collection, [userKey, key], {}),
-            timeFromInitialRequestToResponse:
-              typeof timeFromInitialRequestToResponse === "number"
-                ? [
-                    ...get(
+          if (checkUserInclusive(userKey)) {
+            set(collection, [userKey, key], {
+              ...get(collection, [userKey, key], {}),
+              timeFromInitialRequestToResponse:
+                typeof timeFromInitialRequestToResponse === "number"
+                  ? [
+                      ...get(
+                        collection,
+                        [userKey, key, "timeFromInitialRequestToResponse"],
+                        []
+                      ),
+                      timeFromInitialRequestToResponse,
+                    ]
+                  : get(
                       collection,
                       [userKey, key, "timeFromInitialRequestToResponse"],
                       []
                     ),
-                    timeFromInitialRequestToResponse,
-                  ]
-                : get(
-                    collection,
-                    [userKey, key, "timeFromInitialRequestToResponse"],
-                    []
-                  ),
-            timeFromOpenToResponse:
-              typeof timeFromOpenToResponse === "number"
-                ? [
-                    ...get(
+              timeFromOpenToResponse:
+                typeof timeFromOpenToResponse === "number"
+                  ? [
+                      ...get(
+                        collection,
+                        [userKey, key, "timeFromOpenToResponse"],
+                        []
+                      ),
+                      timeFromOpenToResponse,
+                    ]
+                  : get(
                       collection,
                       [userKey, key, "timeFromOpenToResponse"],
                       []
                     ),
-                    timeFromOpenToResponse,
-                  ]
-                : get(collection, [userKey, key, "timeFromOpenToResponse"], []),
-            timeFromRepeatedRequestToResponse: [
-              ...get(
-                collection,
-                [userKey, key, "timeFromRepeatedRequestToResponse"],
-                []
-              ),
-              ...(timeFromRepeatedRequestToResponse.filter(
-                (el) => typeof el === "number"
-              ) as number[]),
-            ],
-          });
+              timeFromRepeatedRequestToResponse: [
+                ...get(
+                  collection,
+                  [userKey, key, "timeFromRepeatedRequestToResponse"],
+                  []
+                ),
+                ...(timeFromRepeatedRequestToResponse.filter(
+                  (el) => typeof el === "number"
+                ) as number[]),
+              ],
+            });
+          }
         });
       });
     }
