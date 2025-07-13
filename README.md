@@ -42,50 +42,6 @@ Displays the time from PR creation to each displayed status. Helps identify bott
 | **dev3**  |  13 minutes   |       13 minutes       | 4 hours 12 minutes |       2 hours 21 minutes        | 4 hours 48 minutes | 22 hours 8 minutes  |        54        |
 | **total** |  10 minutes   |       10 minutes       | 4 hours 15 minutes |       4 hours 43 minutes        | 7 hours 21 minutes | 22 hours 36 minutes |       232        |
 
-```mermaid
-gantt
-title Pull requests timeline(percentile75) 12/2023 / minutes
-dateFormat X
-axisFormat %s
-section dev1
-Time in draft(34 minutes) :  0, 34
-Time to review request(17 minutes) :  0, 17
-Time to review(3 hours 34 minutes) :  0, 214
-Time to approve(7 hours 32 minutes) :  0, 452
-Time to merge(14 hours 9 minutes) :  0, 849
-
-section dev2
-Time in draft(27 minutes) :  0, 21
-Time to review request(12 minutes) :  0, 20
-Time to review(4 hours) :  0, 240
-Time to approve(4 hours) :  0, 240
-Time to merge(23 hours 1 minute) :  0, 1381
-
-section dev3
-Time in draft(27 minutes) :  0, 15
-Time to review request(12 minutes) :  0, 18
-Time to review(15 hours 16 minutes) :  0, 916
-Time to approve(24 hours 7 minutes) :  0, 1447
-Time to merge(53 hours 43 minutes) :  0, 3223
-
-section total
-Time in draft(27 minutes) :  0, 27
-Time to review request(12 minutes) :  0, 18
-Time to review(4 hours 21 minutes) :  0, 261
-Time to approve(7 hours 36 minutes) :  0, 456
-Time to merge(26 hours 14 minutes) :  0, 1574
-
-```
-
-```mermaid
-pie
-title Review time total 12/2023
-"0-1 hours(12)":12
-"4-6 hours(7)":7
-"6-9 hours(4)":4
-"12+ hours(2)":2
-```
-
 ### Contribution
 
 Shows the total volume of code merged, reviews conducted, and comments in PRs. Helps to understand the context in which other metrics apply. Use the `workload` value in the `SHOW_STATS_TYPES` parameter.
@@ -107,16 +63,6 @@ Measures how discussion-heavy PRs are from the author's perspective, based on op
 | **dev2**  |        13        |             1              |                    0 / 0 / 2                    |         3         |
 | **dev3**  |        2         |             0              |                    0 / 0 / 1                    |         1         |
 | **total** |        47        |             6              |                   3 / 2 / 25                    |        37         |
-
-```mermaid
-pie
-title Discussions types total 12/2023
-"Bug(12)":12
-"Performance(8)":8
-"Code complexity(3)":3
-"Test coverage(2)":2
-"Formatting(9)":9
-```
 
 ### Discussion Intensity (Reviewer's Perspective)
 
