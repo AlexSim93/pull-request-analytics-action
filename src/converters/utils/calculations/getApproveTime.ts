@@ -49,13 +49,6 @@ export const getApproveTime = (
       requiredApprovals &&
     !statuses.some((status) => status.state === "changes_requested");
 
-  console.log(
-    isApproved
-      ? statuses.sort((a, b) =>
-          isBefore(parseISO(a.submittedAt), parseISO(b.submittedAt)) ? 1 : -1
-        )
-      : null
-  );
   return isApproved
     ? statuses.sort((a, b) =>
         isBefore(parseISO(a.submittedAt), parseISO(b.submittedAt)) ? 1 : -1
