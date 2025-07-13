@@ -824,8 +824,7 @@ exports.getApproveTime = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const constants_1 = __nccwpck_require__(95354);
 const checkUserInclusive_1 = __nccwpck_require__(50477);
-const utils_1 = __nccwpck_require__(41002);
-const getApproveTime = (reviews) => {
+const getApproveTime = (reviews, requiredApprovals) => {
     const statuses = Object.values(reviews?.reduce((acc, review) => {
         const user = review.user?.login || constants_1.invalidUserLogin;
         if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
@@ -833,7 +832,7 @@ const getApproveTime = (reviews) => {
         }
         const statusesEntries = Object.keys(acc);
         const isApproved = statusesEntries.filter((user) => acc[user].state === "approved")
-            .length >= parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")) &&
+            .length >= requiredApprovals &&
             !statusesEntries.some((user) => acc[user].state === "changes_requested") &&
             review.state !== "changes_requested";
         if (isApproved) {
@@ -851,10 +850,10 @@ const getApproveTime = (reviews) => {
         };
     }, {}) || {});
     const isApproved = statuses.filter((status) => status.state === "approved").length >=
-        parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")) &&
+        requiredApprovals &&
         !statuses.some((status) => status.state === "changes_requested");
     return isApproved
-        ? statuses.sort((a, b) => (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(a.submittedAt), (0, date_fns_1.parseISO)(b.submittedAt)) ? 1 : -1)[parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")) - 1]?.submittedAt
+        ? statuses.sort((a, b) => (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(a.submittedAt), (0, date_fns_1.parseISO)(b.submittedAt)) ? 1 : -1)[requiredApprovals - 1]?.submittedAt
         : null;
 };
 exports.getApproveTime = getApproveTime;
@@ -1475,7 +1474,7 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
     }
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login &&
         (0, calculations_1.checkUserInclusive)(review.user?.login || constants_1.invalidUserLogin));
-    const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
+    const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews, parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")));
     const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),

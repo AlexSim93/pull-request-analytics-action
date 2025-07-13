@@ -2,10 +2,10 @@ import { isBefore, parseISO } from "date-fns";
 import { makeComplexRequest } from "../../../requests";
 import { invalidUserLogin } from "../../constants";
 import { checkUserInclusive } from "./checkUserInclusive";
-import { getValueAsIs } from "../../../common/utils";
 
 export const getApproveTime = (
-  reviews: Awaited<ReturnType<typeof makeComplexRequest>>["events"][number]
+  reviews: Awaited<ReturnType<typeof makeComplexRequest>>["events"][number],
+  requiredApprovals: number
 ) => {
   const statuses = Object.values(
     reviews?.reduce(
@@ -20,7 +20,7 @@ export const getApproveTime = (
         const statusesEntries = Object.keys(acc) as string[];
         const isApproved =
           statusesEntries.filter((user) => acc[user].state === "approved")
-            .length >= parseInt(getValueAsIs("REQUIRED_APPROVALS")) &&
+            .length >= requiredApprovals &&
           !statusesEntries.some(
             (user) => acc[user].state === "changes_requested"
           ) &&
@@ -45,12 +45,12 @@ export const getApproveTime = (
 
   const isApproved =
     statuses.filter((status) => status.state === "approved").length >=
-      parseInt(getValueAsIs("REQUIRED_APPROVALS")) &&
+      requiredApprovals &&
     !statuses.some((status) => status.state === "changes_requested");
 
   return isApproved
     ? statuses.sort((a, b) =>
         isBefore(parseISO(a.submittedAt), parseISO(b.submittedAt)) ? 1 : -1
-      )[parseInt(getValueAsIs("REQUIRED_APPROVALS")) - 1]?.submittedAt
+      )[requiredApprovals - 1]?.submittedAt
     : null;
 };
