@@ -172,4 +172,10 @@ describe("check getApproveTime", () => {
       "2024-01-11T13:00:00Z"
     );
   });
+  it("Check PR with 2 approvals and return time of the second approval", () => {
+    expect(getApproveTime(approvedTwiceReview, 2)).toBe("2024-01-11T09:00:00Z");
+  });
+  it("Check PR with 3 approvals and return time of the third approval", () => {
+    expect(getApproveTime(approvedTwiceReview, 3)).toBe(null);
+  });
 });

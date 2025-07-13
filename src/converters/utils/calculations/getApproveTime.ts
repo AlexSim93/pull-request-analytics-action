@@ -43,14 +43,23 @@ export const getApproveTime = (
     ) || {}
   );
 
+  console.log(statuses);
+
   const isApproved =
     statuses.filter((status) => status.state === "approved").length >=
       requiredApprovals &&
     !statuses.some((status) => status.state === "changes_requested");
 
+  console.log(
+    isApproved
+      ? statuses.sort((a, b) =>
+          isBefore(parseISO(a.submittedAt), parseISO(b.submittedAt)) ? 1 : -1
+        )
+      : null
+  );
   return isApproved
     ? statuses.sort((a, b) =>
         isBefore(parseISO(a.submittedAt), parseISO(b.submittedAt)) ? 1 : -1
-      )[requiredApprovals - 1]?.submittedAt
+      )[0]?.submittedAt
     : null;
 };
