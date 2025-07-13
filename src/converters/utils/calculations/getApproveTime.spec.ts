@@ -11,6 +11,24 @@ const approvedReview = [
   },
 ];
 
+const approvedTwiceReviewWithRequiredApprovals = [
+  {
+    state: "approved",
+    submitted_at: "2024-01-11T07:00:00Z",
+    user: { login: "dev1" },
+  },
+  {
+    state: "changes_requested",
+    submitted_at: "2024-01-11T09:00:00Z",
+    user: { login: "dev2" },
+  },
+  {
+    state: "approved",
+    submitted_at: "2024-01-11T11:00:00Z",
+    user: { login: "dev2" },
+  },
+]
+
 const approvedTwiceReview = [
   {
     state: "approved",
@@ -177,5 +195,10 @@ describe("check getApproveTime", () => {
   });
   it("Check PR with 3 approvals and return time of the third approval", () => {
     expect(getApproveTime(approvedTwiceReview, 3)).toBe(null);
+  });
+  it("Check PR with 2 approvals and return time of the second approval", () => {
+    expect(getApproveTime(approvedTwiceReviewWithRequiredApprovals, 2)).toBe(
+      "2024-01-11T11:00:00Z"
+    );
   });
 });

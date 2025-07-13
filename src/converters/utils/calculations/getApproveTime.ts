@@ -43,7 +43,6 @@ export const getApproveTime = (
     ) || {}
   );
 
-  console.log(statuses);
 
   const isApproved =
     statuses.filter((status) => status.state === "approved").length >=

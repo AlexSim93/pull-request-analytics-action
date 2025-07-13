@@ -849,7 +849,6 @@ const getApproveTime = (reviews, requiredApprovals) => {
             [user]: { state: review.state, submittedAt: review.submitted_at },
         };
     }, {}) || {});
-    console.log(statuses);
     const isApproved = statuses.filter((status) => status.state === "approved").length >=
         requiredApprovals &&
         !statuses.some((status) => status.state === "changes_requested");
