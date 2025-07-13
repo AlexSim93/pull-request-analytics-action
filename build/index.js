@@ -832,7 +832,8 @@ const getApproveTime = (reviews) => {
             return acc;
         }
         const statusesEntries = Object.keys(acc);
-        const isApproved = statusesEntries.some((user) => acc[user].state === "approved") &&
+        const isApproved = statusesEntries.filter((user) => acc[user].state === "approved")
+            .length >= parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")) &&
             !statusesEntries.some((user) => acc[user].state === "changes_requested") &&
             review.state !== "changes_requested";
         if (isApproved) {

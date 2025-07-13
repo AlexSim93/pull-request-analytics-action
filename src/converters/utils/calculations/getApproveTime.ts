@@ -19,7 +19,8 @@ export const getApproveTime = (
         }
         const statusesEntries = Object.keys(acc) as string[];
         const isApproved =
-          statusesEntries.some((user) => acc[user].state === "approved") &&
+          statusesEntries.filter((user) => acc[user].state === "approved")
+            .length >= parseInt(getValueAsIs("REQUIRED_APPROVALS")) &&
           !statusesEntries.some(
             (user) => acc[user].state === "changes_requested"
           ) &&
