@@ -29,8 +29,11 @@ export const sendActionRun = () => {
       AGGREGATE_VALUE_METHODS: getMultipleValuesInput(
         "AGGREGATE_VALUE_METHODS"
       ),
+      INCLUDE_USERS: getMultipleValuesInput("INCLUDE_USERS").length,
+      EXCLUDE_USERS: getMultipleValuesInput("EXCLUDE_USERS").length,
       HIDE_USERS: getMultipleValuesInput("HIDE_USERS").length,
       SHOW_USERS: getMultipleValuesInput("SHOW_USERS").length,
+      REQUIRED_APPROVALS: getValueAsIs("REQUIRED_APPROVALS"),
       INCLUDE_LABELS: getMultipleValuesInput("INCLUDE_LABELS").length,
       EXCLUDE_LABELS: getMultipleValuesInput("EXCLUDE_LABELS").length,
       EXECUTION_OUTCOME: getMultipleValuesInput("EXECUTION_OUTCOME"),

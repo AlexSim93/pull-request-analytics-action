@@ -122,8 +122,11 @@ const sendActionRun = () => {
             ASSIGNEES: (0, utils_1.getMultipleValuesInput)("ASSIGNEES").length,
             ISSUE_TITLE: !!(0, utils_1.getValueAsIs)("ISSUE_TITLE"),
             AGGREGATE_VALUE_METHODS: (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS"),
+            INCLUDE_USERS: (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").length,
+            EXCLUDE_USERS: (0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").length,
             HIDE_USERS: (0, utils_1.getMultipleValuesInput)("HIDE_USERS").length,
             SHOW_USERS: (0, utils_1.getMultipleValuesInput)("SHOW_USERS").length,
+            REQUIRED_APPROVALS: (0, utils_1.getValueAsIs)("REQUIRED_APPROVALS"),
             INCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS").length,
             EXCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS").length,
             EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
@@ -821,6 +824,7 @@ exports.getApproveTime = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const constants_1 = __nccwpck_require__(95354);
 const checkUserInclusive_1 = __nccwpck_require__(50477);
+const utils_1 = __nccwpck_require__(41002);
 const getApproveTime = (reviews) => {
     const statuses = Object.values(reviews?.reduce((acc, review) => {
         const user = review.user?.login || constants_1.invalidUserLogin;
@@ -845,10 +849,11 @@ const getApproveTime = (reviews) => {
             [user]: { state: review.state, submittedAt: review.submitted_at },
         };
     }, {}) || {});
-    const isApproved = statuses.some((status) => status.state === "approved") &&
+    const isApproved = statuses.filter((status) => status.state === "approved").length >=
+        parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")) &&
         !statuses.some((status) => status.state === "changes_requested");
     return isApproved
-        ? statuses.sort((a, b) => (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(a.submittedAt), (0, date_fns_1.parseISO)(b.submittedAt)) ? 1 : -1)[0]?.submittedAt
+        ? statuses.sort((a, b) => (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(a.submittedAt), (0, date_fns_1.parseISO)(b.submittedAt)) ? 1 : -1)[parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")) - 1]?.submittedAt
         : null;
 };
 exports.getApproveTime = getApproveTime;
@@ -2893,6 +2898,7 @@ ${[
         "AGGREGATE_VALUE_METHODS",
         "SHOW_CORRELATION_GRAPHS",
         "SHOW_ACTIVITY_TIME_GRAPHS",
+        "REQUIRED_APPROVALS",
         "PERCENTILE",
         "HIDE_USERS",
         "SHOW_USERS",
