@@ -132,43 +132,43 @@ const dismissedBySecondReviewer = [
 
 describe("check getApproveTime", () => {
   it("Check PR without reviews and return null", () => {
-    expect(getApproveTime(notReviewed)).toBe(null);
+    expect(getApproveTime(notReviewed, 1)).toBe(null);
   });
   it("Check PR with only 1 approval", () => {
-    expect(getApproveTime(approvedReview)).toBe("2024-01-11T07:00:00Z");
+    expect(getApproveTime(approvedReview, 1)).toBe("2024-01-11T07:00:00Z");
   });
   it("Check PR with 2 approval and return the earliest one", () => {
-    expect(getApproveTime(approvedTwiceReview)).toBe("2024-01-11T07:00:00Z");
+    expect(getApproveTime(approvedTwiceReview, 1)).toBe("2024-01-11T07:00:00Z");
   });
   // changes requested included
   it("Check PR with approval after changes requested and return time of approval", () => {
-    expect(getApproveTime(approvedAfterChangesRequestedReview)).toBe(
+    expect(getApproveTime(approvedAfterChangesRequestedReview, 1)).toBe(
       "2024-01-11T09:00:00Z"
     );
   });
   it("Check PR with changes requested by second developer and approval after it. Should return the last time of approval", () => {
-    expect(getApproveTime(oneApprovedOneChangesRequestedReview)).toBe(
+    expect(getApproveTime(oneApprovedOneChangesRequestedReview, 1)).toBe(
       "2024-01-12T05:00:00Z"
     );
   });
   it("Check PR with approval -> changes requested -> approval and return time of the last approve", () => {
-    expect(getApproveTime(approvedRequestedChangesApprovedReview)).toBe(
+    expect(getApproveTime(approvedRequestedChangesApprovedReview, 1)).toBe(
       "2024-01-12T09:00:00Z"
     );
   });
   it("Check PR with dismissed changes requested and return time of the approval", () => {
-    expect(getApproveTime(dismissedChangesRequestedReview)).toBe(
+    expect(getApproveTime(dismissedChangesRequestedReview, 1)).toBe(
       "2024-01-11T09:00:00Z"
     );
   });
   it("Check PR with changes requested and return null", () => {
-    expect(getApproveTime(changesRequestedReview)).toBe(null);
+    expect(getApproveTime(changesRequestedReview, 1)).toBe(null);
   });
   it("Check commented PR and return time of the approval", () => {
-    expect(getApproveTime(commentedReview)).toBe("2024-01-12T05:00:00Z");
+    expect(getApproveTime(commentedReview, 1)).toBe("2024-01-12T05:00:00Z");
   });
   it("Check PR with dismissed changes requested status from second reviewer and return time of the approval", () => {
-    expect(getApproveTime(dismissedBySecondReviewer)).toBe(
+    expect(getApproveTime(dismissedBySecondReviewer, 1)).toBe(
       "2024-01-11T13:00:00Z"
     );
   });
