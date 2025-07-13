@@ -122,8 +122,11 @@ const sendActionRun = () => {
             ASSIGNEES: (0, utils_1.getMultipleValuesInput)("ASSIGNEES").length,
             ISSUE_TITLE: !!(0, utils_1.getValueAsIs)("ISSUE_TITLE"),
             AGGREGATE_VALUE_METHODS: (0, utils_1.getMultipleValuesInput)("AGGREGATE_VALUE_METHODS"),
+            INCLUDE_USERS: (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").length,
+            EXCLUDE_USERS: (0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").length,
             HIDE_USERS: (0, utils_1.getMultipleValuesInput)("HIDE_USERS").length,
             SHOW_USERS: (0, utils_1.getMultipleValuesInput)("SHOW_USERS").length,
+            REQUIRED_APPROVALS: (0, utils_1.getValueAsIs)("REQUIRED_APPROVALS"),
             INCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS").length,
             EXCLUDE_LABELS: (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS").length,
             EXECUTION_OUTCOME: (0, utils_1.getMultipleValuesInput)("EXECUTION_OUTCOME"),
@@ -821,14 +824,15 @@ exports.getApproveTime = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const constants_1 = __nccwpck_require__(95354);
 const checkUserInclusive_1 = __nccwpck_require__(50477);
-const getApproveTime = (reviews) => {
+const getApproveTime = (reviews, requiredApprovals) => {
     const statuses = Object.values(reviews?.reduce((acc, review) => {
         const user = review.user?.login || constants_1.invalidUserLogin;
         if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
             return acc;
         }
         const statusesEntries = Object.keys(acc);
-        const isApproved = statusesEntries.some((user) => acc[user].state === "approved") &&
+        const isApproved = statusesEntries.filter((user) => acc[user].state === "approved")
+            .length >= requiredApprovals &&
             !statusesEntries.some((user) => acc[user].state === "changes_requested") &&
             review.state !== "changes_requested";
         if (isApproved) {
@@ -845,7 +849,8 @@ const getApproveTime = (reviews) => {
             [user]: { state: review.state, submittedAt: review.submitted_at },
         };
     }, {}) || {});
-    const isApproved = statuses.some((status) => status.state === "approved") &&
+    const isApproved = statuses.filter((status) => status.state === "approved").length >=
+        requiredApprovals &&
         !statuses.some((status) => status.state === "changes_requested");
     return isApproved
         ? statuses.sort((a, b) => (0, date_fns_1.isBefore)((0, date_fns_1.parseISO)(a.submittedAt), (0, date_fns_1.parseISO)(b.submittedAt)) ? 1 : -1)[0]?.submittedAt
@@ -1469,7 +1474,7 @@ const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], re
     }
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login &&
         (0, calculations_1.checkUserInclusive)(review.user?.login || constants_1.invalidUserLogin));
-    const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews);
+    const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews, parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")));
     const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
@@ -2893,6 +2898,7 @@ ${[
         "AGGREGATE_VALUE_METHODS",
         "SHOW_CORRELATION_GRAPHS",
         "SHOW_ACTIVITY_TIME_GRAPHS",
+        "REQUIRED_APPROVALS",
         "PERCENTILE",
         "HIDE_USERS",
         "SHOW_USERS",

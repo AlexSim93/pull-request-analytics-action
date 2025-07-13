@@ -54,6 +54,10 @@ inputs:
     description: "Percentile value for timeline"
     required: false
     default: "75"
+  REQUIRED_APPROVALS:
+    description: "Amount of approvals required for PR to be approved"
+    required: true
+    default: "1"
   TOP_LIST_AMOUNT:
     description: "Amount of items in lists"
     required: false

@@ -4,7 +4,8 @@ import { invalidUserLogin } from "../../constants";
 import { checkUserInclusive } from "./checkUserInclusive";
 
 export const getApproveTime = (
-  reviews: Awaited<ReturnType<typeof makeComplexRequest>>["events"][number]
+  reviews: Awaited<ReturnType<typeof makeComplexRequest>>["events"][number],
+  requiredApprovals: number
 ) => {
   const statuses = Object.values(
     reviews?.reduce(
@@ -13,12 +14,13 @@ export const getApproveTime = (
         review: any
       ) => {
         const user = review.user?.login || invalidUserLogin;
-        if(!checkUserInclusive(user)){
+        if (!checkUserInclusive(user)) {
           return acc;
         }
         const statusesEntries = Object.keys(acc) as string[];
         const isApproved =
-          statusesEntries.some((user) => acc[user].state === "approved") &&
+          statusesEntries.filter((user) => acc[user].state === "approved")
+            .length >= requiredApprovals &&
           !statusesEntries.some(
             (user) => acc[user].state === "changes_requested"
           ) &&
@@ -41,8 +43,10 @@ export const getApproveTime = (
     ) || {}
   );
 
+
   const isApproved =
-    statuses.some((status) => status.state === "approved") &&
+    statuses.filter((status) => status.state === "approved").length >=
+      requiredApprovals &&
     !statuses.some((status) => status.state === "changes_requested");
 
   return isApproved

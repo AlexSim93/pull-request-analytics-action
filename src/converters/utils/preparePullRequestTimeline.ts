@@ -28,7 +28,10 @@ export const preparePullRequestTimeline = (
       review.user?.login !== pullRequestInfo?.user?.login &&
       checkUserInclusive(review.user?.login || invalidUserLogin)
   );
-  const approveTime = getApproveTime(pullRequestReviews);
+  const approveTime = getApproveTime(
+    pullRequestReviews,
+    parseInt(getValueAsIs("REQUIRED_APPROVALS"))
+  );
 
   const timeToReviewRequest = calcDifferenceInMinutes(
     pullRequestInfo?.created_at,
