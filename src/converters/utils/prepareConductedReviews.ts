@@ -20,7 +20,7 @@ export const prepareConductedReviews = (
 
   [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach(
     (key) => {
-      if(!checkUserInclusive(key)) return;
+      if(!checkUserInclusive(key, teams)) return;
       const statusesReviewsStats = statuses.reduce((acc, status) => {
         return {
           ...acc,

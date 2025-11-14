@@ -51,7 +51,8 @@ export const collectData = (
     prepareActionsTime(
       pullRequest,
       data.events[index]?.filter((el) => el),
-      collection
+      collection,
+      teams
     );
 
     const closedDate = pullRequest.closed_at
@@ -68,7 +69,7 @@ export const collectData = (
 
     ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
       ["total", dateKey].forEach((innerKey) => {
-        if (checkUserInclusive(userKey)) {
+        if (checkUserInclusive(userKey, teams)) {
           set(
             collection,
             [key, innerKey],
@@ -87,7 +88,8 @@ export const collectData = (
             reviews,
             reviewRequests?.[0],
             statuses,
-            get(collection, [key, innerKey], {})
+            get(collection, [key, innerKey], {}),
+            teams
           )
         );
       });

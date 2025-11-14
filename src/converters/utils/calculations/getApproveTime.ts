@@ -5,7 +5,8 @@ import { checkUserInclusive } from "./checkUserInclusive";
 
 export const getApproveTime = (
   reviews: Awaited<ReturnType<typeof makeComplexRequest>>["events"][number],
-  requiredApprovals: number
+  requiredApprovals: number,
+  teams: Record<string, string[]>
 ) => {
   const statuses = Object.values(
     reviews?.reduce(
@@ -14,7 +15,7 @@ export const getApproveTime = (
         review: any
       ) => {
         const user = review.user?.login || invalidUserLogin;
-        if (!checkUserInclusive(user)) {
+        if (!checkUserInclusive(user, teams)) {
           return acc;
         }
         const statusesEntries = Object.keys(acc) as string[];

@@ -21,7 +21,7 @@ export const prepareResponseTime = (
   teams: Record<string, string[]>
 ) => {
   if (!events) return;
-  const responses = getResponses(events);
+  const responses = getResponses(events, teams);
   const user = pullRequest?.user.login || invalidUserLogin;
   ["total", user, ...(teams[user] || [])].forEach((userKey) => {
     [dateKey, "total"].forEach((key) => {
@@ -44,7 +44,7 @@ export const prepareResponseTime = (
           )
         )
         .filter((el) => typeof el === "number") as number[];
-      if (checkUserInclusive(userKey)) {
+      if (checkUserInclusive(userKey, teams)) {
         set(
           collection,
           [userKey, key, "timeWaitingForRepeatedReview"],
@@ -99,7 +99,7 @@ export const prepareResponseTime = (
           );
 
         ["total", user, ...(teams[user] || [])].forEach((userKey) => {
-          if (checkUserInclusive(userKey)) {
+          if (checkUserInclusive(userKey, teams)) {
             set(collection, [userKey, key], {
               ...get(collection, [userKey, key], {}),
               timeFromInitialRequestToResponse:

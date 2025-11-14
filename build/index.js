@@ -420,7 +420,7 @@ const collectData = (data, teams) => {
         const reviews = data.events[index]?.filter((el) => el.event === constants_1.reviewedTimelineEvent);
         const reviewRequests = data.events[index]?.filter((el) => el.event === constants_1.reviewRequestedTimelineEvent);
         const statuses = data.events[index]?.filter((el) => [constants_1.readyForReviewTimelineEvent, constants_1.convertToDraftTimelineEvent].includes(el.event));
-        (0, utils_1.prepareActionsTime)(pullRequest, data.events[index]?.filter((el) => el), collection);
+        (0, utils_1.prepareActionsTime)(pullRequest, data.events[index]?.filter((el) => el), collection, teams);
         const closedDate = pullRequest.closed_at
             ? (0, date_fns_1.parseISO)(pullRequest.closed_at)
             : null;
@@ -431,10 +431,10 @@ const collectData = (data, teams) => {
         (0, utils_1.prepareRequestedReviews)(reviewRequests, collection, dateKey, teams);
         ["total", userKey, ...(teams[userKey] || [])].forEach((key) => {
             ["total", dateKey].forEach((innerKey) => {
-                if ((0, calculations_1.checkUserInclusive)(userKey)) {
+                if ((0, calculations_1.checkUserInclusive)(userKey, teams)) {
                     (0, set_1.default)(collection, [key, innerKey], (0, utils_1.preparePullRequestInfo)(pullRequest, (0, get_1.default)(collection, [key, innerKey], {})));
                 }
-                (0, set_1.default)(collection, [key, innerKey], (0, utils_1.preparePullRequestTimeline)(pullRequest, reviews, reviewRequests?.[0], statuses, (0, get_1.default)(collection, [key, innerKey], {})));
+                (0, set_1.default)(collection, [key, innerKey], (0, utils_1.preparePullRequestTimeline)(pullRequest, reviews, reviewRequests?.[0], statuses, (0, get_1.default)(collection, [key, innerKey], {}), teams));
             });
         });
         (0, utils_1.prepareReviews)(reviews, collection, dateKey, userKey, (0, calculations_1.getPullRequestSize)(pullRequest?.additions, pullRequest?.deletions), teams);
@@ -765,17 +765,19 @@ exports.calcWeekendMinutes = calcWeekendMinutes;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.checkUserInclusive = void 0;
 const utils_1 = __nccwpck_require__(41002);
-const checkUserInclusive = (name) => {
+const checkUserInclusive = (name, teams) => {
     if ((0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").length === 0 &&
         (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").length === 0) {
         return true;
     }
     if ((0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").length > 0 &&
-        (0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").includes(name)) {
+        ((0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").includes(name) ||
+            teams[name]?.some((team) => (0, utils_1.getMultipleValuesInput)("EXCLUDE_USERS").includes(team)))) {
         return false;
     }
     return (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").length > 0
-        ? (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").includes(name)
+        ? (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").includes(name) ||
+            teams[name]?.some((team) => (0, utils_1.getMultipleValuesInput)("INCLUDE_USERS").includes(team))
         : true;
 };
 exports.checkUserInclusive = checkUserInclusive;
@@ -824,10 +826,10 @@ exports.getApproveTime = void 0;
 const date_fns_1 = __nccwpck_require__(73314);
 const constants_1 = __nccwpck_require__(95354);
 const checkUserInclusive_1 = __nccwpck_require__(50477);
-const getApproveTime = (reviews, requiredApprovals) => {
+const getApproveTime = (reviews, requiredApprovals, teams) => {
     const statuses = Object.values(reviews?.reduce((acc, review) => {
         const user = review.user?.login || constants_1.invalidUserLogin;
-        if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+        if (!(0, checkUserInclusive_1.checkUserInclusive)(user, teams)) {
             return acc;
         }
         const statusesEntries = Object.keys(acc);
@@ -899,11 +901,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getResponses = void 0;
 const constants_1 = __nccwpck_require__(95354);
 const checkUserInclusive_1 = __nccwpck_require__(50477);
-const getResponses = (events = []) => {
+const getResponses = (events = [], teams) => {
     return events?.reduce((acc, event) => {
         if (event.event === constants_1.reviewRequestedTimelineEvent) {
             const user = event.requested_reviewer?.login || constants_1.invalidUserLogin;
-            if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+            if (!(0, checkUserInclusive_1.checkUserInclusive)(user, teams)) {
                 return acc;
             }
             return {
@@ -913,7 +915,7 @@ const getResponses = (events = []) => {
         }
         if (event.event === constants_1.reviewedTimelineEvent) {
             const user = event.user?.login || constants_1.invalidUserLogin;
-            if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+            if (!(0, checkUserInclusive_1.checkUserInclusive)(user, teams)) {
                 return acc;
             }
             return {
@@ -925,7 +927,7 @@ const getResponses = (events = []) => {
         }
         if (event.event === constants_1.reviewRequestRemoved) {
             const user = event.requested_reviewer?.login || constants_1.invalidUserLogin;
-            if (!(0, checkUserInclusive_1.checkUserInclusive)(user)) {
+            if (!(0, checkUserInclusive_1.checkUserInclusive)(user, teams)) {
                 return acc;
             }
             return {
@@ -1102,7 +1104,7 @@ const date_fns_1 = __nccwpck_require__(73314);
 const lodash_1 = __nccwpck_require__(90250);
 const constants_1 = __nccwpck_require__(95354);
 const calculations_1 = __nccwpck_require__(16576);
-const prepareActionsTime = (pullRequest, events = [], collection) => {
+const prepareActionsTime = (pullRequest, events = [], collection, teams) => {
     const openingHour = pullRequest?.created_at
         ? (0, date_fns_1.getHours)((0, date_fns_1.parseISO)(pullRequest?.created_at))
         : -1;
@@ -1116,7 +1118,7 @@ const prepareActionsTime = (pullRequest, events = [], collection) => {
             ? (0, date_fns_1.getHours)((0, date_fns_1.parseISO)(el?.submitted_at))
             : -1;
         const user = el?.user?.login || constants_1.invalidUserLogin;
-        if (submitHour !== -1 && (0, calculations_1.checkUserInclusive)(user)) {
+        if (submitHour !== -1 && (0, calculations_1.checkUserInclusive)(user, teams)) {
             const keys = ["total", "total", "actionsTime", submitHour, el.state];
             (0, lodash_1.set)(collection, keys, (0, lodash_1.get)(collection, keys, 0) + 1);
             const userKeys = [user, "total", "actionsTime", submitHour, el.state];
@@ -1124,13 +1126,13 @@ const prepareActionsTime = (pullRequest, events = [], collection) => {
         }
     });
     const prAuthor = pullRequest?.user?.login || constants_1.invalidUserLogin;
-    if (openingHour !== -1 && (0, calculations_1.checkUserInclusive)(prAuthor)) {
+    if (openingHour !== -1 && (0, calculations_1.checkUserInclusive)(prAuthor, teams)) {
         const keys = ["total", "total", "actionsTime", openingHour, "opened"];
         (0, lodash_1.set)(collection, keys, (0, lodash_1.get)(collection, keys, 0) + 1);
         const userKeys = [prAuthor, "total", "actionsTime", openingHour, "opened"];
         (0, lodash_1.set)(collection, userKeys, (0, lodash_1.get)(collection, userKeys, 0) + 1);
     }
-    if (mergingHour !== -1 && (0, calculations_1.checkUserInclusive)(prAuthor)) {
+    if (mergingHour !== -1 && (0, calculations_1.checkUserInclusive)(prAuthor, teams)) {
         const keys = ["total", "total", "actionsTime", mergingHour, "merged"];
         (0, lodash_1.set)(collection, keys, (0, lodash_1.get)(collection, keys, 0) + 1);
         const userKeys = [prAuthor, "total", "actionsTime", mergingHour, "merged"];
@@ -1158,7 +1160,7 @@ const prepareConductedReviews = (pullRequestLogin, pullRequestReviews = [], coll
         return { ...acc, [review.state]: 1, total: 1 };
     }, {}) || {});
     [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((key) => {
-        if (!(0, calculations_1.checkUserInclusive)(key))
+        if (!(0, calculations_1.checkUserInclusive)(key, teams))
             return;
         const statusesReviewsStats = statuses.reduce((acc, status) => {
             return {
@@ -1202,19 +1204,19 @@ const getDiscussionType_1 = __nccwpck_require__(49575);
 const calculations_1 = __nccwpck_require__(16576);
 const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin, teams) => {
     const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== (comment.user?.login || constants_1.invalidUserLogin) &&
-        (0, calculations_1.checkUserInclusive)(comment.user?.login || constants_1.invalidUserLogin));
+        (0, calculations_1.checkUserInclusive)(comment.user?.login || constants_1.invalidUserLogin, teams));
     const discussions = comments[index]?.filter((comment) => {
         const userLogin = comment.user?.login || constants_1.invalidUserLogin;
         return (!comment.in_reply_to_id &&
             pullRequestLogin !== userLogin &&
-            (0, calculations_1.checkUserInclusive)(userLogin));
+            (0, calculations_1.checkUserInclusive)(userLogin, teams));
     });
     ["total", dateKey].forEach((key) => {
         discussions?.forEach((discussion) => {
             const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
             (0, getDiscussionType_1.getDiscussionType)(discussion.body).forEach((type) => {
                 [userLogin, ...(teams[userLogin] || []), "total"].forEach((userKey) => {
-                    if ((0, calculations_1.checkUserInclusive)(userLogin)) {
+                    if ((0, calculations_1.checkUserInclusive)(userLogin, teams)) {
                         (0, set_1.default)(collection, [userKey, key, "discussionsTypes", type], {
                             ...(0, get_1.default)(collection, [userKey, key, "discussionsTypes", type], {}),
                             conducted: {
@@ -1247,7 +1249,7 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                     }
                 });
                 [pullRequestLogin, ...(teams[pullRequestLogin] || []), "total"].forEach((userKey) => {
-                    if ((0, calculations_1.checkUserInclusive)(userLogin)) {
+                    if ((0, calculations_1.checkUserInclusive)(userLogin, teams)) {
                         (0, set_1.default)(collection, [userKey, key, "discussionsTypes", type], {
                             ...(0, get_1.default)(collection, [userKey, key, "discussionsTypes", type], {}),
                             received: {
@@ -1282,7 +1284,7 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
             });
         });
         comments[index]
-            ?.filter((comment) => (0, calculations_1.checkUserInclusive)(comment.user?.login || constants_1.invalidUserLogin))
+            ?.filter((comment) => (0, calculations_1.checkUserInclusive)(comment.user?.login || constants_1.invalidUserLogin, teams))
             .forEach((comment) => {
             const userLogin = comment.user?.login || constants_1.invalidUserLogin;
             if (pullRequestLogin !== userLogin) {
@@ -1291,7 +1293,7 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
                 });
             }
         });
-        if (pullRequestLogin && (0, calculations_1.checkUserInclusive)(pullRequestLogin)) {
+        if (pullRequestLogin && (0, calculations_1.checkUserInclusive)(pullRequestLogin, teams)) {
             [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
                 (0, set_1.default)(collection, [userKey, key, "reviewComments"], (reviewComments?.length || 0) +
                     (0, get_1.default)(collection, [userKey, key, "reviewComments"], 0));
@@ -1314,7 +1316,7 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
             const agreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["+1"]);
             const disagreedDiscussions = discussions?.filter((discussion) => discussion.reactions?.["-1"]);
             [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach((userKey) => {
-                if ((0, calculations_1.checkUserInclusive)(pullRequestLogin)) {
+                if ((0, calculations_1.checkUserInclusive)(pullRequestLogin, teams)) {
                     (0, set_1.default)(collection, [userKey, key, "discussions"], {
                         ...(0, get_1.default)(collection, [userKey, key, "discussions"], {}),
                         received: {
@@ -1468,13 +1470,13 @@ const constants_1 = __nccwpck_require__(95354);
 const calculations_1 = __nccwpck_require__(16576);
 const calcDifferenceInMinutes_1 = __nccwpck_require__(72317);
 const calcPRsize_1 = __nccwpck_require__(8722);
-const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], reviewRequest, statuses = [], collection) => {
-    if (!(0, calculations_1.checkUserInclusive)(pullRequestInfo?.user?.login || constants_1.invalidUserLogin)) {
+const preparePullRequestTimeline = (pullRequestInfo, pullRequestReviews = [], reviewRequest, statuses = [], collection, teams) => {
+    if (!(0, calculations_1.checkUserInclusive)(pullRequestInfo?.user?.login || constants_1.invalidUserLogin, teams)) {
         return collection;
     }
     const firstReview = pullRequestReviews?.find((review) => review.user?.login !== pullRequestInfo?.user?.login &&
-        (0, calculations_1.checkUserInclusive)(review.user?.login || constants_1.invalidUserLogin));
-    const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews, parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")));
+        (0, calculations_1.checkUserInclusive)(review.user?.login || constants_1.invalidUserLogin, teams));
+    const approveTime = (0, calculations_1.getApproveTime)(pullRequestReviews, parseInt((0, utils_1.getValueAsIs)("REQUIRED_APPROVALS")), teams);
     const timeToReviewRequest = (0, calcDifferenceInMinutes_1.calcDifferenceInMinutes)(pullRequestInfo?.created_at, reviewRequest?.created_at, {
         endOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_END"),
         startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
@@ -1586,7 +1588,7 @@ const prepareRequestedReviews = (requests = [], collection, dateKey, teams) => {
         const user = request.requested_reviewer
             ? request.requested_reviewer?.login || constants_1.invalidUserLogin
             : request.requested_team?.name || "Invalid Team";
-        if (!(0, calculations_1.checkUserInclusive)(user))
+        if (!(0, calculations_1.checkUserInclusive)(user, teams))
             return acc;
         return { ...acc, [user]: 1 };
     }, {});
@@ -1598,7 +1600,7 @@ const prepareRequestedReviews = (requests = [], collection, dateKey, teams) => {
     });
     [dateKey, "total"].forEach((date) => {
         Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
-            if ((0, calculations_1.checkUserInclusive)(user)) {
+            if ((0, calculations_1.checkUserInclusive)(user, teams)) {
                 (0, set_1.default)(collection, [user, date, "reviewRequestsConducted"], (0, get_1.default)(collection, [user, date, "reviewRequestsConducted"], 0) +
                     value);
             }
@@ -1628,7 +1630,7 @@ const constants_1 = __nccwpck_require__(95354);
 const prepareResponseTime = (events = [], pullRequest, collection, dateKey, teams) => {
     if (!events)
         return;
-    const responses = (0, calculations_1.getResponses)(events);
+    const responses = (0, calculations_1.getResponses)(events, teams);
     const user = pullRequest?.user.login || constants_1.invalidUserLogin;
     ["total", user, ...(teams[user] || [])].forEach((userKey) => {
         [dateKey, "total"].forEach((key) => {
@@ -1642,7 +1644,7 @@ const prepareResponseTime = (events = [], pullRequest, collection, dateKey, team
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")))
                 .filter((el) => typeof el === "number");
-            if ((0, calculations_1.checkUserInclusive)(userKey)) {
+            if ((0, calculations_1.checkUserInclusive)(userKey, teams)) {
                 (0, set_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], [
                     ...(0, get_1.default)(collection, [userKey, key, "timeWaitingForRepeatedReview"], []),
                     ...awaitingResponse,
@@ -1667,7 +1669,7 @@ const prepareResponseTime = (events = [], pullRequest, collection, dateKey, team
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")));
             ["total", user, ...(teams[user] || [])].forEach((userKey) => {
-                if ((0, calculations_1.checkUserInclusive)(userKey)) {
+                if ((0, calculations_1.checkUserInclusive)(userKey, teams)) {
                     (0, set_1.default)(collection, [userKey, key], {
                         ...(0, get_1.default)(collection, [userKey, key], {}),
                         timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"
@@ -1716,7 +1718,7 @@ const prepareReviews = (reviews = [], collection, dateKey, pullRequestLogin, pul
     let teamNames = [];
     const users = Object.keys(reviews?.reduce((acc, review) => {
         const userLogin = review.user?.login || constants_1.invalidUserLogin;
-        if (userLogin !== pullRequestLogin && (0, calculations_1.checkUserInclusive)(userLogin)) {
+        if (userLogin !== pullRequestLogin && (0, calculations_1.checkUserInclusive)(userLogin, teams)) {
             const teamsNames = (teams[userLogin] || []).reduce((acc, team) => ({ ...acc, [team]: 1 }), {});
             teamNames = Object.keys(teamsNames);
             return { ...acc, [userLogin]: 1, ...teamsNames, total: 1 };
@@ -1727,11 +1729,11 @@ const prepareReviews = (reviews = [], collection, dateKey, pullRequestLogin, pul
         const userReviews = Array.isArray(reviews) && user !== "total" && !teamNames.includes(user)
             ? reviews?.filter((review) => {
                 const userLogin = review.user?.login || constants_1.invalidUserLogin;
-                return userLogin === user && (0, calculations_1.checkUserInclusive)(userLogin);
+                return userLogin === user && (0, calculations_1.checkUserInclusive)(userLogin, teams);
             })
             : reviews?.filter((review) => {
                 const userLogin = review.user?.login || constants_1.invalidUserLogin;
-                return (0, calculations_1.checkUserInclusive)(userLogin);
+                return (0, calculations_1.checkUserInclusive)(userLogin, teams);
             });
         [dateKey, "total"].forEach((key) => {
             (0, set_1.default)(collection, [user, key], (0, prepareConductedReviews_1.prepareConductedReviews)(pullRequestLogin, userReviews, (0, get_1.default)(collection, [user, key], {}), pullRequestSize, teams));

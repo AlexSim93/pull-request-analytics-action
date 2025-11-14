@@ -15,7 +15,7 @@ export const prepareRequestedReviews = (
     const user = request.requested_reviewer
       ? request.requested_reviewer?.login || invalidUserLogin
       : request.requested_team?.name || "Invalid Team";
-    if(!checkUserInclusive(user)) return acc;
+    if (!checkUserInclusive(user, teams)) return acc;
     return { ...acc, [user]: 1 };
   }, {});
 
@@ -29,7 +29,7 @@ export const prepareRequestedReviews = (
 
   [dateKey, "total"].forEach((date) => {
     Object.entries({ ...requestedReviewers }).forEach(([user, value]) => {
-      if (checkUserInclusive(user)) {
+      if (checkUserInclusive(user, teams)) {
         set(
           collection,
           [user, date, "reviewRequestsConducted"],

@@ -10,7 +10,8 @@ export const prepareActionsTime = (
     ReturnType<typeof makeComplexRequest>
   >["pullRequestInfo"][number],
   events: any[] | undefined = [],
-  collection: Record<string, Record<string, Collection>>
+  collection: Record<string, Record<string, Collection>>,
+  teams: Record<string, string[]>
 ) => {
   const openingHour = pullRequest?.created_at
     ? getHours(parseISO(pullRequest?.created_at))
@@ -26,7 +27,7 @@ export const prepareActionsTime = (
         ? getHours(parseISO(el?.submitted_at))
         : -1;
       const user = el?.user?.login || invalidUserLogin;
-      if (submitHour !== -1 && checkUserInclusive(user)) {
+      if (submitHour !== -1 && checkUserInclusive(user, teams)) {
         const keys = ["total", "total", "actionsTime", submitHour, el.state];
         set(collection, keys, (get(collection, keys, 0) as number) + 1);
         const userKeys = [user, "total", "actionsTime", submitHour, el.state];
@@ -34,13 +35,13 @@ export const prepareActionsTime = (
       }
     });
   const prAuthor = pullRequest?.user?.login || invalidUserLogin;
-  if (openingHour !== -1 && checkUserInclusive(prAuthor)) {
+  if (openingHour !== -1 && checkUserInclusive(prAuthor, teams)) {
     const keys = ["total", "total", "actionsTime", openingHour, "opened"];
     set(collection, keys, get(collection, keys, 0) + 1);
     const userKeys = [prAuthor, "total", "actionsTime", openingHour, "opened"];
     set(collection, userKeys, get(collection, userKeys, 0) + 1);
   }
-  if (mergingHour !== -1 && checkUserInclusive(prAuthor)) {
+  if (mergingHour !== -1 && checkUserInclusive(prAuthor, teams)) {
     const keys = ["total", "total", "actionsTime", mergingHour, "merged"];
     set(collection, keys, get(collection, keys, 0) + 1);
     const userKeys = [prAuthor, "total", "actionsTime", mergingHour, "merged"];

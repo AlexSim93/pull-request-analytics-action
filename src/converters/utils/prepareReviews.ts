@@ -19,7 +19,7 @@ export const prepareReviews = (
   const users = Object.keys(
     reviews?.reduce((acc, review) => {
       const userLogin = review.user?.login || invalidUserLogin;
-      if (userLogin !== pullRequestLogin && checkUserInclusive(userLogin)) {
+      if (userLogin !== pullRequestLogin && checkUserInclusive(userLogin, teams)) {
         const teamsNames = (teams[userLogin] || []).reduce(
           (acc, team) => ({ ...acc, [team]: 1 }),
           {}
@@ -36,11 +36,11 @@ export const prepareReviews = (
       Array.isArray(reviews) && user !== "total" && !teamNames.includes(user)
         ? reviews?.filter((review) => {
             const userLogin = review.user?.login || invalidUserLogin;
-            return userLogin === user && checkUserInclusive(userLogin);
+            return userLogin === user && checkUserInclusive(userLogin, teams);
           })
         : reviews?.filter((review) => {
             const userLogin = review.user?.login || invalidUserLogin;
-            return checkUserInclusive(userLogin);
+            return checkUserInclusive(userLogin, teams);
           });
     [dateKey, "total"].forEach((key) => {
       set(

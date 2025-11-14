@@ -18,19 +18,21 @@ export const preparePullRequestTimeline = (
   pullRequestReviews: any[] = [],
   reviewRequest: any | undefined,
   statuses: any[] | undefined = [],
-  collection: Collection
+  collection: Collection,
+  teams: Record<string, string[]>
 ) => {
-  if (!checkUserInclusive(pullRequestInfo?.user?.login || invalidUserLogin)) {
+  if (!checkUserInclusive(pullRequestInfo?.user?.login || invalidUserLogin, teams)) {
     return collection;
   }
   const firstReview = pullRequestReviews?.find(
     (review) =>
       review.user?.login !== pullRequestInfo?.user?.login &&
-      checkUserInclusive(review.user?.login || invalidUserLogin)
+      checkUserInclusive(review.user?.login || invalidUserLogin, teams)
   );
   const approveTime = getApproveTime(
     pullRequestReviews,
-    parseInt(getValueAsIs("REQUIRED_APPROVALS"))
+    parseInt(getValueAsIs("REQUIRED_APPROVALS")), 
+    teams
   );
 
   const timeToReviewRequest = calcDifferenceInMinutes(

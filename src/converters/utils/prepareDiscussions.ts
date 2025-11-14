@@ -18,7 +18,7 @@ export const prepareDiscussions = (
   const reviewComments = comments[index]?.filter(
     (comment) =>
       pullRequestLogin !== (comment.user?.login || invalidUserLogin) &&
-      checkUserInclusive(comment.user?.login || invalidUserLogin)
+      checkUserInclusive(comment.user?.login || invalidUserLogin, teams)
   );
 
   const discussions = comments[index]?.filter((comment) => {
@@ -26,7 +26,7 @@ export const prepareDiscussions = (
     return (
       !comment.in_reply_to_id &&
       pullRequestLogin !== userLogin &&
-      checkUserInclusive(userLogin)
+      checkUserInclusive(userLogin, teams)
     );
   });
 
@@ -35,7 +35,7 @@ export const prepareDiscussions = (
       const userLogin = discussion.user?.login || invalidUserLogin;
       getDiscussionType(discussion.body).forEach((type) => {
         [userLogin, ...(teams[userLogin] || []), "total"].forEach((userKey) => {
-          if (checkUserInclusive(userLogin)) {
+          if (checkUserInclusive(userLogin, teams)) {
             set(collection, [userKey, key, "discussionsTypes", type], {
               ...get(collection, [userKey, key, "discussionsTypes", type], {}),
               conducted: {
@@ -85,7 +85,7 @@ export const prepareDiscussions = (
 
         [pullRequestLogin, ...(teams[pullRequestLogin] || []), "total"].forEach(
           (userKey) => {
-            if (checkUserInclusive(userLogin)) {
+            if (checkUserInclusive(userLogin, teams)) {
               set(collection, [userKey, key, "discussionsTypes", type], {
                 ...get(
                   collection,
@@ -142,7 +142,7 @@ export const prepareDiscussions = (
 
     comments[index]
       ?.filter((comment) =>
-        checkUserInclusive(comment.user?.login || invalidUserLogin)
+        checkUserInclusive(comment.user?.login || invalidUserLogin, teams)
       )
       .forEach((comment) => {
         const userLogin = comment.user?.login || invalidUserLogin;
@@ -159,7 +159,7 @@ export const prepareDiscussions = (
         }
       });
 
-    if (pullRequestLogin && checkUserInclusive(pullRequestLogin)) {
+    if (pullRequestLogin && checkUserInclusive(pullRequestLogin, teams)) {
       [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach(
         (userKey) => {
           set(
@@ -211,7 +211,7 @@ export const prepareDiscussions = (
 
       [pullRequestLogin, "total", ...(teams[pullRequestLogin] || [])].forEach(
         (userKey) => {
-          if (checkUserInclusive(pullRequestLogin)) {
+          if (checkUserInclusive(pullRequestLogin, teams)) {
             set(collection, [userKey, key, "discussions"], {
               ...get(collection, [userKey, key, "discussions"], {}),
               received: {

@@ -6,11 +6,14 @@ import {
 } from "../../constants";
 import { checkUserInclusive } from "./checkUserInclusive";
 
-export const getResponses = (events: any[] | undefined | null = []) => {
+export const getResponses = (
+  events: any[] | undefined | null = [],
+  teams: Record<string, string[]>
+) => {
   return events?.reduce((acc, event) => {
     if (event.event === reviewRequestedTimelineEvent) {
       const user = event.requested_reviewer?.login || invalidUserLogin;
-      if (!checkUserInclusive(user)) {
+      if (!checkUserInclusive(user, teams)) {
         return acc;
       }
       return {
@@ -20,7 +23,7 @@ export const getResponses = (events: any[] | undefined | null = []) => {
     }
     if (event.event === reviewedTimelineEvent) {
       const user = event.user?.login || invalidUserLogin;
-      if (!checkUserInclusive(user)) {
+      if (!checkUserInclusive(user, teams)) {
         return acc;
       }
       return {
@@ -34,7 +37,7 @@ export const getResponses = (events: any[] | undefined | null = []) => {
     }
     if (event.event === reviewRequestRemoved) {
       const user = event.requested_reviewer?.login || invalidUserLogin;
-      if (!checkUserInclusive(user)) {
+      if (!checkUserInclusive(user, teams)) {
         return acc;
       }
       return {
