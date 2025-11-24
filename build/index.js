@@ -1669,7 +1669,7 @@ const prepareResponseTime = (events = [], pullRequest, collection, dateKey, team
                 startOfWorkingTime: (0, utils_1.getValueAsIs)("CORE_HOURS_START"),
             }, (0, utils_1.getMultipleValuesInput)("HOLIDAYS")));
             ["total", user, ...(teams[user] || [])].forEach((userKey) => {
-                if ((0, calculations_1.checkUserInclusive)(userKey, teams)) {
+                if ((0, calculations_1.checkUserInclusive)(user, teams)) {
                     (0, set_1.default)(collection, [userKey, key], {
                         ...(0, get_1.default)(collection, [userKey, key], {}),
                         timeFromInitialRequestToResponse: typeof timeFromInitialRequestToResponse === "number"

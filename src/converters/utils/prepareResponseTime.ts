@@ -99,7 +99,7 @@ export const prepareResponseTime = (
           );
 
         ["total", user, ...(teams[user] || [])].forEach((userKey) => {
-          if (checkUserInclusive(userKey, teams)) {
+          if (checkUserInclusive(user, teams)) {
             set(collection, [userKey, key], {
               ...get(collection, [userKey, key], {}),
               timeFromInitialRequestToResponse:
