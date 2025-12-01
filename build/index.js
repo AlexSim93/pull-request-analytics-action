@@ -78,6 +78,8 @@ const sendActionError = (error) => {
             USE_CHARTS: (0, utils_1.getValueAsIs)("USE_CHARTS"),
             SHOW_CORRELATION_GRAPHS: (0, utils_1.getValueAsIs)("SHOW_CORRELATION_GRAPHS"),
             SHOW_ACTIVITY_TIME_GRAPHS: (0, utils_1.getValueAsIs)("SHOW_ACTIVITY_TIME_GRAPHS"),
+            FILTER_HEAD_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_HEAD_BRANCHES"),
+            FILTER_BASE_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_BASE_BRANCHES"),
         });
     }
     else {
@@ -138,6 +140,8 @@ const sendActionRun = () => {
             USE_CHARTS: (0, utils_1.getValueAsIs)("USE_CHARTS"),
             SHOW_CORRELATION_GRAPHS: (0, utils_1.getValueAsIs)("SHOW_CORRELATION_GRAPHS"),
             SHOW_ACTIVITY_TIME_GRAPHS: (0, utils_1.getValueAsIs)("SHOW_ACTIVITY_TIME_GRAPHS"),
+            FILTER_HEAD_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_HEAD_BRANCHES"),
+            FILTER_BASE_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_BASE_BRANCHES"),
         });
     }
     else {
