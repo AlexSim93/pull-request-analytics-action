@@ -16,10 +16,8 @@ export const makeComplexRequest = async (
   const pullRequestNumbers = filterPRs(pullRequests, {
     excludeLabels: getMultipleValuesInput("EXCLUDE_LABELS"),
     includeLabels: getMultipleValuesInput("INCLUDE_LABELS"),
-    excludeHeadBranchesPattern: getValueAsIs("EXCLUDE_HEAD_BRANCHES"),
-    includeHeadBranchesPattern: getValueAsIs("INCLUDE_HEAD_BRANCHES"),
-    excludeBaseBranchesPattern: getValueAsIs("EXCLUDE_BASE_BRANCHES"),
-    includeBaseBranchesPattern: getValueAsIs("INCLUDE_BASE_BRANCHES"),
+    filterHeadBranchesPattern: getValueAsIs("FILTER_HEAD_BRANCHES"),
+    filterBaseBranchesPattern: getValueAsIs("FILTER_BASE_BRANCHES"),
   });
 
   const { PRs, PREvents, PRComments } = await getDataWithThrottle(

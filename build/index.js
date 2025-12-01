@@ -2427,10 +2427,8 @@ const makeComplexRequest = async (amount = 100, repository, options = {
     const pullRequestNumbers = (0, utils_2.filterPRs)(pullRequests, {
         excludeLabels: (0, utils_1.getMultipleValuesInput)("EXCLUDE_LABELS"),
         includeLabels: (0, utils_1.getMultipleValuesInput)("INCLUDE_LABELS"),
-        excludeHeadBranchesPattern: (0, utils_1.getValueAsIs)("EXCLUDE_HEAD_BRANCHES"),
-        includeHeadBranchesPattern: (0, utils_1.getValueAsIs)("INCLUDE_HEAD_BRANCHES"),
-        excludeBaseBranchesPattern: (0, utils_1.getValueAsIs)("EXCLUDE_BASE_BRANCHES"),
-        includeBaseBranchesPattern: (0, utils_1.getValueAsIs)("INCLUDE_BASE_BRANCHES"),
+        filterHeadBranchesPattern: (0, utils_1.getValueAsIs)("FILTER_HEAD_BRANCHES"),
+        filterBaseBranchesPattern: (0, utils_1.getValueAsIs)("FILTER_BASE_BRANCHES"),
     });
     const { PRs, PREvents, PRComments } = await (0, getDataWithThrottle_1.getDataWithThrottle)(pullRequestNumbers, repository, options);
     const events = PREvents.map((element) => element.status === "fulfilled" ? element.value.data : null);
@@ -2455,42 +2453,25 @@ exports.makeComplexRequest = makeComplexRequest;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.filterPRs = void 0;
-const filterPRs = (pullRequests, { excludeLabels, includeLabels, excludeHeadBranchesPattern, includeHeadBranchesPattern, excludeBaseBranchesPattern, includeBaseBranchesPattern, }) => {
+const filterPRs = (pullRequests, { excludeLabels, includeLabels, filterHeadBranchesPattern, filterBaseBranchesPattern, }) => {
     return pullRequests
         .filter((pr) => {
-        // Check all exclude conditions first - if any match, exclude the PR
-        const hasExcludedLabel = excludeLabels.length > 0 &&
-            pr.labels.some((label) => excludeLabels.includes(label.name));
-        const hasExcludedHeadBranch = excludeHeadBranchesPattern.length > 0 &&
-            new RegExp(excludeHeadBranchesPattern).test(pr.head.ref);
-        const hasExcludedBaseBranch = excludeBaseBranchesPattern.length > 0 &&
-            new RegExp(excludeBaseBranchesPattern).test(pr.base.ref);
-        // If any exclude condition matches, reject the PR immediately
-        if (hasExcludedLabel || hasExcludedHeadBranch || hasExcludedBaseBranch) {
-            return false;
-        }
-        if (includeLabels.length === 0 &&
-            includeBaseBranchesPattern.length === 0 &&
-            includeHeadBranchesPattern.length === 0) {
-            return true;
-        }
-        // Check include conditions - ALL specified types must match (AND logic)
-        // If include labels are specified, PR must have at least one
-        const matchesIncludeLabels = includeLabels.length === 0
-            ? false
-            : pr.labels.some((label) => includeLabels.includes(label.name));
-        // If include head branch pattern is specified, PR must match
-        const matchesIncludeHeadBranch = includeHeadBranchesPattern.length === 0
-            ? false
-            : new RegExp(includeHeadBranchesPattern).test(pr.head.ref);
-        // If include base branch pattern is specified, PR must match
-        const matchesIncludeBaseBranch = includeBaseBranchesPattern.length === 0
-            ? false
-            : new RegExp(includeBaseBranchesPattern).test(pr.base.ref);
-        // All specified include conditions must be satisfied
-        return (matchesIncludeLabels ||
-            matchesIncludeHeadBranch ||
-            matchesIncludeBaseBranch);
+        const isIncludeLabelsCorrect = includeLabels.length > 0
+            ? pr.labels.some((label) => includeLabels.includes(label.name))
+            : true;
+        const isExcludeLabelsCorrect = excludeLabels.length > 0
+            ? !pr.labels.some((label) => excludeLabels.includes(label.name))
+            : true;
+        const isFilterHeadBranchesCorrect = filterHeadBranchesPattern.length > 0
+            ? new RegExp(filterHeadBranchesPattern).test(pr.head.ref)
+            : true;
+        const isFilterBaseBranchesCorrect = filterBaseBranchesPattern.length > 0
+            ? new RegExp(filterBaseBranchesPattern).test(pr.base.ref)
+            : true;
+        return (isIncludeLabelsCorrect &&
+            isExcludeLabelsCorrect &&
+            isFilterHeadBranchesCorrect &&
+            isFilterBaseBranchesCorrect);
     })
         .map((item) => item.number);
 };
@@ -2966,10 +2947,8 @@ ${[
         "USE_CHARTS",
         "INCLUDE_LABELS",
         "EXCLUDE_LABELS",
-        "INCLUDE_HEAD_BRANCHES",
-        "EXCLUDE_HEAD_BRANCHES",
-        "INCLUDE_BASE_BRANCHES",
-        "EXCLUDE_BASE_BRANCHES",
+        "FILTER_HEAD_BRANCHES",
+        "FILTER_BASE_BRANCHES",
         "INCLUDE_USERS",
         "EXCLUDE_USERS",
         "EXECUTION_OUTCOME",

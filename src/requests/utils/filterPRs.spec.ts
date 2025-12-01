@@ -7,10 +7,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
+        filterBaseBranchesPattern: "",
       });
 
       expect(result).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -20,10 +18,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: ["bug"],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
       });
 
       expect(result).toEqual([1, 2, 10]);
@@ -33,10 +29,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: ["bug", "enhancement"],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
       });
 
       // PRs that have at least one of the labels
@@ -47,10 +41,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: ["bug"],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
       });
 
       // All PRs except those with "bug" label
@@ -61,10 +53,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: ["bug", "ui-kit"],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
       });
 
       // PRs that don't have any of the excluded labels
@@ -75,10 +65,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: ["bug"],
         includeLabels: ["enhancement"],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
       });
 
       // PRs that have "enhancement" but not "bug"
@@ -89,10 +77,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: ["non-existent-label"],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
       });
 
       expect(result).toEqual([]);
@@ -102,10 +88,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: ["non-existent-label"],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
       });
 
       expect(result).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -117,10 +101,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "^fix/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^fix/",
+        filterBaseBranchesPattern: "",
       });
 
       expect(result).toEqual([1, 2, 3]);
@@ -130,10 +112,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "^(fix|feature)/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^(fix|feature)/",
+        filterBaseBranchesPattern: "",
       });
 
       expect(result).toEqual([1, 2, 3, 4, 5, 6]);
@@ -143,10 +123,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "^fix/",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^(?!fix/)",
+        filterBaseBranchesPattern: "",
       });
 
       // All PRs except those starting with "fix/"
@@ -157,10 +135,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "^(cursor|refactor)/",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^(?!cursor|refactor).*",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs that don't start with "cursor/" or "refactor/"
@@ -171,10 +147,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "dashboard",
-        includeHeadBranchesPattern: "^feature/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^feature/(?!.*dashboard).*",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs that start with "feature/" but don't contain "dashboard"
@@ -185,10 +159,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "ui",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "ui",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs with "ui" in branch name
@@ -201,24 +173,20 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: ["bug"],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "^fix/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^fix/",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs with "bug" label AND starting with "fix/"
-      expect(result).toEqual([1, 2, 3, 10]);
+      expect(result).toEqual([1, 2]);
     });
 
     it("should filter PRs by include label and exclude branch pattern", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: ["ui-kit"],
-        excludeHeadBranchesPattern: "^cursor/",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^(?!cursor/).*",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs with "ui-kit" label AND not starting with "cursor/"
@@ -229,10 +197,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: ["bug"],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "^feature/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^feature/",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs starting with "feature/" AND not having "bug" label
@@ -243,10 +209,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: ["docs"],
         includeLabels: [],
-        excludeHeadBranchesPattern: "^fix/",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^(?!fix/).*",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs not starting with "fix/" AND not having "docs" label
@@ -257,25 +221,21 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: ["bug"],
         includeLabels: ["enhancement"],
-        excludeHeadBranchesPattern: "^cursor/",
-        includeHeadBranchesPattern: "^(feature|refactor)/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^(feature|refactor)/(?!cursor/).*",
+        filterBaseBranchesPattern: "",
       });
 
       // PRs with "enhancement" label, without "bug" label,
       // starting with "feature/" or "refactor/", and not starting with "cursor/"
-      expect(result).toEqual([4, 5, 6, 7, 8]);
+      expect(result).toEqual([4, 5, 6, 7]);
     });
 
     it("should return empty array when filters exclude all PRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: ["non-existent"],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "^non-existent/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "^non-existent/",
+        filterBaseBranchesPattern: "",
       });
 
       expect(result).toEqual([]);
@@ -287,10 +247,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "^main$",
+        filterHeadBranchesPattern: "",
+        filterBaseBranchesPattern: "^main$",
       });
 
       // PRs with base branch = main
@@ -301,10 +259,8 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "",
-        excludeBaseBranchesPattern: "^main$",
-        includeBaseBranchesPattern: "",
+        filterHeadBranchesPattern: "",
+        filterBaseBranchesPattern: "^(?!main$).*",
       });
 
       // All PRs except those with base branch = main
@@ -315,14 +271,12 @@ describe("filterPRs", () => {
       const result = filterPRs(mockPullRequests, {
         excludeLabels: [],
         includeLabels: [],
-        excludeHeadBranchesPattern: "",
-        includeHeadBranchesPattern: "^feature/",
-        excludeBaseBranchesPattern: "",
-        includeBaseBranchesPattern: "^develop$",
+        filterHeadBranchesPattern: "^feature/",
+        filterBaseBranchesPattern: "^develop$",
       });
 
       // PRs starting with "feature/" OR with base branch = develop
-      expect(result).toEqual([2, 4, 5, 6, 7, 10]);
+      expect(result).toEqual([4, 5]);
     });
   });
 });
