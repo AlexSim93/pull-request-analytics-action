@@ -42,6 +42,7 @@ ${[
   "EXCLUDE_USERS",
   "EXECUTION_OUTCOME",
   "ISSUE_NUMBER",
+  "DISCUSSION_TYPE_PATTERN",
 ]
   .filter((name) => getValueAsIs(name))
   .map((name) => `${name}: ${getValueAsIs(name)}`)

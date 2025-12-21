@@ -49,6 +49,7 @@ export const sendActionRun = () => {
       SHOW_ACTIVITY_TIME_GRAPHS: getValueAsIs("SHOW_ACTIVITY_TIME_GRAPHS"),
       FILTER_HEAD_BRANCHES: !!getValueAsIs("FILTER_HEAD_BRANCHES"),
       FILTER_BASE_BRANCHES: !!getValueAsIs("FILTER_BASE_BRANCHES"),
+      DISCUSSION_TYPE_PATTERN: !!getValueAsIs("DISCUSSION_TYPE_PATTERN"),
     });
   } else {
     mixpanel.track("Anomymous action run", { distinct_id: "anonymous" });

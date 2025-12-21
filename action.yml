@@ -138,6 +138,9 @@ inputs:
     description: "Shows activity time graphs"
     required: false
     default: false
+  DISCUSSION_TYPE_PATTERN:
+    description: "Regex pattern to extract discussion types from review comments"
+    required: false
 
 outputs:
   JSON_COLLECTION:

@@ -75,6 +75,6 @@ export const createDiscussionsPieChart = (
   return createTable({
     title: `Discussion's types ${date}`,
     description: "",
-    table: { headers: ["users", ...headers], rows: userRows },
+    table: { headers: ["users", ...headers.map((header) => `\`${header}\``)], rows: userRows },
   });
 };

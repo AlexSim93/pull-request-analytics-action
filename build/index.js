@@ -80,6 +80,7 @@ const sendActionError = (error) => {
             SHOW_ACTIVITY_TIME_GRAPHS: (0, utils_1.getValueAsIs)("SHOW_ACTIVITY_TIME_GRAPHS"),
             FILTER_HEAD_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_HEAD_BRANCHES"),
             FILTER_BASE_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_BASE_BRANCHES"),
+            DISCUSSION_TYPE_PATTERN: !!(0, utils_1.getValueAsIs)("DISCUSSION_TYPE_PATTERN"),
         });
     }
     else {
@@ -142,6 +143,7 @@ const sendActionRun = () => {
             SHOW_ACTIVITY_TIME_GRAPHS: (0, utils_1.getValueAsIs)("SHOW_ACTIVITY_TIME_GRAPHS"),
             FILTER_HEAD_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_HEAD_BRANCHES"),
             FILTER_BASE_BRANCHES: !!(0, utils_1.getValueAsIs)("FILTER_BASE_BRANCHES"),
+            DISCUSSION_TYPE_PATTERN: !!(0, utils_1.getValueAsIs)("DISCUSSION_TYPE_PATTERN"),
         });
     }
     else {
@@ -1058,12 +1060,11 @@ exports.checkRevert = checkRevert;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getDiscussionType = void 0;
-const getDiscussionType = (text) => {
-    const regex = /\[\[(.*?)\]\]/g;
-    return (text
-        .match(regex)
-        ?.map((el) => el.replace(/[\[\]]/g, ""))
-        .filter((el) => el) || []);
+const getDiscussionType = (text, pattern) => {
+    if (!pattern)
+        return [];
+    const regex = new RegExp(pattern, "g");
+    return text.match(regex)?.filter((el) => el) || [];
 };
 exports.getDiscussionType = getDiscussionType;
 
@@ -1206,6 +1207,7 @@ const get_1 = __importDefault(__nccwpck_require__(56908));
 const constants_1 = __nccwpck_require__(95354);
 const getDiscussionType_1 = __nccwpck_require__(49575);
 const calculations_1 = __nccwpck_require__(16576);
+const utils_1 = __nccwpck_require__(41002);
 const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLogin, teams) => {
     const reviewComments = comments[index]?.filter((comment) => pullRequestLogin !== (comment.user?.login || constants_1.invalidUserLogin) &&
         (0, calculations_1.checkUserInclusive)(comment.user?.login || constants_1.invalidUserLogin, teams));
@@ -1218,7 +1220,7 @@ const prepareDiscussions = (comments, collection, index, dateKey, pullRequestLog
     ["total", dateKey].forEach((key) => {
         discussions?.forEach((discussion) => {
             const userLogin = discussion.user?.login || constants_1.invalidUserLogin;
-            (0, getDiscussionType_1.getDiscussionType)(discussion.body).forEach((type) => {
+            (0, getDiscussionType_1.getDiscussionType)(discussion.body, (0, utils_1.getValueAsIs)("DISCUSSION_TYPE_PATTERN")).forEach((type) => {
                 [userLogin, ...(teams[userLogin] || []), "total"].forEach((userKey) => {
                     if ((0, calculations_1.checkUserInclusive)(userLogin, teams)) {
                         (0, set_1.default)(collection, [userKey, key, "discussionsTypes", type], {
@@ -2957,6 +2959,7 @@ ${[
         "EXCLUDE_USERS",
         "EXECUTION_OUTCOME",
         "ISSUE_NUMBER",
+        "DISCUSSION_TYPE_PATTERN",
     ]
         .filter((name) => (0, utils_1.getValueAsIs)(name))
         .map((name) => `${name}: ${(0, utils_1.getValueAsIs)(name)}`)
@@ -3104,7 +3107,7 @@ const createDiscussionsPieChart = (data, users, date) => {
     return (0, common_1.createTable)({
         title: `Discussion's types ${date}`,
         description: "",
-        table: { headers: ["users", ...headers], rows: userRows },
+        table: { headers: ["users", ...headers.map((header) => `\`${header}\``)], rows: userRows },
     });
 };
 exports.createDiscussionsPieChart = createDiscussionsPieChart;

@@ -6,6 +6,7 @@ import { invalidUserLogin } from "../constants";
 import { Collection } from "../types";
 import { getDiscussionType } from "./getDiscussionType";
 import { checkUserInclusive } from "./calculations";
+import { getValueAsIs } from "../../common/utils";
 
 export const prepareDiscussions = (
   comments: Awaited<ReturnType<typeof makeComplexRequest>>["comments"],
@@ -33,7 +34,10 @@ export const prepareDiscussions = (
   ["total", dateKey].forEach((key) => {
     discussions?.forEach((discussion) => {
       const userLogin = discussion.user?.login || invalidUserLogin;
-      getDiscussionType(discussion.body).forEach((type) => {
+      getDiscussionType(
+        discussion.body,
+        getValueAsIs("DISCUSSION_TYPE_PATTERN")
+      ).forEach((type) => {
         [userLogin, ...(teams[userLogin] || []), "total"].forEach((userKey) => {
           if (checkUserInclusive(userLogin, teams)) {
             set(collection, [userKey, key, "discussionsTypes", type], {

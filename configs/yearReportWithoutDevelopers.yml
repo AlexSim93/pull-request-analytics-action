@@ -5,11 +5,11 @@ on:
       report_date_start:
         description: "Report date start(d/MM/yyyy)"
         required: false
-        default: "01/01/2024"
+        default: "01/01/2025"
       report_date_end:
         description: "Report date end(d/MM/yyyy)"
         required: false
-        default: "31/12/2024"
+        default: "31/12/2025"
       issue_title:
         description: "Issue title"
         required: false
